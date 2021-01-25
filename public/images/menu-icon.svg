@@ -1,0 +1,7 @@
+<svg id="Icon_Menu_Filled" data-name="Icon / Menu / Filled" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Box" fill="none" stroke="#ececec" stroke-width="1">
+    <rect width="24" height="24" stroke="none"/>
+    <rect x="0.5" y="0.5" width="23" height="23" fill="none"/>
+  </g>
+  <path id="Icon_Menu" data-name="Icon / Menu" d="M99-1400h18v-2H99Zm0-5h18v-2H99Zm0-7v2h18v-2Z" transform="translate(-96 1418)" fill="#fff" stroke="#ececec" stroke-width="1"/>
+</svg>
