@@ -1,0 +1,9 @@
+{
+  "screens": {
+    "reward": "Reward",
+    "cfg-tool": "CFG Tool",
+    "cfg-session": "CFG Session",
+    "quiz": "Quiz",
+    "events": "Events"
+  }
+}

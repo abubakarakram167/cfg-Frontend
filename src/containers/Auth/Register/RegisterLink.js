@@ -31,15 +31,28 @@ class RegisterLink extends React.PureComponent {
                 <section className="account_wraper forgot_holder">
                     <div className="container_large">
                         <div className="login_holder reset_link">
-                            <div className="login_logo"><img src={"images/jmmb_1.png"} className="img-fluid" alt="" /></div>
+                            <div className="login_logo"><img src={"images/jmmb_1.png"} className="img-fluid" alt=""/>
+                            </div>
                             <div className="login_form">
                                 <div className="send_icon"><i className="fas fa-paper-plane"/></div>
-                                <p>Your request to join the JMMB Joan Duncan Foundation Conversation for Greatness
-                                    family has been submitted. Once approved, a link will be sent to the email provided
-                                    with instructions on how to setup your account.</p>
-                                <p>This link will expire in three (3) hours.</p>
+                                {~window.location.href.indexOf('reset') &&
+                                <>
+                                    <p>If you email address is registered, a link will be sent with instructions
+                                        on how to reset your password within the next few minutes.
+                                    </p>
+                                    <p>This link will expire in three (3) hours.</p>
+                                </>
+                                }
+                                {!~window.location.href.indexOf('reset') &&
+                                <>
+                                    <p>Your request to join the JMMB Joan Duncan Foundation Conversation for Greatness
+                                        family has been submitted. Once approved, a link will be sent to the email provided
+                                        with instructions on how to setup your account.</p>
+                                    <p>This link will expire in three (3) hours.</p>
+                                </>
+                                }
                                 <div className="d-block text-center">
-                                    <Link to="/login" className="button primary_button" >BACK TO LOGIN PAGE</Link>
+                                    <Link to="/login" className="button primary_button">BACK TO LOGIN PAGE</Link>
                                 </div>
                             </div>
                         </div>

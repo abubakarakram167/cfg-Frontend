@@ -1,17 +1,38 @@
-import axios from 'axios';
+import axiosInstance from '../../../utils/axios';
 
 class Auth {
     static register (params) {
-        return axios.post('/api/auth/register', {
+        return axiosInstance.post('/api/auth/register', {
             ...params
         });
 
     }
     static login (params) {
-        return axios.post('/api/auth/login', {
+        return axiosInstance.post('/api/auth/login', {
             ...params
         });
+    }
 
+        static socialLogin (params) {
+        return axiosInstance.post('/api/auth/login/social', {
+            ...params
+        });
+    }
+
+    static forgot (params) {
+        return axiosInstance.post('/api/auth/forgot-password', {
+            ...params
+        });
+    }
+
+    static reset (params) {
+        return axiosInstance.post('/api/auth/reset-password', {
+            ...params
+        });
+    }
+
+    static getPreferences (params) {
+        return axiosInstance.get('/api/preferences/list');
     }
 }
 export default Auth;

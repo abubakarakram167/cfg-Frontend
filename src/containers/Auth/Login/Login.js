@@ -5,11 +5,12 @@ import {connect} from 'react-redux'
 import {push} from 'connected-react-router';
 import {isAuthenticUser} from '../validateUser';
 
-import {login} from '../../../store/actions/auth.actions'
+import {login, socialLogin} from '../../../store/actions/auth.actions';
 import history from "../../../utils/history";
 import { GoogleLogin } from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-with-button';
 import MicrosoftLogin from "react-microsoft-login";
+import jsCookie from "js-cookie";
 
 
 class Login extends React.PureComponent {
@@ -39,22 +40,24 @@ class Login extends React.PureComponent {
 
     onLoginSuccess (user) {
         console.log(user)
-
-        this.setState({
-            logged: true,
-            currentProvider: user._provider,
-            user
-        })
+        let responseObject = { source: 'google'};
+        if (user && user.profileObj && user.profileObj.email) {
+            responseObject.email = user.profileObj.email;
+        }
+        if (user && user.profileObj && user.profileObj.name) {
+            responseObject.name = user.profileObj.name;
+        }
+        // if (user && user.profileObj && user.profileObj.email) {
+        //     responseObject.imageUrl = user.profileObj.imageUrl;
+        // }
+        if (user && user.accessToken && user.profileObj.googleId) {
+            responseObject.socialId = user.profileObj.googleId;
+        }
+        this.props["socialLogin"](responseObject);
     }
 
     onLoginFailure (err) {
         console.error(err)
-
-        this.setState({
-            logged: false,
-            currentProvider: '',
-            user: {}
-        })
     }
 
     onLogoutSuccess () {
@@ -89,8 +92,23 @@ class Login extends React.PureComponent {
             ...this.state
         });
     }
-    authHandler = (err, data) => {
-        console.log(err, data);
+    authHandler = (err, user) => {
+        console.log(err, user);
+        if (err) {
+            alert(err);
+            return;
+        }
+        let responseObject = { source: 'microsoft'};
+        if (user && user.account && user.account.userName) {
+            responseObject.email = user.account.userName;
+        }
+        if (user && user.account && user.account.name) {
+            responseObject.name = user.account.name;
+        }
+        if (user && user.account && user.account.accountIdentifier) {
+            responseObject.socialId = user.account.accountIdentifier;
+        }
+        this.props["socialLogin"](responseObject);
     }
 
 
@@ -160,7 +178,7 @@ class Login extends React.PureComponent {
                                                 </div>
                                             </div>
                                             <div className="col-6">
-                                                <p className="forgot_password"><Link to="#">Forgot Password?</Link></p>
+                                                <p className="forgot_password"><Link to="/forgetPassword">Forgot Password?</Link></p>
                                             </div>
                                         </div>
                                     </div>
@@ -186,8 +204,9 @@ class Login extends React.PureComponent {
                                         </li>
                                         <li>
                                             <MicrosoftLogin
-                                                clientId={"54d2a53c-0bac-45e4-ad96-3fe987822acc"}
+                                                clientId={"6768fe0e-38f9-4e0a-bfc6-65b3d3645607"}
                                                 authCallback={this.authHandler}
+                                                redirectUri={"http://localhost:3001/"}
                                                 buttonTheme={"light_short"}
                                             />
                                             {/*<Link to="#"><img src={"images/mail-icon.png"} alt=""/></Link>*/}
@@ -233,6 +252,7 @@ class Login extends React.PureComponent {
 const mapDispatchToProps = (dispatch) => {
     return {
         login: (params) => dispatch(login(params)),
+        socialLogin: (params) => dispatch(socialLogin(params)),
         push: (param) => dispatch(push(param)),
     };
 };

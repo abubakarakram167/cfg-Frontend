@@ -46,7 +46,7 @@ class Header extends Component {
                                 <ul className={"menuEnd"}>
                                     <li className="user_info">
                                         <Link to="#">
-                                            <img src={"images/member-5.png"} className="user-image" alt=""/>
+                                            <img src={"/images/member-5.png"} className="user-image" alt=""/>
                                             <span className="hidden-xs username">{this.state.user.firstName}</span>
                                         </Link>
                                     </li>

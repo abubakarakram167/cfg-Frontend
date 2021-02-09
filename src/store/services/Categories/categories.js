@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axiosInstance from '../../../utils/axios';
 
 class Auth {
     static getAll () {
-        return axios.get('/api/category/list');
+        return axiosInstance.get('/api/category/list');
     }
     static login (params) {
-        return axios.post('/api/auth/login', {
+        return axiosInstance.post('/api/auth/login', {
             ...params
         });
 
