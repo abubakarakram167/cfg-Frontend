@@ -43,7 +43,7 @@ class UserManagement extends Component {
                 <Header/>
                 <main>
                     <div className="dash-wrapper">
-                        <div className="row dash-add-cfg">
+                        <div className="row dash-add-cfg" style={{margin: '0 auto'}}>
                             <div className="row">
                                 <h5 style={{fontWeight: 700}}><i className="fas fa-user"/> Add New User </h5>
                             </div>
@@ -74,12 +74,12 @@ class UserManagement extends Component {
                                             <label>Group</label>
                                             <input type="text" name="group" placeholder="Group*" onChange={this.onChangeValue}  required/>
                                         </div>
-                                        <div className="d-block">
-                                            <input type="submit" className="button primary_button button_block"
+                                        <div className="d-block" style={{textAlign: 'center'}}>
+                                            <input type="submit" className="button primary_button"
                                                    value="Save"/>
                                             <input type="submit"
                                                    style={{border: "1px solid lightgray", "marginTop": "10px"}}
-                                                   className="button button_block" value="Cancel"/>
+                                                   className="button" value="Cancel"/>
                                         </div>
                                     </form>
                                 </div>

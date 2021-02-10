@@ -4,11 +4,11 @@ import Header from "../../../components/Header";
 import {getAllUsers, changeUsersStatus} from '../../../store/actions/users.actions'
 import {push} from 'connected-react-router';
 import {connect} from "react-redux";
-import {screens} from "./addConfig.json";
 import history from "../../../utils/history";
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import {Typeahead} from "react-bootstrap-typeahead";
 
 class UserManagement extends Component {
     state = {
@@ -121,7 +121,68 @@ class UserManagement extends Component {
                                 />
                             </div>
                             <div className="col-md-3">
-                                Category*
+                                <div className="dash_form_right">
+                                    <form onSubmit={this.onFormSubmit}>
+                                        <div className="mb-4">
+                                            <span>Categories *</span>
+                                            <Typeahead
+                                                allowNew
+                                                id="custom-selections-example"
+                                                multiple
+                                                newSelectionPrefix="Add a new category: "
+                                                options={[]}
+                                                placeholder="Categories *"
+                                            />
+                                        </div>
+                                        <div className="mb-4">
+                                            <span>Apply to Group(s)*</span>
+                                            <Typeahead
+                                                allowNew
+                                                id="custom-selections-example"
+                                                multiple
+                                                newSelectionPrefix="Add a new Group: "
+                                                options={[]}
+                                                placeholder="Groups *"
+                                            />
+                                        </div>
+                                        <div className="mb-4">
+                                            <span>Keywords</span>
+                                            <Typeahead
+                                                allowNew
+                                                id="custom-selections-example"
+                                                multiple
+                                                newSelectionPrefix="Add a new Keyword: "
+                                                options={[]}
+                                                placeholder="Keywords"
+                                            />
+                                        </div>
+
+                                       <div className="mb-4">
+                                            <span>Publish Date</span>
+                                            <input type="text" name="startDate" placeholder="01/01/2021"
+                                                   onChange={this.onChangeValue} required/>
+                                        </div>
+                                        <div className="mb-4">
+                                            <label>End Date</label>
+
+                                            <select placeholder="Draft"
+                                                   onChange={this.onChangeValue} >
+                                                <option>Draft</option>
+                                                <option>Publish</option>
+                                            </select>
+                                        </div>
+                                        <div className="mb-4">
+                                            <label>Total Points</label>
+                                            <input type="text" name="totalPoints" placeholder="Total Points*"
+                                                   onChange={this.onChangeValue} required/>
+                                        </div>
+                                        <span>Feature Image <i className={'fas fa-plus-circle'} style={{color:'red'}}></i></span>
+                                        <div className={'featured-img-container'}>
+                                            <img src={'images/member-1.png'} style={{width: '150px'}}/>
+
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
