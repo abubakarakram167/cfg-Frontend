@@ -12,6 +12,8 @@ class Datatable extends Component {
                 pagination
                 paginationServer
                 // expandableRows
+                onRowClicked={this.props.onRowClicked}
+                pointerOnHover
                 striped
                 responsive
                 conditionalRowStyles={this.props.conditionalRowStyles}

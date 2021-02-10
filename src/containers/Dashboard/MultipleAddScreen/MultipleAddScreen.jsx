@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {Helmet} from 'react-helmet-async';
 import Header from "../../../components/Header";
-import {getAllUsers, changeUsersStatus} from '../../../store/actions/users.actions'
 import {push} from 'connected-react-router';
 import {connect} from "react-redux";
-import { screensConfig } from "./addConfig.js";
+import {screensConfig} from "./addConfig";
 import { Typeahead } from 'react-bootstrap-typeahead';
 import history from "../../../utils/history";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import {addHead} from '../../../store/actions/dynamic.actions'
 
 class UserManagement extends Component {
     state = {
@@ -17,6 +17,14 @@ class UserManagement extends Component {
         role: "",
         telephone: "",
         group: "",
+        author: "",
+        startDate: "",
+        endDate: "",
+        points: "",
+        category: "",
+        status: "",
+        quizSuccess: "",
+        quizFail: "",
         pageContext: {
             title: "",
             fields: {
@@ -48,6 +56,7 @@ class UserManagement extends Component {
     }
     onFormSubmit = (e) => {
         e.preventDefault();
+        this.props['addHead'](this.props.pathname, {...this.state})
     }
 
     render() {
@@ -77,7 +86,7 @@ class UserManagement extends Component {
                                             &&
                                             <div className="mb-4">
                                             <label>Name</label>
-                                            <input type="text" name="name" placeholder="Name*"
+                                            <input type="text" name="title" placeholder="Name*"
                                                    onChange={this.onChangeValue} required/>
                                         </div>
                                         }
@@ -86,7 +95,7 @@ class UserManagement extends Component {
                                             &&
                                             <div className="mb-4">
                                                 <label>Author</label>
-                                                <input type="email" name="author" placeholder="Author*"
+                                                <input type="text" name="author" placeholder="Author*"
                                                        onChange={this.onChangeValue} required/>
                                             </div>
                                         }
@@ -95,7 +104,7 @@ class UserManagement extends Component {
                                             &&
                                             <div className="mb-4">
                                                 <label>Start Date</label>
-                                                <input type="text" name="startDate" placeholder="Start Date*"
+                                                <input type="text" name="start_date" placeholder="Start Date*"
                                                        onChange={this.onChangeValue} required/>
                                             </div>
                                         }
@@ -104,7 +113,7 @@ class UserManagement extends Component {
                                             &&
                                             <div className="mb-4">
                                                 <label>End Date</label>
-                                                <input type="text" name="endDate" placeholder="End Date*"
+                                                <input type="text" name="end_date" placeholder="End Date*"
                                                        onChange={this.onChangeValue} required/>
                                             </div>
                                         }
@@ -113,7 +122,7 @@ class UserManagement extends Component {
                                             &&
                                             <div className="mb-4">
                                                 <label>Total Points</label>
-                                                <input type="text" name="totalPoints" placeholder="Total Points*"
+                                                <input type="text" name="total_points" placeholder="Total Points*"
                                                        onChange={this.onChangeValue} required/>
                                             </div>
                                         }
@@ -140,7 +149,8 @@ class UserManagement extends Component {
                                         <div className="d-block" style={{textAlign: 'center'}}>
                                             <input type="submit" className="button primary_button" style={{marginRight: '10px'}}
                                                    value="Save"/>
-                                            <input type="submit"
+                                            <input type="button"
+                                                   onClick={() => {history.push(`/listing/${this.props.pathname}`)}}
                                                    style={{border: "1px solid lightgray", "marginTop": "10px"}}
                                                    className="button" value="Cancel"/>
                                         </div>
@@ -174,8 +184,7 @@ function mapPropsToState(store) {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        changeUsersStatus: (type, users) => dispatch(changeUsersStatus(type, users)),
-        getAllUsers: (params) => dispatch(getAllUsers(params)),
+        addHead: (string, data) => dispatch(addHead(string, data)),
         push: (param) => dispatch(push(param)),
     };
 };

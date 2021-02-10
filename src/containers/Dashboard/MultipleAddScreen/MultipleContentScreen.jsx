@@ -6,25 +6,57 @@ import {push} from 'connected-react-router';
 import {connect} from "react-redux";
 import history from "../../../utils/history";
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {Typeahead} from "react-bootstrap-typeahead";
+import {screensConfig} from "./addConfig";
+import _ from "lodash";
+import { stateToHTML } from "draft-js-export-html";
 
 class UserManagement extends Component {
     state = {
+        once: true,
         username: "",
         name: "",
         email: "",
         role: "",
         telephone: "",
         group: "",
-        editorState: EditorState.createEmpty(),
+        editorState: EditorState.createWithText(_.get(this.props, 'content.detail', '')),
+        pageContext: {
+            title: "",
+            fields: {
+                name: true,
+                author: true,
+                startDate: true,
+                endDate: true,
+                points: true,
+                category: true,
+                group: true,
+                status: true,
+                quizSuccess: true,
+                quizFail: true
+            }
+        },
+        content: {},
     }
 
     componentDidMount() {
-        // if (!screens[this.props.pathname]) {
-        //     history.push('/dashboard');
-        // }
+        if (!screensConfig[this.props.pathname] || !this.props.content) {
+            history.push('/dashboard');
+        }
+        this.setState({pageContext: screensConfig[this.props.pathname]});
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        if (state.once  && props.content) {
+            return {
+                ...state,
+                once: false,
+                content: {...props.content}
+            };
+        }
+        return null;
     }
 
     onChangeValue = (e) => {
@@ -37,12 +69,16 @@ class UserManagement extends Component {
     }
 
     onEditorStateChange = (editorState) => {
+        console.log("convertFromHTML", editorState.getCurrentContent().getPlainText())
+        console.log("convertFromHTML", convertFromRaw(convertToRaw(editorState.getCurrentContent())))
         this.setState({
             editorState,
+            editorContentHtml: stateToHTML(editorState.getCurrentContent()),
         });
     };
 
     render() {
+        console.log('state', this.state)
         return (
             <>
                 <article>
@@ -59,14 +95,14 @@ class UserManagement extends Component {
                     <div className="dash-wrapper">
                         <div className="row dash-session-header">
                             <div className="col-md-8">
-                                <div className="session-title">Chapter 2: Live session with Barrak</div>
-                                <div className="session-sub-title">What can mindfulness do for teachers?</div>
+                                <div className="session-title">{_.get(this.state, 'content.title', '')}</div>
+                                <div className="session-sub-title">{_.get(this.state, 'content.sub_title', '')}</div>
                             </div>
                             <div className="col-md-4" style={{textAlign: "right"}}>
                                 <button className="button-title button_inline"><i className="fas fa-eye"/> preview
                                 </button>
                                 <div className="btn-group">
-                                    <button type="button" className="btn bg-primary btn-danger"
+                                    <button type="button" className="btn btn-danger"
                                             style={{
                                                 borderTopLeftRadius: "25px",
                                                 borderBottomLeftRadius: "25px",
@@ -77,7 +113,7 @@ class UserManagement extends Component {
                                         <i className="fas fa-upload"/> Publish
                                     </button>
                                     <button type="button"
-                                            className="btn bg-primary btn-danger dropdown-toggle dropdown-toggle-split"
+                                            className="btn btn-danger dropdown-toggle dropdown-toggle-split"
                                             style={{
                                                 paddingRight: "25px",
                                                 borderBottomRightRadius: "25px",
@@ -114,6 +150,7 @@ class UserManagement extends Component {
                                 </div>
                                 <Editor
                                     editorState={this.state.editorState}
+                                    // defaultEditorState = {defaultState}
                                     toolbarClassName="toolbarClassName"
                                     wrapperClassName="wrapperClassName"
                                     editorClassName="editorClassName"
@@ -160,6 +197,7 @@ class UserManagement extends Component {
                                        <div className="mb-4">
                                             <span>Publish Date</span>
                                             <input type="text" name="startDate" placeholder="01/01/2021"
+                                                   value={_.get(this.state, 'content.start_date', 0)}
                                                    onChange={this.onChangeValue} required/>
                                         </div>
                                         <div className="mb-4">
@@ -173,12 +211,12 @@ class UserManagement extends Component {
                                         </div>
                                         <div className="mb-4">
                                             <label>Total Points</label>
-                                            <input type="text" name="totalPoints" placeholder="Total Points*"
+                                            <input type="text" name="totalPoints" placeholder="Total Points*" value={_.get(this.state, 'content.total_points', 0)}
                                                    onChange={this.onChangeValue} required/>
                                         </div>
                                         <span>Feature Image <i className={'fas fa-plus-circle'} style={{color:'red'}}></i></span>
                                         <div className={'featured-img-container'}>
-                                            <img src={'images/member-1.png'} style={{width: '150px'}}/>
+                                            <img src={'/images/member-1.png'} style={{width: '150px'}}/>
 
                                         </div>
                                     </form>
@@ -204,7 +242,8 @@ function mapPropsToState(store) {
         }
     }
     return {
-        pathname
+        pathname,
+        content: _.get(store.router, 'location.state.content', undefined),
     }
 }
 

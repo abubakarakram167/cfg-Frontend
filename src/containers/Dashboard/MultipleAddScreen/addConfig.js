@@ -52,8 +52,21 @@ module.exports = {
         status: true,
       }
     },
-    events: {
+    event: {
       title:"Events",
+      fields: {
+        name: true,
+        author: true,
+        startDate: true,
+        endDate: true,
+        points: true,
+        category: true,
+        group: true,
+        status: true,
+      }
+    },
+    mini: {
+      title:"Conversations",
       fields: {
         name: true,
         author: true,

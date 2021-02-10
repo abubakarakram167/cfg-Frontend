@@ -47,10 +47,11 @@ export const changeUsersStatus = (type, users) => {
 };
 
 
-export const addUser = (type, users) => {
+export const addUser = (user) => {
     return (dispatch) => {
-        return Users.addUser(type, users).then(response => {
-            toast.success('Users updated successfully');
+        return Users.addUser(user).then(response => {
+            toast.success('Users added successfully');
+            // dispatch(push('/userManagement'));
         }).catch(e => {
             console.log(e.response)
             return dispatch({type: ERROR, payload: {message: e.response && e.response.data ? e.response.data.message : e.message}});

@@ -12,6 +12,7 @@ import {error} from './error.reducer'
 import {categories} from './categories.reducer'
 import {users} from './users.reducer'
 import {preferences} from './preferences.reducer'
+import {dynamic} from './dynamic.reducer'
 
 /**
  * Merges the main reducer with the router state and dynamically injected reducers
@@ -23,6 +24,7 @@ export default function createReducer(injectedReducers = {}) {
         categories,
         users,
         preferences,
-        error
+        error,
+        dynamic
     });
 }

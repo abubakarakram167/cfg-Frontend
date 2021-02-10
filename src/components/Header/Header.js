@@ -28,7 +28,10 @@ class Header extends Component {
                         <div className="header_wraper">
                             <div className="top_left">
                                 <div className="logo_icon">
-                                    <Link to="#"><img src={"images/cfg-logo.png"} alt=""/></Link>
+                                    <Link to="#"><img src={"/images/cfg-logo.png"} alt=""/></Link>
+                                </div>
+                                <div className="logo_icon">
+                                    <Link style={{color: 'white'}} to="/dashboard"><i style={{fontSize: '33px'}} className="fas fa-home"/></Link>
                                 </div>
                                 <div className="top_left_search">
                                     <input type="search" name=""/>

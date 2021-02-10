@@ -2441,6 +2441,12 @@ main {
     font-size: 1.5rem;
 }
 
+.dash-home-grid span:hover {
+    cursor: pointer;
+}
+
+
+
 .bg-off-white {
     background: #c3ac89;
 }
@@ -5019,6 +5025,10 @@ main{
 }
 .form-control:focus {
     box-shadow: none !important;
+}
+
+.center-div {
+    margin: 0 auto !important;
 }
 
 .featured-img-container{

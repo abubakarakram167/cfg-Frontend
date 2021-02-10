@@ -6,6 +6,8 @@ import Datatable from "../../../components/Datatable/Datatable";
 import {getAllUsers, changeUsersStatus} from '../../../store/actions/users.actions'
 import {push} from 'connected-react-router';
 import {connect} from "react-redux";
+import {toast} from "react-toastify";
+import history from "../../../utils/history";
 
 class UserManagement extends Component {
     state = {
@@ -29,6 +31,18 @@ class UserManagement extends Component {
         this.setState({
             [e.target.name]: e.target.value
         });
+    }
+
+    editUser = (e) => {
+        e.preventDefault();
+        if (!this.state.users.length || this.state.users.length > 1) {
+            toast.error('Please select only one user to edit');
+            return;
+        }
+        history.push({
+            pathname: 'editUser',
+            state: { user: this.state.users[0] }
+        })
     }
 
     onResetSubmit = (e) => {
@@ -71,6 +85,7 @@ class UserManagement extends Component {
                 name: 'ID',
                 selector: 'id',
                 sortable: true,
+                cell: row => <Link to={`/${row.id}`}>{row.id}</Link>
             },
             {
                 name: 'First Name',
@@ -137,9 +152,9 @@ class UserManagement extends Component {
                                 <button type="button" className="button-title-small button_inline m-l-15 um_approve_button" onClick={() => {this.changeUsersStatus('approved')}}>
                                     <i className="fas fa-check-circle"/> Approve
                                 </button>
-                                <Link to={"/editUser"} type="button" className="button-title-small button_inline m-l-15">
+                                <button onClick={this.editUser} type="button" className="button-title-small button_inline m-l-15">
                                     <i className="fas fa-edit"/> Edit
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     </div>

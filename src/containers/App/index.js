@@ -15,7 +15,7 @@ import {withRouter} from "react-router-dom";
 import ProtectedRoute from './protectedRouter'
 import ForgetPassword from "../Auth/ForgetPassword/Loadable";
 import {UserManagement, AddUser, EditUser} from "../Dashboard/UserManagement/Loadable";
-import {MultipleAddScreen, MultipleContentScreen} from "../Dashboard/MultipleAddScreen/Loadable";
+import {MultipleAddScreen, MultipleContentScreen, MultipleListingScreen} from "../Dashboard/MultipleAddScreen/Loadable";
 import ResetPassword from "../Auth/ResetPassword/Loadable";
 
 
@@ -41,12 +41,30 @@ function App() {
                 <ProtectedRoute path="/editUser" component={withRouter(EditUser)}/>
 
 
-                <ProtectedRoute path="/add/cfg-tool" component={withRouter(MultipleAddScreen)}/>
+                <ProtectedRoute path="/add/tool" component={withRouter(MultipleAddScreen)}/>
                 <ProtectedRoute path="/add/reward" component={withRouter(MultipleAddScreen)}/>
-                <ProtectedRoute path="/add/events" component={withRouter(MultipleAddScreen)}/>
-                <ProtectedRoute path="/add/cfg-session" component={withRouter(MultipleAddScreen)}/>
+                <ProtectedRoute path="/add/event" component={withRouter(MultipleAddScreen)}/>
+                <ProtectedRoute path="/add/session" component={withRouter(MultipleAddScreen)}/>
                 <ProtectedRoute path="/add/quiz" component={withRouter(MultipleAddScreen)}/>
-                <ProtectedRoute path="/content" component={withRouter(MultipleContentScreen)}/>
+
+                <ProtectedRoute path="/listing/tool" component={withRouter(MultipleListingScreen)}/>
+                <ProtectedRoute path="/listing/reward" component={withRouter(MultipleListingScreen)}/>
+                <ProtectedRoute path="/listing/event" component={withRouter(MultipleListingScreen)}/>
+                <ProtectedRoute path="/listing/session" component={withRouter(MultipleListingScreen)}/>
+                <ProtectedRoute path="/listing/quiz" component={withRouter(MultipleListingScreen)}/>
+                <ProtectedRoute path="/listing/mini" component={withRouter(MultipleListingScreen)}/>
+
+                <ProtectedRoute path="/content/tool" component={withRouter(MultipleContentScreen)}/>
+                <ProtectedRoute path="/content/reward" component={withRouter(MultipleContentScreen)}/>
+                <ProtectedRoute path="/content/event" component={withRouter(MultipleContentScreen)}/>
+                <ProtectedRoute path="/content/session" component={withRouter(MultipleContentScreen)}/>
+                <ProtectedRoute path="/content/quiz" component={withRouter(MultipleContentScreen)}/>
+                <ProtectedRoute path="/content/mini" component={withRouter(MultipleContentScreen)}/>
+
+
+
+
+
                 <Route path="" component={NotFoundPage}/>
             </Switch>
         </div>

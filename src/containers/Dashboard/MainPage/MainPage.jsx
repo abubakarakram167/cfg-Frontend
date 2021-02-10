@@ -9,6 +9,7 @@ import React, {Component} from 'react';
 import {Helmet} from 'react-helmet-async';
 import {Link} from "react-router-dom";
 import Header from "../../../components/Header";
+import history from "../../../utils/history";
 
 class MainPage extends Component {
 
@@ -33,44 +34,58 @@ class MainPage extends Component {
                                 <label>Dashboard</label>
                             </div>
                             <div className="col bg-blue dashboardBorder">
-                                <Link to={"/userManagement"} className={"bg-blue"}>
+                                <span onClick={() => {history.push('/userManagement')}} style={{background: 'transparent'}}>
                                     <i className="fas fa-users-cog"/>
                                     <label>User Mgmt</label>
-                                </Link>
+                                </span>
                             </div>
                             <div className="col bg-pink dashboardBorder">
-                                <i className="fas fa-comments"/>
-                                <label>CFG Session</label>
+                                <span onClick={() => {history.push('/listing/session')}} style={{background: 'transparent'}}>
+                                    <i className="fas fa-comments"/>
+                                    <label>CFG Session</label>
+                                </span>
                             </div>
                             <div className="col bg-dark-red dashboardBorder">
-                                <i className="fas fa-stream"/>
-                                <label>Timeline</label>
+                                <span style={{background: 'transparent'}}>
+                                    <i className="fas fa-stream"/>
+                                    <label>Timeline</label>
+                                </span>
                             </div>
                             <div className="col bg-orange dashboardBorder">
-                                <i className="fas fa-tools"/>
-                                <label>CFG Tools</label>
+                                <span onClick={() => {history.push('/listing/tool')}} style={{background: 'transparent'}}>
+                                    <i className="fas fa-tools"/>
+                                    <label>CFG Tools</label>
+                                </span>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col bg-green dashboardBorder">
-                                <i className="fas fa-calendar-day"/>
-                                <label>Events</label>
+                                <span onClick={() => {history.push('/listing/event')}}  style={{background: 'transparent'}}>
+                                    <i className="fas fa-calendar-day"/>
+                                    <label>Events</label>
+                                </span>
                             </div>
                             <div className="col bg-orange dashboardBorder">
-                                <i className="fas fa-question-circle"/>
-                                <label>Quiz</label>
+                                <span onClick={() => {history.push('/listing/quiz')}} style={{background: 'transparent'}}>
+                                    <i className="fas fa-question-circle"/>
+                                    <label>Quiz</label>
+                                </span>
                             </div>
                             <div className="col bg-light-blue dashboardBorder">
-                                <i className="fas fa-cogs"/>
-                                <label>Preferences</label>
+                                <span style={{background: 'transparent'}}>
+                                    <i className="fas fa-cogs"/>
+                                    <label>Preferences</label>
+                                </span>
                             </div>
                             <div className="col bg-blue dashboardBorder">
                                 <i className="fas fa-images"/>
                                 <label>Media Library</label>
                             </div>
                             <div className="col bg-pink dashboardBorder">
-                                <i className="fas fa-comment-alt"/>
-                                <label>Mini CFG</label>
+                                <span onClick={() => {history.push('/listing/mini')}} style={{background: 'transparent'}}>
+                                    <i className="fas fa-comment-alt"/>
+                                    <label>Mini CFG</label>
+                                </span>
                             </div>
                         </div>
                     </div>

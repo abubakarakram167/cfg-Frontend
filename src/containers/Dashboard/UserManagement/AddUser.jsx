@@ -3,18 +3,30 @@ import {Helmet} from 'react-helmet-async';
 import {Link} from "react-router-dom";
 import Header from "../../../components/Header";
 import Datatable from "../../../components/Datatable/Datatable";
-import {getAllUsers, changeUsersStatus} from '../../../store/actions/users.actions'
+import {addUser} from '../../../store/actions/users.actions'
 import {push} from 'connected-react-router';
 import {connect} from "react-redux";
+import {Typeahead} from "react-bootstrap-typeahead";
 
-class UserManagement extends Component {
-    state = {
-        username: "",
-        name: "",
-        email: "",
-        role: "",
-        telephone: "",
-        group: ""
+class AddUser extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user_name: "",
+            first_name: "",
+            email: "",
+            role: "",
+            phone: "",
+            group: "",
+            roles: [
+                {id: 'auditor', label: 'Auditor'},
+                {id: 'candidate', label: 'Candidate'},
+                {id: 'content-manager', label: 'Content Manager'},
+                {id: 'facilitator', label: 'Facilitator'},
+                {id: 'reviewer', label: 'Reviewer'},
+                {id: 'system-administrator', label: 'System Administrator'},
+            ]
+        }
     }
 
     componentDidMount() {}
@@ -24,11 +36,20 @@ class UserManagement extends Component {
             [e.target.name]: e.target.value
         });
     }
+    onChangeTypehead = (selected, key) => {
+        this.setState({
+            [key]: selected[0].id
+        });
+    }
     onFormSubmit = (e) => {
         e.preventDefault();
+        let userObject = {...this.state}
+        delete userObject.roles;
+        this.props['addUser'](userObject);
     }
 
     render() {
+        console.log(this.state)
         return (
             <>
                 <article>
@@ -43,7 +64,7 @@ class UserManagement extends Component {
                 <Header/>
                 <main>
                     <div className="dash-wrapper">
-                        <div className="row dash-add-cfg" style={{margin: '0 auto'}}>
+                        <div className="row dash-add-cfg center-div">
                             <div className="row">
                                 <h5 style={{fontWeight: 700}}><i className="fas fa-user"/> Add New User </h5>
                             </div>
@@ -52,11 +73,11 @@ class UserManagement extends Component {
                                     <form onSubmit={this.onFormSubmit}>
                                         <div className="mb-4">
                                             <label>Username</label>
-                                            <input type="text" name="username" placeholder="Username*" required onChange={this.onChangeValue} />
+                                            <input type="text" name="user_name" placeholder="Username*" required onChange={this.onChangeValue} />
                                         </div>
                                         <div className="mb-4">
                                             <label>Name</label>
-                                            <input type="text" name="name" placeholder="Name*" onChange={this.onChangeValue}  required/>
+                                            <input type="text" name="first_name" placeholder="Name*" onChange={this.onChangeValue}  required/>
                                         </div>
                                         <div className="mb-4">
                                             <label>Email</label>
@@ -64,15 +85,37 @@ class UserManagement extends Component {
                                         </div>
                                         <div className="mb-4">
                                             <label>Telephone</label>
-                                            <input type="text" name="telephone" placeholder="Telephone*" onChange={this.onChangeValue}  required/>
+                                            <input type="text" name="phone" placeholder="Telephone*" onChange={this.onChangeValue}  required/>
                                         </div>
                                         <div className="mb-4">
                                             <label>Role</label>
-                                            <input type="text" name="role" placeholder="Role*" onChange={this.onChangeValue}  required/>
+                                            <div className="mb-4">
+                                                <label>Role*</label>
+                                                <Typeahead
+                                                    allowNew
+                                                    id="custom-selections-example"
+                                                    // multiple
+                                                    onChange={(selected) => { this.onChangeTypehead(selected, 'role')}}
+                                                    newSelectionPrefix="Add a new category: "
+                                                    options={this.state.roles}
+                                                    placeholder="Role*"
+                                                />
+                                            </div>
                                         </div>
                                         <div className="mb-4">
                                             <label>Group</label>
-                                            <input type="text" name="group" placeholder="Group*" onChange={this.onChangeValue}  required/>
+                                            <div className="mb-4">
+                                                <label>Group*</label>
+                                                <Typeahead
+                                                    allowNew
+                                                    id="custom-selections-example"
+                                                    onChange={(selected) => { this.onChangeTypehead(selected, 'group')}}
+                                                    // multiple
+                                                    newSelectionPrefix="Add a new category: "
+                                                    options={this.state.roles}
+                                                    placeholder="Group*"
+                                                />
+                                            </div>
                                         </div>
                                         <div className="d-block" style={{textAlign: 'center'}}>
                                             <input type="submit" className="button primary_button"
@@ -103,9 +146,8 @@ function mapPropsToState(store) {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        changeUsersStatus: (type, users) => dispatch(changeUsersStatus(type, users)),
-        getAllUsers: (params) => dispatch(getAllUsers(params)),
+        addUser: (params) => dispatch(addUser(params)),
         push: (param) => dispatch(push(param)),
     };
 };
-export default connect(mapPropsToState, mapDispatchToProps)(UserManagement);
+export default connect(mapPropsToState, mapDispatchToProps)(AddUser);
