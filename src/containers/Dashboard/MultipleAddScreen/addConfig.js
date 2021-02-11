@@ -77,6 +77,19 @@ module.exports = {
         group: true,
         status: true,
       }
+    },
+    timeline: {
+      title:"Timeline Posts",
+      fields: {
+        name: true,
+        author: true,
+        startDate: true,
+        endDate: true,
+        points: true,
+        category: true,
+        group: true,
+        status: true,
+      }
     }
   }
 }

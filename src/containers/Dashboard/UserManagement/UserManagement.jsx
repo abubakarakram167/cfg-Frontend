@@ -19,7 +19,7 @@ class UserManagement extends Component {
     }
 
     componentDidMount() {
-        this.props["getAllUsers"](`_count=10&_pageNo=1`);
+        this.props["getAllUsers"](`_count=100&_pageNo=1`);
     }
 
     handleSelected = (data) => {

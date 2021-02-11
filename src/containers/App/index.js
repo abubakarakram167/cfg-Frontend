@@ -15,7 +15,13 @@ import {withRouter} from "react-router-dom";
 import ProtectedRoute from './protectedRouter'
 import ForgetPassword from "../Auth/ForgetPassword/Loadable";
 import {UserManagement, AddUser, EditUser} from "../Dashboard/UserManagement/Loadable";
-import {MultipleAddScreen, MultipleContentScreen, MultipleListingScreen} from "../Dashboard/MultipleAddScreen/Loadable";
+import {
+    MultipleAddScreen,
+    MultipleContentScreen,
+    MultipleListingScreen,
+    MultipleEditScreen
+} from "../Dashboard/MultipleAddScreen/Loadable";
+import {PreferencesListingScreen} from "../Dashboard/Preferences/Loadable";
 import ResetPassword from "../Auth/ResetPassword/Loadable";
 
 
@@ -46,6 +52,17 @@ function App() {
                 <ProtectedRoute path="/add/event" component={withRouter(MultipleAddScreen)}/>
                 <ProtectedRoute path="/add/session" component={withRouter(MultipleAddScreen)}/>
                 <ProtectedRoute path="/add/quiz" component={withRouter(MultipleAddScreen)}/>
+                <ProtectedRoute path="/add/mini" component={withRouter(MultipleAddScreen)}/>
+                <ProtectedRoute path="/add/timeline" component={withRouter(MultipleAddScreen)}/>
+
+
+                <ProtectedRoute path="/edit/tool" component={withRouter(MultipleEditScreen)}/>
+                <ProtectedRoute path="/edit/reward" component={withRouter(MultipleEditScreen)}/>
+                <ProtectedRoute path="/edit/event" component={withRouter(MultipleEditScreen)}/>
+                <ProtectedRoute path="/edit/session" component={withRouter(MultipleEditScreen)}/>
+                <ProtectedRoute path="/edit/quiz" component={withRouter(MultipleEditScreen)}/>
+                <ProtectedRoute path="/edit/mini" component={withRouter(MultipleEditScreen)}/>
+                <ProtectedRoute path="/edit/timeline" component={withRouter(MultipleEditScreen)}/>
 
                 <ProtectedRoute path="/listing/tool" component={withRouter(MultipleListingScreen)}/>
                 <ProtectedRoute path="/listing/reward" component={withRouter(MultipleListingScreen)}/>
@@ -53,6 +70,7 @@ function App() {
                 <ProtectedRoute path="/listing/session" component={withRouter(MultipleListingScreen)}/>
                 <ProtectedRoute path="/listing/quiz" component={withRouter(MultipleListingScreen)}/>
                 <ProtectedRoute path="/listing/mini" component={withRouter(MultipleListingScreen)}/>
+                <ProtectedRoute path="/listing/timeline" component={withRouter(MultipleListingScreen)}/>
 
                 <ProtectedRoute path="/content/tool" component={withRouter(MultipleContentScreen)}/>
                 <ProtectedRoute path="/content/reward" component={withRouter(MultipleContentScreen)}/>
@@ -60,6 +78,10 @@ function App() {
                 <ProtectedRoute path="/content/session" component={withRouter(MultipleContentScreen)}/>
                 <ProtectedRoute path="/content/quiz" component={withRouter(MultipleContentScreen)}/>
                 <ProtectedRoute path="/content/mini" component={withRouter(MultipleContentScreen)}/>
+                <ProtectedRoute path="/content/timeline" component={withRouter(MultipleContentScreen)}/>
+
+
+                <ProtectedRoute path="/listing/preference" component={withRouter(PreferencesListingScreen)}/>
 
 
 

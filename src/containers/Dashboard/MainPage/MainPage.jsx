@@ -46,7 +46,7 @@ class MainPage extends Component {
                                 </span>
                             </div>
                             <div className="col bg-dark-red dashboardBorder">
-                                <span style={{background: 'transparent'}}>
+                                <span onClick={() => {history.push('/listing/timeline')}} style={{background: 'transparent'}}>
                                     <i className="fas fa-stream"/>
                                     <label>Timeline</label>
                                 </span>
@@ -72,7 +72,7 @@ class MainPage extends Component {
                                 </span>
                             </div>
                             <div className="col bg-light-blue dashboardBorder">
-                                <span style={{background: 'transparent'}}>
+                                <span onClick={() => {history.push('/listing/preference')}} style={{background: 'transparent'}}>
                                     <i className="fas fa-cogs"/>
                                     <label>Preferences</label>
                                 </span>

@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
 import {Helmet} from 'react-helmet-async';
-import {Link} from "react-router-dom";
 import Header from "../../../components/Header";
-import Datatable from "../../../components/Datatable/Datatable";
-import {getAllUsers, changeUsersStatus} from '../../../store/actions/users.actions'
+import {editUser} from '../../../store/actions/users.actions';
 import {push} from 'connected-react-router';
 import {connect} from "react-redux";
 import {Typeahead} from "react-bootstrap-typeahead";
 import _ from 'lodash';
+import {paramCase} from 'change-case'
 
-class UserManagement extends Component {
+class EditUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,6 +26,11 @@ class UserManagement extends Component {
                 {id: 'facilitator', label: 'Facilitator'},
                 {id: 'reviewer', label: 'Reviewer'},
                 {id: 'system-administrator', label: 'System Administrator'},
+            ],
+            statuses: [
+                {id: 'disabled', label: 'Disabled'},
+                {id: 'approved', label: 'Approved'},
+                {id: 'pending', label: 'Pending'}
             ]
         }
     }
@@ -64,10 +68,17 @@ class UserManagement extends Component {
     }
     onFormSubmit = (e) => {
         e.preventDefault();
+        let userObject = {...this.state}
+        userObject.role = paramCase(userObject.role);
+        delete userObject.roles;
+        delete userObject.password;
+        this.props['editUser'](userObject);
     }
 
     render() {
-        console.log("sdbalkf", this.state)
+        let defaultStatus = this.state.statuses.filter((o) =>{ return o.id === this.state.status || o.label === this.state.status })
+        let defaultRole = this.state.roles.filter((o) =>{ return o.label === this.state.role })
+        console.log("defaultStatus", defaultStatus)
         return (
             <>
                 <article>
@@ -111,7 +122,7 @@ class UserManagement extends Component {
                                                 <label>Role*</label>
                                                 <Typeahead
                                                     allowNew
-                                                    defaultSelected={[this.state.roles[3]]}
+                                                    defaultSelected={defaultRole}
                                                     id="custom-selections-example"
                                                     // multiple
                                                     onChange={(selected) => { this.onChangeTypehead(selected, 'role')}}
@@ -144,11 +155,11 @@ class UserManagement extends Component {
                                                 <Typeahead
                                                     allowNew
                                                     id="custom-selections-example"
-                                                    defaultSelected={[this.state.roles[1]]}
+                                                    defaultSelected={defaultStatus}
                                                     onChange={(selected) => { this.onChangeTypehead(selected, 'group')}}
                                                     // multiple
                                                     newSelectionPrefix="Status"
-                                                    options={this.state.roles}
+                                                    options={this.state.statuses}
                                                     placeholder="Status*"
                                                 />
                                             </div>
@@ -156,7 +167,7 @@ class UserManagement extends Component {
                                         <div className="d-block" style={{textAlign: 'center'}}>
                                             <input type="submit" className="button primary_button"
                                                    value="Save"/>
-                                            <input type="submit"
+                                            <input type="button"
                                                    style={{border: "1px solid lightgray", "marginTop": "10px"}}
                                                    className="button" value="Cancel"/>
                                         </div>
@@ -182,9 +193,8 @@ function mapPropsToState(store) {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        changeUsersStatus: (type, users) => dispatch(changeUsersStatus(type, users)),
-        getAllUsers: (params) => dispatch(getAllUsers(params)),
+        editUser: (params) => dispatch(editUser(params)),
         push: (param) => dispatch(push(param)),
     };
 };
-export default connect(mapPropsToState, mapDispatchToProps)(UserManagement);
+export default connect(mapPropsToState, mapDispatchToProps)(EditUser);

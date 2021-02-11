@@ -10,7 +10,7 @@ class Datatable extends Component {
                 selectableRows
                 onSelectedRowsChange={this.props.handleSelected}
                 pagination
-                paginationServer
+                // paginationServer
                 // expandableRows
                 onRowClicked={this.props.onRowClicked}
                 pointerOnHover

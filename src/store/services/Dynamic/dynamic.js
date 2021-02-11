@@ -10,6 +10,11 @@ class Dynamic {
             ...data
         });
     }
+    static editHead(type = '', data) {
+        return axiosInstance.put(`/api/content/${type}`, {
+            ...data
+        });
+    }
 }
 
 export default Dynamic;

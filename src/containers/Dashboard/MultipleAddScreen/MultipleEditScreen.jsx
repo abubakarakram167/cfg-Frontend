@@ -7,39 +7,48 @@ import {screensConfig} from "./addConfig";
 import { Typeahead } from 'react-bootstrap-typeahead';
 import history from "../../../utils/history";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import {addHead} from '../../../store/actions/dynamic.actions'
+import {editHead} from '../../../store/actions/dynamic.actions'
+import _ from "lodash";
 
-class UserManagement extends Component {
-    state = {
-        username: "",
-        name: "",
-        email: "",
-        role: "",
-        telephone: "",
-        group: "",
-        author: "",
-        startDate: "",
-        endDate: "",
-        points: "",
-        category: "",
-        status: "",
-        quizSuccess: "",
-        quizFail: "",
-        pageContext: {
-            title: "",
-            fields: {
-                name: true,
-                author: true,
-                startDate: true,
-                endDate: true,
-                points: true,
-                category: true,
-                group: true,
-                status: true,
-                quizSuccess: true,
-                quizFail: true
-            }
-        },
+class MultipleEditScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            once: true,
+            username: "",
+            name: "",
+            email: "",
+            role: "",
+            telephone: "",
+            group: "",
+            author: "",
+            startDate: "",
+            endDate: "",
+            points: "",
+            total_points: '',
+            category: "",
+            status: "",
+            quizSuccess: "",
+            quizFail: "",
+            start_date: '',
+            end_date: '',
+            pageContext: {
+                title: "",
+                fields: {
+                    name: true,
+                    author: true,
+                    startDate: true,
+                    endDate: true,
+                    points: true,
+                    category: true,
+                    group: true,
+                    status: true,
+                    quizSuccess: true,
+                    quizFail: true
+                }
+            },
+            head: {}
+        }
     }
 
     componentDidMount() {
@@ -49,17 +58,30 @@ class UserManagement extends Component {
         this.setState({ pageContext : screensConfig[this.props.pathname] });
     }
 
+    static getDerivedStateFromProps (props, state) {
+        if (state.once && props.head) {
+            return {
+                ...state,
+                once: false,
+                ...props.head
+            }
+        }
+        return null;
+    }
+
     onChangeValue = (e) => {
         this.setState({
+            ...this.state,
             [e.target.name]: e.target.value
         });
     }
     onFormSubmit = (e) => {
         e.preventDefault();
-        this.props['addHead'](this.props.pathname, {...this.state})
+        this.props['editHead'](this.props.pathname, {...this.state})
     }
 
     render() {
+        console.log("state", this.state)
         let {first_name: first_name = ''} = JSON.parse(localStorage.getItem('user'));
         return (
             <>
@@ -77,7 +99,7 @@ class UserManagement extends Component {
                     <div className="dash-wrapper">
                         <div className="row dash-add-cfg" style={{margin:'0 auto'}}>
                             <div className="row">
-                                <h5 style={{fontWeight: 700}}><i className="fas fa-user"/> Add { this.state.pageContext && this.state.pageContext.title} </h5>
+                                <h5 style={{fontWeight: 700}}><i className="fas fa-user"/> Edit { this.state.pageContext && this.state.pageContext.title} </h5>
                             </div>
                             <div className="row form-container ">
                                 <div className="dash_form">
@@ -87,7 +109,7 @@ class UserManagement extends Component {
                                             &&
                                             <div className="mb-4">
                                             <label>Name</label>
-                                            <input type="text" name="title" placeholder="Name*"
+                                            <input type="text" name="title" placeholder="Name*" value={this.state.title}
                                                    onChange={this.onChangeValue} required/>
                                         </div>
                                         }
@@ -105,7 +127,7 @@ class UserManagement extends Component {
                                             &&
                                             <div className="mb-4">
                                                 <label>Start Date</label>
-                                                <input type="text" name="start_date" placeholder="Start Date*"
+                                                <input type="text" name="start_date" placeholder="Start Date*" value={this.state.start_date}
                                                        onChange={this.onChangeValue} required/>
                                             </div>
                                         }
@@ -114,7 +136,7 @@ class UserManagement extends Component {
                                             &&
                                             <div className="mb-4">
                                                 <label>End Date</label>
-                                                <input type="text" name="end_date" placeholder="End Date*"
+                                                <input type="text" name="end_date" placeholder="End Date*" value={this.state.end_date}
                                                        onChange={this.onChangeValue} required/>
                                             </div>
                                         }
@@ -123,7 +145,7 @@ class UserManagement extends Component {
                                             &&
                                             <div className="mb-4">
                                                 <label>Total Points</label>
-                                                <input type="text" name="total_points" placeholder="Total Points*"
+                                                <input type="text" name="total_points" placeholder="Total Points*" value={this.state.total_points}
                                                        onChange={this.onChangeValue} required/>
                                             </div>
                                         }
@@ -179,14 +201,15 @@ function mapPropsToState(store) {
         }
     }
     return {
-        pathname
+        pathname,
+        head: _.get(store.router, 'location.state.head', undefined),
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addHead: (string, data) => dispatch(addHead(string, data)),
+        editHead: (string, data) => dispatch(editHead(string, data)),
         push: (param) => dispatch(push(param)),
     };
 };
-export default connect(mapPropsToState, mapDispatchToProps)(UserManagement);
+export default connect(mapPropsToState, mapDispatchToProps)(MultipleEditScreen);

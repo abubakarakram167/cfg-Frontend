@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {Helmet} from 'react-helmet-async';
-import {Link} from "react-router-dom";
 import Header from "../../../components/Header";
-import Datatable from "../../../components/Datatable/Datatable";
-import {addUser} from '../../../store/actions/users.actions'
+import {addUser} from '../../../store/actions/users.actions';
 import {push} from 'connected-react-router';
 import {connect} from "react-redux";
 import {Typeahead} from "react-bootstrap-typeahead";
@@ -120,7 +118,7 @@ class AddUser extends Component {
                                         <div className="d-block" style={{textAlign: 'center'}}>
                                             <input type="submit" className="button primary_button"
                                                    value="Save"/>
-                                            <input type="submit"
+                                            <input type="button"
                                                    style={{border: "1px solid lightgray", "marginTop": "10px"}}
                                                    className="button" value="Cancel"/>
                                         </div>

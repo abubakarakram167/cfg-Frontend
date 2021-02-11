@@ -5,7 +5,7 @@ import {
 import Users from '../services/Users/users';
 import {capitalCase} from "change-case";
 import {toast} from "react-toastify";
-
+import {push} from 'connected-react-router';
 
 export const getAllUsers = (urlString) => {
     return (dispatch) => {
@@ -51,7 +51,19 @@ export const addUser = (user) => {
     return (dispatch) => {
         return Users.addUser(user).then(response => {
             toast.success('Users added successfully');
-            // dispatch(push('/userManagement'));
+            dispatch(push('/userManagement'));
+        }).catch(e => {
+            console.log(e.response)
+            return dispatch({type: ERROR, payload: {message: e.response && e.response.data ? e.response.data.message : e.message}});
+        })
+    };
+};
+
+export const editUser = (user) => {
+    return (dispatch) => {
+        return Users.editUser(user).then(response => {
+            toast.success('Users updated successfully');
+            dispatch(push('/userManagement'));
         }).catch(e => {
             console.log(e.response)
             return dispatch({type: ERROR, payload: {message: e.response && e.response.data ? e.response.data.message : e.message}});

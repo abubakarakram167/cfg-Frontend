@@ -19,7 +19,6 @@ class Header extends Component {
     }
 
     render() {
-        console.log("header", this.state)
         return (
             <>
                 {/*Desktop Header Start Here*/}

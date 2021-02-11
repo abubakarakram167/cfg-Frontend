@@ -39,3 +39,16 @@ export const addHead = (type, data) => {
         })
     };
 };
+
+
+export const editHead = (type, data) => {
+    return (dispatch) => {
+        return Dynamic.editHead(type, data).then(response => {
+            toast.success('Updated successfully');
+            history.push(`/listing/${type}`)
+        }).catch(e => {
+            console.log(e.response)
+            return dispatch({type: ERROR, payload: {message: e.response && e.response.data ? e.response.data.message : e.message}});
+        })
+    };
+};

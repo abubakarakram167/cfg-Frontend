@@ -17,7 +17,7 @@ class MultipleListingScreen extends Component {
         last_name: "",
         email: "",
         role: "",
-        users: [],
+        heads: [],
         pageContext: {
             title: "",
             fields: {
@@ -40,12 +40,12 @@ class MultipleListingScreen extends Component {
             history.push('/dashboard');
         }
         this.setState({pageContext: screensConfig[this.props.pathname]});
-        this.props["contentList"](this.props.pathname, `_count=10&_pageNo=1`);
+        this.props["contentList"](this.props.pathname, `_count=100&_pageNo=1`);
     }
 
     handleSelected = (data) => {
         this.setState({
-            users: data.selectedRows
+            heads: data.selectedRows
         });
     }
     onChangeValue = (e) => {
@@ -56,13 +56,13 @@ class MultipleListingScreen extends Component {
 
     editUser = (e) => {
         e.preventDefault();
-        if (!this.state.users.length || this.state.users.length > 1) {
-            toast.error('Please select only one user to edit');
+        if (!this.state.heads.length || this.state.heads.length > 1) {
+            toast.error('Please select only one row to edit');
             return;
         }
         history.push({
-            pathname: 'editUser',
-            state: {user: this.state.users[0]}
+            pathname: `/edit/${this.props.pathname}`,
+            state: {head: this.state.heads[0]}
         })
     }
     onRowClicked = (content) => {
@@ -98,7 +98,7 @@ class MultipleListingScreen extends Component {
             },
             {
                 name: 'Total Points',
-                selector: 'status',
+                selector: 'total_points',
             },
             {
                 name: 'Status',

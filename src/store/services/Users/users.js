@@ -16,6 +16,12 @@ class Auth {
             ...user
         });
     }
+
+    static editUser(user) {
+        return axiosInstance.put(`/api/users`, {
+            ...user
+        });
+    }
 }
 
 export default Auth;
