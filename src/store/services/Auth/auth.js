@@ -14,7 +14,7 @@ class Auth {
     }
 
         static socialLogin (params) {
-        return axiosInstance.post('/api/auth/login/social', {
+        return axiosInstance.post('/api/auth/connect/social', {
             ...params
         });
     }

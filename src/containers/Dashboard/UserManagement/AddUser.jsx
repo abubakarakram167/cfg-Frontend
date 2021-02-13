@@ -105,6 +105,7 @@ class AddUser extends Component {
                                             <div className="mb-4">
                                                 <label>Group*</label>
                                                 <Typeahead
+                                                    disabled={true}
                                                     allowNew
                                                     id="custom-selections-example"
                                                     onChange={(selected) => { this.onChangeTypehead(selected, 'group')}}

@@ -52,3 +52,4 @@ export const editHead = (type, data) => {
         })
     };
 };
+

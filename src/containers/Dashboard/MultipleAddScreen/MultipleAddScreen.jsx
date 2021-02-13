@@ -60,7 +60,7 @@ class UserManagement extends Component {
     }
 
     render() {
-        let {first_name: first_name = ''} = JSON.parse(localStorage.getItem('user'));
+        let {first_name, email} = JSON.parse(localStorage.getItem('user'));
         return (
             <>
                 <article>
@@ -97,7 +97,7 @@ class UserManagement extends Component {
                                             <div className="mb-4">
                                                 <label>Author</label>
                                                 <input type="text" name="author" placeholder="Author*"
-                                                       value={first_name} readOnly/>
+                                                       value={first_name || email} readOnly/>
                                             </div>
                                         }
                                         {
@@ -133,6 +133,7 @@ class UserManagement extends Component {
                                             <div className="mb-4">
                                                 <label>Categories *</label>
                                                 <Typeahead
+                                                    disabled={true}
                                                     allowNew
                                                     id="custom-selections-example"
                                                     multiple

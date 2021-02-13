@@ -82,7 +82,7 @@ class MultipleEditScreen extends Component {
 
     render() {
         console.log("state", this.state)
-        let {first_name: first_name = ''} = JSON.parse(localStorage.getItem('user'));
+        let {first_name, email} = JSON.parse(localStorage.getItem('user'));
         return (
             <>
                 <article>
@@ -119,7 +119,7 @@ class MultipleEditScreen extends Component {
                                             <div className="mb-4">
                                                 <label>Author</label>
                                                 <input type="text" name="author" placeholder="Author*"
-                                                       value={first_name} readOnly/>
+                                                       value={first_name || email} readOnly/>
                                             </div>
                                         }
                                         {

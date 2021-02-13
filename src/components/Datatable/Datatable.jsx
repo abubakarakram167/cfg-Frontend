@@ -18,6 +18,14 @@ class Datatable extends Component {
                 responsive
                 conditionalRowStyles={this.props.conditionalRowStyles}
                 subHeader
+                customStyles={{
+                    headCells: {
+                        style: {
+                            fontWeight: 600,
+                            fontSize: "medium"
+                        },
+                    }
+                }}
 
             />
         );

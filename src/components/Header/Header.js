@@ -19,6 +19,7 @@ class Header extends Component {
     }
 
     render() {
+        let {first_name, last_name, userName} = JSON.parse(localStorage.getItem('user'));
         return (
             <>
                 {/*Desktop Header Start Here*/}
@@ -49,7 +50,7 @@ class Header extends Component {
                                     <li className="user_info">
                                         <Link to="#">
                                             <img src={"/images/member-5.png"} className="user-image" alt=""/>
-                                            <span className="hidden-xs username">{this.state.user.firstName}</span>
+                                            <span className="hidden-xs username">{first_name || last_name || userName}</span>
                                         </Link>
                                     </li>
                                     <li>

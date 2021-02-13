@@ -28,9 +28,9 @@ class EditUser extends Component {
                 {id: 'system-administrator', label: 'System Administrator'},
             ],
             statuses: [
-                {id: 'disabled', label: 'Disabled'},
-                {id: 'approved', label: 'Approved'},
-                {id: 'pending', label: 'Pending'}
+                {id: 2, label: 'Disabled'},
+                {id: 1, label: 'Approved'},
+                {id: 0, label: 'Pending'}
             ]
         }
     }
@@ -137,6 +137,7 @@ class EditUser extends Component {
                                             <div className="mb-4">
                                                 <label>Group*</label>
                                                 <Typeahead
+                                                    disabled={true}
                                                     allowNew
                                                     id="custom-selections-example"
                                                     defaultSelected={[this.state.roles[1]]}
