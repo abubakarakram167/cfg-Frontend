@@ -85,7 +85,7 @@ class UserManagement extends Component {
                 name: 'ID',
                 selector: 'id',
                 sortable: true,
-                cell: row => <Link to={`/${row.id}`}>{row.id}</Link>
+                // cell: row => <Link to={`/${row.id}`}>{row.id}</Link>
             },
             {
                 name: 'First Name',

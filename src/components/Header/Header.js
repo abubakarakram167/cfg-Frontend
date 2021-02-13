@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import './Header.scss';
+import history from "../../utils/history";
+import jsCookie from 'js-cookie';
 
 class Header extends Component {
     constructor(props) {
@@ -16,6 +18,15 @@ class Header extends Component {
         this.setState({
             menuClass: this.state.menuClass === 'inactive' ? 'active' : 'inactive'
         });
+    }
+
+    logout = (e) => {
+        e.preventDefault();
+        jsCookie.remove('login');
+        jsCookie.remove('access');
+        sessionStorage.clear();
+        localStorage.clear();
+        history.push('/login');
     }
 
     render() {
@@ -64,6 +75,9 @@ class Header extends Component {
                                     </li>}
                                     <li>
                                         <Link to="#"><i className="fas fa-user-cog"/></Link>
+                                    </li>
+                                    <li>
+                                        <Link onClick={this.logout} to="#"><i className="fas fa-sign-out-alt"/></Link>
                                     </li>
                                 </ul>
                             </div>
