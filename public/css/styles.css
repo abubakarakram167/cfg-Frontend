@@ -5048,3 +5048,33 @@ main{
     color: #6A6A6A;
     font-weight: 500;
 }
+
+.fb-button-custom{
+    border: none;
+    width: 30px;
+    color: transparent;
+    font-size: 25px !important;
+    padding: 0 10px 5px !important;
+    border-radius: 5px;
+    opacity: 1;
+    background: transparent url("../images/facebook-icon.png") no-repeat;
+    background-size: 30px;
+}
+button:focus {
+    outline: none !important;
+}
+.fb-button-custom button:focus{
+    border: none;
+    outline: none !important;
+}
+
+.ms-custom{
+    width: 30px;
+    height: 30px;
+    opacity: 0;
+}
+
+.ms-li {
+    background: transparent url("../images/mail-icon.png") no-repeat;
+    background-size: 30px;
+}

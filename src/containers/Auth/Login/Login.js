@@ -170,10 +170,10 @@ class Login extends React.PureComponent {
                                                     <div className="form-check">
                                                         <input className="form-check-input" type="checkbox" value=""
                                                                id="flexCheckDefault"/>
-                                                        <label className="form-check-label"
+                                                        <span className="form-check-label"
                                                                htmlFor="flexCheckDefault">
                                                             Remember Me
-                                                        </label>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -202,8 +202,9 @@ class Login extends React.PureComponent {
                                                 cookiePolicy={'single_host_origin'}
                                             />
                                         </li>
-                                        <li>
+                                        <li className={'ms-li'}>
                                             <MicrosoftLogin
+                                                className={'ms-custom'}
                                                 clientId={"6768fe0e-38f9-4e0a-bfc6-65b3d3645607"}
                                                 authCallback={this.authHandler}
                                                 redirectUri={"http://localhost:3001/"}
@@ -220,10 +221,11 @@ class Login extends React.PureComponent {
                                                 fields="name,email,picture"
                                                 scope="public_profile,email,phone"
                                                 callback={this.onLoginSuccess}
-                                                cssClass={"fb-button"}
+                                                cssClass={"fb-button-custom"}
                                                 icon={"fa fa-facebook"}
                                                 size={"small"}
                                                 render={renderProps => (
+                                                    // <button onClick={renderProps.onClick}>This is my custom FB button</button>
                                                     <Link to="#" onClick={renderProps.onClick}><img src={"images/facebook-icon.png"} alt=""/></Link>
                                                 )}
                                             />

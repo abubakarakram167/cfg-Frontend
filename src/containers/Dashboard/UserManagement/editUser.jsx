@@ -156,7 +156,7 @@ class EditUser extends Component {
                                                     allowNew
                                                     id="custom-selections-example"
                                                     defaultSelected={defaultStatus}
-                                                    onChange={(selected) => { this.onChangeTypehead(selected, 'group')}}
+                                                    onChange={(selected) => { this.onChangeTypehead(selected, 'status')}}
                                                     // multiple
                                                     newSelectionPrefix="Status"
                                                     options={this.state.statuses}
