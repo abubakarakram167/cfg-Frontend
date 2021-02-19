@@ -89,6 +89,7 @@ class UserManagement extends Component {
   render() {
     const columns = [
       {
+        name: 'Select All',
         selector: 'user_name',
         sortable: true,
         // cell: row => <Link to={`/${row.id}`}>{row.id}</Link>
@@ -139,7 +140,10 @@ class UserManagement extends Component {
         <Header />
         <main>
           <div className='dash-wrapper'>
-            <div className='row dash-session-header'>
+            <div
+              style={{ textAlign: 'center' }}
+              className='row dash-session-header'
+            >
               <div className='col-md-8'>
                 <label
                   style={{

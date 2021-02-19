@@ -5,6 +5,8 @@ import { addUser } from '../../../store/actions/users.actions';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import save from '../../../components/common/assets/icons/save.svg';
+import cancel from '../../../components/common/assets/icons/x-circle.svg';
 
 class AddUser extends Component {
   constructor(props) {
@@ -65,7 +67,9 @@ class AddUser extends Component {
           <div className='dash-wrapper'>
             <div className='row dash-add-cfg center-div'>
               <div className='row'>
-                <h5 style={{ fontWeight: 700 }}>
+                <h5
+                  style={{ marginLeft: -20, fontWeight: 700, color: '#6A6A6A' }}
+                >
                   <i className='fas fa-user' /> Add New User{' '}
                 </h5>
               </div>
@@ -105,11 +109,10 @@ class AddUser extends Component {
                     <div className='mb-4'>
                       <label>Telephone</label>
                       <input
-                        type='text'
+                        type='number'
                         name='phone'
-                        placeholder='Telephone*'
+                        placeholder='Telephone'
                         onChange={this.onChangeValue}
-                        required
                       />
                     </div>
                     <div className='mb-4'>
@@ -148,20 +151,25 @@ class AddUser extends Component {
                       </div>
                     </div>
                     <div className='d-block' style={{ textAlign: 'center' }}>
-                      <input
+                      <button
                         type='submit'
                         className='button primary_button'
-                        value='Save'
-                      />
-                      <input
+                        style={{ marginRight: 10 }}
+                      >
+                        <div className='d-flex align-items-center justify-content-center'>
+                          <img src={save} />
+                          <span style={{ marginLeft: 5 }}>Save</span>
+                        </div>
+                      </button>
+                      <button
                         type='button'
-                        style={{
-                          border: '1px solid lightgray',
-                          marginTop: '10px',
-                        }}
-                        className='button'
-                        value='Cancel'
-                      />
+                        className='button secondary_button mw-50'
+                      >
+                        <div className='d-flex align-items-center justify-content-center'>
+                          <img src={cancel} />
+                          <span style={{ marginLeft: 5 }}>Cancel</span>
+                        </div>
+                      </button>
                     </div>
                   </form>
                 </div>
