@@ -372,22 +372,24 @@ body {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 3px 6px rgb(0 0 0 / 16%);
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
-.login_form label {
+/* .login_form label {
   display: none;
-}
+} */
 
 .login_form input[type='text'],
 .login_form input[type='email'],
 .login_form input[type='password'] {
   width: 100%;
-  background: #f6f6f6;
-  border: none;
-  border-bottom: 1px solid #707070;
+  /* background: #f6f6f6; */
+  /* border: none; */
+  /* border-bottom: 1px solid #707070; */
   font-size: 1.3rem;
   letter-spacing: 1px;
-  padding: 15px 15px;
+  /* padding: 15px 15px; */
   color: #6a6a6a;
   font-family: 'Roboto-Medium';
 }
@@ -474,11 +476,13 @@ p.forgot_password a {
 }
 
 .round_img {
+  z-index: -1;
   position: fixed;
   left: -500px;
   top: 0;
   height: 1300px;
-  width: 1300px;
+  /* width: 1300px; */
+  width:1253px;
   overflow: hidden;
   object-fit: cover;
 }
@@ -1986,7 +1990,10 @@ main {
         border-radius: 500px;
     }
 }*/
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1200px) {
+  .round_img{
+    width:1000px !important;
+  }
 }
 
 @media screen and (max-width: 1280px) {
@@ -2166,13 +2173,14 @@ main {
   }
 
   .login_holder {
-    position: absolute;
+    /* position: absolute;
     top: auto;
     left: 15px;
     transform: translate(0, 0);
     width: calc(100% - 30px);
     max-width: 100%;
-    bottom: 20px;
+    bottom: 20px; */
+    width: calc(100% - 30px) !important;
   }
 
   .login_form {
@@ -2814,12 +2822,10 @@ main {
 }
 
 .form-container {
-  /* padding: 20px; */
-  background: #ffffff 0% 0% no-repeat padding-box;
-  opacity: 1;
-  margin-top: 20px !important;
-  border: 1px solid #707070;
-  border-radius: 8px;
+  padding: 20px;
+  background: white;
+  margin-top: 20px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);  
 }
 
 @font-face {
@@ -3153,16 +3159,16 @@ body {
   margin-bottom: 30px;
   text-align: center;
 }
-.login_form {
+/* .login_form {
   background: #fff;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 3px 6px rgb(0 0 0 / 16%);
-}
-.login_form label {
+} */
+/* .login_form label {
   display: none;
-}
-.login_form input[type='text'],
+} */
+/* .login_form input[type='text'],
 .login_form input[type='email'],
 .login_form input[type='password'] {
   width: 100%;
@@ -3174,7 +3180,7 @@ body {
   padding: 15px 15px;
   color: #6a6a6a;
   font-family: 'Roboto-Medium';
-}
+} */
 .show_password {
   background: transparent;
   border: none;
@@ -3246,7 +3252,7 @@ p.forgot_password a {
   left: -500px;
   top: 0;
   height: 1300px;
-  width: 1300px;
+  /* width: 1300px; */
   overflow: hidden;
   object-fit: cover;
 }
@@ -4632,7 +4638,7 @@ main {
   .login_top_bar h1 {
     font-size: 1.5rem;
   }
-  .login_holder {
+  /* .login_holder {
     position: absolute;
     top: auto;
     left: 15px;
@@ -4640,7 +4646,7 @@ main {
     width: calc(100% - 30px);
     max-width: 100%;
     bottom: 20px;
-  }
+  } */
   .login_form {
     background: rgb(255 255 255 / 80%);
   }
