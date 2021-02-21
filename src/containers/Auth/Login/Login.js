@@ -40,7 +40,6 @@ class Login extends React.PureComponent {
       showPassword: false,
     };
     this.nodes = {};
-
     this.onLoginSuccess = this.onLoginSuccess.bind(this);
     this.onLoginFailure = this.onLoginFailure.bind(this);
     this.onLogoutSuccess = this.onLogoutSuccess.bind(this);
@@ -179,6 +178,9 @@ class Login extends React.PureComponent {
                 <form onSubmit={this.onLoginSubmit}>
                   <div className='mb-4'>
                     <TextField
+                      // helperText={(e) => {
+                      //   return e.target.error ? "Incorrect Entry" : "";
+                      // }}
                       className={classes.w_100}
                       id='email'
                       variant='filled'

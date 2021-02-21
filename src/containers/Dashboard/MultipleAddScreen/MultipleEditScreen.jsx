@@ -11,6 +11,16 @@ import { editHead } from '../../../store/actions/dynamic.actions';
 import _ from 'lodash';
 import save from '../../../components/common/assets/icons/save.svg';
 import cancel from '../../../components/common/assets/icons/x-circle.svg';
+import { withStyles } from "@material-ui/core/styles";
+import { TextField, IconButton, InputAdornment,InputLabel,Select } from "@material-ui/core";
+
+const useStyles = (theme) => ({
+ 
+  w_100: {
+    width: "100%",
+  },
+  
+});
 
 class MultipleEditScreen extends Component {
   constructor(props) {
@@ -29,6 +39,7 @@ class MultipleEditScreen extends Component {
       points: '',
       total_points: '',
       category: '',
+      categories:[],
       status: '',
       quizSuccess: '',
       quizFail: '',
@@ -83,6 +94,7 @@ class MultipleEditScreen extends Component {
   };
 
   render() {
+    const {classes}=this.props;
     console.log('state', this.state);
     let { first_name, email } = JSON.parse(localStorage.getItem('user'));
     return (
@@ -115,32 +127,41 @@ class MultipleEditScreen extends Component {
                   <form onSubmit={this.onFormSubmit}>
                     {this.state.pageContext.fields.name && (
                       <div className='mb-4'>
-                        <label>Name</label>
-                        <input
-                          type='text'
-                          name='title'
-                          placeholder='Name*'
-                          value={this.state.title}
-                          onChange={this.onChangeValue}
-                          required
-                        />
+                       
+                        <TextField
+                      className={classes.w_100}
+                      id='name'
+                      variant='filled'
+                      label='Name'
+                      name='title'
+                      value={this.state.title}
+                      required
+                      onChange={this.onChangeValue}
+                     
+                    />
                       </div>
                     )}
                     {this.state.pageContext.fields.author && (
                       <div className='mb-4'>
-                        <label>Author</label>
-                        <input
-                          type='text'
-                          name='author'
-                          placeholder='Author*'
-                          value={first_name || email}
-                          readOnly
-                        />
+                        
+
+                      <TextField
+                      className={classes.w_100}
+                      id='author'
+                      variant='filled'
+                      label='Author'
+                      name='author'
+                      value={first_name || email}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      
+                    />
                       </div>
                     )}
                     {this.state.pageContext.fields.startDate && (
                       <div className='mb-4'>
-                        <label>Start Date</label>
+                        {/* <label>Start Date</label>
                         <input
                           type='date'
                           name='start_date'
@@ -148,46 +169,77 @@ class MultipleEditScreen extends Component {
                           value={this.state.start_date}
                           onChange={this.onChangeValue}
                           required
-                        />
+                        /> */}
+                        <TextField
+        id="start_date"
+        label="Start Date"
+        type='date'
+        // defaultValue="2017-05-24"
+        name='start_date'
+        onChange={this.onChangeValue}
+        className={classes.w_100}
+        required
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
                       </div>
                     )}
                     {this.state.pageContext.fields.endDate && (
                       <div className='mb-4'>
-                        <label>End Date</label>
-                        <input
-                          type='date'
-                          name='end_date'
-                          placeholder='End Date*'
-                          value={this.state.end_date}
-                          onChange={this.onChangeValue}
-                          required
-                        />
+                       <TextField
+        id="end_date"
+        label="End Date"
+        type='date'
+        // defaultValue="2017-05-24"
+        name='end_date'
+        onChange={this.onChangeValue}
+        className={classes.w_100}
+        required
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
                       </div>
                     )}
                     {this.state.pageContext.fields.points && (
                       <div className='mb-4'>
-                        <label>Total Points</label>
-                        <input
-                          type='number'
-                          name='total_points'
-                          placeholder='Total Points*'
-                          value={this.state.total_points}
-                          onChange={this.onChangeValue}
-                          required
-                        />
+                        
+                         <TextField
+                      className={classes.w_100}
+                      id='totalpoint'
+                      variant='filled'
+                      label='Total Points'
+                      name='total_points'
+                      type='number'
+                      value={this.state.total_points}
+                      required
+                      onChange={this.onChangeValue}
+                     
+                    />
                       </div>
                     )}
                     {this.state.pageContext.fields.category && (
                       <div className='mb-4'>
-                        <label>Categories *</label>
-                        <Typeahead
-                          allowNew
-                          id='custom-selections-example'
-                          multiple
-                          newSelectionPrefix='Add a new category: '
-                          options={[]}
-                          placeholder='Categories *'
-                        />
+                      
+
+
+<InputLabel htmlFor="categories">Categories</InputLabel>
+                           <Select
+                           native
+                           onChange={this.onChangeValue}
+                           className={classes.w_100}
+                           inputProps={{id:"categories"}}
+                           name='category'
+                              >
+          
+          <option aria-label="None" value="" />
+          {this.state.categories.map((r)=>{
+           return <option id={r.id} value={r.label}>{r.label}</option>
+          })}
+         
+        </Select>
+
                       </div>
                     )}
                     <div className='d-block' style={{ textAlign: 'center' }}>
@@ -249,4 +301,8 @@ const mapDispatchToProps = (dispatch) => {
     push: (param) => dispatch(push(param)),
   };
 };
-export default connect(mapPropsToState, mapDispatchToProps)(MultipleEditScreen);
+// export default connect(mapPropsToState, mapDispatchToProps)(MultipleEditScreen);
+export default connect(
+  mapPropsToState,
+  mapDispatchToProps
+)(withStyles(useStyles, { withTheme: true })(MultipleEditScreen));

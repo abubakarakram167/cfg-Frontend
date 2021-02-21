@@ -33,46 +33,46 @@ class MainPage extends Component {
                                 <i className="fas fa-chart-line"/>
                                 <label>Dashboard</label>
                             </div>
-                            <div className="col bg-blue dashboardBorder">
-                                <span onClick={() => {history.push('/userManagement')}} style={{background: 'transparent'}}>
+                            <div className="col bg-blue dashboardBorder"  onClick={() => {history.push('/userManagement')}}>
+                                <span  style={{background: 'transparent'}}>
                                     <i className="fas fa-users-cog"/>
                                     <label>User Mgmt</label>
                                 </span>
                             </div>
-                            <div className="col bg-pink dashboardBorder">
-                                <span onClick={() => {history.push('/listing/session')}} style={{background: 'transparent'}}>
+                            <div className="col bg-pink dashboardBorder"  onClick={() => {history.push('/listing/session')}}>
+                                <span style={{background: 'transparent'}}>
                                     <i className="fas fa-comments"/>
                                     <label>CFG Session</label>
                                 </span>
                             </div>
-                            <div className="col bg-dark-red dashboardBorder">
-                                <span onClick={() => {history.push('/listing/timeline')}} style={{background: 'transparent'}}>
+                            <div className="col bg-dark-red dashboardBorder"  onClick={() => {history.push('/listing/timeline')}}>
+                                <span style={{background: 'transparent'}}>
                                     <i className="fas fa-stream"/>
                                     <label>Timeline</label>
                                 </span>
                             </div>
-                            <div className="col bg-orange dashboardBorder">
-                                <span onClick={() => {history.push('/listing/tool')}} style={{background: 'transparent'}}>
+                            <div className="col bg-orange dashboardBorder" onClick={() => {history.push('/listing/tool')}}>
+                                <span  style={{background: 'transparent'}}>
                                     <i className="fas fa-tools"/>
                                     <label>CFG Tools</label>
                                 </span>
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col bg-green dashboardBorder">
-                                <span onClick={() => {history.push('/listing/event')}}  style={{background: 'transparent'}}>
+                            <div className="col bg-green dashboardBorder" onClick={() => {history.push('/listing/event')}}>
+                                <span   style={{background: 'transparent'}}>
                                     <i className="fas fa-calendar-day"/>
                                     <label>Events</label>
                                 </span>
                             </div>
-                            <div className="col bg-orange dashboardBorder">
-                                <span onClick={() => {history.push('/listing/quiz')}} style={{background: 'transparent'}}>
+                            <div className="col bg-orange dashboardBorder" onClick={() => {history.push('/listing/quiz')}}>
+                                <span  style={{background: 'transparent'}}>
                                     <i className="fas fa-question-circle"/>
                                     <label>Quiz</label>
                                 </span>
                             </div>
-                            <div className="col bg-light-blue dashboardBorder">
-                                <span onClick={() => {history.push('/listing/preference')}} style={{background: 'transparent'}}>
+                            <div className="col bg-light-blue dashboardBorder" onClick={() => {history.push('/listing/preference')}}>
+                                <span  style={{background: 'transparent'}}>
                                     <i className="fas fa-cogs"/>
                                     <label>Preferences</label>
                                 </span>
