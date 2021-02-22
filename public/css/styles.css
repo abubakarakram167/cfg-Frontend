@@ -5123,9 +5123,9 @@ main {
   padding: 20px;
   /*box-shadow: 0 3px 6px rgb(0 0 0 / 16%);*/
 }
-.dash_form label {
+/* .dash_form label {
   display: none;
-}
+} */
 .dash_form input[type='text'],
 .dash_form input[type='email'],
 .dash_form input[type='select'],
@@ -5141,7 +5141,7 @@ main {
   border-bottom: 1px solid #707070;
   font-size: 1.3rem;
   letter-spacing: 1px;
-  padding: 15px 15px;
+  /* padding: 15px 15px; */
   color: #6a6a6a;
   font-family: 'Roboto-Medium';
 }
@@ -5169,11 +5169,12 @@ main {
 .wrapperClassName {
   border: 1px solid gray;
   max-height: 500px;
-  min-height: 500px;
+  /* min-height: 500px; */
+  min-height: 250px;
 }
 .editorClassName {
   max-height: 450px;
-  min-height: 450px;
+  /* min-height: 450px; */
 }
 
 .rbt-token .rbt-token-remove-button {
@@ -5283,3 +5284,6 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+.MuiFormControlLabel-label{width:100%}
+.MuiButton-root{padding:8px 16px !important ;}

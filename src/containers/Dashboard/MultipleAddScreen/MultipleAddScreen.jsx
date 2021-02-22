@@ -10,6 +10,16 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { addHead } from '../../../store/actions/dynamic.actions';
 import save from '../../../components/common/assets/icons/save.svg';
 import cancel from '../../../components/common/assets/icons/x-circle.svg';
+import { withStyles } from "@material-ui/core/styles";
+import { TextField, IconButton, InputAdornment,InputLabel,Select } from "@material-ui/core";
+
+const useStyles = (theme) => ({
+ 
+  w_100: {
+    width: "100%",
+  },
+  
+});
 
 class UserManagement extends Component {
   state = {
@@ -24,6 +34,7 @@ class UserManagement extends Component {
     endDate: '',
     points: '',
     category: '',
+    categories:[],
     status: '',
     quizSuccess: '',
     quizFail: '',
@@ -54,6 +65,7 @@ class UserManagement extends Component {
   }
 
   onChangeValue = (e) => {
+    
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -64,6 +76,8 @@ class UserManagement extends Component {
   };
 
   render() {
+    console.log(this.state)
+    const {classes}=this.props;
     const { startDatePlaceHolder, endDatePlaceHolder } = this.state;
     let { first_name, email } = JSON.parse(localStorage.getItem('user'));
     return (
@@ -96,31 +110,55 @@ class UserManagement extends Component {
                   <form onSubmit={this.onFormSubmit}>
                     {this.state.pageContext.fields.name && (
                       <div className='mb-4'>
-                        <label>Name</label>
+                        {/* <label>Name</label>
                         <input
                           type='text'
                           name='title'
                           placeholder='Name*'
                           onChange={this.onChangeValue}
                           required
-                        />
+                        /> */}
+                         <TextField
+                      className={classes.w_100}
+                      id='name'
+                      variant='filled'
+                      label='Name'
+                      name='title'
+                    
+                      required
+                      onChange={this.onChangeValue}
+                     
+                    />
                       </div>
                     )}
                     {this.state.pageContext.fields.author && (
                       <div className='mb-4'>
-                        <label>Author</label>
+                        {/* <label>Author</label>
                         <input
                           type='text'
                           name='author'
                           placeholder='Author*'
                           value={first_name || email}
                           readOnly
-                        />
+                        /> */}
+                         <TextField
+                      className={classes.w_100}
+                      id='author'
+                      variant='filled'
+                      label='Author'
+                      name='author'
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      
+                      
+                     
+                    />
                       </div>
                     )}
                     {this.state.pageContext.fields.startDate && (
                       <div className='mb-4'>
-                        <label>Start Date</label>
+                        {/* <label>Start Date</label>
                         <input
                           type={startDatePlaceHolder ? 'text' : 'date'}
                           name='start_date'
@@ -130,12 +168,31 @@ class UserManagement extends Component {
                             this.setState({ startDatePlaceHolder: false });
                           }}
                           required
-                        />
+                        /> */}
+
+<TextField
+        id="start_date"
+        label="Start Date"
+        type={startDatePlaceHolder ? 'text' : 'date'}
+        // defaultValue="2017-05-24"
+        name='start_date'
+        onChange={this.onChangeValue}
+        className={classes.w_100}
+        onFocus={() => {
+          this.setState({ startDatePlaceHolder: false });
+        }}
+        required
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+
+
                       </div>
                     )}
                     {this.state.pageContext.fields.endDate && (
                       <div className='mb-4'>
-                        <label>End Date</label>
+                        {/* <label>End Date</label>
                         <input
                           type={endDatePlaceHolder ? 'text' : 'date'}
                           name='end_date'
@@ -145,24 +202,52 @@ class UserManagement extends Component {
                           }}
                           onChange={this.onChangeValue}
                           required
-                        />
+                        /> */}
+                        <TextField
+        id="end_date"
+        label="End Date"
+        type={endDatePlaceHolder ? 'text' : 'date'}
+        // defaultValue="2017-05-24"
+        name='end_date'
+        onChange={this.onChangeValue}
+        className={classes.w_100}
+        onFocus={() => {
+          this.setState({ endDatePlaceHolder: false });
+        }}
+        required
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
                       </div>
                     )}
                     {this.state.pageContext.fields.points && (
                       <div className='mb-4'>
-                        <label>Total Points</label>
+                        {/* <label>Total Points</label>
                         <input
                           type='number'
                           name='total_points'
                           placeholder='Total Points*'
                           onChange={this.onChangeValue}
                           required
-                        />
+                        /> */}
+                        <TextField
+                      className={classes.w_100}
+                      id='totalpoint'
+                      variant='filled'
+                      label='Total Points'
+                      name='total_points'
+                      type='number'
+                    
+                      required
+                      onChange={this.onChangeValue}
+                     
+                    />
                       </div>
                     )}
                     {this.state.pageContext.fields.category && (
                       <div className='mb-4'>
-                        <label>Categories *</label>
+                        {/* <label>Categories *</label>
                         <Typeahead
                           disabled
                           allowNew
@@ -173,7 +258,22 @@ class UserManagement extends Component {
                           placeholder='Categories *'
                           name='category'
                           onChange={this.onChangeValue}
-                        />
+                        /> */}
+                        <InputLabel htmlFor="categories">Categories</InputLabel>
+                           <Select
+                           native
+                           onChange={this.onChangeValue}
+                           className={classes.w_100}
+                           inputProps={{id:"categories"}}
+                           name='category'
+                              >
+          
+          <option aria-label="None" value="" />
+          {this.state.categories.map((r)=>{
+           return <option id={r.id} value={r.label}>{r.label}</option>
+          })}
+         
+        </Select>
                       </div>
                     )}
                     <div className='d-block' style={{ textAlign: 'center' }}>
@@ -234,4 +334,10 @@ const mapDispatchToProps = (dispatch) => {
     push: (param) => dispatch(push(param)),
   };
 };
-export default connect(mapPropsToState, mapDispatchToProps)(UserManagement);
+
+export default connect(
+  mapPropsToState,
+  mapDispatchToProps
+)(withStyles(useStyles, { withTheme: true })(UserManagement));
+
+
