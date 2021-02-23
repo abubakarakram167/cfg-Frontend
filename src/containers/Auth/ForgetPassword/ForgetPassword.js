@@ -100,6 +100,7 @@ class ForgetPassword extends React.PureComponent {
                       className={classes.w_100}
                       variant='filled'
                       id='email'
+                      name='email'
                       label='Email'
                       type='email'
                       required
