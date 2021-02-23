@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   question: {
     width: "fit-content",
   },
+  answer:{
+    maxWidth:'calc(100% - 70px)'
+  },
   questionCard: {
     backgroundColor: "#f6f6f6",
     fontSize: "1.3rem",
@@ -61,7 +64,7 @@ const QuizContentScreen = () => {
   const [questions, setQuestions] = useState([]);
   const [openNew, setOpenNew] = useState(false);
   const [openImport, setOpenImport] = useState(false);
-  const [selected, setSelected] = useState("lol");
+  const [selected, setSelected] = useState();
   const [editorState, setEditorState] = useState(
     EditorState.createWithText("")
   );
@@ -97,6 +100,14 @@ const QuizContentScreen = () => {
   const handleEdit = (e) => {
     setSelected(e);
   };
+const handleAnswerDelete=(e)=>{
+//   let newArr=[...questions]
+//   let index=newArr.indexOf(selected)
+//   newArr[index].answers.filter((a)=>a!==e)
+// setQuestions(newArr);
+// setSelected(newArr[index]);
+
+}
 
   const onEditorStateChange = (editorState) => {
     console.log(
@@ -233,7 +244,7 @@ const QuizContentScreen = () => {
                     <div className={classes.actions}>
                       <i
                         className="fas fa-edit"
-                        onClick={() => handleEdit(q.id)}
+                        onClick={() => handleEdit(q)}
                       />
                       <i className="fas fa-copy" />
                       <i
@@ -245,7 +256,7 @@ const QuizContentScreen = () => {
                     <div className={classes.question}>{q.question}</div>
                   </div>
                 </div>
-                {q.id == selected && (
+                {q == selected && (
                   <div className={classes.editSection}>
                     <TextField
                       id="outlined-basic"
@@ -255,14 +266,15 @@ const QuizContentScreen = () => {
                       defaultValue={q.question}
                     />
 
+                   
                     <Editor
-                      editorState={editorState}
-                      // defaultEditorState = {defaultState}
-                      toolbarClassName="toolbarClassName"
-                      wrapperClassName="wrapperClassName"
-                      editorClassName="editorClassName"
-                      onEditorStateChange={onEditorStateChange}
-                    />
+  editorState={editorState}
+  // defaultEditorState = {defaultState}
+  toolbarClassName="toolbarClassName"
+  wrapperClassName="wrapperClassName"
+  editorClassName="editorClassName"
+  onEditorStateChange={onEditorStateChange}
+/>
 
                     <div className={classes.answerHeader}>
                       <h3>Answers</h3>{" "}
@@ -278,16 +290,17 @@ const QuizContentScreen = () => {
                     </div>
 
                     {q.answers.map((a) => (
-                      <div>
-                        <div className={classes.questionCard}>
+                      <div style={{padding:'10px'}}>
+                        <div className={classes.questionCard} style={{border:'none'}}>
                           <div className="row">
-                            <div className={classes.actions}>
+                            <div className={classes.actions} style={{maxWidth:'50px'}} onClick={handleAnswerDelete(a)}>
                               <i
                                 className="fas fa-trash"
                                 style={{ color: "#EB1B29" }}
                               />
                             </div>
-                            <div className={classes.question}>{a}</div>
+                            <TextField className={classes.answer} value={a}  variant="outlined"/>
+                           
                           </div>
                         </div>
                       </div>

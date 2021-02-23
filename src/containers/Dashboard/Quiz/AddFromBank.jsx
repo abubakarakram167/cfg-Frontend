@@ -53,7 +53,7 @@ const AddFromBank = ({ onImport, onClose }) => {
       question: "What can mindfulness do for teachers?",
       quizName: "CFG For Secondary Schools",
       id: "one",
-      answers: [],
+      answers: ["First","Second","Third","Fourth"],
     },
     { question: "Who are you?", quizName: "jksdfd", id: "two", answers: [] },
     {

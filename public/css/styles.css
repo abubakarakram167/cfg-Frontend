@@ -2777,10 +2777,13 @@ main {
   min-height: 35px !important;
 }
 
-.iaaJGV {
+.iaaJGV ,.gsoPma {
   border-bottom: none !important;
   border-top: none !important;
   background-color: #ffffff !important;
+}
+.jsdCun{
+  border: none !important;
 }
 .ljvEUq {
   /* display: none !important; */
@@ -2819,6 +2822,7 @@ main {
   /*border: 1px solid #707070;*/
   border-radius: 10px;
   opacity: 1;
+  cursor:pointer
 }
 
 .form-container {
