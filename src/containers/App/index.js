@@ -31,6 +31,8 @@ import {
 } from "../Dashboard/Quiz/Loadable";
 import { PreferencesListingScreen } from "../Dashboard/Preferences/Loadable";
 import ResetPassword from "../Auth/ResetPassword/Loadable";
+import CFGSessionDetails from "../Dashboard/CFGSession.js/CFGSessionDetails";
+import SessionContentScreen from "../Dashboard/CFGSession.js/SessionContentScreen"
 
 function App() {
   return (
@@ -189,6 +191,11 @@ function App() {
         <ProtectedRoute
           path='/listing/preference'
           component={withRouter(PreferencesListingScreen)}
+        />
+
+        <ProtectedRoute
+          path='/content/detail/session'
+          component={withRouter(CFGSessionDetails)}
         />
 
         <Route path='' component={NotFoundPage} />

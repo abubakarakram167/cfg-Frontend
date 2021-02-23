@@ -39,7 +39,7 @@ class MainPage extends Component {
                                     <label>User Mgmt</label>
                                 </span>
                             </div>
-                            <div className="col bg-pink dashboardBorder"  onClick={() => {history.push('/listing/session')}}>
+                            <div className="col bg-pink dashboardBorder" onClick={() => history.push('/listing/session')}>
                                 <span style={{background: 'transparent'}}>
                                     <i className="fas fa-comments"/>
                                     <label>CFG Session</label>

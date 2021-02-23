@@ -41,6 +41,8 @@ class MultipleListingScreen extends Component {
     }
     this.setState({ pageContext: screensConfig[this.props.pathname] });
     this.props['contentList'](this.props.pathname, `_count=100&_pageNo=1`);
+    localStorage.removeItem("session");
+
   }
 
   handleSelected = (data) => {
@@ -66,10 +68,13 @@ class MultipleListingScreen extends Component {
     });
   };
   onRowClicked = (content) => {
+    const locationShould = history?.location?.pathname;
     history.push({
-      pathname: `/content/${this.props.pathname}`,
+      pathname: locationShould === "/listing/session" ? 
+      `/content/detail/session` : `/content/${this.props.pathname}`,
       state: { content },
     });
+    localStorage.setItem("session", JSON.stringify(content));
   };
 
   render() {
@@ -183,7 +188,6 @@ class MultipleListingScreen extends Component {
 }
 
 function mapPropsToState(store) {
-  console.log('store.users', store.users);
   let pathname;
   if (store.router && store.router.location && store.router.location.pathname) {
     pathname = store.router.location.pathname;

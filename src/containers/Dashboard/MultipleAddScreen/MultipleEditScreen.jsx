@@ -94,8 +94,7 @@ class MultipleEditScreen extends Component {
   };
 
   render() {
-    const {classes}=this.props;
-    console.log('state', this.state);
+    const { classes } = this.props;
     let { first_name, email } = JSON.parse(localStorage.getItem('user'));
     return (
       <>
