@@ -30,7 +30,7 @@ class Datatable extends Component {
           },
           headCells: {
             style: {
-              fontWeight: 600,
+              fontWeight: 700,
               fontSize: 'medium',
               color: '#6A6A6A',
             },

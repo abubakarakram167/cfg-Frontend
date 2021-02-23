@@ -25,7 +25,10 @@ import {
   MultipleListingScreen,
   MultipleEditScreen,
 } from "../Dashboard/MultipleAddScreen/Loadable";
-import { QuizContentScreen } from "../Dashboard/Quiz/Loadable";
+import {
+  QuizContentScreen,
+  PreviewQuizScreen,
+} from "../Dashboard/Quiz/Loadable";
 import { PreferencesListingScreen } from "../Dashboard/Preferences/Loadable";
 import ResetPassword from "../Auth/ResetPassword/Loadable";
 
@@ -169,6 +172,11 @@ function App() {
           path='/content/quiz'
           component={withRouter(QuizContentScreen)}
         />
+        <ProtectedRoute
+          path='/preview/quiz'
+          component={withRouter(PreviewQuizScreen)}
+        />
+
         <ProtectedRoute
           path='/content/mini'
           component={withRouter(MultipleContentScreen)}

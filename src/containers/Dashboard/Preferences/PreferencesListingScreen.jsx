@@ -7,17 +7,78 @@ import { getPreferences } from '../../../store/actions/preferences.actions';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import AddModal from './AddModal'
+import AddNewPreference from './AddNewPreference'
+import EditPreference from './EditPreference'
 
 class PreferencesListingScreen extends Component {
   state = {
-    preference: [],
+    preferen: [
+      {
+        id:0,
+        option_name:'Login with username',
+        option_value:'No',
+        description:'Default = No. if user can login with username and password. By default only a valid email is allowed'
+      },
+      {
+        id:1,
+        option_name:'Login splash images URL',
+        option_value:'https://cfg.jmmb.com/app/media/image',
+        description:'Default = a images link from media library'
+      },
+      {
+        id:2,
+        option_name:'NUmber of point give to timeline post',
+        option_value:'0',
+        description:'Default = 0'
+      }
+    ],
+    preference:this.props.preferences,
+    AddOpen:false,
+    EditOpen:false,
+    selectedRow:{}
   };
 
   componentDidMount() {
-    this.props['getPreferences']();
+    
+    let abc= this.props['getPreferences']();
+    // console.log(getPreferences())
+    abc.then((res)=>{
+      this.setState({preference:this.props.preferences})
+    })
+  
+    
+   
   }
+  handleAddOpen=()=>{
+this.setState({AddOpen:true})
+  }
+  handleEditOpen=()=>{
+    this.setState({EditOpen:true})
+      }
+  handleClose=()=>{
+    this.setState({AddOpen:false,EditOpen:false})
+      }
+      onSave=(e)=>{
+
+let newArr=[...this.state.preference,...[e]]
+this.setState({preference:newArr})
+      }
+      onEdit=(e)=>{
+console.log(e)
+        let newArr=[...this.state.preference]
+        newArr[ newArr.indexOf(this.state.selectedRow)]=e
+        this.setState({preference:newArr})
+      }
+
+      onRowClicked=(e)=>{
+console.log(e)
+this.setState({selectedRow:e});
+this.handleEditOpen()
+      }
 
   render() {
+   
     const columns = [
       //   {
       //     name: 'ID',
@@ -37,6 +98,7 @@ class PreferencesListingScreen extends Component {
         selector: 'description',
       },
     ];
+   
     const conditionalRowStyles = [
       {
         when: (row) => !row.isEven,
@@ -48,6 +110,7 @@ class PreferencesListingScreen extends Component {
 
     return (
       <>
+      {console.log(this.state.preference)}
         <article>
           <Helmet>
             <title>Preferences</title>
@@ -68,29 +131,28 @@ class PreferencesListingScreen extends Component {
                   {' '}
                   Preferences{' '}
                 </label>
-                <Link
-                  to={`#`}
-                  type='button'
-                  className='button-title-small button_inline m-l-15 um_primary_button'
-                >
-                  <i className='fas fa-plus-circle' /> Add new
-                </Link>
+               
+              
               </div>
             </div>
             <div className={'row'}>
-              {/*<div className={"col-md-1"}/>*/}
+
               <div className={'col-md-12'}>
                 <Datatable
-                  data={this.props.preferences}
+                  // data={this.props.preferences}
+                  data={this.state.preference}
                   columns={columns}
                   handleSelected={this.handleSelected}
                   conditionalRowStyles={conditionalRowStyles}
                   onRowClicked={this.onRowClicked}
                 />
               </div>
-              {/*<div className={"col-md-1"}/>*/}
+             
             </div>
           </div>
+          <AddModal title='Add preference' index={this.state.preference.length} onClose={this.handleClose} open={this.state.AddOpen} ><AddNewPreference onClose={this.handleClose} onSave={(e)=>this.onSave(e)}/></AddModal>
+          <AddModal title='Edit preference' onClose={this.handleClose} open={this.state.EditOpen} ><EditPreference selectedRow={this.state.selectedRow} onClose={this.handleClose} onSave={e=>this.onEdit(e)}/></AddModal>
+       
         </main>
       </>
     );
