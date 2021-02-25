@@ -164,7 +164,7 @@ function App() {
         />
         <ProtectedRoute
           path='/content/session'
-          component={withRouter(MultipleContentScreen)}
+          component={withRouter(SessionContentScreen)}
         />
         {/* <ProtectedRoute
           path='/content/quiz'

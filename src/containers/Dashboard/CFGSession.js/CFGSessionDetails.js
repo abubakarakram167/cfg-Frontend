@@ -255,6 +255,116 @@ const CFGSessionDetails = () => {
                                                                             </TableRow>
                                                                         </TableHead>
                                                                     }
+                                                                    {item?.subtitles?.rows[5] &&
+                                                                        <TableHead>
+                                                                            <TableRow className="tbody" style={{ height: "40px" }}>
+                                                                                <td className="colm">&nbsp;</td>
+                                                                                <td>{item?.subtitles?.rows[5]
+                                                                                    && item?.subtitles?.rows[5]?.title}
+                                                                                </td>
+                                                                                <td>
+                                                                                    author
+                                                                            </td>
+                                                                                <td>{item?.subtitles?.rows[5]
+                                                                                    && item?.subtitles?.rows[5]?.created_at}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[5]
+                                                                                    && item?.subtitles?.rows[5]?.total_points}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[5]
+                                                                                    && item?.subtitles?.rows[5]?.status}
+                                                                                </td>
+                                                                            </TableRow>
+                                                                        </TableHead>
+                                                                    }
+                                                                    {item?.subtitles?.rows[6] &&
+                                                                        <TableHead>
+                                                                            <TableRow className="tbody" style={{ height: "40px" }}>
+                                                                                <td className="colm">&nbsp;</td>
+                                                                                <td>{item?.subtitles?.rows[6]
+                                                                                    && item?.subtitles?.rows[6]?.title}
+                                                                                </td>
+                                                                                <td>
+                                                                                    author
+                                                                            </td>
+                                                                                <td>{item?.subtitles?.rows[6]
+                                                                                    && item?.subtitles?.rows[6]?.created_at}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[6]
+                                                                                    && item?.subtitles?.rows[6]?.total_points}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[6]
+                                                                                    && item?.subtitles?.rows[6]?.status}
+                                                                                </td>
+                                                                            </TableRow>
+                                                                        </TableHead>
+                                                                    }
+                                                                    {item?.subtitles?.rows[7] &&
+                                                                        <TableHead>
+                                                                            <TableRow className="tbody" style={{ height: "70px" }}>
+                                                                                <td className="colm">&nbsp;</td>
+                                                                                <td>{item?.subtitles?.rows[7]
+                                                                                    && item?.subtitles?.rows[7]?.title}
+                                                                                </td>
+                                                                                <td>
+                                                                                    author
+                                                                            </td>
+                                                                                <td>{item?.subtitles?.rows[7]
+                                                                                    && item?.subtitles?.rows[7]?.created_at}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[7]
+                                                                                    && item?.subtitles?.rows[7]?.total_points}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[7]
+                                                                                    && item?.subtitles?.rows[7]?.status}
+                                                                                </td>
+                                                                            </TableRow>
+                                                                        </TableHead>
+                                                                    }
+                                                                    {item?.subtitles?.rows[8] &&
+                                                                        <TableHead>
+                                                                            <TableRow className="tbody" style={{ height: "40px" }}>
+                                                                                <td className="colm">&nbsp;</td>
+                                                                                <td>{item?.subtitles?.rows[8]
+                                                                                    && item?.subtitles?.rows[8]?.title}
+                                                                                </td>
+                                                                                <td>
+                                                                                    author
+                                                                            </td>
+                                                                                <td>{item?.subtitles?.rows[8]
+                                                                                    && item?.subtitles?.rows[8]?.created_at}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[8]
+                                                                                    && item?.subtitles?.rows[8]?.total_points}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[8]
+                                                                                    && item?.subtitles?.rows[8]?.status}
+                                                                                </td>
+                                                                            </TableRow>
+                                                                        </TableHead>
+                                                                    }
+                                                                    {item?.subtitles?.rows[9] &&
+                                                                        <TableHead>
+                                                                            <TableRow className="tbody" style={{ height: "40px" }}>
+                                                                                <td className="colm">&nbsp;</td>
+                                                                                <td>{item?.subtitles?.rows[9]
+                                                                                    && item?.subtitles?.rows[9]?.title}
+                                                                                </td>
+                                                                                <td>
+                                                                                    author
+                                                                            </td>
+                                                                                <td>{item?.subtitles?.rows[9]
+                                                                                    && item?.subtitles?.rows[9]?.created_at}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[9]
+                                                                                    && item?.subtitles?.rows[9]?.total_points}
+                                                                                </td>
+                                                                                <td>{item?.subtitles?.rows[9]
+                                                                                    && item?.subtitles?.rows[9]?.status}
+                                                                                </td>
+                                                                            </TableRow>
+                                                                        </TableHead>
+                                                                    }
                                                                     
                                                                 </Table>
                                                             </Box>
