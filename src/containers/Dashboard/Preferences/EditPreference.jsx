@@ -19,7 +19,7 @@ setPreference({...preference,[e.name]:e.value})
   }
   const handleSave = async () => {
     if (preference!==selectedRow) {
-        if(!preference.option_name==""&&!preference.option_value==""&&!preference.description==""){
+        if(!preference.option_name==""&&!preference.option_value==""&&!preference.option_description==""){
       await onSave(preference);
     }
     }
@@ -62,10 +62,10 @@ setPreference({...preference,[e.name]:e.value})
         label="Description"
         placeholder="Write the description here!"
         variant="filled"
-        name="description"
+        name="option_description"
         fullWidth
         margin="normal"
-        value={preference.description}
+        value={preference.option_description}
         onChange={(e) => handleChange(e.target)}
         InputLabelProps={{
           shrink: true,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { Helmet } from "react-helmet-async";
 import Header from "../../../components/Header";
 import { withStyles } from "@material-ui/styles";
@@ -12,6 +12,8 @@ import AddFromBank from "./AddFromBank";
 import _ from "lodash";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
+import history from "../../../utils/history";
+import{ addQuestionaire,addAnswer,addQuizQuestions} from "../../../store/actions/quiz.actions"
 import {
   EditorState,
   convertToRaw,
@@ -20,6 +22,9 @@ import {
 } from "draft-js";
 
 const useStyles = makeStyles((theme) => ({
+  questionTitle:{
+    marginBottom:'20px'
+  },
   actions: {
     maxWidth: "170px",
     display: "flex",
@@ -32,7 +37,13 @@ const useStyles = makeStyles((theme) => ({
     width: "fit-content",
   },
   answer:{
-    maxWidth:'calc(100% - 70px)'
+    maxWidth:'calc(100% - 230px)',
+    backgroundColor:'white'
+  },
+  points:{
+    maxWidth:'150px',
+    marginLeft:'20px',
+    backgroundColor:'white'
   },
   questionCard: {
     backgroundColor: "#f6f6f6",
@@ -65,6 +76,9 @@ const QuizContentScreen = () => {
   const [openNew, setOpenNew] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [selected, setSelected] = useState();
+  
+ 
+
   const [editorState, setEditorState] = useState(
     EditorState.createWithText("")
   );
@@ -87,11 +101,16 @@ const QuizContentScreen = () => {
   };
 
   const handleAddNewQuestion = (e) => {
-    let newQuestion = { question: "", Answers: { A: "", B: "", C: "", D: "" } };
+    let newQuestion = { question: "", answers:[],id:questions.length+1 };
     newQuestion.question = e;
     let temp = [...questions];
     temp.push(newQuestion);
     setQuestions(temp);
+
+  // addQuestionaire({question:e,correct_answer:10,deleted:0})
+    
+    
+
   };
   const handleImport = (e) => {
     setQuestions([...questions, ...e]);
@@ -100,13 +119,72 @@ const QuizContentScreen = () => {
   const handleEdit = (e) => {
     setSelected(e);
   };
-const handleAnswerDelete=(e)=>{
-//   let newArr=[...questions]
-//   let index=newArr.indexOf(selected)
-//   newArr[index].answers.filter((a)=>a!==e)
-// setQuestions(newArr);
-// setSelected(newArr[index]);
+const handleAnswerDelete=(e,i)=>{
+ 
+  let newArr=[...questions]
+  let index=newArr.indexOf(selected)
+  newArr[index].answers.splice(i,1)
+ 
+setQuestions(newArr);
+setSelected(newArr[index]);
 
+}
+
+
+
+const handleAnswerChange =(e,i)=>{
+  let newArr=[...questions]
+  let index=newArr.indexOf(selected)
+ let q ={...selected}
+ q.answers[i].option=e;
+ setSelected(q);
+ newArr[index]=q;
+ setQuestions(newArr)
+}
+
+const handlePointsChange=(e,i)=>{
+  let newArr=[...questions]
+  let index=newArr.indexOf(selected)
+ let q ={...selected}
+ q.answers[i].points=e;
+ setSelected(q);
+ newArr[index]=q;
+ setQuestions(newArr)
+}
+const handlePublish=()=>{
+  
+questions.forEach((q)=>{
+  // console.log(q.question)
+  let points=[]
+  q.answers.forEach((a)=>{
+points.push(a.points)
+  })
+  // console.log(parseInt(points.sort((a,b)=>b-a)[0],10))
+  
+ 
+  addQuestionaire({question:q.question,correct_answer:points.length>0? parseInt(points.sort((a,b)=>b-a)[0],10):0,deleted:0}).then((res)=>{
+    addQuizQuestions({quiz_id:1,question_id:res.id,created_by:JSON.parse(localStorage.getItem('session')).author.id})
+    q.answers.forEach((a,i)=>{
+addAnswer({option_description:a.option,question_id:res.id,is_answer:a.points==parseInt(points.sort((a,b)=>b-a)[0],10)?1:0,sequence_order:i})
+// console.log({option_description:a.option,question_id:res.id,is_answer:a.points==parseInt(points.sort((a,b)=>b-a)[0],10)?1:0,sequence_order:i})
+    })
+    
+    })
+  
+})
+
+
+}
+const addNewAnswer=()=>{
+  let newArr=[...questions]
+  let index=newArr.indexOf(selected)
+  if(selected.answers.length<4){
+    let temp={...selected}
+    temp.answers.push({option:"",points:0})
+    setSelected(temp)
+    newArr[index]=temp;
+    setQuestions(newArr)
+  }
 }
 
   const onEditorStateChange = (editorState) => {
@@ -163,13 +241,15 @@ const handleAnswerDelete=(e)=>{
         >
           Add question from questions
         </Button>
+        
             </div>
             <div className="col-md-4" style={{ textAlign: "right" }}>
-              <button className="button-title button_inline">
+              <button className="button-title button_inline" onClick={() => {history.push('/preview/quiz')}}>
                 <i className="fas fa-eye" /> preview
               </button>
               <div className="btn-group">
                 <button
+                onClick={()=>handlePublish()}
                   type="button"
                   className="btn bg-primary btn-danger"
                   style={{
@@ -259,6 +339,7 @@ const handleAnswerDelete=(e)=>{
                 {q == selected && (
                   <div className={classes.editSection}>
                     <TextField
+                    className={classes.questionTitle}
                       id="outlined-basic"
                       variant="outlined"
                       inputProps={{ style: { fontSize: "1.3rem" } }}
@@ -284,22 +365,26 @@ const handleAnswerDelete=(e)=>{
                         color="secondary"
                         className={classes.button}
                         startIcon={<AddCircleOutlinedIcon />}
+                        onClick={()=>addNewAnswer()}
                       >
                         ADD NEW ANSWER
                       </Button>
                     </div>
-
-                    {q.answers.map((a) => (
+                   
+                    {q.answers.map((a,i) => (
+                     
                       <div style={{padding:'10px'}}>
+                        
                         <div className={classes.questionCard} style={{border:'none'}}>
                           <div className="row">
-                            <div className={classes.actions} style={{maxWidth:'50px'}} onClick={handleAnswerDelete(a)}>
+                            <div className={classes.actions} style={{maxWidth:'50px'}} onClick={()=>handleAnswerDelete(a,i)}>
                               <i
                                 className="fas fa-trash"
                                 style={{ color: "#EB1B29" }}
                               />
                             </div>
-                            <TextField className={classes.answer} value={a}  variant="outlined"/>
+                            <TextField className={classes.answer}  value={a.option} onChange={(e)=>handleAnswerChange(e.target.value,i)} variant="outlined"/>
+                            <TextField className={classes.points}  value={a.points} onChange={(e)=>handlePointsChange(e.target.value,i)} type="number" variant="outlined"/>
                            
                           </div>
                         </div>

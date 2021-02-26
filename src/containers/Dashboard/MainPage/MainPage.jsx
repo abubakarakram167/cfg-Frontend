@@ -77,7 +77,7 @@ class MainPage extends Component {
                                     <label>Preferences</label>
                                 </span>
                             </div>
-                            <div className="col bg-blue dashboardBorder">
+                            <div className="col bg-blue dashboardBorder" onClick={() => {history.push('/listing/media')}}>
                                 <i className="fas fa-images"/>
                                 <label>Media Library</label>
                             </div>

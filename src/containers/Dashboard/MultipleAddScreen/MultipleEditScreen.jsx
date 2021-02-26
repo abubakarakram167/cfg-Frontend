@@ -176,6 +176,7 @@ class MultipleEditScreen extends Component {
         // defaultValue="2017-05-24"
         name='start_date'
         onChange={this.onChangeValue}
+        value={this.state.start_date}
         className={classes.w_100}
         required
         InputLabelProps={{
@@ -192,6 +193,7 @@ class MultipleEditScreen extends Component {
         type='date'
         // defaultValue="2017-05-24"
         name='end_date'
+        value={this.state.end_date}
         onChange={this.onChangeValue}
         className={classes.w_100}
         required
