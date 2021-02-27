@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import Header from '../../../components/Header';
 import Datatable from '../../../components/Datatable/Datatable';
-import { getPreferences } from '../../../store/actions/preferences.actions';
+import { getPreferences,editPreferences } from '../../../store/actions/preferences.actions';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -42,6 +42,7 @@ class PreferencesListingScreen extends Component {
   componentDidMount() {
     
     let abc= this.props['getPreferences']();
+    console.log(abc)
     // console.log(getPreferences())
     abc.then((res)=>{
       this.setState({preference:this.props.preferences})
@@ -59,16 +60,19 @@ this.setState({AddOpen:true})
   handleClose=()=>{
     this.setState({AddOpen:false,EditOpen:false})
       }
-      onSave=(e)=>{
+//       onSave=(e)=>{
 
-let newArr=[...this.state.preference,...[e]]
-this.setState({preference:newArr})
-      }
+// let newArr=[...this.state.preference,...[e]]
+// this.setState({preference:newArr})
+//       }
       onEdit=(e)=>{
 console.log(e)
         let newArr=[...this.state.preference]
         newArr[ newArr.indexOf(this.state.selectedRow)]=e
         this.setState({preference:newArr})
+
+        console.log(this.props['editPreferences'](e.id,e))
+        
       }
 
       onRowClicked=(e)=>{
@@ -95,7 +99,7 @@ this.handleEditOpen()
       },
       {
         name: 'Description',
-        selector: 'description',
+        selector: 'option_description',
       },
     ];
    
@@ -150,7 +154,7 @@ this.handleEditOpen()
              
             </div>
           </div>
-          <AddModal title='Add preference' index={this.state.preference.length} onClose={this.handleClose} open={this.state.AddOpen} ><AddNewPreference onClose={this.handleClose} onSave={(e)=>this.onSave(e)}/></AddModal>
+          {/* <AddModal title='Add preference' index={this.state.preference.length} onClose={this.handleClose} open={this.state.AddOpen} ><AddNewPreference onClose={this.handleClose} onSave={(e)=>this.onSave(e)}/></AddModal> */}
           <AddModal title='Edit preference' onClose={this.handleClose} open={this.state.EditOpen} ><EditPreference selectedRow={this.state.selectedRow} onClose={this.handleClose} onSave={e=>this.onEdit(e)}/></AddModal>
        
         </main>
@@ -168,6 +172,7 @@ function mapPropsToState(store) {
 const mapDispatchToProps = (dispatch) => {
   return {
     getPreferences: () => dispatch(getPreferences()),
+    editPreferences:(params,body)=> dispatch(editPreferences(params,body)),
     push: (param) => dispatch(push(param)),
   };
 };

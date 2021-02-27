@@ -2788,7 +2788,13 @@ main {
 .ljvEUq {
   /* display: none !important; */
 }
+.MuiOutlinedInput-root {
+border-radius: 8px !important;
+}
+.rdw-editor-wrapper {
+  border-radius: 8px !important;
 
+}
 .input-label {
   text-align: start;
   margin-bottom: 6px;
@@ -5291,3 +5297,13 @@ input[type='number'] {
 
 .MuiFormControlLabel-label{width:100%}
 .MuiButton-root{padding:8px 16px !important ;}
+
+.MuiDropzoneArea-root{
+  max-width: 700px;
+}
+.MuiDropzoneArea-text{
+  color:gray
+}
+.MuiDropzonePreviewList-root{
+  max-width: 700px;
+}

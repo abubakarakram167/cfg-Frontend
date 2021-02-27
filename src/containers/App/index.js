@@ -30,9 +30,10 @@ import {
   PreviewQuizScreen,
 } from "../Dashboard/Quiz/Loadable";
 import { PreferencesListingScreen } from "../Dashboard/Preferences/Loadable";
+import { MediaContentScreen } from "../Dashboard/MediaLibrary/Loadable";
 import ResetPassword from "../Auth/ResetPassword/Loadable";
 import CFGSessionDetails from "../Dashboard/CFGSession.js/CFGSessionDetails";
-import SessionContentScreen from "../Dashboard/CFGSession.js/SessionContentScreen"
+import SessionContentScreen from "../Dashboard/CFGSession.js/SessionContentScreen";
 
 function App() {
   return (
@@ -173,6 +174,10 @@ function App() {
         <ProtectedRoute
           path='/content/quiz'
           component={withRouter(QuizContentScreen)}
+        />
+        <ProtectedRoute
+          path='/listing/media'
+          component={withRouter(MediaContentScreen)}
         />
         <ProtectedRoute
           path='/preview/quiz'
