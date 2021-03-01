@@ -20,6 +20,7 @@ class UserManagement extends Component {
     role: '',
     users: [],
     status: '',
+    showAll: false
   };
 
   componentDidMount() {
@@ -27,8 +28,12 @@ class UserManagement extends Component {
   }
 
   handleSelected = (data) => {
+    let showAll;
+    if(!this.state.showAll)
+      showAll = true 
     this.setState({
       users: data.selectedRows,
+      showAll
     });
   };
   onChangeValue = (e) => {
@@ -88,21 +93,21 @@ class UserManagement extends Component {
 
   render() {
     const columns = [
-      {
-        name: 'Select All',
-        selector: 'user_name',
-        sortable: true,
-        // cell: row => <Link to={`/${row.id}`}>{row.id}</Link>
-      },
+      // {
+      //   name: 'Select All',
+      //   selector: 'user_name',
+      //   sortable: true,
+      //   // cell: row => <Link to={`/${row.id}`}>{row.id}</Link>
+      // },
       {
         selector: 'first_name',
         // sortable: true,
       },
-      // {
-      //     name: 'Last Name',
-      //     selector: 'first_name',
-      //     sortable: true
-      // },
+      {
+          // name: 'Last Name',
+          selector: 'last_name',
+          sortable: true
+      },
       {
         selector: 'email',
         // sortable: true
@@ -199,11 +204,19 @@ class UserManagement extends Component {
           <br />
           <br />
           <br />
-          <div style={{ marginTop: -35 }} className={'row'}>
-            <div className={'col-md-1'} />
+          <div style={{ marginTop: -35 }} className={'row justify-content-center'}>
+            <div  
+              className="col-md-1 input-check-all"
+            >
+            <input 
+              type = "checkbox"
+              checked = {this.state.showAll}
+              onClick = {()=> { this.handleSelected({ selectedRows: this.props.users }) } }
+            />
+            </div>
             <div className='col-md-2'>
               <div className='input-label'>Username</div>
-              <div className='d-flex align-items-center justify-content-center'>
+              <div className='d-flex align-items-center'>
                 <input
                   className={'input-border'}
                   type='text'
@@ -217,8 +230,8 @@ class UserManagement extends Component {
               </div>
             </div>
             <div className='col-md-2'>
-              <div className='input-label'>Name</div>
-              <div className='d-flex align-items-center justify-content-center'>
+              <div className='input-label other-fields'>Name</div>
+              <div className='d-flex align-items-center'>
                 <input
                   className={'input-border'}
                   type='text'
@@ -232,8 +245,8 @@ class UserManagement extends Component {
               </div>
             </div>
             <div className='col-md-2'>
-              <div className='input-label'>Email</div>
-              <div className='d-flex align-items-center justify-content-center'>
+              <div className='input-label other-fields'>Email</div>
+              <div className='d-flex align-items-center'>
                 <input
                   className={'input-border'}
                   type='text'
@@ -247,8 +260,8 @@ class UserManagement extends Component {
               </div>
             </div>
             <div className='col-md-2'>
-              <div className='input-label'>Role</div>
-              <div className='d-flex align-items-center justify-content-center'>
+              <div className='input-label other-fields'>Role</div>
+              <div className='d-flex align-items-center'>
                 <select
                   name='role'
                   className={'input-border'}
@@ -270,8 +283,8 @@ class UserManagement extends Component {
               </div>
             </div>
             <div className='col-md-2'>
-              <div className='input-label'>Status</div>
-              <div className='d-flex align-items-center justify-content-center'>
+              <div className='input-label other-fields'>Status</div>
+              <div className='d-flex align-items-center'>
                 <select
                   name='status'
                   className={'input-border'}
@@ -298,8 +311,8 @@ class UserManagement extends Component {
               </div>
             </div> */}
           </div>
-          <div className={'row'}>
-            <div className={'col-md-1'} />
+          <div className = "container-fluid" >
+          <div className={'row justify-content-center'}>     
             <div className={'col-md-10'}>
               <Datatable
                 data={this.props.users}
@@ -307,8 +320,8 @@ class UserManagement extends Component {
                 handleSelected={this.handleSelected}
                 conditionalRowStyles={conditionalRowStyles}
               />
-            </div>
-            <div className={'col-md-1'} />
+            </div>    
+          </div>
           </div>
         </main>
       </>

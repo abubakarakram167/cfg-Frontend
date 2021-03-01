@@ -2793,16 +2793,13 @@ border-radius: 8px !important;
 }
 .rdw-editor-wrapper {
   border-radius: 8px !important;
-
 }
 .input-label {
-  text-align: start;
   margin-bottom: 6px;
   font-weight: 700;
   color: #6a6a6a;
   display: flex;
-  justify-content: start;
-  margin-left: 14%;
+  width: 80%;
 }
 .um_primary_button {
   background: #eb1b29 !important;
@@ -2823,7 +2820,9 @@ border-radius: 8px !important;
   background: #c3ac89;
   color: #fff;
 }
-
+.input-check-all{
+  text-align: end;
+}
 .dashboardBorder {
   /*border: 1px solid #707070;*/
   border-radius: 10px;
