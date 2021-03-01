@@ -3,13 +3,23 @@ import DataTable from 'react-data-table-component';
 
 class Datatable extends Component {
   render() {
+    const fakeData = this.props.data.map((user)=> {
+      return {
+        ...user,
+        first_name: 'abubakar',
+        last_name: 'sajid',
+        middle_name: 'sajid'
+      }
+    })
+
     return (
       <DataTable
         columns={this.props.columns}
-        data={this.props.data}
+        data={fakeData}
         selectableRows
         onSelectedRowsChange={this.props.handleSelected}
         pagination
+        noTableHead = {true}
         // paginationServer
         // expandableRows
         onRowClicked={this.props.onRowClicked}
