@@ -14,10 +14,11 @@ export const getMedia = () => {
 export const addMedia = (body) => {
   return Media.addMedia(body)
     .then((response) => {
+      console.log("the response after adding media", response)
       return response.data;
     })
     .catch((e) => {
-      console.log(e.response.data);
-      return e.response.data;
+      console.log(e);
+      return e
     });
 };

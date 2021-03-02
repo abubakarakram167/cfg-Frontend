@@ -17,7 +17,10 @@ import { editHead } from "../../../store/actions/dynamic.actions";
 import { screensConfig } from '../MultipleAddScreen/addConfig';
 import axiosInstance from '../../../utils/axios';
 import history from "../../../utils/history";
+import { StylesProvider } from '@material-ui/core';
+import './customToolbarOptions.css';
 
+// console.log("the custom", JSON.parse(customToolbarOptions))
 class SessionContentScreen extends Component {
     constructor(props) {
         super(props);
@@ -62,11 +65,11 @@ class SessionContentScreen extends Component {
     }
 
     componentDidMount() {
-        if (screensConfig[this.props.pathname] === null || this.props.content === null) {
-            history.push('/dashboard');
-        }
-        this.setState({pageContext: screensConfig[this.props.pathname], show: true});
-        this.setState({ title: '', subTitle: '', detail: ''});
+      if (screensConfig[this.props.pathname] === null || this.props.content === null) {
+        history.push('/dashboard');
+      }
+      this.setState({pageContext: screensConfig[this.props.pathname], show: true});
+      this.setState({ title: '', subTitle: '', detail: ''});
     }
 
     componentDidUpdate() {
@@ -196,10 +199,10 @@ class SessionContentScreen extends Component {
                         <div className="row dash-session-header">
                             <div className="col-md-8">
                                 <div className="session-title">
-                                    <input type="text" style={{ border: 'none' }} onChange={this.onChangeValue} placeholder="Title" name="title" value={this.state?.title} />
+                                    <input type="text" style={{ border: 'none', color: '#888484' }} onChange={this.onChangeValue} placeholder="Title" name="title" value={this.state?.title} />
                                 </div>
                                 <div className="session-sub-title">
-                                    <input type="text" placeholder="subTitle" style={{ border: 'none' }} onChange={this.onChangeValue} name="subTitle" value={this.state?.subTitle} />
+                                    <input type="text" placeholder="subTitle" style={{ border: 'none', color: '#888484' }} onChange={this.onChangeValue} name="subTitle" value={this.state?.subTitle} />
                                 </div>
                             </div>
                             <div className="col-md-4" style={{textAlign: "right"}}>
@@ -207,14 +210,15 @@ class SessionContentScreen extends Component {
                                 </button>
                                 <div className="btn-group">
                                     <button onClick={this.onFormSubmit} type="button" className="btn btn-danger"
-                                            style={{
-                                                borderTopLeftRadius: "25px",
-                                                borderBottomLeftRadius: "25px",
-                                                padding: "10px 0",
-                                                paddingLeft: "25px",
-                                                paddingRight: "5px"
-                                            }}>
-                                        <i className="fas fa-upload"/> Publish
+                                      style={{
+                                        borderTopLeftRadius: "25px",
+                                        borderBottomLeftRadius: "25px",
+                                        padding: "10px 0",
+                                        paddingLeft: "25px",
+                                        paddingRight: "5px"
+                                      }}
+                                    >
+                                      <i className="fas fa-upload"/> Publish
                                     </button>
                                     <button type="button"
                                             className="btn btn-danger dropdown-toggle dropdown-toggle-split"
@@ -245,100 +249,99 @@ class SessionContentScreen extends Component {
                             </div>
                         </div>
                         <div className="row" style={{marginTop: "20px"}}>
-                            <div className="col-md-9" style={{position: "relative"}}>
-                                <Editor
-                                    editorState={this.state.editorState}
-                                    toolbarClassName="toolbarClassName"
-                                    wrapperClassName="wrapperClassName"
-                                    editorClassName="editorClassName"
-                                    onEditorStateChange={this.onEditorStateChange}
-                                />
-                            </div>
+                          <div className="col-md-9" style={{position: "relative"}}>
+                            <Editor
+                              editorState={this.state.editorState}
+                              wrapperClassName="wrapperClassName"       
+                              onEditorStateChange={this.onEditorStateChange}
+                              toolbar = {{ options: ['inline', 'textAlign', 'colorPicker', 'link', 'embedded', 'image', 'remove'] }}
+                            />
+                          </div>
                             <div className="col-md-3">
-                                <div className="dash_form_right">
-                                    <form onSubmit={this.onFormSubmit}>
-                                        <div className="mb-4">
-                                            <span>Categories *</span>
-                                            <Typeahead
-                                                disabled={true}
-                                                allowNew
-                                                id="custom-selections-example"
-                                                multiple
-                                                newSelectionPrefix="Add a new category: "
-                                                options={[]}
-                                                placeholder="Categories *"
-                                                onChange={(selected) => {
-                                                    this.onChangeTypehead(selected, 'categories')
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="mb-4">
-                                            <span>Apply to Group(s)*</span>
-                                            <Typeahead
-                                                disabled={true}
-                                                allowNew
-                                                id="custom-selections-example"
-                                                multiple
-                                                newSelectionPrefix="Add a new Group: "
-                                                options={[]}
-                                                placeholder="Groups *"
-                                                onChange={(selected) => {
-                                                    this.onChangeTypehead(selected, 'groups')
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="mb-4">
-                                            <span>Keywords</span>
-                                            <Typeahead
-                                                disabled={true}
-                                                allowNew
-                                                id="custom-selections-example"
-                                                multiple
-                                                newSelectionPrefix="Add a new Keyword: "
-                                                options={[]}
-                                                placeholder="Keywords"
-                                                onChange={(selected) => {
-                                                    this.onChangeTypehead(selected, 'keywords')
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="row mb-4" style={{ width: "99%", marginLeft: "1px", marginRight: "1px" }}>
-                                            <div className="col-sm-6" style={{ backgroundColor: "#F9F9F9" }}>
-                                                <span>Start Date</span>
-                                                <br />
-                                                <input style={{ border: "none", height: "50px", backgroundColor: "#F9F9F9" }} type="date" name="startDate" placeholder="01/01/2021"
-                                                    value={this.state.startDate}
-                                                    onChange={this.onChangeValue} required />
-                                            </div>
-                                            <div className="col-sm-6" style={{ backgroundColor: "#F9F9F9" }}>
-                                                <span>End Date</span>
-                                                <br />
-                                                <input style={{ border: "none", height: "50px", backgroundColor: "#F9F9F9" }} type="date" name="endDate" placeholder="01/01/2021"
-                                                    value={this.state.endDate}
-                                                    onChange={this.onChangeValue} required />
-                                            </div>
-                                        </div>
-                                        <div className="mb-4">
-                                            <select placeholder="Draft" value={this.state.status} name={"status"}
-                                                    onChange={this.onChangeValue}>
-                                                <option value={"draft"}>Draft</option>
-                                                <option value={"published"}>Publish</option>
-                                            </select>
-                                        </div>
-                                        <div className="mb-4">
-                                            <label>Total Points</label>
-                                            <input type="text" name="totalPoints" placeholder="Total Points*"
-                                                   value={this.state.totalPoints}
-                                                   onChange={this.onChangeValue} required/>
-                                        </div>
-                                        <span>Feature Image <i className={'fas fa-plus-circle'}
-                                                               style={{color: 'red'}}></i></span>
-                                        <div className={'featured-img-container'}>
-                                            <img src={'/images/member-1.png'} style={{width: '150px'}} alt=""/>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                              <div className="dash_form_right">
+                                  <form onSubmit={this.onFormSubmit}>
+                                      <div className="mb-4">
+                                          <span>Categories *</span>
+                                          <Typeahead
+                                              disabled={true}
+                                              allowNew
+                                              id="custom-selections-example"
+                                              multiple
+                                              newSelectionPrefix="Add a new category: "
+                                              options={[]}
+                                              placeholder="Categories *"
+                                              onChange={(selected) => {
+                                                  this.onChangeTypehead(selected, 'categories')
+                                              }}
+                                          />
+                                      </div>
+                                      <div className="mb-4">
+                                          <span>Apply to Group(s)*</span>
+                                          <Typeahead
+                                              disabled={true}
+                                              allowNew
+                                              id="custom-selections-example"
+                                              multiple
+                                              newSelectionPrefix="Add a new Group: "
+                                              options={[]}
+                                              placeholder="Groups *"
+                                              onChange={(selected) => {
+                                                  this.onChangeTypehead(selected, 'groups')
+                                              }}
+                                          />
+                                      </div>
+                                      <div className="mb-4">
+                                          <span>Keywords</span>
+                                          <Typeahead
+                                              disabled={true}
+                                              allowNew
+                                              id="custom-selections-example"
+                                              multiple
+                                              newSelectionPrefix="Add a new Keyword: "
+                                              options={[]}
+                                              placeholder="Keywords"
+                                              onChange={(selected) => {
+                                                  this.onChangeTypehead(selected, 'keywords')
+                                              }}
+                                          />
+                                      </div>
+                                      <div className="row mb-4" style={{ width: "99%", marginLeft: "1px", marginRight: "1px" }}>
+                                          <div className="col-sm-6" style={{ backgroundColor: "#F9F9F9" }}>
+                                              <span>Start Date</span>
+                                              <br />
+                                              <input style={{ border: "none", height: "50px", backgroundColor: "#F9F9F9" }} type="date" name="startDate" placeholder="01/01/2021"
+                                                  value={this.state.startDate}
+                                                  onChange={this.onChangeValue} required />
+                                          </div>
+                                          <div className="col-sm-6" style={{ backgroundColor: "#F9F9F9" }}>
+                                              <span>End Date</span>
+                                              <br />
+                                              <input style={{ border: "none", height: "50px", backgroundColor: "#F9F9F9" }} type="date" name="endDate" placeholder="01/01/2021"
+                                                  value={this.state.endDate}
+                                                  onChange={this.onChangeValue} required />
+                                          </div>
+                                      </div>
+                                      <div className="mb-4">
+                                          <select placeholder="Draft" value={this.state.status} name={"status"}
+                                                  onChange={this.onChangeValue}>
+                                              <option value={"draft"}>Draft</option>
+                                              <option value={"published"}>Publish</option>
+                                          </select>
+                                      </div>
+                                      <div className="mb-4">
+                                          <label>Total Points</label>
+                                          <input type="text" name="totalPoints" placeholder="Total Points*"
+                                                  value={this.state.totalPoints}
+                                                  onChange={this.onChangeValue} required/>
+                                      </div>
+                                      <span>Feature Image <i className={'fas fa-plus-circle'}
+                                                              style={{color: 'red'}}></i></span>
+                                      <div className={'featured-img-container'}>
+                                          <img src={'/images/member-1.png'} style={{width: '150px'}} alt=""/>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
                         </div>
                     </div>
 
