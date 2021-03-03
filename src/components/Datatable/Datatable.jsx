@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DataTable from 'react-data-table-component';
-
+import '../Header/Header.scss';
 class Datatable extends Component {
   render() {
     const fakeData = this.props.data.map((user)=> {
@@ -19,11 +19,12 @@ class Datatable extends Component {
         selectableRows
         onSelectedRowsChange={this.props.handleSelected}
         pagination
-        noTableHead = {true}
+        noTableHead = {false}
         // paginationServer
         // expandableRows
         onRowClicked={this.props.onRowClicked}
         pointerOnHover
+        selectableRowsHighlight = {true}
         striped
         responsive
         conditionalRowStyles={this.props.conditionalRowStyles}

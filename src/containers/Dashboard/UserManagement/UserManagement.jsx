@@ -28,6 +28,7 @@ class UserManagement extends Component {
   }
 
   handleSelected = (data) => {
+    console.log("the data", data)
     let showAll;
     if(!this.state.showAll)
       showAll = true 
@@ -146,10 +147,9 @@ class UserManagement extends Component {
         <main>
           <div className='dash-wrapper'>
             <div
-              style={{ textAlign: 'center' }}
               className='row dash-session-header'
             >
-              <div className='col-md-8'>
+              <div className='col-md-11'>
                 <label
                   style={{
                     fontSize: '1rem',
@@ -202,20 +202,18 @@ class UserManagement extends Component {
             </div>
           </div>
           <br />
-          <br />
-          <br />
-          <div style={{ marginTop: -35 }} className={'row justify-content-center'}>
-            <div  
-              className="col-md-1 input-check-all"
-            >
-            <input 
-              type = "checkbox"
-              checked = {this.state.showAll}
-              onClick = {()=> { this.handleSelected({ selectedRows: this.props.users }) } }
-            />
-            </div>
+          <div style={{ marginTop: -35, width: '100%', margin: 'auto' }} className={'row justify-content-center'}>  
             <div className='col-md-2'>
-              <div className='input-label'>Username</div>
+              <div className='input-label'>  
+                {/* <input 
+                  type = "checkbox"
+                  className = "custom-checkbox"
+                  name = "select-all-rows"
+                  checked = {this.state.showAll}
+                  onClick = {()=> { this.handleSelected({ selectedRows: this.props.users, allSelected: true, selectedCount: 2 }) } }
+                /> */}
+                Username
+              </div>
               <div className='d-flex align-items-center'>
                 <input
                   className={'input-border'}
@@ -229,7 +227,7 @@ class UserManagement extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-md-2'>
+            <div className='col-md-2 other-stacks'>
               <div className='input-label other-fields'>Name</div>
               <div className='d-flex align-items-center'>
                 <input
@@ -244,7 +242,7 @@ class UserManagement extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-md-2'>
+            <div className='col-md-2 other-stacks'>
               <div className='input-label other-fields'>Email</div>
               <div className='d-flex align-items-center'>
                 <input
@@ -259,7 +257,7 @@ class UserManagement extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-md-2'>
+            <div className='col-md-2 other-stacks other-stacks-two'>
               <div className='input-label other-fields'>Role</div>
               <div className='d-flex align-items-center'>
                 <select
@@ -282,7 +280,7 @@ class UserManagement extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-md-2'>
+            <div className='col-md-2 other-stacks other-stacks-two'>
               <div className='input-label other-fields'>Status</div>
               <div className='d-flex align-items-center'>
                 <select
@@ -300,25 +298,16 @@ class UserManagement extends Component {
                 </div>
               </div>
             </div>
-            {/* <div className={'col-md-1'}>
-              <div className='d-block'>
-                <input
-                  type='submit'
-                  className='button primary_button button_block'
-                  value='Search'
-                  onClick={this.onResetSubmit}
-                />
-              </div>
-            </div> */}
           </div>
           <div className = "container-fluid" >
           <div className={'row justify-content-center'}>     
-            <div className={'col-md-10'}>
+            <div className={'col-md-11'}>
               <Datatable
                 data={this.props.users}
                 columns={columns}
                 handleSelected={this.handleSelected}
                 conditionalRowStyles={conditionalRowStyles}
+                onRowClicked  = {(get)=> { console.log("the geting...", get) }}
               />
             </div>    
           </div>

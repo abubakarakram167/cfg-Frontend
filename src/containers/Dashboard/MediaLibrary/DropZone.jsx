@@ -6,20 +6,20 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 const useStyles = makeStyles((theme) => ({
- cont:{
-     display:'flex',
-     alignItems:'center',
-     flexDirection:'column'
- },
- selectButton:{
-border:'1px solid grey',
-backgroundColor:'lightgrey'
- },
- header:{
-    width:'100%',
-    maxWidth:'700px',
-    color:'gray'
-},
+  cont:{
+    display:'flex',
+    alignItems:'center',
+    flexDirection:'column'
+  },
+  selectButton:{
+      border:'1px solid grey',
+      backgroundColor:'lightgrey'
+  },
+  header:{
+      width:'100%',
+      maxWidth:'700px',
+      color:'gray'
+  },
  dropCont:{
      width:'100%',
      display:'flex',
@@ -44,32 +44,58 @@ backgroundColor:'lightgrey'
 const DropZone = (props) => {
 const classes=useStyles()
 const [files,setFiles]=useState([])
-    const handleChange=(e)=>{
-setFiles(e)
-    }
+const [imaging, setImaging] = useState(null)
+const handleChange=(e)=>{
+  let idCardBase64 = '';
+  console.log("the e", e)
+  if(e.length){
+    getBase64(e[0], (result) => {
+      console.log("the result", result)
+        e[0].base64 = result;
+        var image = new Image();
+        image.src = result
+        setImaging(image)
+        document.body.appendChild(image);
+        setFiles(e)
+    });
+  }
+}
 
-    const handleSave=()=>{
-        props.onSave(files)
-        props.onClose()
-    }
+const getBase64 = (file, cb) =>{
+  let reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = function () {
+      cb(reader.result)
+  };
+  reader.onerror = function (error) {
+      console.log('Error: ', error);
+  };
+}
 
-    return ( <div className={classes.cont}>
-        <div className={classes.dropCont}>
-        <div className={classes.header}><i className="fas fa-images" style={{fontSize:'25px',color:'gray'}} /> <b style={{color:'gray',fontSize:'22px'}}>Add New Media</b></div>
-<DropzoneArea
-Icon={()=><Button className={classes.selectButton} startIcon={<AttachFileIcon />}>Select files</Button>}
-acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
-showPreviews={true}
-onSave={handleChange}
-dropzoneText="Drop files here or"
-maxFileSize={5000000}
+const handleSave=()=>{
+  console.log("the filess", files)
+  props.onSave(files);
+  props.onClose();
+}
+
+return (
+  <div className={classes.cont}>
+    <div className={classes.dropCont}>
+      <div className={classes.header}><i className="fas fa-images" style={{fontSize:'25px',color:'gray'}} /> <b style={{color:'gray',fontSize:'22px'}}>Add New Media</b></div>
+      <DropzoneArea
+        Icon={()=><Button className={classes.selectButton} startIcon={<AttachFileIcon />}>Select files</Button>}
+        acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+        showPreviews={true}
+        onSave={handleChange}
+        dropzoneText="Drop files here or"
+        maxFileSize={5000000}
         onChange={(e)=>handleChange(e)}
-        />
-        <p className={classes.footer}>Maximum upload file size: 1 GB</p>
-</div>
-
-<div className={classes.btnCont}>
-<Button
+      />
+      <p className={classes.footer}>Maximum upload file size: 1 GB</p>
+    </div>
+      {/* <img  src = {imaging} /> */}
+      <div className={classes.btnCont}>
+        <Button
           variant="contained"
           onClick={handleSave}
           style={{ backgroundColor: "red" }}
@@ -89,8 +115,6 @@ maxFileSize={5000000}
         >
           Cancel
         </Button>
-
-        
       </div>
 
     </div> );

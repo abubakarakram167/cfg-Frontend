@@ -36,20 +36,17 @@ const useStyles = makeStyles((theme) => ({
 const MediaContentScreen = () => {
     const [media,setMedia]=useState([]);
     const [displayList,setDisplayList]=useState(true)
-
+    console.log("the media", media)
     useEffect(()=>{
-        getMedia().then((res)=>setMedia(res))
+      getMedia().then((res)=>setMedia(res))
     },[])
     const classes=useStyles()
     const handleSave=(e)=>{
-console.log(e)
-
-
-e.forEach((f)=>{
-    addMedia({title:f.name,url:f.path,mime_type:f.type,description:"",created_by:JSON.parse(localStorage.getItem('session')).author.id})
-    console.log({title:f.name,url:f.path,mime_type:f.type,description:"",created_by:JSON.parse(localStorage.getItem('session')).author.email})
-})
-
+      // debugger 
+      e.forEach((f)=>{
+          addMedia({title:f.name,url:f.path,mime_type:f.type,description:"",created_by:1})
+          // console.log({title:f.name,url:f.path,mime_type:f.type,description:"",created_by:JSON.parse(localStorage.getItem('session')).author.email})
+      })
     }
     return ( <>
      <Header />
@@ -67,12 +64,12 @@ e.forEach((f)=>{
           </div>
           <div className="row">
             <div className="media-grid-parent">
-{media.map((m)=>(
-    <div className="media-img">
+            {media.map((m)=>(
+              <div className="media-img">
                 <img src={m.url} />
               </div>
-
-))}
+            ))
+            }
               
             </div>
           </div>

@@ -4,6 +4,9 @@ class Quiz {
   static addQuestion(body) {
     return axiosInstance.post("/api/question", body);
   }
+  static addHead(body) {
+    return axiosInstance.post("/api/quiz", body);
+  }
   static addAnswers(body) {
     return axiosInstance.post("/api/question_options", body);
   }
@@ -12,6 +15,9 @@ class Quiz {
   }
   static addQuiz(body) {
     return axiosInstance.post("/api/quiz", body);
+  }
+  static getAll(url_string){
+    return axiosInstance.get("/api/quiz/list", url_string);
   }
 }
 export default Quiz;
