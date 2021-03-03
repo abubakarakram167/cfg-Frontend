@@ -198,11 +198,12 @@ class SessionContentScreen extends Component {
                     <div className="dash-wrapper">
                         <div className="row dash-session-header">
                             <div className="col-md-8">
-                                <div className="session-title">
-                                    <input type="text" style={{ border: 'none', color: '#888484' }} onChange={this.onChangeValue} placeholder="Title" name="title" value={this.state?.title} />
+                                
+                                <div >
+                                    <input className="session-title" type="text" style={{ border: 'none', color: '#E09B3B' }} onChange={this.onChangeValue} placeholder="Title" name="title" value={this.state?.title} />
                                 </div>
-                                <div className="session-sub-title">
-                                    <input type="text" placeholder="subTitle" style={{ border: 'none', color: '#888484' }} onChange={this.onChangeValue} name="subTitle" value={this.state?.subTitle} />
+                                <div >
+                                    <input className="session-sub-title" type="text" placeholder="subTitle" style={{ border: 'none', color: '#929292' , fontFamily:'Segoe UI' , fontWeightL:'bold' , characterSpacing: '12.89999' , lineSpacing: '33', fontSize: '25px' }} onChange={this.onChangeValue} name="subTitle" value={this.state?.subTitle} />
                                 </div>
                             </div>
                             <div className="col-md-4" style={{textAlign: "right"}}>

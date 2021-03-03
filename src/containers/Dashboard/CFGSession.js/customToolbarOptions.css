@@ -6,11 +6,15 @@
   border-width: 0px;
   bottom: 45px;
   padding: 0px;
+  background-color: #f9f9f9;
 }
 .rdw-editor-wrapper {
   border-radius: 4px !important;
+  border: 1px solid #707070;
   min-height: 570px;
   margin-bottom: 50px;
+  padding: 10px;
+  background-color: white;
 }
 .public-DraftStyleDefault-ltr{
   margin: 0;

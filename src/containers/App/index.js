@@ -28,6 +28,8 @@ import {
 import {
   QuizContentScreen,
   PreviewQuizScreen,
+  QuizAddScreen,
+  QuizListingScreen
 } from "../Dashboard/Quiz/Loadable";
 import { PreferencesListingScreen } from "../Dashboard/Preferences/Loadable";
 import { MediaContentScreen } from "../Dashboard/MediaLibrary/Loadable";
@@ -82,7 +84,7 @@ function App() {
         />
         <ProtectedRoute
           path='/add/quiz'
-          component={withRouter(MultipleAddScreen)}
+          component={withRouter(QuizAddScreen)}
         />
         <ProtectedRoute
           path='/add/mini'
