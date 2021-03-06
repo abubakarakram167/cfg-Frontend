@@ -64,7 +64,7 @@ class MultipleListingScreen extends Component {
     const locationShould = history?.location?.pathname;
     history.push({
       pathname: locationShould === "/listing/session" ? 
-      `/content/detail/session` : `/content/${this.props.pathname}`,
+      `/content/detail/session` : `/content/${this.props.pathname}/?quiz_id=${content.id}`,
       state: { content },
     });
     localStorage.setItem("session", JSON.stringify(content));

@@ -43,12 +43,16 @@ const PreviewQuizScreen = ({data}) => {
   const handleFinish=()=>{
     console.log(attempt)
   }
+  const getQuizParams=()=>{
+    var url = new URL(document.URL);
+    return url.searchParams.get("quiz_id");
+  }
 
   useEffect(() => {
     const getQuestions = async() => {
-      const questions = await getQuizAllQuestions(); 
+      const questions = await getQuizAllQuestions(getQuizParams()); 
       const questionAllOptions = await getQuestionAllOptions();
-      const hardCodeOptionsWithQuestion = questions.questions.map((question)=> {
+      const hardCodeOptionsWithQuestion =   questions && questions.questions.length ? questions.questions.map((question)=> {
         const options = questionAllOptions.filter((option) => {
           return option.question_id === question.id;
         })
@@ -56,8 +60,8 @@ const PreviewQuizScreen = ({data}) => {
           ...question,
           answers: options
         }
-      })
-      console.log("here to..", hardCodeOptionsWithQuestion)
+      }) : []
+    
       setQuestions(hardCodeOptionsWithQuestion);
     }
     getQuestions()

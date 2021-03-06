@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QuizContentScreen = () => {
+const QuizContentScreen = (props) => {
   const classes = useStyles();
   const [questions, setQuestions] = useState([]);
   const [openNew, setOpenNew] = useState(false);
@@ -83,7 +83,6 @@ const QuizContentScreen = () => {
     EditorState.createWithText("")
   );
   const [detail, setDetail] = useState("");
-  console.log("the detail", detail);
   const handleOpenNew = () => {
     setOpenNew(true);
   };
@@ -123,7 +122,13 @@ const QuizContentScreen = () => {
 const handleEdit = (e) => {
   console.log("ada", e)
   setDetail(e.detail)
-  setSelected(e);
+  if(!selected)
+    setSelected(e)
+  else{
+    if( e.id === selected.id)
+      setSelected(null);
+  }  
+  
 };
 const handleAnswerDelete=(e,i)=>{
   let newArr=[...questions]
@@ -152,6 +157,7 @@ const handlePointsChange=(e,i)=>{
   newArr[index]=q;
   setQuestions(newArr)
 }
+
 const handlePublish=()=>{
   questions.forEach((q)=>{
     let points=[]
@@ -160,7 +166,7 @@ const handlePublish=()=>{
     })
     if(q.new){
       addQuestionaire({question:q.question,correct_answer:points.length>0? parseInt(points.sort((a,b)=>b-a)[0],10):0,deleted:0, detail}).then((res)=>{
-        addQuizQuestions({quiz_id:1,question_id:res.id,created_by:1 ,updated_at: moment(), created_at: moment(), deleted:false, detail})
+        addQuizQuestions({quiz_id: getQuizParams(),question_id:res.id,created_by:1 ,updated_at: moment(), created_at: moment(), deleted:false, detail})
         q.answers.forEach((a,i)=>{
           addAnswer({option_description:a.option, question_id:res.id, is_answer:a.points==parseInt(points.sort((a,b)=>b-a)[0],10)?1:0, sequence_order:i})
         })  
@@ -168,25 +174,32 @@ const handlePublish=()=>{
     }
   })
 }
+
+const getQuizParams=()=>{
+  var url = new URL(document.URL);
+  return url.searchParams.get("quiz_id");
+}
+
 useEffect(() => {
   const getQuestions = async() => {
-    let questions = await getQuizAllQuestions(); 
-    const questionAllOptions = await getQuestionAllOptions();
-    const hardCodeOptionsWithQuestion =   questions && questions.questions.length && questions.questions.map((question)=> {
-      const options = questionAllOptions.filter((option) => {
-        return option.question_id === question.id;
-      }).map(optionValue => {
-        return {
-          option: optionValue.option_description,
-          points: Math.floor(Math.random() * 10) + 1
-        }
-      })
+  let questions = await getQuizAllQuestions(parseInt(getQuizParams())); 
+  const questionAllOptions = await getQuestionAllOptions();
+  const hardCodeOptionsWithQuestion =   questions && questions.questions.length ? questions.questions.map((question)=> {
+    const options = questionAllOptions.filter((option) => {
+      return option.question_id === question.id;
+    }).map(optionValue => {
       return {
-        ...question,
-        answers: options,
-        new: false
+        option: optionValue.option_description,
+        points: Math.floor(Math.random() * 10) + 1
       }
-    })
+    }) 
+    return {
+      ...question,
+      answers: options,
+      new: false
+    }
+  }) : []
+
     setQuestions(hardCodeOptionsWithQuestion);
   }
   getQuestions()
@@ -259,7 +272,7 @@ const addNewAnswer=()=>{
               </Button>  
             </div>
             <div className="col-md-4" style={{ textAlign: "right" }}>
-              <button style = {{ padding: "7px 0",  paddingLeft: "25px", paddingRight: "25px", }} className="button-title button_inline" onClick={() => {history.push('/preview/quiz')}}>
+              <button style = {{ padding: "7px 0",  paddingLeft: "25px", paddingRight: "25px", }} className="button-title button_inline" onClick={() => {history.push(`/preview/quiz?quiz_id=${getQuizParams()}`)}}>
                 <i className="fas fa-eye" /> preview
               </button>
               <div className="btn-group">
@@ -365,7 +378,9 @@ const addNewAnswer=()=>{
                       style = {{ marginBottom: 80 }}
                       defaultValue={q.question}
                     />             
-                      <RichTextHtmlEditor onChangeDetail = {(data)=> setDetail(data) } detail = {detail}  />
+                      <RichTextHtmlEditor 
+                        onChangeDetail = {(data)=> setDetail(data) } detail = {detail}  
+                      />
                     <div className={classes.answerHeader}>
                       <h3>Answers</h3>{" "}
                       <Button

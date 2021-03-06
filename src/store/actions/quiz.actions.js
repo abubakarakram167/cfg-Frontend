@@ -84,9 +84,9 @@ export const addQuizQuestions = (body) => {
     });
 };
 
-export const getQuizAllQuestions = async() => {
+export const getQuizAllQuestions = async(quizId) => {
   try{
-    const getAllQuestions = await Quiz.getAllQuizQuestions();
+    const getAllQuestions = await Quiz.getAllQuizQuestions(quizId);
     return getAllQuestions.data
   }catch(e){
     return e.response.data;

@@ -108,7 +108,7 @@ class UserManagement extends Component {
 
   render() {
     const columns = [
-      // {
+      //  {
       //   name: 'Select All',
       //   selector: 'user_name',
       //   sortable: true,
@@ -117,6 +117,7 @@ class UserManagement extends Component {
       {
         selector: 'first_name',
         // sortable: true,
+       
       },
       {
           // name: 'Last Name',
@@ -217,7 +218,7 @@ class UserManagement extends Component {
           </div>
           <br />
           <div style={{ marginTop: -35, width: '100%', margin: 'auto' }} className={'row justify-content-center'}>  
-            <div className='col-md-2'>
+            <div className='col-md-2 username-column'>
               <div className='input-label'>  
                 <input 
                   type = "checkbox"
@@ -241,7 +242,7 @@ class UserManagement extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-md-2 other-stacks'>
+            <div className='col-md-2'>
               <div className='input-label other-fields'>Name</div>
               <div className='d-flex align-items-center'>
                 <input
@@ -256,7 +257,7 @@ class UserManagement extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-md-2 other-stacks'>
+            <div className='col-md-2 '>
               <div className='input-label other-fields'>Email</div>
               <div className='d-flex align-items-center'>
                 <input
@@ -271,7 +272,7 @@ class UserManagement extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-md-2 other-stacks other-stacks-two'>
+            <div className='col-md-2 '>
               <div className='input-label other-fields'>Role</div>
               <div className='d-flex align-items-center'>
                 <select
@@ -294,7 +295,7 @@ class UserManagement extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-md-2 other-stacks other-stacks-two'>
+            <div className='col-md-2'>
               <div className='input-label other-fields'>Status</div>
               <div className='d-flex align-items-center'>
                 <select
@@ -319,6 +320,7 @@ class UserManagement extends Component {
               <Datatable
                 data={this.props.users}
                 columns={columns}
+                showHeaderTable = {false}
                 handleSelected={this.handleSelected}
                 conditionalRowStyles={conditionalRowStyles}
                 onRowClicked  = {(get)=> { console.log("the geting...", get) }}
