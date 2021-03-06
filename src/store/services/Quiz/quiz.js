@@ -23,7 +23,7 @@ class Quiz {
     return axiosInstance.get("/api/quiz/list");
   }
   static getAllQuizQuestions(){
-    return axiosInstance.get("/api/quiz_questions/1");
+    return axiosInstance.get("/api/quiz_questions/2");
   }
 
 }
