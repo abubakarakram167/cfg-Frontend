@@ -55,6 +55,7 @@ function App() {
           component={withRouter(ForgetPassword)}
         />
         <Route path='/reset' component={withRouter(ResetPassword)} />
+        <Route path='/createPassword' component={withRouter(ResetPassword)} />
 
         {/*Dashboard Links*/}
         <ProtectedRoute path='/dashboard' component={withRouter(MainPage)} />
@@ -142,7 +143,7 @@ function App() {
         />
         <ProtectedRoute
           path='/listing/quiz'
-          component={withRouter(MultipleListingScreen)}
+          component={withRouter( QuizListingScreen)}
         />
         <ProtectedRoute
           path='/listing/mini'

@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import history from '../../../utils/history';
 import _ from 'lodash';
+import moment from 'moment';
 
 class MultipleListingScreen extends Component {
   state = {
@@ -32,11 +33,9 @@ class MultipleListingScreen extends Component {
     heads:[]
   };
 
-  componentDidMount() {
-    
+  componentDidMount() { 
     this.props['quizList'](`_count=100&_pageNo=1`);
     localStorage.removeItem("session");
-
   }
 
   handleSelected = (data) => {
@@ -72,34 +71,32 @@ class MultipleListingScreen extends Component {
   };
 
   render() {
+   
+    const placeData = this.props.data.map((data)=> {
+      return  {...data, 
+        authorName: "frankley", 
+        status: "approved", 
+        created_at: moment(data.created_at).format("DD/MM/YYYY"),
+        updated_at: moment(data.updated_at).format("DD/MM/YYYY"),
+      }
+    })
+
     const columns = [
-      //   {
-      //     name: 'ID',
-      //     selector: 'id',
-      //     sortable: true,
-      //   },
       {
         name: 'Name',
-        selector: 'title',
+        selector: 'quiz_name',
       },
       {
         name: 'Author',
-        selector: 'author.first_name',
-        cell: (row) => (
-          <span>
-            {_.get(row, 'author.first_name', undefined) ||
-              _.get(row, 'author.user_name', undefined) ||
-              _.get(row, 'author.email')}
-          </span>
-        ),
+        selector: 'authorName',
       },
       {
         name: 'Start Date',
-        selector: 'start_date',
+        selector: 'created_at',
       },
       {
         name: 'End Date',
-        selector: 'end_date',
+        selector: 'updated_at',
       },
       {
         name: 'Total Points',
@@ -165,11 +162,12 @@ class MultipleListingScreen extends Component {
               {/*<div className={"col-md-1"}/>*/}
               <div className={'col-md-12'}>
                 <Datatable
-                  data={this.props.data}
+                  data={placeData}
                   columns={columns}
                   handleSelected={this.handleSelected}
                   conditionalRowStyles={conditionalRowStyles}
                   onRowClicked={this.onRowClicked}
+                  showHeaderTable = {true}
                 />
               </div>
               {/*<div className={"col-md-1"}/>*/}
@@ -182,6 +180,7 @@ class MultipleListingScreen extends Component {
 }
 
 function mapPropsToState(store) {
+  console.log("the store", store)
   let pathname;
   if (store.router && store.router.location && store.router.location.pathname) {
     pathname = store.router.location.pathname;
@@ -190,12 +189,14 @@ function mapPropsToState(store) {
       pathname = pathname[pathname.length - 1];
     }
   }
+  
   return {
     pathname,
     count: _.get(store, 'dynamic.listing.count', 0),
-    data: _.get(store, 'dynamic.listing.data', []),
+    data: store.dynamic.quizData
   };
 }
+
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -205,5 +206,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 export default connect(
   mapPropsToState,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(MultipleListingScreen);

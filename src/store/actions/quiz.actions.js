@@ -72,8 +72,6 @@ export const addAnswer = (body) => {
 };
 
 export const addQuizQuestions = (body) => {
-  //   console.log("fun");
-
   return Quiz.addQuizQuestions(body)
     .then((response) => {
       console.log(response);
@@ -81,14 +79,30 @@ export const addQuizQuestions = (body) => {
       // dispatch({ type: QUIZ, payload: response.data });
     })
     .catch((e) => {
-      console.log(e.response.data);
+      console.log( "adding questions", e.response.data);
       return e.response.data;
     });
 };
 
-export const addQuiz = (body) => {
-  //   console.log("fun");
+export const getQuizAllQuestions = async() => {
+  try{
+    const getAllQuestions = await Quiz.getAllQuizQuestions();
+    return getAllQuestions.data
+  }catch(e){
+    return e.response.data;
+  }
+}
 
+export const getQuestionAllOptions = async() => {
+  try{
+    const getAllQuestions = await Quiz.getQuestionOptions();
+    return getAllQuestions.data
+  }catch(e){
+    return e.response.data;
+  }
+}
+
+export const addQuiz = (body) => {
   return Quiz.addQuiz(body)
     .then((response) => {
       console.log(response);

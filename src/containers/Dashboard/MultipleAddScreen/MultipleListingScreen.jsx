@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import history from '../../../utils/history';
 import { screensConfig } from './addConfig';
+import { quizList } from '../../../store/actions/quiz.actions';
+
 import _ from 'lodash';
 
 class MultipleListingScreen extends Component {
@@ -41,6 +43,7 @@ class MultipleListingScreen extends Component {
     }
     this.setState({ pageContext: screensConfig[this.props.pathname] });
     this.props['contentList'](this.props.pathname, `_count=100&_pageNo=1`);
+    // this.props['quizList'](`_count=100&_pageNo=1`);
     localStorage.removeItem("session");
 
   }
@@ -206,6 +209,7 @@ function mapPropsToState(store) {
 const mapDispatchToProps = (dispatch) => {
   return {
     contentList: (type, urlString) => dispatch(contentList(type, urlString)),
+    quizList: (urlString) => dispatch(quizList(urlString)),
     push: (param) => dispatch(push(param)),
   };
 };

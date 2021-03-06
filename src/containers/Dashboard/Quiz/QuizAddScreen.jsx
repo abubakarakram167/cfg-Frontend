@@ -33,14 +33,15 @@ class UserManagement extends Component {
     publish_date: '',
     expiry_date: '',
     points: '',
-    category: '',
+    category: '1',
     categories: [],
     status: '',
     quizSuccess: '',
     quizFail: '',
     startDatePlaceHolder: true,
     endDatePlaceHolder: true,
-    
+    created_at: new Date(),
+    updated_at: new Date,
   };
 
   componentDidMount() {
@@ -60,6 +61,7 @@ class UserManagement extends Component {
   };
   onFormSubmit = (e) => {
     e.preventDefault();
+
     this.props['addQuizHead']({ ...this.state });
     console.log(this.state)
   };
@@ -94,19 +96,18 @@ class UserManagement extends Component {
                   Quiz{' '}
                 </h5>
               </div>
-              <div className='row form-container '>
+              <div style = {{ overflowY: "scroll", height: 600 }} className='row form-container '>
+                <div style = {{ textAlign: "center" }} >
+                  <img style = {{ width: 400, height: 350 }} src= {'/images/CFG logo 2015.png'} />
+                </div>
+                <div style  ={{ textAlign: 'end' }} >
+                  <button style = {{ position: "relative", bottom: 50, right: 30, padding: 10,paddingTop: 7,paddingBottom:7, borderRadius:7, borderWidth: 1, borderColor: "darkgray", color: '#4c4343' }} >
+                  <i className='fas fa-camera' />  Edit Photo
+                  </button>
+                </div>  
                 <div className='dash_form'>
-                  <form onSubmit={this.onFormSubmit}>
-                    
+                  <form onSubmit={this.onFormSubmit}> 
                       <div className='mb-4'>
-                        {/* <label>Name</label>
-                        <input
-                          type='text'
-                          name='title'
-                          placeholder='Name*'
-                          onChange={this.onChangeValue}
-                          required
-                        /> */}
                         <TextField
                           className={classes.w_100}
                           id='name'

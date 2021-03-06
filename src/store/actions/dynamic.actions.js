@@ -29,15 +29,15 @@ export const contentList = (type, urlString) => {
 
 
 export const addHead = (type, data) => {
-    return (dispatch) => {
-        return Dynamic.addHead(type, data).then(response => {
-            toast.success('Added successfully');
-            history.push(`/listing/${type}`)
-        }).catch(e => {
-            console.log(e.response)
-            return dispatch({type: ERROR, payload: {message: e.response && e.response.data ? e.response.data.message : e.message}});
-        })
-    };
+  return (dispatch) => {
+    return Dynamic.addHead(type, data).then(response => {
+        toast.success('Added successfully');
+        history.push(`/listing/${type}`)
+    }).catch(e => {
+        console.log(e.response)
+        return dispatch({type: ERROR, payload: {message: e.response && e.response.data ? e.response.data.message : e.message}});
+    })
+  };
 };
 
 

@@ -1,0 +1,79 @@
+.rdw-editor-toolbar{
+  width: 50%;
+  border-radius: 8px;
+  border-color: #9e9d9d;
+  position: relative;
+  border-width: 0px;
+  bottom: 45px;
+  padding: 0px;
+  background-color: #f9f9f9;
+}
+.rdw-editor-wrapper {
+  border-radius: 4px !important;
+  border: 1px solid #707070;
+  min-height: 570px;
+  margin-bottom: 50px;
+  padding: 10px;
+  background-color: white;
+}
+.public-DraftStyleDefault-ltr{
+  margin: 0;
+}
+.rdw-option-wrapper {
+  border: 1px solid #5a5a5a;
+  padding: 5px;
+  min-width: 25px;
+  height: 25px;
+  border-radius: 2px;
+  margin: 0 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background: white;
+  text-transform: capitalize;
+  margin: 0;
+}
+.se-menu-list li button img{
+  height: 17px;
+  width: 15px;
+}
+.custom-image{
+  height: 12px;
+  width: 12px;
+}
+
+.rdw-inline-wrapper .rdw-option-wrapper:first-of-type{
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.rdw-remove-wrapper .rdw-option-wrapper:last-of-type{
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.suneditor-whole-body{
+  height: 100%;
+  width: 100%;
+}
+.se-btn-tray{
+  border-width: 2px;
+  border-color: black;
+  border-style: double;
+}
+.ql-toolbar{
+  margin-bottom: 50px;
+}
+.se-toolbar-inline{
+  position: absolute;
+  display: block;
+  width: 60%;
+  top: -69px;
+}
+.se-toolbar{
+  position: absolute;
+  display: block;
+  width: 60%;
+  top: -69px;
+}
