@@ -22,8 +22,10 @@ class Quiz {
   static getAll(url_string){
     return axiosInstance.get("/api/quiz/list");
   }
+
   static getAllQuizQuestions(quizId){
     return axiosInstance.get(`/api/quiz_questions/${quizId}`);
+
   }
 
 }

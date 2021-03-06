@@ -182,12 +182,14 @@ const getQuizParams=()=>{
 
 useEffect(() => {
   const getQuestions = async() => {
+
   let questions = await getQuizAllQuestions(parseInt(getQuizParams())); 
   const questionAllOptions = await getQuestionAllOptions();
   const hardCodeOptionsWithQuestion =   questions && questions.questions.length ? questions.questions.map((question)=> {
     const options = questionAllOptions.filter((option) => {
       return option.question_id === question.id;
     }).map(optionValue => {
+
       return {
         option: optionValue.option_description,
         points: Math.floor(Math.random() * 10) + 1
