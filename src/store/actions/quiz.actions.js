@@ -93,6 +93,15 @@ export const getQuizAllQuestions = async() => {
   }
 }
 
+export const getQuestionAllOptions = async() => {
+  try{
+    const getAllQuestions = await Quiz.getQuestionOptions();
+    return getAllQuestions.data
+  }catch(e){
+    return e.response.data;
+  }
+}
+
 export const addQuiz = (body) => {
   return Quiz.addQuiz(body)
     .then((response) => {

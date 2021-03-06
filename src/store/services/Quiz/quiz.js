@@ -10,6 +10,9 @@ class Quiz {
   static addAnswers(body) {
     return axiosInstance.post("/api/question_options", body);
   }
+  static getQuestionOptions(){
+    return axiosInstance.get("/api/question_options/list");
+  }
   static addQuizQuestions(body) {
     return axiosInstance.post("/api/quiz_questions", body);
   }

@@ -2,7 +2,7 @@ import React ,{useState, useEffect} from 'react';
 import Header from "../../../components/Header";
 import {Button,makeStyles} from "@material-ui/core";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import{ getQuizAllQuestions } from "../../../store/actions/quiz.actions"
+import{ getQuizAllQuestions , getQuestionAllOptions} from "../../../store/actions/quiz.actions"
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 import './toolbar.css';
@@ -47,13 +47,17 @@ const PreviewQuizScreen = ({data}) => {
   useEffect(() => {
     const getQuestions = async() => {
       const questions = await getQuizAllQuestions(); 
+      const questionAllOptions = await getQuestionAllOptions();
       const hardCodeOptionsWithQuestion = questions.questions.map((question)=> {
+        const options = questionAllOptions.filter((option) => {
+          return option.question_id === question.id;
+        })
         return {
           ...question,
-          answers: ["option 1", "option 2", "option 3"]
+          answers: options
         }
       })
-      console.log("the hardCode", hardCodeOptionsWithQuestion)
+      console.log("here to..", hardCodeOptionsWithQuestion)
       setQuestions(hardCodeOptionsWithQuestion);
     }
     getQuestions()
@@ -66,7 +70,7 @@ const PreviewQuizScreen = ({data}) => {
       <Header />
       <main>
         <div className="dash-wrapper" style={{paddingTop: '0 !important'}}>
-          <div className="row preview-questions-grid">
+          <div className="row preview-questions-grid" style = {{margin: 'auto', width: "50%" }} >
             <div className="view-questions-box">
               <div className="view-questions-box-title">CFG for secondary school</div>
               <div className="questions-list">
@@ -84,7 +88,7 @@ const PreviewQuizScreen = ({data}) => {
                       />  
                       <div style={{display:'flex',flexDirection:'column', marginTop: 30}}>
                       {q.answers.map((a)=>(
-                        <button  className="view-questions-option" style={{textAlign:'left',backgroundColor:(attempt[q.id]==a)?'lightgrey':'transparent'}} name={q.question} value={a} onClick={(e)=>handleChoose(e.target)}>{a}</button>
+                        <button  className="view-questions-option" style={{textAlign:'left',backgroundColor:(attempt[q.id]==a)?'lightgrey':'transparent'}} name={q.question} value={a} onClick={(e)=>handleChoose(e.target)}>{a.option_description}</button>
                       ))}
                       </div>
                   </div>

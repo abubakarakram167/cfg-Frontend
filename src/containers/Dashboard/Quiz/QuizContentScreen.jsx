@@ -13,7 +13,7 @@ import _ from "lodash";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import history from "../../../utils/history";
-import{ addQuestionaire,addAnswer,addQuizQuestions} from "../../../store/actions/quiz.actions"
+import{ addQuestionaire,addAnswer,addQuizQuestions, getQuestionAllOptions} from "../../../store/actions/quiz.actions"
 import{ getQuizAllQuestions } from "../../../store/actions/quiz.actions"
 import moment from 'moment';
 import {
@@ -102,7 +102,7 @@ const QuizContentScreen = () => {
   };
 
   const handleAddNewQuestion = (e) => {
-    let newQuestion = { question: "", answers:[],id:questions.length+1 };
+    let newQuestion = { question: "",new: true, answers:[],id:questions.length+1 };
     newQuestion.question = e;
     let temp = [...questions];
     temp.push(newQuestion);
@@ -110,7 +110,14 @@ const QuizContentScreen = () => {
   // addQuestionaire({question:e,correct_answer:10,deleted:0})
   };
   const handleImport = (e) => {
-    setQuestions([...questions, ...e]);
+    console.log("the e", e);
+    const newImportQuestions = e.map((option)=> {
+      return {
+        ...option,
+        new: true
+      }
+    })
+    setQuestions([...questions, ...newImportQuestions]);
   };
 
 const handleEdit = (e) => {
@@ -130,7 +137,6 @@ const handleAnswerChange =(e,i)=>{
   let newArr=[...questions]
   let index=newArr.indexOf(selected)
   let q ={...selected}
-  console.log("the q", q)
   q.answers[i].option=e;
   setSelected(q);
   newArr[index]=q;
@@ -140,11 +146,11 @@ const handleAnswerChange =(e,i)=>{
 const handlePointsChange=(e,i)=>{
   let newArr=[...questions]
   let index=newArr.indexOf(selected)
- let q ={...selected}
- q.answers[i].points=e;
- setSelected(q);
- newArr[index]=q;
- setQuestions(newArr)
+  let q ={...selected}
+  q.answers[i].points=e;
+  setSelected(q);
+  newArr[index]=q;
+  setQuestions(newArr)
 }
 const handlePublish=()=>{
   questions.forEach((q)=>{
@@ -152,31 +158,40 @@ const handlePublish=()=>{
     q.answers.forEach((a)=>{
       points.push(a.points)
     })
-
-    addQuestionaire({question:q.question,correct_answer:points.length>0? parseInt(points.sort((a,b)=>b-a)[0],10):0,deleted:0, detail}).then((res)=>{
-      addQuizQuestions({quiz_id:1,question_id:res.id,created_by:1 ,updated_at: moment(), created_at: moment(), deleted:false, detail})
-      q.answers.forEach((a,i)=>{
-        addAnswer({option_description:a.option,question_id:res.id,is_answer:a.points==parseInt(points.sort((a,b)=>b-a)[0],10)?1:0,sequence_order:i})
-      })  
-    })
+    if(q.new){
+      addQuestionaire({question:q.question,correct_answer:points.length>0? parseInt(points.sort((a,b)=>b-a)[0],10):0,deleted:0, detail}).then((res)=>{
+        addQuizQuestions({quiz_id:1,question_id:res.id,created_by:1 ,updated_at: moment(), created_at: moment(), deleted:false, detail})
+        q.answers.forEach((a,i)=>{
+          addAnswer({option_description:a.option, question_id:res.id, is_answer:a.points==parseInt(points.sort((a,b)=>b-a)[0],10)?1:0, sequence_order:i})
+        })  
+      })
+    }
   })
 }
 useEffect(() => {
   const getQuestions = async() => {
-    const questions = await getQuizAllQuestions(); 
-    console.log("the data...", questions);
-    const hardCodeOptionsWithQuestion = questions.questions.map((question)=> {
+    let questions = await getQuizAllQuestions(); 
+    const questionAllOptions = await getQuestionAllOptions();
+    const hardCodeOptionsWithQuestion =   questions && questions.questions.length && questions.questions.map((question)=> {
+      const options = questionAllOptions.filter((option) => {
+        return option.question_id === question.id;
+      }).map(optionValue => {
+        return {
+          option: optionValue.option_description,
+          points: Math.floor(Math.random() * 10) + 1
+        }
+      })
       return {
         ...question,
-        answers: [{ option: "option a", points: 1 }, { option: "option b", points: 2 }, {option: "option c", points: 3}]
+        answers: options,
+        new: false
       }
     })
-    console.log("the hardCode", hardCodeOptionsWithQuestion)
     setQuestions(hardCodeOptionsWithQuestion);
   }
   getQuestions()
-
 }, [])
+
 const addNewAnswer=()=>{
   let newArr=[...questions]
   let index=newArr.indexOf(selected)
@@ -320,7 +335,7 @@ const addNewAnswer=()=>{
             />
           </QuizModal>
           <div style = {{ marginTop: 30, width: "100%" }} className="row">
-            {questions.map((q) => (
+            {questions && questions.map((q) => (
               <div style={{ marginBottom: "10px" }}>
                 <div className={classes.questionCard}>
                   <div className="row">

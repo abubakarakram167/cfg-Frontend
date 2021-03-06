@@ -101,7 +101,7 @@ class UserManagement extends Component {
                   <img style = {{ width: 400, height: 350 }} src= {'/images/CFG logo 2015.png'} />
                 </div>
                 <div style  ={{ textAlign: 'end' }} >
-                  <button style = {{ position: "relative", bottom: 50, right: 30, padding: 10,paddingTop: 7,paddingBottom:7, borderRadius:7, borderWidth: 1, borderColor: "darkgray" }} >
+                  <button style = {{ position: "relative", bottom: 50, right: 30, padding: 10,paddingTop: 7,paddingBottom:7, borderRadius:7, borderWidth: 1, borderColor: "darkgray", color: '#4c4343' }} >
                   <i className='fas fa-camera' />  Edit Photo
                   </button>
                 </div>  
