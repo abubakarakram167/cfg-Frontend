@@ -184,7 +184,8 @@ useEffect(() => {
   const getQuestions = async() => {
   let questions = await getQuizAllQuestions(parseInt(getQuizParams())); 
   const questionAllOptions = await getQuestionAllOptions();
-  const hardCodeOptionsWithQuestion =   questions && questions.questions.length ? questions.questions.map((question)=> {
+  console.log("the questions", questions)
+  const hardCodeOptionsWithQuestion =   questions && questions.questions && questions.questions.length ? questions.questions.map((question)=> {
     const options = questionAllOptions.filter((option) => {
       return option.question_id === question.id;
     }).map(optionValue => {

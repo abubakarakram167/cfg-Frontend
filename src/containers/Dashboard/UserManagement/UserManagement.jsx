@@ -108,12 +108,12 @@ class UserManagement extends Component {
 
   render() {
     const columns = [
-      //  {
+      // // {
       //   name: 'Select All',
-      //   selector: 'user_name',
-      //   sortable: true,
-      //   // cell: row => <Link to={`/${row.id}`}>{row.id}</Link>
-      // },
+      // //   selector: 'user_name',
+      // //   sortable: true,
+      // //   // cell: row => <Link to={`/${row.id}`}>{row.id}</Link>
+      // // },
       {
         selector: 'first_name',
         // sortable: true,
@@ -217,99 +217,101 @@ class UserManagement extends Component {
             </div>
           </div>
           <br />
-          <div style={{ marginTop: -35, width: '100%', margin: 'auto' }} className={'row justify-content-center'}>  
-            <div className='col-md-2 username-column'>
-              <div className='input-label'>  
-                <input 
-                  type = "checkbox"
-                  className = "custom-checkbox"
-                  name = "select-all-rows"
-                  checked = {this.state.showAll}
-                  onClick = {()=> { this.handleSelected({ selectedRows: this.props.users, allSelected: true, selectedCount: 2, custom: true }) } }
-                />
-                Username
-              </div>
-              <div className='d-flex align-items-center'>
-                <input
-                  className={'input-border'}
-                  type='text'
-                  name='user_name'
-                  placeholder='Username'
-                  onChange={this.onChangeValue}
-                />
-                <div onClick={this.onResetSubmit}>
-                  <img src={filter} />
+          <div className = "container-fluid" >
+            <div style={{ marginTop: -25}} className={'row justify-content-center'}>  
+              <div className='col-md-2 username-column'>
+                <div className='input-label'>  
+                  {/* <input 
+                    type = "checkbox"
+                    className = "custom-checkbox"
+                    name = "select-all-rows"
+                    checked = {this.state.showAll}
+                    onClick = {()=> { this.handleSelected({ selectedRows: this.props.users, allSelected: true, selectedCount: 2, custom: true }) } }
+                  /> */}
+                  Username
+                </div>
+                <div className='d-flex align-items-center'>
+                  <input
+                    className={'input-border'}
+                    type='text'
+                    name='user_name'
+                    placeholder='Username'
+                    onChange={this.onChangeValue}
+                  />
+                  <div onClick={this.onResetSubmit}>
+                    <img src={filter} />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className='col-md-2'>
-              <div className='input-label other-fields'>Name</div>
-              <div className='d-flex align-items-center'>
-                <input
-                  className={'input-border'}
-                  type='text'
-                  name='first_name'
-                  placeholder='Name'
-                  onChange={this.onChangeValue}
-                />
-                <div onClick={this.onResetSubmit}>
-                  <img src={filter} />
+              <div className='col-md-2'>
+                <div className='input-label other-fields'>Name</div>
+                <div className='d-flex align-items-center'>
+                  <input
+                    className={'input-border'}
+                    type='text'
+                    name='first_name'
+                    placeholder='Name'
+                    onChange={this.onChangeValue}
+                  />
+                  <div onClick={this.onResetSubmit}>
+                    <img src={filter} />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className='col-md-2 '>
-              <div className='input-label other-fields'>Email</div>
-              <div className='d-flex align-items-center'>
-                <input
-                  className={'input-border'}
-                  type='text'
-                  name='email'
-                  placeholder='Email'
-                  onChange={this.onChangeValue}
-                />
-                <div onClick={this.onResetSubmit}>
-                  <img src={filter} />
+              <div className='col-md-2 '>
+                <div className='input-label other-fields'>Email</div>
+                <div className='d-flex align-items-center'>
+                  <input
+                    className={'input-border'}
+                    type='text'
+                    name='email'
+                    placeholder='Email'
+                    onChange={this.onChangeValue}
+                  />
+                  <div onClick={this.onResetSubmit}>
+                    <img src={filter} />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className='col-md-2 '>
-              <div className='input-label other-fields'>Role</div>
-              <div className='d-flex align-items-center'>
-                <select
-                  name='role'
-                  className={'input-border'}
-                  onChange={this.onChangeValue}
-                >
-                  <option value=''>Select</option>
-                  <option value='auditor'>Auditor</option>
-                  <option value='candidate'>Candidate</option>
-                  <option value='content-manager'>Content Manager</option>
-                  <option value='facilitator'>Facilitator</option>
-                  <option value='reviewer'>Reviewer</option>
-                  <option value='system-administrator'>
-                    System Administrator
-                  </option>
-                </select>
-                <div onClick={this.onResetSubmit}>
-                  <img src={filter} />
+              <div className='col-md-2 '>
+                <div className='input-label other-fields'>Role</div>
+                <div className='d-flex align-items-center'>
+                  <select
+                    name='role'
+                    className={'input-border'}
+                    onChange={this.onChangeValue}
+                  >
+                    <option value=''>Select</option>
+                    <option value='auditor'>Auditor</option>
+                    <option value='candidate'>Candidate</option>
+                    <option value='content-manager'>Content Manager</option>
+                    <option value='facilitator'>Facilitator</option>
+                    <option value='reviewer'>Reviewer</option>
+                    <option value='system-administrator'>
+                      System Administrator
+                    </option>
+                  </select>
+                  <div onClick={this.onResetSubmit}>
+                    <img src={filter} />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className='col-md-2'>
-              <div className='input-label other-fields'>Status</div>
-              <div className='d-flex align-items-center'>
-                <select
-                  name='status'
-                  className={'input-border'}
-                  onChange={this.onChangeValue}
-                >
-                  <option value=''>Select</option>
-                  <option value='1'>Approved</option>
-                  <option value='0'>Pending</option>
-                  <option value='2'>Disabled</option>
-                </select>
-                <div onClick={this.onResetSubmit}>
-                  <img src={filter} />
+              <div className='col-md-2'>
+                <div className='input-label other-fields'>Status</div>
+                <div className='d-flex align-items-center'>
+                  <select
+                    name='status'
+                    className={'input-border'}
+                    onChange={this.onChangeValue}
+                  >
+                    <option value=''>Select</option>
+                    <option value='1'>Approved</option>
+                    <option value='0'>Pending</option>
+                    <option value='2'>Disabled</option>
+                  </select>
+                  <div onClick={this.onResetSubmit}>
+                    <img src={filter} />
+                  </div>
                 </div>
               </div>
             </div>

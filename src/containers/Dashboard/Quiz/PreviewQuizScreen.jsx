@@ -52,7 +52,7 @@ const PreviewQuizScreen = ({data}) => {
     const getQuestions = async() => {
       const questions = await getQuizAllQuestions(getQuizParams()); 
       const questionAllOptions = await getQuestionAllOptions();
-      const hardCodeOptionsWithQuestion =   questions && questions.questions.length ? questions.questions.map((question)=> {
+      const hardCodeOptionsWithQuestion =   questions && questions.questions  &&questions.questions.length ? questions.questions.map((question)=> {
         const options = questionAllOptions.filter((option) => {
           return option.question_id === question.id;
         })

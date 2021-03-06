@@ -53,14 +53,31 @@
 @media screen and (min-width: 1515px) {
   .username-column{
     position: relative;
-    left: 0%;
-    right: 5px;
+    left: -5px
+    
   }
 }
 @media screen and (min-width: 1700px) {
   .username-column{
     position: relative;
-    left:0px;
-    right: 25px;
+    left: -10px;
+  }
+}
+@media screen and (min-width: 1860px) {
+  .username-column{
+    position: relative;
+    left: -25px;
+  }
+}
+@media screen and (min-width: 2230px) {
+  .username-column{
+    position: relative;
+    left: -35px;
+  }
+}
+@media screen and (min-width: 2460px) {
+  .username-column{
+    position: relative;
+    left: -45px;
   }
 }
