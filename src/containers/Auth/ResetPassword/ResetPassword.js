@@ -13,6 +13,7 @@ import history from "../../../utils/history";
 import { toast } from "react-toastify";
 
 class ResetPassword extends React.PureComponent {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -22,15 +23,26 @@ class ResetPassword extends React.PureComponent {
       accepted: false,
       terms: "",
       showPassword: false,
+      createPass: false,
     };
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
+
   }
 
   componentDidMount() {
     let urlParts = window.location.href;
     let shouldRedirect = true;
     urlParts = ~urlParts.indexOf("?") ? urlParts.split("?") : undefined;
+    console.log(urlParts)
+    // let currScreen = .split('/')[1];
+    // console.log(currScreen);
+    if (~urlParts[0].indexOf("createPassword")) {
+      this.setState({
+        createPass: true
+      });
+      console.log(this.state.createPass);
+    }
     if (urlParts) {
       urlParts = ~urlParts[1].indexOf("=") ? urlParts[1].split("=") : undefined;
       if (urlParts) {
@@ -112,42 +124,45 @@ class ResetPassword extends React.PureComponent {
             <h1>JMMB Foundation</h1>
           </div>
         </div>
-        {!this.state.accepted && (
-          <section className='account_wraper forgot_holder'>
-            <div className='container_large'>
-              <div className='login_holder reset_link'>
-                <div className='login_logo'>
-                  <img src={"images/jmmb_1.png"} className='img-fluid' alt='' />
-                </div>
-                <div
-                  className='login_form'
-                  style={{
-                    maxHeight: "500px",
-                    overflowY: "scroll",
-                    overflowX: "hidden",
-                  }}
-                >
-                  <h1 style={{ textAlign: "center" }}>Terms and Conditions</h1>
-                  <br />
-                  <p>{this.state.terms}</p>
-                  <div className='d-block text-center'>
-                    <Link
-                      to='#'
-                      className='button primary_button'
-                      onClick={(e) => {
-                        e.preventDefault();
-                        this.setState({ accepted: true });
-                      }}
-                    >
-                      I AGREE
+        
+
+
+          {!this.state.accepted && this.state.createPass && (
+        <section className='account_wraper forgot_holder'>
+          <div className='container_large'>
+            <div className='login_holder reset_link'>
+              <div className='login_logo'>
+                <img src={"images/jmmb_1.png"} className='img-fluid' alt='' />
+              </div>
+              <div
+                className='login_form'
+                style={{
+                  maxHeight: "500px",
+                  overflowY: "scroll",
+                  overflowX: "hidden",
+                }}
+              >
+                <h1 style={{ textAlign: "center" }}>Terms and Conditions</h1>
+                <br />
+                <p>{this.state.terms}</p>
+                <div className='d-block text-center'>
+                  <Link
+                    to='#'
+                    className='button primary_button'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      this.setState({ accepted: true });
+                    }}
+                  >
+                    I AGREE
                     </Link>
-                  </div>
                 </div>
               </div>
             </div>
-          </section>
+          </div>
+        </section>
         )}
-        {this.state.accepted && (
+        { !this.state.createPass && (
           <section className='account_wraper forgot_holder'>
             <div className='container_large'>
               <div className='login_holder'>
@@ -237,6 +252,104 @@ class ResetPassword extends React.PureComponent {
                         type='submit'
                         className='button primary_button button_block'
                         value='Reset Password'
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+        {this.state.accepted && this.state.createPass && (
+          <section className='account_wraper forgot_holder'>
+            <div className='container_large'>
+              <div className='login_holder'>
+                <div className='login_logo'>
+                  <img
+                    src={"/images/jmmb_1.png"}
+                    className='img-fluid'
+                    alt=''
+                  />
+                </div>
+                <div className='login_form'>
+                  <h2>Create your password?</h2>
+                  <h3>Enter your password and click Create</h3>
+                  <form onSubmit={this.onResetSubmit}>
+                    <div className='mb-4'>
+                      <TextField
+                        style={{ width: "100%" }}
+                        id='password'
+                        label='Password'
+                        name='password'
+                        variant='filled'
+                        required
+                        onChange={this.onChangeValue}
+                        type={this.state.showPassword ? "text" : "password"}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position='start'>
+                              {" "}
+                              <IconButton
+                                aria-label='toggle password visibility'
+                                onClick={this.handleClickShowPassword}
+                                onMouseDown={this.handleMouseDownPassword}
+                              >
+                                {this.state.showPassword ? (
+                                  <Visibility />
+                                ) : (
+                                  <VisibilityOff />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      {/* <input
+                        type='password'
+                        name='password'
+                        placeholder='Enter new password *'
+                        onChange={this.onChangeValue}
+                        required
+                      /> */}
+                    </div>
+                    <div className='mb-4'>
+                      {/* <input type="password" name="newPassword"
+                                               placeholder="Enter new password again *" onChange={this.onChangeValue}
+                                               required/> */}
+                      <TextField
+                        style={{ width: "100%" }}
+                        id='password'
+                        label='Confirm Password'
+                        name='newPassword'
+                        variant='filled'
+                        required
+                        onChange={this.onChangeValue}
+                        type={this.state.showPassword ? "text" : "password"}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position='start'>
+                              {" "}
+                              <IconButton
+                                aria-label='toggle password visibility'
+                                onClick={this.handleClickShowPassword}
+                                onMouseDown={this.handleMouseDownPassword}
+                              >
+                                {this.state.showPassword ? (
+                                  <Visibility />
+                                ) : (
+                                  <VisibilityOff />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </div>
+                    <div className='d-block'>
+                      <input
+                        type='submit'
+                        className='button primary_button button_block'
+                        value='Create Password'
                       />
                     </div>
                   </form>
