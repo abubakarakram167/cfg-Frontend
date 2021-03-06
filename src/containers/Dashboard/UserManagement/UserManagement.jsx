@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import history from '../../../utils/history';
 import filter from '../../../components/common/assets/icons/ic-filter.svg';
+import './usermanagement.css';
 class UserManagement extends Component {
   state = {
     user_name: '',
@@ -28,13 +29,26 @@ class UserManagement extends Component {
   }
 
   handleSelected = (data) => {
-    console.log("the data", data)
+
     let showAll;
-    if(!this.state.showAll)
+    if(!this.state.showAll  && data.custom)
       showAll = true 
+    else
+      showAll = false;
+
     this.setState({
       users: data.selectedRows,
       showAll
+    }, ()=> {
+      if(data.custom){
+        const dataRows = data.selectedRows;
+        setTimeout(()=> {  
+          for(let i = 0; i< dataRows.length ; i++){ 
+            document.querySelectorAll(`#row-${dataRows[i].id} div input`)[0].checked = this.state.showAll ? true : false
+          }    
+     }, 100)
+     }
+
     });
   };
   onChangeValue = (e) => {
@@ -205,13 +219,13 @@ class UserManagement extends Component {
           <div style={{ marginTop: -35, width: '100%', margin: 'auto' }} className={'row justify-content-center'}>  
             <div className='col-md-2'>
               <div className='input-label'>  
-                {/* <input 
+                <input 
                   type = "checkbox"
                   className = "custom-checkbox"
                   name = "select-all-rows"
                   checked = {this.state.showAll}
-                  onClick = {()=> { this.handleSelected({ selectedRows: this.props.users, allSelected: true, selectedCount: 2 }) } }
-                /> */}
+                  onClick = {()=> { this.handleSelected({ selectedRows: this.props.users, allSelected: true, selectedCount: 2, custom: true }) } }
+                />
                 Username
               </div>
               <div className='d-flex align-items-center'>

@@ -14,12 +14,15 @@ import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import history from "../../../utils/history";
 import{ addQuestionaire,addAnswer,addQuizQuestions} from "../../../store/actions/quiz.actions"
+import{ getQuizAllQuestions } from "../../../store/actions/quiz.actions"
+import moment from 'moment';
 import {
   EditorState,
   convertToRaw,
   convertFromRaw,
   ContentState,
 } from "draft-js";
+import RichTextHtmlEditor from "../../../components/RichTextEditor/htmlEditor";
 
 const useStyles = makeStyles((theme) => ({
   questionTitle:{
@@ -75,14 +78,12 @@ const QuizContentScreen = () => {
   const [questions, setQuestions] = useState([]);
   const [openNew, setOpenNew] = useState(false);
   const [openImport, setOpenImport] = useState(false);
-  const [selected, setSelected] = useState();
-  
- 
-
+  const [selected, setSelected] = useState(null);
   const [editorState, setEditorState] = useState(
     EditorState.createWithText("")
   );
   const [detail, setDetail] = useState("");
+  console.log("the detail", detail);
   const handleOpenNew = () => {
     setOpenNew(true);
   };
@@ -106,40 +107,34 @@ const QuizContentScreen = () => {
     let temp = [...questions];
     temp.push(newQuestion);
     setQuestions(temp);
-
   // addQuestionaire({question:e,correct_answer:10,deleted:0})
-    
-    
-
   };
   const handleImport = (e) => {
     setQuestions([...questions, ...e]);
   };
 
-  const handleEdit = (e) => {
-    setSelected(e);
-  };
+const handleEdit = (e) => {
+  console.log("ada", e)
+  setDetail(e.detail)
+  setSelected(e);
+};
 const handleAnswerDelete=(e,i)=>{
- 
   let newArr=[...questions]
   let index=newArr.indexOf(selected)
-  newArr[index].answers.splice(i,1)
- 
-setQuestions(newArr);
-setSelected(newArr[index]);
-
+  newArr[index].answers.splice(i,1)  
+  setQuestions(newArr);
+  setSelected(newArr[index]);
 }
-
-
 
 const handleAnswerChange =(e,i)=>{
   let newArr=[...questions]
   let index=newArr.indexOf(selected)
- let q ={...selected}
- q.answers[i].option=e;
- setSelected(q);
- newArr[index]=q;
- setQuestions(newArr)
+  let q ={...selected}
+  console.log("the q", q)
+  q.answers[i].option=e;
+  setSelected(q);
+  newArr[index]=q;
+  setQuestions(newArr)
 }
 
 const handlePointsChange=(e,i)=>{
@@ -152,29 +147,36 @@ const handlePointsChange=(e,i)=>{
  setQuestions(newArr)
 }
 const handlePublish=()=>{
-  
-questions.forEach((q)=>{
-  // console.log(q.question)
-  let points=[]
-  q.answers.forEach((a)=>{
-points.push(a.points)
+  questions.forEach((q)=>{
+    let points=[]
+    q.answers.forEach((a)=>{
+      points.push(a.points)
+    })
+
+    addQuestionaire({question:q.question,correct_answer:points.length>0? parseInt(points.sort((a,b)=>b-a)[0],10):0,deleted:0, detail}).then((res)=>{
+      addQuizQuestions({quiz_id:1,question_id:res.id,created_by:1 ,updated_at: moment(), created_at: moment(), deleted:false, detail})
+      q.answers.forEach((a,i)=>{
+        addAnswer({option_description:a.option,question_id:res.id,is_answer:a.points==parseInt(points.sort((a,b)=>b-a)[0],10)?1:0,sequence_order:i})
+      })  
+    })
   })
-  // console.log(parseInt(points.sort((a,b)=>b-a)[0],10))
-  
- 
-  addQuestionaire({question:q.question,correct_answer:points.length>0? parseInt(points.sort((a,b)=>b-a)[0],10):0,deleted:0}).then((res)=>{
-    addQuizQuestions({quiz_id:1,question_id:res.id,created_by:JSON.parse(localStorage.getItem('session')).author.id})
-    q.answers.forEach((a,i)=>{
-addAnswer({option_description:a.option,question_id:res.id,is_answer:a.points==parseInt(points.sort((a,b)=>b-a)[0],10)?1:0,sequence_order:i})
-// console.log({option_description:a.option,question_id:res.id,is_answer:a.points==parseInt(points.sort((a,b)=>b-a)[0],10)?1:0,sequence_order:i})
-    })
-    
-    })
-  
-})
-
-
 }
+useEffect(() => {
+  const getQuestions = async() => {
+    const questions = await getQuizAllQuestions(); 
+    console.log("the data...", questions);
+    const hardCodeOptionsWithQuestion = questions.questions.map((question)=> {
+      return {
+        ...question,
+        answers: [{ option: "option a", points: 1 }, { option: "option b", points: 2 }, {option: "option c", points: 3}]
+      }
+    })
+    console.log("the hardCode", hardCodeOptionsWithQuestion)
+    setQuestions(hardCodeOptionsWithQuestion);
+  }
+  getQuestions()
+
+}, [])
 const addNewAnswer=()=>{
   let newArr=[...questions]
   let index=newArr.indexOf(selected)
@@ -216,66 +218,67 @@ const addNewAnswer=()=>{
         <div className="dash-wrapper">
           <div className="row dash-session-header">
             <div className="col-md-8">
-              <label style={{ fontSize: "1rem", fontWeight: 700 }}>
+              <label style={{ fontSize: "1rem", fontWeight: 700, color: "#565454" }}>
                 CFG for secondary schools Quiz
-              </label>
-             
+              </label>       
               <Button
-          variant="contained"
-          onClick={() => handleOpenNew()}
-          style={{ backgroundColor: "red" }}
-          color="secondary"
-          className={classes.button}
-          startIcon={<AddCircleOutlinedIcon />}
-        >
-          Add new questions
-        </Button>
-      
+                variant="contained"
+                onClick={() => handleOpenNew()}
+                style={{ backgroundColor: "red" , marginLeft: 10}}
+                color="secondary"
+                className={classes.button}
+                startIcon={<AddCircleOutlinedIcon />}
+              >
+                Add new questions
+              </Button>
+
               <Button
-          variant="contained"
-          onClick={() => handleOpenImport()}
-          style={{ backgroundColor: "grey" }}
-          color="secondary"
-          className={classes.button}
-          startIcon={<AddCircleOutlinedIcon />}
-        >
-          Add question from questions
-        </Button>
-        
+                variant="contained"
+                onClick={() => handleOpenImport()}
+                style={{ backgroundColor: "grey", padding: "7px 0" }}
+                color="secondary"
+                className={classes.button}
+                startIcon={<AddCircleOutlinedIcon />}
+              >
+                Add question from questions
+              </Button>  
             </div>
             <div className="col-md-4" style={{ textAlign: "right" }}>
-              <button className="button-title button_inline" onClick={() => {history.push('/preview/quiz')}}>
+              <button style = {{ padding: "7px 0",  paddingLeft: "25px", paddingRight: "25px", }} className="button-title button_inline" onClick={() => {history.push('/preview/quiz')}}>
                 <i className="fas fa-eye" /> preview
               </button>
               <div className="btn-group">
                 <button
-                onClick={()=>handlePublish()}
-                  type="button"
-                  className="btn bg-primary btn-danger"
-                  style={{
-                    borderTopLeftRadius: "25px",
-                    borderBottomLeftRadius: "25px",
-                    padding: "10px 0",
-                    paddingLeft: "25px",
-                    paddingRight: "5px",
-                  }}
+                  onClick={()=>handlePublish()}
+                    type="button"
+                    className="btn btn-danger"
+                    style={{
+                      borderTopLeftRadius: "25px",
+                      borderBottomLeftRadius: "25px",
+                      padding: "7px 0",
+                      paddingLeft: "25px",
+                      paddingRight: "5px",
+                      backgroundColor: 'red',
+                      marginLeft: 20
+                    }}
                 >
                   <i className="fas fa-upload" /> Publish
                 </button>
                 <button
                   type="button"
-                  className="btn bg-primary btn-danger dropdown-toggle dropdown-toggle-split"
+                  className="btn btn-danger dropdown-toggle dropdown-toggle-split"
                   style={{
                     paddingRight: "25px",
                     borderBottomRightRadius: "25px",
                     borderTopRightRadius: "25px",
                     borderLeft: "1px solid white",
+                    backgroundColor: 'red'
                   }}
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  <span className="sr-only">Toggle Dropdown</span>
+                  <span style = {{ fontSize: 20 }} className="sr-only">Toggle Dropdown</span>
                 </button>
                 <div className="dropdown-menu">
                   <a className="dropdown-item" href="#">
@@ -316,7 +319,7 @@ const addNewAnswer=()=>{
               onClose={handleClose}
             />
           </QuizModal>
-          <div className="row">
+          <div style = {{ marginTop: 30, width: "100%" }} className="row">
             {questions.map((q) => (
               <div style={{ marginBottom: "10px" }}>
                 <div className={classes.questionCard}>
@@ -339,24 +342,15 @@ const addNewAnswer=()=>{
                 {q == selected && (
                   <div className={classes.editSection}>
                     <TextField
-                    className={classes.questionTitle}
+                      className={classes.questionTitle}
                       id="outlined-basic"
                       variant="outlined"
                       inputProps={{ style: { fontSize: "1.3rem" } }}
                       fullWidth
+                      style = {{ marginBottom: 80 }}
                       defaultValue={q.question}
-                    />
-
-                   
-                    <Editor
-  editorState={editorState}
-  // defaultEditorState = {defaultState}
-  toolbarClassName="toolbarClassName"
-  wrapperClassName="wrapperClassName"
-  editorClassName="editorClassName"
-  onEditorStateChange={onEditorStateChange}
-/>
-
+                    />             
+                      <RichTextHtmlEditor onChangeDetail = {(data)=> setDetail(data) } detail = {detail}  />
                     <div className={classes.answerHeader}>
                       <h3>Answers</h3>{" "}
                       <Button

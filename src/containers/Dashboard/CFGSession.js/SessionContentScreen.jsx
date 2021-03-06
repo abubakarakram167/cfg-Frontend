@@ -17,8 +17,10 @@ import { editHead } from "../../../store/actions/dynamic.actions";
 import { screensConfig } from '../MultipleAddScreen/addConfig';
 import axiosInstance from '../../../utils/axios';
 import history from "../../../utils/history";
-import { StylesProvider } from '@material-ui/core';
+import RichTextHtmlEditor from "../../../components/RichTextEditor/htmlEditor";
 import './customToolbarOptions.css';
+
+const customToolBarCss = "position: absolute;  display: block; width: 50%; top:-59px; box-shadow: none;border: none;outline: 0px;";
 
 // console.log("the custom", JSON.parse(customToolbarOptions))
 class SessionContentScreen extends Component {
@@ -60,7 +62,8 @@ class SessionContentScreen extends Component {
             keywords: [],
             groups: [],
             categories: [],
-            show: false
+            show: false,
+            value: ''
         }
     }
 
@@ -71,19 +74,43 @@ class SessionContentScreen extends Component {
       this.setState({pageContext: screensConfig[this.props.pathname], show: true});
       this.setState({ title: '', subTitle: '', detail: ''});
     }
+    insertAfter= (referenceNode, newNode)=> {
+      referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+    createCustomButtonInstance(image, position, functionality){
+      var el = document.createElement("div");
+      el.innerHTML = this.getCustomButtonHtml(image)
+      el.onclick = ()=> {
+        if(functionality === "lower")
+          document.querySelector(`.sun-editor`).setAttribute("style", "text-transform: lowercase;")
+        else if(functionality === "upper")  
+          document.querySelector(`.sun-editor`).setAttribute("style", "text-transform: uppercase;")
+      };
+      var div =  document.querySelectorAll('.se-btn-module')[position]
+      el.setAttribute("class", "se-btn-module se-btn-module-border");
+      this.insertAfter(div, el);
+    }
+
+    getCustomButtonHtml = (image) => {
+      return `<ul class="se-menu-list"><li><button type="button" class="se-btn _se_command_italic se-tooltip" data-command="italic" data-display="" tabindex="-1"><img className = "custom-image" src="${image}"><span class="se-tooltip-inner"><span class="se-tooltip-text">Italic<span class="se-shortcut">⌘+<span class="se-shortcut-key">I</span></span></span></span></button></li></ul>`;
+    }
+
+    customButtonFunctionalityPerform = () => {
+      console.log("heheheh")
+    }
 
     componentDidUpdate() {
         const getInfo = JSON.parse(localStorage.getItem('content'));
         if(this.state.show && getInfo !== null) {
             this.setState({ 
-                title: getInfo?.title,
-                subTitle: getInfo?.sub_title,
-                detail: getInfo?.detail,
-                startDate: getInfo?.start_date,
-                endDate: getInfo?.end_date,
-                totalPoints: getInfo?.total_points,
-                status: getInfo?.status,
-                show: false
+              title: getInfo?.title,
+              subTitle: getInfo?.sub_title,
+              detail: getInfo?.detail,
+              startDate: getInfo?.start_date,
+              endDate: getInfo?.end_date,
+              totalPoints: getInfo?.total_points,
+              status: getInfo?.status,
+              show: false
             });
         }
     }
@@ -125,15 +152,15 @@ class SessionContentScreen extends Component {
         console.log(type)
         e.preventDefault();
         const userData = {
-            content_header_id: type === "title" ? update?.id : session?.id,
-            title: this.state?.title,
-            sub_title: this.state?.subTitle,
-            detail: this.state?.detail,
-            start_date: this.state?.startDate,
-            end_date: this.state?.endDate,
-            total_points: this.state?.totalPoints,
-            status: this.state?.status,
-            type:  type === "title" ? "subtitle" : "title"
+          content_header_id: type === "title" ? update?.id : session?.id,
+          title: this.state?.title,
+          sub_title: this.state?.subTitle,
+          detail: this.state?.detail,
+          start_date: this.state?.startDate,
+          end_date: this.state?.endDate,
+          total_points: this.state?.totalPoints,
+          status: this.state?.status,
+          type:  type === "title" ? "subtitle" : "title"
         }
         const url = type === "title" ? "sub-title" : "title";
         // if(update !== null) {
@@ -164,9 +191,12 @@ class SessionContentScreen extends Component {
     }
 
     onEditorStateChange = (editorState) => {
+      console.log("the editor state", editorState);
         this.setState({
             editorState,
             detail: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+        }, ()=> {
+          console.log("the detail", this.state.detail)
         });
     };
 
@@ -181,8 +211,22 @@ class SessionContentScreen extends Component {
             });
         }
     }
+    setValue = (data) => {
+      console.log("the data", data)
+      this.setState({ value: data })
+    }
+
+    uploadCallback = (data) => {
+      console.log('the upload', data)
+    }
+
+    handleEditor = (data) => {
+     this.setState({ detail: data })
+    }
+    
 
     render() {
+   
         return (
             <>
                 <article>
@@ -249,14 +293,9 @@ class SessionContentScreen extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="row" style={{marginTop: "20px"}}>
+                        <div className="row" style={{marginTop: "80px", paddingBottom: '50px'}}>
                           <div className="col-md-9" style={{position: "relative"}}>
-                            <Editor
-                              editorState={this.state.editorState}
-                              wrapperClassName="wrapperClassName"       
-                              onEditorStateChange={this.onEditorStateChange}
-                              toolbar = {{ options: ['inline', 'textAlign', 'colorPicker', 'link', 'embedded', 'image', 'remove'] }}
-                            />
+                            <RichTextHtmlEditor onChangeDetail = {(data)=> this.setState({ detail: data })} detail = {this.state.detail}  />
                           </div>
                             <div className="col-md-3">
                               <div className="dash_form_right">

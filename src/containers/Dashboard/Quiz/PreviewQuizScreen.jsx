@@ -1,10 +1,14 @@
-import React ,{useState} from 'react';
+import React ,{useState, useEffect} from 'react';
 import Header from "../../../components/Header";
 import {Button,makeStyles} from "@material-ui/core";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import{ getQuizAllQuestions } from "../../../store/actions/quiz.actions"
+import SunEditor from 'suneditor-react';
+import 'suneditor/dist/css/suneditor.min.css';
+import './toolbar.css';
+// i  
 
 const useStyles = makeStyles((theme) => ({
-  
   button: {
     borderRadius: "25px",
     marginRight: "15px",
@@ -16,32 +20,48 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor:'lightgrey'
     }
   }
-  
-}));
+}))
 
 const PreviewQuizScreen = ({data}) => {
   const classes = useStyles();
-    const dummyData=[
-        {id:0,question:'What is MIndfullness?',answers:['This is Option One','This is B Option','This is C option','This is D Option']},
-        {id:1,question:'What is It?',answers:['This is Option One','This is B Option','This is C option','This is D Option']},
-        {id:2,question:'What is ss?',answers:['This is Option One','This is B Option','This is C option','This is D Option']},
-        {id:3,question:'What is REact?',answers:['This is Option One','This is B Option','This is C option','This is D Option']},
-        {id:4,question:'What is MongoDb?',answers:['This is Option One','This is B Option','This is C option','This is D Option']}
-    ]
-    const [questions,setQuestions]=useState(data?data:dummyData);
-    const [attempt,setAttempt]=useState({})
-    const [currentQuestion,setCurrentQuestion]=useState(null)
-    const handleChoose=(e)=>{
-     
-setAttempt({...attempt,[currentQuestion]:e.value})
-    }
-    const handleFinish=()=>{
-console.log(attempt)
-    }
 
-    const handleCurrentQuestion=(e)=>{
-      setCurrentQuestion(e)
+  const dummyData = [
+    {id:0,question:'What is MIndfullness?',answers:['This is Option One','This is B Option','This is C option','This is D Option']},
+    {id:1,question:'What is It?',answers:['This is Option One','This is B Option','This is C option','This is D Option']},
+    {id:2,question:'What is ss?',answers:['This is Option One','This is B Option','This is C option','This is D Option']},
+    {id:3,question:'What is REact?',answers:['This is Option One','This is B Option','This is C option','This is D Option']},
+    {id:4,question:'What is MongoDb?',answers:['This is Option One','This is B Option','This is C option','This is D Option']}
+  ];
+
+  const [questions,setQuestions]=useState(null);
+  const [attempt,setAttempt]=useState({})
+  const [currentQuestion,setCurrentQuestion]=useState(null)
+
+  const handleChoose=(e)=>{
+    setAttempt({...attempt,[currentQuestion]:e.value})
+  }
+  const handleFinish=()=>{
+    console.log(attempt)
+  }
+
+  useEffect(() => {
+    const getQuestions = async() => {
+      const questions = await getQuizAllQuestions(); 
+      const hardCodeOptionsWithQuestion = questions.questions.map((question)=> {
+        return {
+          ...question,
+          answers: ["option 1", "option 2", "option 3"]
+        }
+      })
+      console.log("the hardCode", hardCodeOptionsWithQuestion)
+      setQuestions(hardCodeOptionsWithQuestion);
     }
+    getQuestions()
+  }, [])
+
+  const handleCurrentQuestion=(e)=>{
+    setCurrentQuestion(e)
+  }
     return ( <>
       <Header />
       <main>
@@ -50,30 +70,41 @@ console.log(attempt)
             <div className="view-questions-box">
               <div className="view-questions-box-title">CFG for secondary school</div>
               <div className="questions-list">
-{questions.map((q,i)=>(
-                <div className="view-question" onMouseEnter={()=>handleCurrentQuestion(q.id)}>
-                  <div className="view-questions-title">{i+1}) {q.question}</div>
-                  <div style={{display:'flex',flexDirection:'column'}}>
-                  {q.answers.map((a)=>(
-                      <button  className="view-questions-option" style={{textAlign:'left',backgroundColor:(attempt[q.id]==a)?'lightgrey':'transparent'}} name={q.question} value={a} onClick={(e)=>handleChoose(e.target)}>{a}</button>
-                
-                  ))}
+                { questions && questions.map((q,i)=>(
+                  <div className="view-question" onMouseEnter={()=>handleCurrentQuestion(q.id)}>
+                    <div style = {{ marginBottom: 30 }} className="view-questions-title">{i+1}) {q.question}</div>     
+                      <SunEditor  
+                        defaultValue = {q.detail}
+                        style = {{ display: "none" }}
+                        showToolbar={false} 
+                        setOptions = {{
+                          height: 300
+                        }}
+                        disable={true}
+                      />  
+                      <div style={{display:'flex',flexDirection:'column', marginTop: 30}}>
+                      {q.answers.map((a)=>(
+                        <button  className="view-questions-option" style={{textAlign:'left',backgroundColor:(attempt[q.id]==a)?'lightgrey':'transparent'}} name={q.question} value={a} onClick={(e)=>handleChoose(e.target)}>{a}</button>
+                      ))}
+                      </div>
                   </div>
-                </div>
                 ))}
               </div>
-              
             </div>
             <div style={{margin:'20px 0'}}>
               <Button 
-              onClick={handleFinish}
-              variant="contained" color="secondary"
-          className={classes.button}
-          startIcon={<CheckCircleIcon />}>Finish</Button>
-          </div>
+                onClick={handleFinish}
+                variant="contained" color="secondary"
+                className={classes.button}
+                startIcon={<CheckCircleIcon />}
+              >
+                Finish
+              </Button>
+            </div>
           </div>
         </div>
-      </main>  </> );
+      </main>  </> 
+    );
 }
  
 export default PreviewQuizScreen;

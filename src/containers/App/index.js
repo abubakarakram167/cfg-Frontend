@@ -142,7 +142,7 @@ function App() {
         />
         <ProtectedRoute
           path='/listing/quiz'
-          component={withRouter(MultipleListingScreen)}
+          component={withRouter( QuizListingScreen)}
         />
         <ProtectedRoute
           path='/listing/mini'

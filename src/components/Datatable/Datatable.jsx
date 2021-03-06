@@ -19,7 +19,7 @@ class Datatable extends Component {
         selectableRows
         onSelectedRowsChange={this.props.handleSelected}
         pagination
-        noTableHead = {false}
+        noTableHead = { !this.props.showHeaderTable ? true : false}
         // paginationServer
         // expandableRows
         onRowClicked={this.props.onRowClicked}

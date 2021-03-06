@@ -17,7 +17,11 @@ class Quiz {
     return axiosInstance.post("/api/quiz", body);
   }
   static getAll(url_string){
-    return axiosInstance.get("/api/quiz/list", url_string);
+    return axiosInstance.get("/api/quiz/list");
   }
+  static getAllQuizQuestions(){
+    return axiosInstance.get("/api/quiz_questions/1");
+  }
+
 }
 export default Quiz;
