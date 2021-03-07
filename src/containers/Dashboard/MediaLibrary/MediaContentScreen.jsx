@@ -42,7 +42,6 @@ const MediaContentScreen = () => {
     },[])
     const classes=useStyles()
     const handleSave=(e)=>{
-      // debugger 
       e.forEach((f)=>{
           addMedia({title:f.name,url:f.path,mime_type:f.type,description:"",created_by:1})
           // console.log({title:f.name,url:f.path,mime_type:f.type,description:"",created_by:JSON.parse(localStorage.getItem('session')).author.email})

@@ -77,6 +77,7 @@ const QuizContentScreen = (props) => {
 
   const classes = useStyles();
   const [questions, setQuestions] = useState([]);
+  const [renderQuestions, setRenderQuestions] = useState([]);
   const [openNew, setOpenNew] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -107,6 +108,7 @@ const QuizContentScreen = (props) => {
     setSelected(q);
     newArr[index]=q;
     setQuestions(newArr)
+    setRenderQuestions(newArr)
   };
 
   const handleAddNewQuestion = (e) => {
@@ -126,12 +128,13 @@ const QuizContentScreen = (props) => {
       }
     })
     setQuestions([...questions, ...newImportQuestions]);
+    setRenderQuestions([...questions, ...newImportQuestions])
   };
 
 const handleEdit = (e) => {
-  console.log("the e..", e)
+  setSelected(e)
   if(!e.new)
-    e.edit = true
+    e.edit = true 
   setDetail(e.detail)
   if(!selected)
     setSelected(e)
@@ -146,6 +149,7 @@ const handleAnswerDelete=(e,i)=>{
   newArr[index].answers.splice(i,1)  
   setQuestions(newArr);
   setSelected(newArr[index]);
+  setRenderQuestions(newArr)
 }
 
 const handleAnswerChange =(e,i)=>{
@@ -153,8 +157,10 @@ const handleAnswerChange =(e,i)=>{
   let index=newArr.indexOf(selected)
   let q ={...selected}
   setSelected(q);
+  q.answers[i].option=e;
   newArr[index]=q;
   setQuestions(newArr)
+  setRenderQuestions(newArr)
 }
 
 const handlePointsChange=(e,i)=>{
@@ -165,10 +171,11 @@ const handlePointsChange=(e,i)=>{
   setSelected(q);
   newArr[index]=q;
   setQuestions(newArr)
+  setRenderQuestions(newArr)
 }
 
 const handlePublish=()=>{
-  questions.forEach((q)=>{
+  renderQuestions.forEach((q)=>{
     let points=[]
     q.answers.forEach((a)=>{
       points.push(a.points)
@@ -200,12 +207,14 @@ const getQuizParams=()=>{
   var url = new URL(document.URL);
   return url.searchParams.get("quiz_id");
 }
+const getQuizName = () => {
+  var url = new URL(document.URL);
+  return url.searchParams.get("quiz_name");
+}
 
 useEffect(() => {
   const getQuestions = async() => {
-
   let questions = await getQuizAllQuestions(parseInt(getQuizParams()));
-  console.log("the all questions", questions) 
   const questionAllOptions = await getQuestionAllOptions();
   const hardCodeOptionsWithQuestion =   questions && questions.questions && questions.questions.length ? questions.questions.map((question)=> {
     const options = questionAllOptions.filter((option) => {
@@ -239,6 +248,7 @@ const addNewAnswer=()=>{
     setSelected(temp)
     newArr[index]=temp;
     setQuestions(newArr)
+    setRenderQuestions(newArr)
   }
 }
 
@@ -262,9 +272,10 @@ const addNewAnswer=()=>{
     let index=newArr.indexOf(selected)
     let q ={...selected}
     q.detail = data;
-    setSelected(q);
+    // setSelected(q);
     newArr[index]=q;
-    setQuestions(newArr)
+    setRenderQuestions(newArr)
+    // setQuestions(newArr)
     setDetail(data)
   }
 
@@ -276,6 +287,7 @@ const addNewAnswer=()=>{
     setSelected(q);
     newArr[index]=q;
     setQuestions(newArr)
+    setRenderQuestions(newArr)
   }
 
   return (
@@ -294,7 +306,7 @@ const addNewAnswer=()=>{
           <div className="row dash-session-header">
             <div className="col-md-8">
               <label style={{ fontSize: "1rem", fontWeight: 700, color: "#565454" }}>
-                CFG for secondary schools Quiz
+                { getQuizName() }
               </label>       
               <Button
                 variant="contained"
@@ -319,7 +331,7 @@ const addNewAnswer=()=>{
               </Button>  
             </div>
             <div className="col-md-4" style={{ textAlign: "right" }}>
-              <button style = {{ padding: "7px 0",  paddingLeft: "25px", paddingRight: "25px", }} className="button-title button_inline" onClick={() => {history.push(`/preview/quiz?quiz_id=${getQuizParams()}`)}}>
+              <button style = {{ padding: "7px 0",  paddingLeft: "25px", paddingRight: "25px", }} className="button-title button_inline" onClick={() => {history.push(`/preview/quiz?quiz_id=${getQuizParams()}&quiz_name=${getQuizName()}`)}}>
                 <i className="fas fa-eye" /> preview
               </button>
               <div className="btn-group">
@@ -416,7 +428,7 @@ const addNewAnswer=()=>{
                       <div className={classes.question}>{q.question}</div>
                     </div>
                   </div>
-                  {q == selected && (
+                  {q == selected &&  (
                     <div className={classes.editSection}>
                       <TextField
                         className={classes.questionTitle}
@@ -446,9 +458,7 @@ const addNewAnswer=()=>{
                       </div>
                      
                       {q.answers.map((a,i) => (
-                       
                         <div style={{padding:'10px'}}>
-                          
                           <div className={classes.questionCard} style={{border:'none'}}>
                             <div className="row">
                               <div className={classes.actions} style={{maxWidth:'50px'}} onClick={()=>handleAnswerDelete(a,i)}>
@@ -465,7 +475,8 @@ const addNewAnswer=()=>{
                         </div>
                       ))}
                     </div>
-                  )}
+                  )
+                  }
                 </div>
                  )
                }

@@ -20,29 +20,31 @@ class RichTextEditor extends Component {
     super(props);
     this.state = {
       detail: "",
+      render:false
     }
   }
 
   componentDidMount() {
-    console.log("here....")
-    setTimeout(()=> {
-      document.querySelectorAll(`.se-toolbar`)[0].setAttribute("style", customToolBarCss);   
-      this.createCustomButtonInstance(lowerCase, 2, 'lower');
-      this.createCustomButtonInstance(upperCase, 2, 'upper');
-      this.createCustomButtonInstance(button, 10, 'custom');
-      var totalToolbarElements =  document.querySelectorAll('.se-btn-module')
-      var x = document.getElementsByClassName(`se-toolbar-separator-vertical`)
-      var y = document.getElementsByClassName(`se-btn-module-border`)
-      for(let i = 0; i < totalToolbarElements.length; i++){
-        y[i].style.borderRadius = "0px";
-        y[i].style.border = "1px solid #464444";
-      }
-      for (let i = 0; i < x.length; i++) {
-        x[i].style.margin = "0px";
-      }
-      document.querySelector(`.se-btn-module:first-child`).setAttribute("style", "border: 1px solid black; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-bottom-right-radius:0px;  border-top-right-radius:0px;");
-      document.querySelector(`.se-btn-module:last-child`).setAttribute("style", "border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius:0px;  border-top-left-radius:0px; border: 1px solid black;");
-    }, 200)
+    
+      setTimeout(()=> {
+        document.querySelectorAll(`.se-toolbar`)[0].setAttribute("style", customToolBarCss);   
+        this.createCustomButtonInstance(lowerCase, 2, 'lower');
+        this.createCustomButtonInstance(upperCase, 2, 'upper');
+        this.createCustomButtonInstance(button, 10, 'custom');
+        var totalToolbarElements =  document.querySelectorAll('.se-btn-module')
+        var x = document.getElementsByClassName(`se-toolbar-separator-vertical`)
+        var y = document.getElementsByClassName(`se-btn-module-border`)
+        for(let i = 0; i < totalToolbarElements.length; i++){
+          y[i].style.borderRadius = "0px";
+          y[i].style.border = "1px solid #464444";
+        }
+        for (let i = 0; i < x.length; i++) {
+          x[i].style.margin = "0px";
+        }
+        document.querySelector(`.se-btn-module:first-child`).setAttribute("style", "border: 1px solid black; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-bottom-right-radius:0px;  border-top-right-radius:0px;");
+        document.querySelector(`.se-btn-module:last-child`).setAttribute("style", "border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius:0px;  border-top-left-radius:0px; border: 1px solid black;");
+      }, 200)
+     
         
     this.setState({ detail: ''});
   }

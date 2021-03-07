@@ -13,7 +13,7 @@ import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-with-button";
 import MicrosoftLogin from "react-microsoft-login";
 import jsCookie from "js-cookie";
-
+import './login.css';
 const useStyles = (theme) => ({
   margin: {
     margin: theme.spacing(1),
@@ -168,7 +168,7 @@ class Login extends React.PureComponent {
           </div>
         </div>
 
-        <section className='account_wraper'>
+        <section className='account_wraper' style = {{ overflowX: 'hidden', overflowY: "hidden" }} >
           <div className='container_large'>
             <div className='login_holder'>
               <div className='login_logo'>

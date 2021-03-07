@@ -52,6 +52,7 @@ class EditUser extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
+    console.log(`user: ${props.user}  and state is ${state}`)
     if (state.once && props.user) {
       return {
         ...state,

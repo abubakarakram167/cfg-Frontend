@@ -229,7 +229,8 @@ class UserManagement extends Component {
                     checked = {this.state.showAll}
                     onClick = {()=> { this.handleSelected({ selectedRows: this.props.users, allSelected: true, selectedCount: 2, custom: true }) } }
                   />
-                  Username
+                  <span className = "username-heading" > Username </span>
+                  
                 </div>
                 <div className='d-flex align-items-center'>
                   <input

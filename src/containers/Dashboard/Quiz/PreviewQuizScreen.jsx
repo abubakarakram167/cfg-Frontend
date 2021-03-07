@@ -48,6 +48,11 @@ const PreviewQuizScreen = ({data}) => {
     return url.searchParams.get("quiz_id");
   }
 
+  const getQuizName = () => {
+    var url = new URL(document.URL);
+    return url.searchParams.get("quiz_name");
+  }
+
   useEffect(() => {
     const getQuestions = async() => {
       const questions = await getQuizAllQuestions(getQuizParams()); 
@@ -76,7 +81,7 @@ const PreviewQuizScreen = ({data}) => {
         <div className="dash-wrapper" style={{paddingTop: '0 !important'}}>
           <div className="row preview-questions-grid" style = {{margin: 'auto', width: "50%" }} >
             <div className="view-questions-box">
-              <div className="view-questions-box-title">CFG for secondary school</div>
+            <div className="view-questions-box-title">{getQuizName()}</div>
               <div className="questions-list">
                 { questions && questions.map((q,i)=>(
                   <div className="view-question" onMouseEnter={()=>handleCurrentQuestion(q.id)}>

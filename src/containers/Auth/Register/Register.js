@@ -71,7 +71,7 @@ class Register extends React.PureComponent {
           </div>
         </div>
 
-        <section className='account_wraper'>
+        <section className='account_wraper'  >
           <div className='container_large'>
             <div className='login_holder'>
               <div className='login_logo'>

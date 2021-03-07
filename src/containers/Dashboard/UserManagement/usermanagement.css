@@ -60,7 +60,7 @@
  @media screen and (min-width: 1310px) {
   .username-column{
     position: relative;
-    left: -6px;
+    left: -9px;
   }
   .name-column{
     position: relative;
@@ -95,6 +95,10 @@
     position: relative;
     left: -12px;
   }
+  .name-column{
+    position: relative;
+    left: -10px;
+  }
 }
 
 @media screen and (min-width: 1515px) {
@@ -106,11 +110,11 @@
 @media screen and (min-width: 1620px) {
   .username-column{
     position: relative;
-    left: -15px;
+    left: -23px;
   }
   .name-column{
     position: relative;
-    left: -3px;
+    left: -7px;
   }
   .role-column{
     position: relative;
@@ -124,68 +128,152 @@
 @media screen and (min-width: 1680px) {
   .username-column{
     position: relative;
-    left: -18px;
+    left: -21px;
   }
 }
 
 @media screen and (min-width: 1700px) {
   .username-column{
     position: relative;
-    left: -21px;
+    left: -27px;
   }
   .name-column{
     position: relative;
-    left: -6px;
+    left: -8px;
   }
   .role-column{
     position: relative;
-    left: -3px;
+    left: 15px;
   }
   .status-column{
     position: relative;
-    left: 26px;
+    left: 29px;
   }
 }
 @media screen and (min-width: 1860px) {
   .username-column{
     position: relative;
-    left: -24px;
+    left: -30px;
+  }
+  .name-column{
+    position: relative;
+    left: -16px;
+  }
+  .role-column{
+    position: relative;
+    left: 22px;
+  }
+  .status-column{
+    position: relative;
+    left: 35px;
   }
 }
 @media screen and (min-width: 1900px) {
   
+  .username-column{
+    position: relative;
+    left: -30px;
+  }
   .name-column{
     position: relative;
-    left: -9px;
+    left: -12px;
   }
   .role-column{
     position: relative;
-    left: -9px;
+    left: 25px;
   }
+}
+@media screen and (min-width: 1970px) {
+  
+  .username-column{
+    position: relative;
+    left: -34px;
+  }
+  .name-column{
+    position: relative;
+    left: -15px;
+  }
+  .status-column{
+    position: relative;
+    left: 35px;
+  }
+  
+}
+@media screen and (min-width: 2050px) {
+  
+  .username-column{
+    position: relative;
+    left: -38px;
+  }
+  .name-column{
+    position: relative;
+    left: -15px;
+  }
+  .status-column{
+    position: relative;
+    left: 40px;
+  }
+  
+}
+@media screen and (min-width: 2160px) {
+  
+  .username-column{
+    position: relative;
+    left: -40px;
+  }
+  .name-column{
+    position: relative;
+    left: -18px;
+  }
+  .status-column{
+    position: relative;
+    left: 45px;
+  }
+  
 }
 @media screen and (min-width: 2230px) {
   .username-column{
     position: relative;
-    left: -35px;
-  }
-}
-@media screen and (min-width: 2460px) {
-  .username-column{
-    position: relative;
     left: -45px;
   }
+  .name-column{
+    position: relative;
+    left: -20px;
+  }
+}
+@media screen and (min-width: 2320px) {
+  .username-column{
+    position: relative;
+    left: -47px;
+  }
+  .name-column{
+    position: relative;
+    left: -23px;
+  }
 }
 @media screen and (min-width: 2460px) {
   .username-column{
     position: relative;
-    left: -50px;
+    left: -56px;
+  }
+  .name-column{
+    position: relative;
+    left: -27px;
+  }
+  .status-column{
+    position: relative;
+    left: 55px;
   }
 }
 @media screen and (min-width: 2560px) {
   .username-column{
     position: relative;
-    left: -55px;
+    left: -60px;
   } 
+  .name-column{
+    position: relative;
+    left: -30px;
+  }
 } 
 
 .rdt_TableCell input[type="checkbox"]:after{
@@ -231,6 +319,10 @@
 
 .rdt_TableCell{
 
+}
+.username-heading{
+  position: relative;
+  right: 12px;
 }
 
 .custom-checkboxes{
