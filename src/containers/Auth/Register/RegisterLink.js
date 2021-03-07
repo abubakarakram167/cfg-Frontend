@@ -52,7 +52,7 @@ class RegisterLink extends React.PureComponent {
                                 </>
                                 }
                                 <div className="d-block text-center">
-                                    <Link to="/login" className="button primary_button">BACK TO LOGIN PAGE</Link>
+                                    <Link to="/login" className="button primary_button col-8">BACK TO LOGIN PAGE</Link>
                                 </div>
                             </div>
                         </div>

@@ -10,14 +10,15 @@ import { paramCase } from 'change-case';
 import save from '../../../components/common/assets/icons/save.svg';
 import cancel from '../../../components/common/assets/icons/x-circle.svg';
 import { withStyles } from "@material-ui/core/styles";
-import { TextField, IconButton, InputAdornment,InputLabel,Select } from "@material-ui/core";
+import { TextField, IconButton, InputAdornment, InputLabel, Select } from "@material-ui/core";
+import FormControl from '@material-ui/core/FormControl';
 
 const useStyles = (theme) => ({
- 
+
   w_100: {
     width: "100%",
   },
-  
+
 });
 
 class EditUser extends Component {
@@ -53,6 +54,7 @@ class EditUser extends Component {
 
   static getDerivedStateFromProps(props, state) {
     console.log(`user: ${props.user}  and state is ${state}`)
+    console.log(state)
     if (state.once && props.user) {
       return {
         ...state,
@@ -89,7 +91,7 @@ class EditUser extends Component {
   };
 
   render() {
-    const {classes}=this.props;
+    const { classes } = this.props;
     let defaultStatus = this.state.statuses.filter((o) => {
       return o.id === this.state.status || o.label === this.state.status;
     });
@@ -123,108 +125,116 @@ class EditUser extends Component {
                 <div className='dash_form'>
                   <form onSubmit={this.onFormSubmit}>
                     <div className='mb-4'>
-                     
-                       <TextField
-                      className={classes.w_100}
-                      id='username'
-                      variant='filled'
-                      label='Username'
-                      name='user_name'
-                      required
-                      onChange={this.onChangeValue}
-                     
-                    />
+
+                      <TextField
+                        className={classes.w_100}
+                        id='username'
+                        variant='filled'
+                        label='Username'
+                        name='user_name'
+                        required
+                        onChange={this.onChangeValue}
+
+                      />
                     </div>
                     <div className='mb-4'>
-                     
-                       <TextField
-                      className={classes.w_100}
-                      id='first_name'
-                      variant='filled'
-                      label='Name'
-                      name='first_name'
-                      required
-                      onChange={this.onChangeValue}
-                     
-                    />
+
+                      <TextField
+                        className={classes.w_100}
+                        id='first_name'
+                        variant='filled'
+                        label='Name'
+                        name='first_name'
+                        required
+                        onChange={this.onChangeValue}
+
+                      />
                     </div>
                     <div className='mb-4'>
-                    <TextField
-                      className={classes.w_100}
-                      id='email'
-                      variant='filled'
-                      label='Email'
-                      name='email'
-                      type='email'
-                      required
-                      onChange={this.onChangeValue}
-                      error={
-                        this.state.email !== "" &&
-                        !this.state.email.match(
-                          "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$"
-                        )
-                      }
-                    />
+                      <TextField
+                        className={classes.w_100}
+                        id='email'
+                        variant='filled'
+                        label='Email'
+                        name='email'
+                        type='email'
+                        required
+                        onChange={this.onChangeValue}
+                        error={
+                          this.state.email !== "" &&
+                          !this.state.email.match(
+                            "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$"
+                          )
+                        }
+                      />
                     </div>
                     <div className='mb-4'>
-                    <TextField
-                      className={classes.w_100}
-                      id='phone'
-                      variant='filled'
-                      label='Telephone'
-                      name='phone'
-                      type='number'
-                      required
-                      onChange={this.onChangeValue}
-                     
-                    />
+                      <TextField
+                        className={classes.w_100}
+                        id='phone'
+                        variant='filled'
+                        label='Telephone'
+                        name='phone'
+                        type='number'
+                        required
+                        onChange={this.onChangeValue}
+
+                      />
                     </div>
                     <div className='mb-4'>
-                    <InputLabel htmlFor="role">Role</InputLabel>
-                           <Select
-                           native
-                            onChange={(selected) => {this.onChangeTypehead(selected, 'role');}}
-                           className={classes.w_100}
-                           inputProps={{id:"role"}}
-                              >
-          <option aria-label="None" value="" />
-          {this.state.roles.map((r)=>{
-           return <option id={r.id} value={r.label}>{r.label}</option>
-          })}
-         
-        </Select>
+                    <FormControl variant="filled" className={classes.w_100}>
+                      <InputLabel id="label" htmlFor="role">Role</InputLabel>
+                      <Select labelId="label"
+                        native
+                        onChange={(selected) => { this.onChangeTypehead(selected, 'role'); }}
+                        
+                        inputProps={{ id: "role" }}
+                        label='Role'
+                      >
+                        <option aria-label="None" value="" />
+                        {this.state.roles.map((r) => {
+                          return <option id={r.id} value={r.label}>{r.label}</option>
+                        })}
+
+                      </Select>
+                      </FormControl>
+                    </div>
+                    
+                    <div className='mb-4'>
+                    <FormControl variant="filled" className={classes.w_100}>
+                      <InputLabel htmlFor="role">Group</InputLabel>
+                      <Select
+                        native
+                        onChange={(selected) => { this.onChangeTypehead(selected, 'group'); }}
+                        
+                        inputProps={{ id: "role" }}
+                      >
+
+                        <option aria-label="None" value="" />
+                        {this.state.roles.map((r) => {
+                          return <option id={r.id} value={r.label}>{r.label}</option>
+                        })}
+
+                      </Select>
+                      </FormControl>
                     </div>
                     <div className='mb-4'>
-                    <InputLabel htmlFor="role">Group</InputLabel>
-                           <Select
-                           native
-                            onChange={(selected) => {this.onChangeTypehead(selected, 'group');}}
-                           className={classes.w_100}
-                           inputProps={{id:"role"}}
-                              >
-          
-          <option aria-label="None" value="" />
-          {this.state.roles.map((r)=>{
-           return <option id={r.id} value={r.label}>{r.label}</option>
-          })}
-         
-        </Select>
-                    </div>
-                    <div className='mb-4'>
-                    <InputLabel htmlFor="role">Status</InputLabel>
-                           <Select
-                           native
-                            onChange={(selected) => {this.onChangeTypehead(selected, 'status');}}
-                           className={classes.w_100}
-                           inputProps={{id:"role"}}
-                              >
-          
-          <option aria-label="None" value="" />
-          {this.state.roles.map((r)=>{
-           return <option id={r.id} value={r.label}>{r.label}</option>
-          })}
-         
-        </Select>
+                    <FormControl variant="filled" className={classes.w_100}>
+                      <InputLabel htmlFor="role">Status</InputLabel>
+                      <Select
+                        native
+                        onChange={(selected) => { this.onChangeTypehead(selected, 'status'); }}
+                        
+                        inputProps={{ id: "role" }}
+                      >
+
+                        <option aria-label="None" value="" />
+                        {this.state.roles.map((r) => {
+                          return <option id={r.id} value={r.label}>{r.label}</option>
+                        })}
+
+                      </Select>
+                      </FormControl>
                     </div>
                     <div className='d-block' style={{ textAlign: 'center' }}>
                       <button

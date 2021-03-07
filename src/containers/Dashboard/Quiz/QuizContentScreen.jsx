@@ -201,6 +201,7 @@ const handlePublish=()=>{
       }
     }
   })
+  history.push('/listing/quiz');
 }
 
 const getQuizParams=()=>{

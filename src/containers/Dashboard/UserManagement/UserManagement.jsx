@@ -241,12 +241,12 @@ class UserManagement extends Component {
                     onChange={this.onChangeValue}
                   />
                   <div onClick={this.onResetSubmit}>
-                    <img src={filter} />
+                    <img style={{  cursor: "pointer" }} src={filter} />
                   </div>
                 </div>
               </div>
               <div className='col-md-2 name-column'>
-                <div className='input-label other-fields'>Name</div>
+                <div className='input-label rdt_TableCell other-fields'>Name</div>
                 <div className='d-flex align-items-center'>
                   <input
                     className={'input-border'}
@@ -256,12 +256,12 @@ class UserManagement extends Component {
                     onChange={this.onChangeValue}
                   />
                   <div onClick={this.onResetSubmit}>
-                    <img src={filter} />
+                    <img style={{  cursor: "pointer" }} src={filter} />
                   </div>
                 </div>
               </div>
               <div className='col-md-2 email-column'>
-                <div className='input-label other-fields'>Email</div>
+                <div className='input-label rdt_TableCell other-fields'>Email</div>
                 <div className='d-flex align-items-center'>
                   <input
                     className={'input-border'}
@@ -271,12 +271,12 @@ class UserManagement extends Component {
                     onChange={this.onChangeValue}
                   />
                   <div onClick={this.onResetSubmit}>
-                    <img src={filter} />
+                    <img style={{  cursor: "pointer" }} src={filter} />
                   </div>
                 </div>
               </div>
               <div className='col-md-2 role-column'>
-                <div className='input-label other-fields'>Role</div>
+                <div className='input-label rdt_TableCell other-fields'>Role</div>
                 <div className='d-flex align-items-center'>
                   <select
                     name='role'
@@ -294,12 +294,12 @@ class UserManagement extends Component {
                     </option>
                   </select>
                   <div onClick={this.onResetSubmit}>
-                    <img src={filter} />
+                    <img style={{  cursor: "pointer" }} src={filter} />
                   </div>
                 </div>
               </div>
               <div className='col-md-2 status-column'>
-                <div className='input-label other-fields'>Status</div>
+                <div className='input-label rdt_TableCell other-fields'>Status</div>
                 <div className='d-flex align-items-center'>
                   <select
                     name='status'
@@ -312,7 +312,7 @@ class UserManagement extends Component {
                     <option value='2'>Disabled</option>
                   </select>
                   <div onClick={this.onResetSubmit}>
-                    <img src={filter} />
+                    <img style={{  cursor: "pointer" }} src={filter} />
                   </div>
                 </div>
               </div>

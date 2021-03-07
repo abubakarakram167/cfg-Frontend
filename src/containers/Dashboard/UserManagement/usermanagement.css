@@ -318,7 +318,10 @@
 }
 
 .rdt_TableCell{
-
+  font-size: 24px  !important;
+}
+.rdt_TableRow{
+  font-size: 24px;
 }
 .username-heading{
   position: relative;
