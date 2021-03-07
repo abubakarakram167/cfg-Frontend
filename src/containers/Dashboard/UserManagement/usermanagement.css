@@ -186,4 +186,49 @@
     position: relative;
     left: -55px;
   } 
-}  
+} 
+
+.rdt_TableCell input[type="checkbox"]:after{
+  position: relative;
+  display: block;
+
+  height: 15px;
+  width: 15px;
+  content: "";
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+.rdt_TableCell input[type="checkbox"]:before{
+  content: "";
+  position: relative;
+  display: block;
+  width: 15px;
+  height: 15px;
+
+}
+.rdt_TableCell input[type="checkbox"]:checked:after{
+  background-color: black;
+  background-image:  url('./ticked.png');
+  background-repeat: no-repeat;
+  background-size: 15px 15px;
+}
+/* Large checkboxes */
+.rdt_TableCell input{
+  height:18px;
+  width: 18px;
+}
+
+.rdt_TableCell input[type="checkbox"]:before{
+  width: 18px;
+  height: 18px;
+}
+.rdt_TableCell input[type="checkbox"]:after{
+  top: -18px;
+  width: 18px;
+  height: 18px;
+}
+
+.rdt_TableCell{
+
+}

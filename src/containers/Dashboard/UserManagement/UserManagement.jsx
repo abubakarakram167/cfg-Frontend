@@ -221,10 +221,10 @@ class UserManagement extends Component {
           <div className = "container-fluid" >
             <div style={{ marginTop: -25}} className={'row justify-content-center'}>  
               <div className='col-md-2 username-column'>
-                <div className='input-label'  >  
+                <div className='input-label rdt_TableCell'  >  
                   <input 
                     type = "checkbox"
-                    className = "custom-checkbox"
+                    className = "custom-checkbox customCheckBox large"
                     name = "select-all-rows"
                     checked = {this.state.showAll}
                     onClick = {()=> { this.handleSelected({ selectedRows: this.props.users, allSelected: true, selectedCount: 2, custom: true }) } }
