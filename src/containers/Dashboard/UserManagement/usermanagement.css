@@ -232,3 +232,8 @@
 .rdt_TableCell{
 
 }
+
+.custom-checkboxes{
+  position: relative;
+  right: 3px;
+}

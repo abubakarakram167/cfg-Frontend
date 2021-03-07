@@ -221,7 +221,7 @@ class UserManagement extends Component {
           <div className = "container-fluid" >
             <div style={{ marginTop: -25}} className={'row justify-content-center'}>  
               <div className='col-md-2 username-column'>
-                <div className='input-label rdt_TableCell'  >  
+                <div className='input-label rdt_TableCell custom-checkboxes'  >  
                   <input 
                     type = "checkbox"
                     className = "custom-checkbox customCheckBox large"
