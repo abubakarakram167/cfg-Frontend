@@ -13,7 +13,7 @@ import _ from "lodash";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import history from "../../../utils/history";
-import{ addQuestionaire,addAnswer,addQuizQuestions, getQuestionAllOptions} from "../../../store/actions/quiz.actions"
+import{ addQuestionaire,addAnswer,addQuizQuestions, getQuestionAllOptions, editQuestion} from "../../../store/actions/quiz.actions"
 import{ getQuizAllQuestions } from "../../../store/actions/quiz.actions"
 import moment from 'moment';
 import {
@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const QuizContentScreen = (props) => {
+
   const classes = useStyles();
   const [questions, setQuestions] = useState([]);
   const [openNew, setOpenNew] = useState(false);
@@ -96,12 +97,20 @@ const QuizContentScreen = (props) => {
   };
 
   const handleDelete = (e) => {
-    let temp = _.difference(questions, [e]);
-    setQuestions(temp);
+    // let temp = _.difference(questions, [e]);
+    // setQuestions(temp);
+    let newArr=[...questions]
+    let index=newArr.indexOf(e)
+    let q ={...e}
+    q.deleted = true;
+    q.edit = true;
+    setSelected(q);
+    newArr[index]=q;
+    setQuestions(newArr)
   };
 
   const handleAddNewQuestion = (e) => {
-    let newQuestion = { question: "",new: true, answers:[],id:questions.length+1 };
+    let newQuestion = { question: "", new: true,edit: false ,answers:[],id:questions.length+1 };
     newQuestion.question = e;
     let temp = [...questions];
     temp.push(newQuestion);
@@ -120,7 +129,9 @@ const QuizContentScreen = (props) => {
   };
 
 const handleEdit = (e) => {
-  console.log("ada", e)
+  console.log("the e..", e)
+  if(!e.new)
+    e.edit = true
   setDetail(e.detail)
   if(!selected)
     setSelected(e)
@@ -128,7 +139,6 @@ const handleEdit = (e) => {
     if( e.id === selected.id)
       setSelected(null);
   }  
-  
 };
 const handleAnswerDelete=(e,i)=>{
   let newArr=[...questions]
@@ -142,7 +152,6 @@ const handleAnswerChange =(e,i)=>{
   let newArr=[...questions]
   let index=newArr.indexOf(selected)
   let q ={...selected}
-  q.answers[i].option=e;
   setSelected(q);
   newArr[index]=q;
   setQuestions(newArr)
@@ -172,6 +181,18 @@ const handlePublish=()=>{
         })  
       })
     }
+    else{
+      if(q.edit){
+        let questionToBeEdit = q
+        editQuestion({ 
+          questionId: questionToBeEdit.quiz_questions.question_id, 
+          detail: questionToBeEdit.detail, 
+          answers: questionToBeEdit.answers,
+          question: questionToBeEdit.question,
+          deleted: q.deleted 
+        })
+      }
+    }
   })
 }
 
@@ -183,23 +204,24 @@ const getQuizParams=()=>{
 useEffect(() => {
   const getQuestions = async() => {
 
-  let questions = await getQuizAllQuestions(parseInt(getQuizParams())); 
+  let questions = await getQuizAllQuestions(parseInt(getQuizParams()));
+  console.log("the all questions", questions) 
   const questionAllOptions = await getQuestionAllOptions();
-  console.log("the questions", questions)
   const hardCodeOptionsWithQuestion =   questions && questions.questions && questions.questions.length ? questions.questions.map((question)=> {
     const options = questionAllOptions.filter((option) => {
       return option.question_id === question.id;
     }).map(optionValue => {
-
       return {
         option: optionValue.option_description,
-        points: Math.floor(Math.random() * 10) + 1
+        points: Math.floor(Math.random() * 10) + 1,
+        id: optionValue.id
       }
     }) 
     return {
       ...question,
       answers: options,
-      new: false
+      new: false,
+      edit: false
     }
   }) : []
 
@@ -234,6 +256,28 @@ const addNewAnswer=()=>{
     setEditorState(editorState);
     setDetail(draftToHtml(convertToRaw(editorState.getCurrentContent())));
   };
+
+  const setDetailForQuestion = (data) => {
+    let newArr=[...questions]
+    let index=newArr.indexOf(selected)
+    let q ={...selected}
+    q.detail = data;
+    setSelected(q);
+    newArr[index]=q;
+    setQuestions(newArr)
+    setDetail(data)
+  }
+
+  const onChangeQuestionText = (text) => {
+    let newArr=[...questions]
+    let index=newArr.indexOf(selected)
+    let q ={...selected};
+    q.question = text.target.value;
+    setSelected(q);
+    newArr[index]=q;
+    setQuestions(newArr)
+  }
+
   return (
     <>
       <article>
@@ -351,76 +395,82 @@ const addNewAnswer=()=>{
             />
           </QuizModal>
           <div style = {{ marginTop: 30, width: "100%" }} className="row">
-            {questions && questions.map((q) => (
-              <div style={{ marginBottom: "10px" }}>
-                <div className={classes.questionCard}>
-                  <div className="row">
-                    <div className={classes.actions}>
-                      <i
-                        className="fas fa-edit"
-                        onClick={() => handleEdit(q)}
-                      />
-                      <i className="fas fa-copy" />
-                      <i
-                        className="fas fa-trash"
-                        style={{ color: "#EB1B29" }}
-                        onClick={() => handleDelete(q)}
-                      />
+            {questions && questions.map((q) => {
+              if(!q.deleted){
+                return (
+                  <div style={{ marginBottom: "10px" }}>
+                  <div className={classes.questionCard}>
+                    <div className="row">
+                      <div className={classes.actions}>
+                        <i
+                          className="fas fa-edit"
+                          onClick={() => handleEdit(q)}
+                        />
+                        <i className="fas fa-copy" />
+                        <i
+                          className="fas fa-trash"
+                          style={{ color: "#EB1B29" }}
+                          onClick={() => handleDelete(q)}
+                        />
+                      </div>
+                      <div className={classes.question}>{q.question}</div>
                     </div>
-                    <div className={classes.question}>{q.question}</div>
                   </div>
-                </div>
-                {q == selected && (
-                  <div className={classes.editSection}>
-                    <TextField
-                      className={classes.questionTitle}
-                      id="outlined-basic"
-                      variant="outlined"
-                      inputProps={{ style: { fontSize: "1.3rem" } }}
-                      fullWidth
-                      style = {{ marginBottom: 80 }}
-                      defaultValue={q.question}
-                    />             
-                      <RichTextHtmlEditor 
-                        onChangeDetail = {(data)=> setDetail(data) } detail = {detail}  
-                      />
-                    <div className={classes.answerHeader}>
-                      <h3>Answers</h3>{" "}
-                      <Button
-                        variant="contained"
-                        style={{ backgroundColor: "red" }}
-                        color="secondary"
-                        className={classes.button}
-                        startIcon={<AddCircleOutlinedIcon />}
-                        onClick={()=>addNewAnswer()}
-                      >
-                        ADD NEW ANSWER
-                      </Button>
-                    </div>
-                   
-                    {q.answers.map((a,i) => (
+                  {q == selected && (
+                    <div className={classes.editSection}>
+                      <TextField
+                        className={classes.questionTitle}
+                        id="outlined-basic"
+                        variant="outlined"
+                        inputProps={{ style: { fontSize: "1.3rem" } }}
+                        fullWidth
+                        style = {{ marginBottom: 80 }}
+                        defaultValue={q.question}
+                        onChange = {(text)=> { onChangeQuestionText(text) }}
+                      />             
+                        <RichTextHtmlEditor 
+                          onChangeDetail = {(data)=> setDetailForQuestion(data) } detail = {detail}  
+                        />
+                      <div className={classes.answerHeader}>
+                        <h3>Answers</h3>{" "}
+                        <Button
+                          variant="contained"
+                          style={{ backgroundColor: "red" }}
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<AddCircleOutlinedIcon />}
+                          onClick={()=>addNewAnswer()}
+                        >
+                          ADD NEW ANSWER
+                        </Button>
+                      </div>
                      
-                      <div style={{padding:'10px'}}>
-                        
-                        <div className={classes.questionCard} style={{border:'none'}}>
-                          <div className="row">
-                            <div className={classes.actions} style={{maxWidth:'50px'}} onClick={()=>handleAnswerDelete(a,i)}>
-                              <i
-                                className="fas fa-trash"
-                                style={{ color: "#EB1B29" }}
-                              />
+                      {q.answers.map((a,i) => (
+                       
+                        <div style={{padding:'10px'}}>
+                          
+                          <div className={classes.questionCard} style={{border:'none'}}>
+                            <div className="row">
+                              <div className={classes.actions} style={{maxWidth:'50px'}} onClick={()=>handleAnswerDelete(a,i)}>
+                                <i
+                                  className="fas fa-trash"
+                                  style={{ color: "#EB1B29" }}
+                                />
+                              </div>
+                              <TextField className={classes.answer}  value={a.option} onChange={(e)=>handleAnswerChange(e.target.value,i)} variant="outlined"/>
+                              <TextField className={classes.points}  value={a.points} onChange={(e)=>handlePointsChange(e.target.value,i)} type="number" variant="outlined"/>
+                             
                             </div>
-                            <TextField className={classes.answer}  value={a.option} onChange={(e)=>handleAnswerChange(e.target.value,i)} variant="outlined"/>
-                            <TextField className={classes.points}  value={a.points} onChange={(e)=>handlePointsChange(e.target.value,i)} type="number" variant="outlined"/>
-                           
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                      ))}
+                    </div>
+                  )}
+                </div>
+                 )
+               }
+              return null;     
+            })}
           </div>
         </div>
       </main>

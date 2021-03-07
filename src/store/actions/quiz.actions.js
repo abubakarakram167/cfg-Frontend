@@ -56,6 +56,18 @@ export const addQuestionaire = (body) => {
     });
 };
 
+export const editQuestion = (body) => {
+  return Quiz.editQuestion(body)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((e) => {
+      console.log(e.response.data);
+      return e.response.data;
+    });
+};
+
+
 export const addAnswer = (body) => {
   //   console.log("fun");
 

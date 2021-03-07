@@ -83,11 +83,11 @@ const PreviewQuizScreen = ({data}) => {
                     <div style = {{ marginBottom: 30 }} className="view-questions-title">{i+1}) {q.question}</div>     
                       <SunEditor  
                         defaultValue = {q.detail}
-                        style = {{ display: "none" }}
                         showToolbar={false} 
                         setOptions = {{
                           height: 300
                         }}
+                        setDefaultStyle="font-size: 18px; color: #8f8f8f; font-weight: 400"
                         disable={true}
                       />  
                       <div style={{display:'flex',flexDirection:'column', marginTop: 30}}>

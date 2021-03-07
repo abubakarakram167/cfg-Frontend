@@ -5,68 +5,162 @@
   margin-top: 1px; 
   vertical-align: middle; 
   position: relative;
+  left: -32px;
 }
 .container-fluid{
   margin-top: 10px;
 }
 .username-column{
   position: relative;
-  left: 2.5%;
+  left: 1px;
+}
+.dash-wrapper{
+  width: 88%;
+  margin-bottom: 15px;
 }
 
 @media screen and (min-width: 900px) {
   .username-column{
     position: relative;
-    left: 2.2%;
+    left: 1px;
+  }
+  .email-column{
+    position: relative;
+    left: 5px;
+  }
+  .name-column{
+    position: relative;
+    left: 8px;
+  }
+  .role-column{
+    position: relative;
+    left: 8px;
+  }
+  .status-column{
+    position: relative;
+    left: 18px;
   }
 }
-@media screen and (min-width: 1055px) {
+
+ @media screen and (min-width: 1180px) {
   .username-column{
     position: relative;
-    left: 1.5%;
+    left: -2px;
+  }
+  .name-column{
+    position: relative;
+    left: 0px;
+  }
+  .role-column{
+    position: relative;
+    left: 10px;
   }
 }
-@media screen and (min-width: 1215px) {
+
+ @media screen and (min-width: 1310px) {
   .username-column{
     position: relative;
-    left: 1%;
+    left: -6px;
   }
-}
-@media screen and (min-width: 1320px) {
-  .username-column{
+  .name-column{
     position: relative;
-    left: 0.5%;
+    left: 0px;
+  }
+  .role-column{
+    position: relative;
+    left: 15px;
+  }
+  .status-column{
+    position: relative;
+    left: 22px;
   }
 }
+
 @media screen and (min-width: 1440px) {
   .username-column{
     position: relative;
-    left: 0.3%;
+    left: -10px;
+  }
+  .name-column{
+    position: relative;
+    left: 0px;
+  }
+  .role-column{
+    position: relative;
+    left: 20px;
   }
 }
+@media screen and (min-width: 1460px) {
+  .username-column{
+    position: relative;
+    left: -12px;
+  }
+}
+
 @media screen and (min-width: 1515px) {
   .username-column{
     position: relative;
-    left: 0.1%;
+    left: -15px;
   }
 }
-@media screen and (min-width: 1515px) {
+@media screen and (min-width: 1620px) {
   .username-column{
     position: relative;
-    left: -5px
-    
+    left: -15px;
+  }
+  .name-column{
+    position: relative;
+    left: -3px;
+  }
+  .role-column{
+    position: relative;
+    left: 20px;
+  }
+  .status-column{
+    position: relative;
+    left: 25px;
   }
 }
+@media screen and (min-width: 1680px) {
+  .username-column{
+    position: relative;
+    left: -18px;
+  }
+}
+
 @media screen and (min-width: 1700px) {
   .username-column{
     position: relative;
-    left: -10px;
+    left: -21px;
+  }
+  .name-column{
+    position: relative;
+    left: -6px;
+  }
+  .role-column{
+    position: relative;
+    left: -3px;
+  }
+  .status-column{
+    position: relative;
+    left: 26px;
   }
 }
 @media screen and (min-width: 1860px) {
   .username-column{
     position: relative;
-    left: -25px;
+    left: -24px;
+  }
+}
+@media screen and (min-width: 1900px) {
+  
+  .name-column{
+    position: relative;
+    left: -9px;
+  }
+  .role-column{
+    position: relative;
+    left: -9px;
   }
 }
 @media screen and (min-width: 2230px) {
@@ -81,3 +175,15 @@
     left: -45px;
   }
 }
+@media screen and (min-width: 2460px) {
+  .username-column{
+    position: relative;
+    left: -50px;
+  }
+}
+@media screen and (min-width: 2560px) {
+  .username-column{
+    position: relative;
+    left: -55px;
+  } 
+}  
