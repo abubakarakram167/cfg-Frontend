@@ -1,9 +1,17 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+react-sortable-hoc# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
+/.idea/crema.iml
+/.idea/dictionaries/yogi0.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/*
 
 # testing
 /coverage
@@ -21,17 +29,4 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-# git ls-files --others --exclude-from=.git/info/exclude
-# Lines that start with '#' are comments.
-# For a project mostly in C, the following would be a good set of
-# exclude patterns (uncomment them if you want to use them):
-# *.[oa]
-# *~
-/.idea/
-.eslintcache
-
-
-debug.log
-
-*.zip
-*.rar
+package-lock.json
