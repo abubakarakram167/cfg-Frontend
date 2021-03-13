@@ -1,0 +1,39 @@
+.options {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chip-style {
+  margin: 10px !important;
+  background-color: #eb1b29 !important;
+  font-weight: 600;
+  color: white !important;
+  cursor: pointer !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.gray-chip {
+  background-color: gray !important;
+}
+
+.green-chip {
+  background-color: #0ab804 !important;
+}
+
+.graph-container {
+  width: 50%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+.graph-container-bar {
+  width: 50%;
+  text-align: center;
+}
+
+.container-graphs {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
