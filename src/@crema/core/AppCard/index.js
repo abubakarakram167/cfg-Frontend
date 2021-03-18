@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
   link: {
     fontSize: 14,
   },
+  color: 'white',
   textTruncate: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AppCard = ({
+  backgroundColor,
   title,
   titleStyle,
   headerStyle,
@@ -43,7 +45,7 @@ const AppCard = ({
   const classes = useStyles();
   return (
     <Box display='flex' flexDirection='column' {...rest} clone>
-      <Card>
+      <Card style={{background: backgroundColor}}>
         {title || action ? (
           <CardHeader
             className={classes.cardHeader}

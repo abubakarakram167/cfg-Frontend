@@ -11,7 +11,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     marginRight: 10,
+    marginLeft: 40,
     position: 'relative',
+    borderRadius: '50%',
     [theme.breakpoints.up('sm')]: {
       marginRight: 20,
     },
@@ -28,9 +30,11 @@ const useStyles = makeStyles((theme) => ({
   },
   search: (props) => ({
     position: 'relative',
-    borderRadius: theme.shape.borderRadius,
+    // borderRadius: theme.shape.borderRadius,
+    borderRadius: '50px',
     backgroundColor: fade(theme.palette.common.white, 0.15),
     marginLeft: props.align === 'right' ? 'auto' : 0,
+
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
@@ -73,16 +77,18 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     backgroundColor: theme.palette.common.white,
-    width: 162,
+    width: 200,
     height: 35,
-    borderRadius: 4,
+    borderRadius: '50px',
+    outline: 'none',
     boxSizing: 'border-box',
     [theme.breakpoints.down('sm')]: {
-      width: 100,
+      width: 150,
     },
     '&:focus': {
-      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      backgroundColor: 'rgba(255, 255, 255, 1)',
       borderColor: theme.palette.primary,
+      border: 'none',
       width: 235,
       [theme.breakpoints.down('sm')]: {
         backgroundColor: theme.palette.common.white,
@@ -91,13 +97,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   inputBase: {
+    borderRadius: '50px',
     backgroundColor: 'transparent',
     fontWeight: Fonts.MEDIUM,
-    border: '1px solid',
+    border: 'none',
     borderColor: (props) =>
       props.borderLight ? '#efefef' : theme.palette.text.secondary,
     color: 'black',
-    borderRadius: 4,
+    // borderRadius: 4,
 
     '& > .Mui-focused': {
       borderColor: 'red',
