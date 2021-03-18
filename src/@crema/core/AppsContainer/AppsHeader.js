@@ -7,6 +7,8 @@ const useStyles = makeStyles((theme) => ({
   appHeader: {
     height: 60,
     display: 'flex',
+    background: '#EB1B29',
+    boxShadow: '0px 1px 2px gainsboro',
     alignItems: 'center',
     borderBottom: `1px solid ${grey[300]}`,
     [theme.breakpoints.up('xl')]: {

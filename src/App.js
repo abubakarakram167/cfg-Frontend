@@ -1,16 +1,17 @@
 import React from 'react';
 import {Provider} from 'react-redux';
-import {ConnectedRouter} from 'connected-react-router';
-import AppLayout from '@crema/core/AppLayout';
-import AuthRoutes from '@crema/utility/AuthRoutes';
+
 import LocaleProvider from '@crema/utility/LocaleProvider';
 import CremaThemeProvider from '@crema/utility/CremaThemeProvider';
 import CremaStyleProvider from '@crema/utility/CremaStyleProvider';
 import ContextProvider from '@crema/utility/ContextProvider';
-
-import configureStore, {history} from './redux/store';
-import CssBaseline from '@material-ui/core/CssBaseline';
-
+import configureStore from './redux/store';
+import MainApp from 'pages/app';
+// import { ConnectedRouter } from 'connected-react-router';
+// import AppLayout from '@crema/core/AppLayout';
+// import AuthRoutes from '@crema/utility/AuthRoutes';
+// import CssBaseline from '@material-ui/core/CssBaseline';
+// import { history } from './redux/store';
 const store = configureStore();
 
 const App = () => (
@@ -19,12 +20,13 @@ const App = () => (
       <CremaThemeProvider>
         <CremaStyleProvider>
           <LocaleProvider>
-            <ConnectedRouter history={history}>
+            {/* <ConnectedRouter history={history}>
               <AuthRoutes>
                 <CssBaseline />
                 <AppLayout />
               </AuthRoutes>
-            </ConnectedRouter>
+            </ConnectedRouter> */}
+            <MainApp />
           </LocaleProvider>
         </CremaStyleProvider>
       </CremaThemeProvider>

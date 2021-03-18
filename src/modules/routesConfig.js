@@ -8,6 +8,14 @@ const routesConfig = [
     type: 'group',
     children: [
       {
+        id: 'admin',
+        title: 'Admin',
+        messageId: '',
+        type: '',
+        icon: '',
+        url: '/admin',
+      },
+      {
         id: 'dashboards',
         title: 'Dashboards',
         messageId: 'sidebar.app.dashboard',
