@@ -1,1 +1,1 @@
-release: npm --prefix /var/app/current start -- --port 3000
+release: ./root/execute.sh 
