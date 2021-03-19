@@ -1,1 +1,1 @@
-web: npm starttr -- --port 3000
+web: npm start -- --port 3000
