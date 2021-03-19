@@ -1,1 +1,1 @@
-web: npm start -- --port 3000
+web: npm --prefix /var/app/current start -- --port 3000
