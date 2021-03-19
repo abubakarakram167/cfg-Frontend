@@ -1,2 +1,2 @@
 web: npm install
-web: npm start -- --port 3000
+web: npm start
