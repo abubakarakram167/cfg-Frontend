@@ -1,1 +1,1 @@
-web: npm --prefix /var/app/current/ start -- --port 3000
+web: pm2 start --name jmmbcfg-frontend npm -- start
