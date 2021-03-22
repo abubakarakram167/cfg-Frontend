@@ -1,9 +1,10 @@
-.container {
+.container-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   flex: 1;
+  height: 10vh !important;
 }
 .left {
   display: flex;
@@ -53,8 +54,9 @@
 }
 
 @media only screen and (max-width: 955px) {
-  .container {
+  .container-header {
     justify-content: center;
+    height: 10vh !important;
   }
   .left {
     margin-left: 120px;

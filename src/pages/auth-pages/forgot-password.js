@@ -1,9 +1,48 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import TextField from '@material-ui/core/TextField';
+import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
+import {forgotPasswordAction} from 'backend-integration/actions/auth-actions';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
-export default function ForgotPassword({setView}) {
+function ForgotPassword({setView}) {
+  const [email, setEmail] = useState('');
+  const dispatch = useDispatch();
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+
+  const state = useSelector((state) => {
+    return state;
+  });
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(forgotPasswordAction(email));
+
+    setOpen1(true);
+    setEmail('');
+  };
   return (
     <div>
+      <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
+        <Alert onClose={handleClose1} severity='success'>
+          Email has been sent to the associated email address.
+        </Alert>
+      </Snackbar>
+      <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
+        <Alert onClose={handleClose2} severity='error'>
+          No email addresses found matching the one you entered.
+        </Alert>
+      </Snackbar>
       <span
         style={{
           fontWeight: 600,
@@ -16,16 +55,20 @@ export default function ForgotPassword({setView}) {
         Enter your email address to reset password
       </div>
 
-      <form className='forms' action=''>
+      <form className='forms' onSubmit={handleSubmit} action=''>
         <TextField
           required
           type='email'
           label='Email'
           fullWidth
           variant='filled'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
-        <button className='action-button'>Reset Password</button>
+        <button type='submit' className='action-button'>
+          Reset Password
+        </button>
 
         <div style={{width: '100%', marginTop: '10px'}}>
           <span
@@ -38,3 +81,5 @@ export default function ForgotPassword({setView}) {
     </div>
   );
 }
+
+export default React.memo(ForgotPassword);

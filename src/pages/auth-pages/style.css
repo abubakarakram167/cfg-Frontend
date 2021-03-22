@@ -3,6 +3,8 @@
   display: flex;
   flex-direction: column;
   text-align: center;
+  /* margin-top: 510px; */
+  background-color: white;
 }
 .main {
   width: 40%;
@@ -41,6 +43,11 @@
   margin-top: 10px;
   margin-bottom: 10px;
   cursor: pointer;
+  outline: none;
+}
+
+.left-box {
+  background-color: #f0f2f5;
 }
 
 .icons {
@@ -51,6 +58,10 @@
 
 .icons img {
   cursor: pointer;
+}
+
+.message-text {
+  font-weight: 400;
 }
 
 @media only screen and (max-width: 600px) {

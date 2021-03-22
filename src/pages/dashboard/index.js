@@ -6,7 +6,7 @@ import AppCard from '@crema/core/AppCard';
 import OrdersGraph from './OrdersGraph';
 import './style.css';
 
-export default function index() {
+export default function Dashboard() {
   return (
     <div>
       <div className='toolbar-container'>

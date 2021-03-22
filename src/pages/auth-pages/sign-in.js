@@ -1,21 +1,71 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Facebook from 'assets/facebook.png';
 import Google from 'assets/google.jpg';
 import Mail from 'assets/Mail.png';
 import Twitter from 'assets/Twitter.png';
+import {useDispatch, useSelector} from 'react-redux';
+import {loginAction} from 'backend-integration/actions/auth-actions';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import {useHistory} from 'react-router-dom';
 
 export default function SignIn({setView}) {
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const history = useHistory();
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
+
+  const dispatch = useDispatch();
+  const state = useSelector((state) => {
+    return state;
+  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(loginAction({email, password}));
+  };
+
+  useEffect(() => {
+    if (state.auth.error) {
+      setOpen2(true);
+    }
+    if (state.auth.user) {
+      window.location.href = '/admin';
+    }
+  }, [state]);
+
   return (
     <div>
-      <form className='forms' action=''>
+      <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
+        <Alert onClose={handleClose1} severity='success'>
+          Email has been sent to the associated email address.
+        </Alert>
+      </Snackbar>
+      <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
+        <Alert onClose={handleClose2} severity='error'>
+          Email or password is incorrect.
+        </Alert>
+      </Snackbar>
+      <form className='forms' onSubmit={handleSubmit}>
         <TextField
           required
           type='email'
           label='Email'
           fullWidth
           variant='filled'
+          required
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           required
@@ -24,6 +74,8 @@ export default function SignIn({setView}) {
           fullWidth
           variant='filled'
           style={{marginTop: '20px', marginBottom: '20px'}}
+          required
+          onChange={(e) => setPassword(e.target.value)}
         />
         <div
           style={{

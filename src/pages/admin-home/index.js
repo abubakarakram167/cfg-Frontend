@@ -35,7 +35,12 @@ export default function index() {
               <div className='card-text'>Dashboard</div>
             </AppCard>
           </Link>
-          <Link to='/admin/user-management' className='card-container'>
+          <Link
+            to='/admin/user-management'
+            className='card-container'
+            onClick={() => {
+              console.log('hello');
+            }}>
             <AppCard backgroundColor={'#01097A'}>
               <Settings style={{fill: '#ffffff', fontSize: 70}} />
 
