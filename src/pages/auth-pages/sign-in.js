@@ -46,7 +46,7 @@ export default function SignIn({setView}) {
   }, [state]);
 
   return (
-    <div>
+    <div className='sign-in-box'>
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
         <Alert onClose={handleClose1} severity='success'>
           Email has been sent to the associated email address.

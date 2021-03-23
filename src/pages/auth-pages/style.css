@@ -3,20 +3,30 @@
   display: flex;
   flex-direction: column;
   text-align: center;
-  /* margin-top: 510px; */
-  background-color: white;
+  background-color: #ffffff;
+
+  width: 50%;
+}
+.right-box {
+  width: 100%;
+  height: 60vh;
+  position: relative;
 }
 .main {
-  width: 40%;
+  width: 511px;
   box-shadow: 0px 1px 2px gainsboro;
+  position: absolute;
+  top: 100px;
+  right: 50px;
 }
-.container {
-  /* margin: 100px; */
+.container-auth {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
 }
 .image-container {
   text-align: center;
 }
-
 .forms {
   text-align: center;
   display: flex;
@@ -33,7 +43,7 @@
   width: 100%;
   background-color: #eb1b29;
   border: none;
-  box-shadow: 0px 1px 2px gainsboro;
+  box-shadow: 1px 2px 3px gainsboro;
   border-radius: 50px;
   padding: 15px;
   color: white;
@@ -45,9 +55,10 @@
   cursor: pointer;
   outline: none;
 }
-
-.left-box {
-  background-color: #f0f2f5;
+.logo-image-screen {
+  top: -113px;
+  position: absolute;
+  right: 76px;
 }
 
 .icons {
@@ -64,11 +75,73 @@
   font-weight: 400;
 }
 
+.left-box {
+  background-image: url('../../assets/jmmb-foundation.png');
+  width: 100%;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: stretch;
+  width: 75%;
+  height: 91.75vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: -265px;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+
+.whole-auth {
+  background-color: #f0f2f5;
+}
+
 @media only screen and (max-width: 600px) {
   .left-box {
     display: none;
   }
   .main {
     width: 100%;
+    position: unset;
+  }
+  .right-box {
+    position: unset;
+    margin: 20px;
+  }
+  .logo-image-screen {
+    position: unset;
+  }
+}
+
+@media only screen and (min-width: 1281px) {
+  .right-box {
+    margin-top: 140px;
+  }
+  .left-box {
+    background-position: -467px;
+  }
+  .logo-image-screen {
+    position: absolute;
+    left: 100px;
+  }
+}
+
+@media only screen and (max-width: 1024px) and (min-width: 1023px) {
+  .right-box {
+    margin-top: 140px;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-size: cover;
+  }
+
+  .left-box {
+    display: none;
+  }
+  .main {
+    width: 60%;
+    position: unset;
+  }
+  .logo-image-screen {
+    position: unset;
   }
 }
