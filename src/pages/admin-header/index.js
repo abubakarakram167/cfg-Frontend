@@ -26,6 +26,18 @@ export default function AdminHeader() {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    setAnchorEl(null);
+    localStorage.removeItem('auth-token');
+    window.location.href = '/';
+  };
+
+  const handleLogout2 = () => {
+    setAnchorE2(null);
+    localStorage.removeItem('auth-token');
+    window.location.href = '/';
+  };
+
   const [anchorE2, setAnchorE2] = useState(null);
 
   const handleClick2 = (event) => {
@@ -39,7 +51,7 @@ export default function AdminHeader() {
   return (
     <div>
       <AppHeader>
-        <div className='container'>
+        <div className='container-header'>
           <div className='left'>
             <div className='left-user-info'>
               <Avatar alt='User Avatar' src={Logo} className='logo-style' />
@@ -121,7 +133,7 @@ export default function AdminHeader() {
                     <div className='user-name-text'>Preview as User</div>
                   </div>
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={handleLogout}>
                   <div className='mobile-menu-item'>
                     <div className='icon'>
                       <Logout style={{fill: 'black'}} />
@@ -170,7 +182,7 @@ export default function AdminHeader() {
                     <div className='user-name-text'>Preview as User</div>
                   </div>
                 </MenuItem>
-                <MenuItem onClick={handleClose2}>
+                <MenuItem onClick={handleLogout2}>
                   <div className='mobile-menu-item'>
                     <div className='icon'>
                       <Logout style={{fill: 'black'}} />

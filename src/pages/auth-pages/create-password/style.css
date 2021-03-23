@@ -1,0 +1,55 @@
+.container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+.appCard {
+  width: 40%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  box-shadow: 0px 1px 2px gainsboro;
+}
+.top {
+  background-color: #eb1b29;
+  color: white;
+  font-weight: 600;
+  padding: 10px;
+  width: 100%;
+  margin: 0px 0px;
+  border-radius: 10px;
+}
+
+.submit-button {
+  background-color: #eb1b29;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 1px 2px gainsboro;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+  font-weight: 600;
+}
+
+.image-logo {
+  width: 100%;
+}
+
+.bottom-links {
+  font-weight: 600;
+}
+
+.bottom-links a {
+  text-decoration: none;
+  color: #eb1b29;
+}
+
+@media only screen and (max-width: 600px) {
+  .appCard {
+    width: 90%;
+  }
+}

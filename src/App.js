@@ -26,6 +26,7 @@ const App = () => (
                 <AppLayout />
               </AuthRoutes>
             </ConnectedRouter> */}
+
             <MainApp />
           </LocaleProvider>
         </CremaStyleProvider>
