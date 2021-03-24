@@ -1,1 +1,1 @@
-export const url = 'http://app.mycfg.org/api';
+export const url = 'https://app.mycfg.org/api';
