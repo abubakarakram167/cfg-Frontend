@@ -4,7 +4,7 @@ import AppCard from '@crema/core/AppCard';
 import Logo from 'assets/jmmb_2.png';
 import {TextField} from '@material-ui/core';
 import queryString from 'query-string';
-import {passwordResetAction} from 'backend-integration/actions/auth-actions';
+import {passwordResetAction} from '../../../redux/actions/authActions';
 import {useDispatch} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';

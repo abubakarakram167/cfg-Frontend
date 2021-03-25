@@ -9,12 +9,12 @@ import './style.css';
 import Logo from 'assets/jmmb_2.png';
 import {useDispatch} from 'react-redux';
 import LogoImage from 'assets/jmmb-foundation.png';
-import {
-  forgotPasswordAction,
-  loginAction,
-  passwordResetAction,
-  registerAction,
-} from 'backend-integration/actions/auth-actions';
+// import {
+//   forgotPasswordAction,
+//   loginAction,
+//   passwordResetAction,
+//   registerAction,
+// } from 'backend-integration/actions/auth-actions';
 
 export default function Index() {
   const [view, setView] = useState(1);

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import TextField from '@material-ui/core/TextField';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import {forgotPasswordAction} from 'backend-integration/actions/auth-actions';
+import {forgotPasswordAction} from '../../redux/actions/authActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 
@@ -26,7 +26,7 @@ function ForgotPassword({setView}) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(forgotPasswordAction(email));
+    dispatch(forgotPasswordAction({email}));
 
     setOpen1(true);
     setEmail('');
