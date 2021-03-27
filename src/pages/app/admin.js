@@ -12,17 +12,18 @@ import Preferences from 'pages/preferences';
 import MediaLibrary from 'pages/media-library';
 import MiniCfg from 'pages/mini-cfg';
 import Rewards from 'pages/rewards';
-import Editor from 'pages/editor';
+import Editor from 'pages/editor/index';
 
+import Test from 'pages/test';
 const Admin = () => {
   return (
     <Router>
       <Switch>
-        <Route path='/admin/editor'>
-          <Editor />
-        </Route>
         <Route path='/admin' exact={true}>
           <AdminHome />
+        </Route>
+        <Route path='/admin/editor/:id'>
+          <Editor />
         </Route>
         <Route path='/admin/dashboard' exact={true}>
           <Dashboard />

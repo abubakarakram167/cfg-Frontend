@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {Container, Select, MenuItem, TextField} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
@@ -9,6 +9,7 @@ import 'suneditor/dist/css/suneditor.min.css';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import PublishIcon from '@material-ui/icons/Publish';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+
 export default function Editor() {
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('Enter a title');
@@ -35,6 +36,10 @@ export default function Editor() {
     setKeywords([...keywords, value]);
     setValue('');
   };
+
+  useEffect(() => {
+    console.log('hello');
+  }, []);
 
   return (
     <div>
