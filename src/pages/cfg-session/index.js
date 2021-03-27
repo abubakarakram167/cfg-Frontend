@@ -21,8 +21,11 @@ import {
   DialogTitle,
   TextField,
   Button,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import {KeyboardDatePicker} from '@material-ui/pickers';
+import formatDate from 'utils/formatDate';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -54,36 +57,36 @@ export default function CfgSession() {
       checked: false,
       name: 'JaneDoe',
       author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
+      start_date: '2020/1/1',
+      end_date: '2020/1/1',
+      total_points: 500,
       status: 'Approved',
     },
     {
       checked: false,
       name: 'JaneDoe',
       author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
+      start_date: '2020/1/1',
+      end_date: '2020/1/1',
+      total_points: 500,
       status: 'Approved',
     },
     {
       checked: false,
       name: 'JaneDoe',
       author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
+      start_date: '2020/1/1',
+      end_date: '2020/1/1',
+      total_points: 500,
       status: 'Approved',
     },
     {
       checked: false,
       name: 'JaneDoe',
       author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
+      start_date: '2020/1/1',
+      end_date: '2020/1/1',
+      total_points: 500,
       status: 'Approved',
     },
   ]);
@@ -116,10 +119,10 @@ export default function CfgSession() {
 
   const [name, setName] = useState('');
   const [author, setAuthor] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [totalPoints, setTotalPoints] = useState('');
-  const [status, setStatus] = useState('');
+  const [start_date, setstart_date] = useState(new Date());
+  const [end_date, setend_date] = useState(new Date());
+  const [total_points, settotal_points] = useState('');
+  const [status, setStatus] = useState('draft');
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleSubmit = (e) => {
@@ -129,17 +132,18 @@ export default function CfgSession() {
       {
         name,
         author,
-        startDate,
-        endDate,
-        totalPoints,
+        start_date: formatDate(start_date),
+        end_date: formatDate(end_date),
+        total_points,
         status,
       },
     ]);
+
     setName('');
     setAuthor('');
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setTotalPoints('');
+    setstart_date(new Date());
+    setend_date(new Date());
+    settotal_points('');
     setStatus('');
     setDialogOpen(false);
   };
@@ -158,6 +162,7 @@ export default function CfgSession() {
                 variant='filled'
                 fullWidth
                 onChange={(e) => setName(e.target.value)}
+                required
               />
             </ListItem>
             <ListItem>
@@ -166,6 +171,7 @@ export default function CfgSession() {
                 variant='filled'
                 fullWidth
                 onChange={(e) => setAuthor(e.target.value)}
+                required
               />
             </ListItem>
             <ListItem>
@@ -176,11 +182,12 @@ export default function CfgSession() {
                 margin='normal'
                 fullWidth={true}
                 label='Start Date'
-                value={startDate}
-                onChange={(e) => setStartDate(e)}
+                value={start_date}
+                onChange={(e) => setstart_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </ListItem>
             <ListItem>
@@ -191,11 +198,12 @@ export default function CfgSession() {
                 margin='normal'
                 fullWidth={true}
                 label='End Date'
-                value={endDate}
-                onChange={(e) => setEndDate(e)}
+                value={end_date}
+                onChange={(e) => setend_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </ListItem>
             <ListItem>
@@ -203,16 +211,28 @@ export default function CfgSession() {
                 label='Total Points'
                 variant='filled'
                 fullWidth
-                onChange={(e) => setTotalPoints(e.target.value)}
+                onChange={(e) => settotal_points(e.target.value)}
+                required
+                type='number'
               />
             </ListItem>
             <ListItem>
-              <TextField
-                label='Status'
+              <Select
+                labelId='demo-simple-select-filled-label'
+                id='demo-simple-select-filled'
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
                 fullWidth
-                onChange={(e) => setStatus(e.target.value)}
-              />
+                label='status'
+                required>
+                <MenuItem value={''}>
+                  <em>Status</em>
+                </MenuItem>
+                <MenuItem value={'saved'}>Saved</MenuItem>
+                <MenuItem value={'draft'}>Draft</MenuItem>
+                <MenuItem value={'published'}>Published</MenuItem>
+              </Select>
             </ListItem>
             <ListItem>
               <div
@@ -281,9 +301,9 @@ export default function CfgSession() {
                   </StyledTableCell>
                   <StyledTableCell>{row.name}</StyledTableCell>
                   <StyledTableCell>{row.author}</StyledTableCell>
-                  <StyledTableCell>{row.startDate.toString()}</StyledTableCell>
-                  <StyledTableCell>{row.endDate.toString()}</StyledTableCell>
-                  <StyledTableCell>{row.totalPoints}</StyledTableCell>
+                  <StyledTableCell>{row.start_date.toString()}</StyledTableCell>
+                  <StyledTableCell>{row.end_date.toString()}</StyledTableCell>
+                  <StyledTableCell>{row.total_points}</StyledTableCell>
                   <StyledTableCell>{row.status}</StyledTableCell>
                 </StyledTableRow>
               ))}

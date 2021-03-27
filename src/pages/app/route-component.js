@@ -6,6 +6,7 @@ import Auth from 'pages/auth-pages';
 import ResetPassword from 'pages/auth-pages/reset-password/index';
 import CreatePassword from 'pages/auth-pages/create-password/index';
 import ProtectedRoute from './protectedRouter';
+import Editor from 'pages/editor';
 
 const RouteComponent = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -46,6 +47,9 @@ const RouteComponent = (props) => {
           </Route>
           <Route path='/createPassword'>
             <CreatePassword />
+          </Route>
+          <Route path='/editor'>
+            <Editor />
           </Route>
         </Switch>
       </Router>
