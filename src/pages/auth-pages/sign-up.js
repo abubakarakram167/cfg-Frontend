@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import TextField from '@material-ui/core/TextField';
-import {registerAction} from 'backend-integration/actions/auth-actions';
+import {registerAction} from '../../redux/actions/authActions';
 import {useDispatch} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';

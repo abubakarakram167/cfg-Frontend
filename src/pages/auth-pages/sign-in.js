@@ -6,7 +6,7 @@ import Google from 'assets/google.jpg';
 import Mail from 'assets/Mail.png';
 import Twitter from 'assets/Twitter.png';
 import {useDispatch, useSelector} from 'react-redux';
-import {loginAction} from 'backend-integration/actions/auth-actions';
+import {loginAction} from '../../redux/actions/authActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useHistory} from 'react-router-dom';

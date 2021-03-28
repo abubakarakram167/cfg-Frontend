@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import AdminHome from 'pages/admin-home';
 import {Provider} from 'react-redux';
 import ResetPassword from 'pages/auth-pages/reset-password/index';
-import configureStore from 'backend-integration/store';
+import configureStore from '../../redux/store/index';
 import Admin from './admin';
 import Auth from './auth';
 import RouteComponent from './route-component';
