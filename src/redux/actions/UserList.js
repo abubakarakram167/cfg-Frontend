@@ -58,13 +58,9 @@ export const addUserToList = (body) => {
 };
 export const editUserInList = (body) => {
   console.log('here the body in edit..', body);
-  let updatedStatusBody = {
-    ...body,
-    status: body.status === 'pending' ? '0' : '1',
-  };
   return (dispatch) => {
     dispatch({type: FETCH_START});
-    Api.put('/api/users/', updatedStatusBody)
+    Api.put('/api/users/', body)
       .then((data) => {
         if (data.status === 200) {
           console.log('the data to be fetched', data);
