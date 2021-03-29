@@ -6,18 +6,57 @@
 
 .chip-style {
   margin: 10px !important;
-  background-color: #eb1b29 !important;
+  background-color: #eb1b29;
   font-weight: 600;
   color: white !important;
   cursor: pointer !important;
   padding-left: 10px !important;
   padding-right: 10px !important;
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+  border-radius: 20px !important;
 }
 
 .gray-chip {
-  background-color: gray !important;
+  margin: 10px !important;
+  font-weight: 600;
+  color: white !important;
+  cursor: pointer !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+  border-radius: 20px !important;
+  background-color: #6f6f6f !important;
 }
 
 .green-chip {
+  margin: 10px !important;
+  font-weight: 600;
+  color: white !important;
+  cursor: pointer !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+  border-radius: 20px !important;
   background-color: #0ab804 !important;
+}
+
+.column-heading {
+  color: #6b6b6b;
+  position: relative;
+  bottom: 10px;
+  font-weight: 600;
+  font-size: 18px;
+}
+.MuiOutlinedInput-root {
+  padding-top: 12px;
+  border-radius: 8px;
+}
+.custom-textfield {
+  border-radius: 8px !important;
+}
+.body-page {
+  background-color: #f7f7f7;
 }
