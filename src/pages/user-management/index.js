@@ -46,21 +46,18 @@ const StyledTableCell = withStyles((theme) => ({
     color: theme.palette.common.black,
   },
   body: {
-    fontSize: 17,
+    fontSize: 14,
     color: '#6b6b6b',
-    fontWeight: 400,
-    paddingTop: 2,
-    paddingBottom: 2,
+    fontWeight: 500,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
-      backgroundColor: 'white',
-    },
-    '&:nth-of-type(even)': {
-      backgroundColor: '#e5f4fd',
+      backgroundColor: '#f7f5f5',
     },
   },
 }))(TableRow);
@@ -94,13 +91,13 @@ export default function UserManagement() {
   const [userData, setUserData] = useState([]);
   const [currentCheckState, setCurrentCheckState] = useState(false);
   const BlackCheckbox = withStyles({
-    root: {
-      '&$checked': {
-        color: 'black',
-      },
-      borderWidth: 25,
-    },
-    checked: {},
+    // root: {
+    //   '&$checked': {
+    //     color: 'black',
+    //   },
+    //   borderWidth: 25,
+    // },
+    // checked: {},
   })((props) => <Checkbox color='default' {...props} />);
 
   const getUserStatus = (status) => {
@@ -129,7 +126,7 @@ export default function UserManagement() {
   const toggleCheckbox = (id) => {
     setUserData(
       userData.filter((data, index) => {
-        if (id === index) {
+        if (id === data.id) {
           data.checked = !data.checked;
           return data;
         }
@@ -219,6 +216,14 @@ export default function UserManagement() {
     setStatus('');
     setDialogOpen(false);
   };
+  const resetFilters = () => {
+    setUsernameFilter('');
+    setNameFilter('');
+    setRoleFilter('');
+    setEmailFilter('');
+    setStatusFilter('');
+  };
+
   const capitalize = ([first, ...rest]) =>
     first.toUpperCase() + rest.join('').toLowerCase();
 
@@ -295,18 +300,14 @@ export default function UserManagement() {
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
-      <Container maxWidth='xl' style={{maxWidth: '91%'}}>
+      <Container maxWidth='xl' style={{maxWidth: '96%'}}>
         <div className='options'>
-          <img
-            style={{width: 25, height: 25, marginBottom: 8}}
-            src={require('../../assets/userSettings.png')}
-          />
-          <Typography style={{color: '#6b6b6b'}} variant='h6'>
+          <Typography style={{color: 'black'}} variant='h6'>
             User Management
           </Typography>
           <Chip
             icon={<AddCircleRoundedIcon style={{fill: 'white'}} />}
-            label={'ADD NEW'}
+            label={'ADD NEW User'}
             className='chip-style'
             onClick={() => {
               setEditForm(false);
@@ -316,12 +317,13 @@ export default function UserManagement() {
           <Chip
             icon={<ResetIcon style={{fill: 'white'}} />}
             label={'RESET'}
-            className='gray-chip'
+            className='chip-style'
+            onClick={() => resetFilters()}
           />
           <Chip
             icon={<LockIcon style={{fill: 'white'}} />}
             label={'LOCK'}
-            className='gray-chip'
+            className='chip-style'
             onClick={() => {
               changeUserStatus('disabled');
             }}
@@ -329,7 +331,7 @@ export default function UserManagement() {
           <Chip
             icon={<ApproveIcon style={{fill: 'white'}} />}
             label={'APPROVE'}
-            className='green-chip'
+            className='chip-style'
             onClick={() => {
               changeUserStatus('approved');
             }}
@@ -337,7 +339,7 @@ export default function UserManagement() {
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
             label={'EDIT'}
-            className='gray-chip'
+            className='chip-style'
             onClick={() => {
               setEditForm(true);
               setDialogOpen(true);
@@ -346,91 +348,77 @@ export default function UserManagement() {
         </div>
         <br />
 
-        <TableContainer style={{boxShadow: 'none'}} component={Paper}>
+        <TableContainer component={Paper}>
           <Table className={classes.table} aria-label='customized table'>
             <TableHead className='body-page'>
               <TableRow>
                 <StyledTableCell>
-                  <Checkbox
-                    style={{
-                      position: 'relative',
-                      bottom: 33,
-                      padding: 0,
-                      right: 18,
-                    }}
-                    checked={currentCheckState}
-                    onChange={toggleAll}
-                  />
+                  <Checkbox checked={currentCheckState} onChange={toggleAll} />
                 </StyledTableCell>
                 <StyledTableCell>
                   <span className='column-heading'> Username </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
-                    <StyledTextField
-                      variant='outlined'
+                    <TextField
+                      variant='filled'
                       size='small'
+                      label='Username'
                       placeholder=''
+                      value={usernameFilter}
                       onChange={(e) => setUsernameFilter(e.target.value)}
                     />
-                    <img
-                      style={{width: 25, height: 25, marginLeft: 7}}
-                      src={require('../../assets/filterIconTwo.png')}
-                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
                   <span className='column-heading'>Name</span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
-                    <StyledTextField
-                      variant='outlined'
+                    <TextField
+                      variant='filled'
+                      label='Name'
                       size='small'
+                      value={nameFilter}
                       onChange={(e) => setNameFilter(e.target.value)}
                     />
-                    <img
-                      style={{width: 25, height: 25, marginLeft: 7}}
-                      src={require('../../assets/filterIconTwo.png')}
-                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
                   <span className='column-heading'> Email </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
-                    <StyledTextField
-                      variant='outlined'
+                    <TextField
+                      variant='filled'
+                      label='Email'
                       size='small'
+                      value={emailFilter}
                       onChange={(e) => setEmailFilter(e.target.value)}
                     />
-                    <img
-                      style={{width: 25, height: 25, marginLeft: 7}}
-                      src={require('../../assets/filterIconTwo.png')}
-                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
                   <span className='column-heading'> Role </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
-                    <StyledTextField
-                      variant='outlined'
+                    <TextField
+                      variant='filled'
+                      label='Role'
                       size='small'
+                      value={roleFilter}
                       onChange={(e) => setRoleFilter(e.target.value)}
                     />
-                    <img
-                      style={{width: 25, height: 25, marginLeft: 7}}
-                      src={require('../../assets/filterIconTwo.png')}
-                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
                   <span className='column-heading'> Status </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
-                    <StyledTextField
-                      variant='outlined'
+                    <TextField
+                      variant='filled'
+                      label='Status'
+                      value={statusFilter}
                       size='small'
                       onChange={(e) => setStatusFilter(e.target.value)}
                     />
-                    <img
-                      style={{width: 25, height: 25, marginLeft: 7}}
-                      src={require('../../assets/filterIconTwo.png')}
-                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
               </TableRow>
@@ -473,11 +461,6 @@ export default function UserManagement() {
                       <StyledTableCell>
                         <BlackCheckbox
                           checked={row.checked}
-                          style={{
-                            position: 'relative',
-                            right: 18,
-                            paddingLeft: 0,
-                          }}
                           onChange={() => {
                             let allIds = allUserIds;
                             if (!allIds.includes(row.id)) allIds.push(row.id);
@@ -492,7 +475,7 @@ export default function UserManagement() {
                             setEmail(row.email);
                             setRole(row.role);
                             setStatus(row.status);
-                            toggleCheckbox(index);
+                            toggleCheckbox(row.id);
                           }}
                         />
                       </StyledTableCell>
