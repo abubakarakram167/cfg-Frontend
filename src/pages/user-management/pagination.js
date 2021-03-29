@@ -18,20 +18,20 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
-    // marginLeft: theme.spacing(2.5),
+    marginLeft: theme.spacing(2.5),
   },
 }));
 
 const StyledTablePagination = withStyles((theme) => ({
-  selectRoot: {
-    display: 'none',
-  },
-  caption: {
-    display: 'none',
-  },
-  toolbar: {
-    display: 'inline',
-  },
+  // selectRoot: {
+  //   display: 'none',
+  // },
+  // caption: {
+  //   display: 'none',
+  // },
+  // toolbar: {
+  //   display: 'inline',
+  // },
 }))(TablePagination);
 
 function TablePaginationActions(props) {
@@ -57,9 +57,9 @@ function TablePaginationActions(props) {
 
   return (
     <div className={classes.root}>
-      <span>
+      {/* <span>
         Page {page + 1} of {Math.ceil(count / rowsPerPage)} ({count} items)
-      </span>
+      </span> */}
       <span>
         <IconButton
           onClick={handleBackButtonClick}
@@ -127,6 +127,7 @@ export default function CustomPaginationActionsTable(props) {
       style={{borderBottom: 0}}
       rowsPerPage={rowsPerPage}
       page={page}
+      style={{width: 400}}
       // SelectProps={{
       //   inputProps: { 'aria-label': 'rows per page' },
       //   native: true,
