@@ -13,6 +13,7 @@ import Container from '@material-ui/core/Container';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
+import InputLabel from '@material-ui/core/InputLabel';
 import ControlPoint from '@material-ui/icons/ControlPoint';
 import ResetIcon from '@material-ui/icons/VpnKey';
 import LockIcon from '@material-ui/icons/Lock';
@@ -23,6 +24,8 @@ import FilterList from '@material-ui/icons/FilterList';
 import {useDispatch, useSelector} from 'react-redux';
 import {onGetUserList} from '../../redux/actions';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import {
   Dialog,
   List,
@@ -62,12 +65,15 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const allCheckBox = withStyles((theme) => ({
-  colorSecondary: {
-    position: 'relative',
-    bottom: 20,
+const CustomSelect = withStyles((theme) => ({
+  select: {
+    paddingLeft: 12,
+    paddingBottom: 17,
+    paddingTop: 17,
+    backgroundColor: '#eaeaea',
+    color: '#777777',
   },
-}))(Checkbox);
+}))(Select);
 
 const StyledTextField = withStyles((theme) => ({
   root: {
@@ -200,8 +206,9 @@ export default function UserManagement() {
         status,
         id: userId,
       };
+      editUser.status = getUserStatus(parseInt(status));
       const getResult = await dispatch(editUserInList(editUser));
-      editUser.status = status === '0' ? 'pending' : 'approved';
+      editUser.status = getUserStatus(parseInt(status));
       const changedUserData = userData.map((user) => {
         if (user.id === userId) {
           return editUser;
@@ -227,6 +234,13 @@ export default function UserManagement() {
   const capitalize = ([first, ...rest]) =>
     first.toUpperCase() + rest.join('').toLowerCase();
 
+  const getStatusValue = () => {
+    console.log('the status', status);
+    if (status === 'approved') return 1;
+    else if (status === 'pending') return 0;
+    else return 2;
+  };
+
   return (
     <div className='body-page' style={{paddingBottom: 150}}>
       <Dialog open={dialogOpen}>
@@ -242,6 +256,7 @@ export default function UserManagement() {
                 fullWidth
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
+                required
               />
             </ListItem>
             <ListItem>
@@ -251,6 +266,7 @@ export default function UserManagement() {
                 fullWidth
                 onChange={(e) => setName(e.target.value)}
                 value={name}
+                required
               />
             </ListItem>
             <ListItem>
@@ -260,24 +276,41 @@ export default function UserManagement() {
                 fullWidth
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
+                required
               />
             </ListItem>
             <ListItem>
-              <TextField
-                label='Role'
-                variant='filled'
+              <CustomSelect
+                labelId='demo-simple-select-filled-label'
+                id='demo-simple-select-filled'
+                placeholder='Role'
+                value={role ? role : 'candidate'}
                 fullWidth
-                onChange={(e) => setRole(e.target.value)}
-                value={role}
-              />
+                onChange={(e) => setRole(e.target.value)}>
+                <MenuItem value={'candidate'}>Candidate</MenuItem>
+                <MenuItem value={'facilitator'}>Facilitator</MenuItem>
+                <MenuItem value={'content-manager'}>Content Manager</MenuItem>
+                <MenuItem value={'support'}>Support</MenuItem>
+                <MenuItem value={'system-administrator'}>
+                  System Administrator
+                </MenuItem>
+                <MenuItem value={'auditor'}>Auditor</MenuItem>
+              </CustomSelect>
             </ListItem>
             <ListItem>
-              <TextField
-                label='Status'
-                variant='filled'
+              <CustomSelect
+                labelId='demo-simple-select-filled-label'
+                id='demo-simple-select-filled'
+                placeholder='Role'
+                value={status ? status : 0}
                 fullWidth
-                onChange={(e) => setStatus(e.target.value)}
-              />
+                onChange={(e) => {
+                  setStatus(e.target.value);
+                }}>
+                <MenuItem value={0}>Pending</MenuItem>
+                <MenuItem value={1}>Approved</MenuItem>
+                <MenuItem value={2}>Disabled</MenuItem>
+              </CustomSelect>
             </ListItem>
             <ListItem>
               <div
