@@ -1,0 +1,59 @@
+.cfg-element-page {
+  background-color: #f9f9f9;
+  /* height: 100%; */
+  min-height: 100vh;
+}
+.options {
+  display: flex;
+  flex-wrap: wrap;
+}
+.titleText {
+  margin-right: 20px;
+}
+.summary-margin-left {
+  margin-left: 23px;
+}
+.chip-style {
+  margin: 10px !important;
+  background-color: #eb1b29 !important;
+  font-weight: 600;
+  color: white !important;
+  cursor: pointer !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.gray-chip {
+  background-color: gray !important;
+}
+
+.green-chip {
+  background-color: #0ab804 !important;
+}
+
+.custom-row-design-cfg-details {
+  display: grid;
+  grid-template-columns: 16.6% 16.6% 16.6% 16.6% 16.6% 16.6%;
+  width: 100%;
+}
+.custom-row-design-header {
+  font-size: 20px;
+  font-weight: 600%;
+}
+.subtitles-container-custom {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-direction: column;
+}
+
+.subtitle-card-custom {
+  border: 1px solid gainsboro;
+  box-shadow: 0px 1px 2px gainsboro;
+  margin-bottom: 10px;
+  padding: 10px 0px;
+}
+
+.subtitle-card-custom:nth-child(odd) {
+  background-color: #e8f8ff;
+}

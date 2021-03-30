@@ -53,7 +53,6 @@ export const registerAction = (data) => {
   return async function (dispatch) {
     try {
       const response = await Auth.register(data);
-      console.log('the response', response);
       if (response.status === 200) {
         const data_resp = response.data;
         console.log(data_resp);
@@ -64,7 +63,7 @@ export const registerAction = (data) => {
         });
       }
     } catch (error) {
-      console.log('the error', error);
+      console.log('the error', error.message);
       dispatch({
         type: 'REGISTER',
         payload: {error: 'Email already exists.'},
@@ -77,7 +76,7 @@ export const registerAction = (data) => {
 export const passwordResetAction = (data) => {
   return async function (dispatch) {
     try {
-      const response = await Auth.register(data);
+      const response = await Auth.reset(data);
       if (response.status === 200) {
         const data_resp = response.data;
         console.log(data_resp);
@@ -88,6 +87,7 @@ export const passwordResetAction = (data) => {
         });
       }
     } catch (error) {
+      console.log(error.message);
       dispatch({
         type: 'RESET_PASSWORD',
         payload: {

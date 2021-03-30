@@ -1,4 +1,9 @@
-import {CREATE_SESSION} from './action.types';
+import {
+  CREATE_SESSION,
+  GET_SESSION_DATA,
+  GET_LIST_DATA,
+  CREATE_TITLE,
+} from './action.types';
 import Session from '../services/session';
 import jsCookie from 'js-cookie';
 
@@ -6,7 +11,6 @@ export const createSession = (params) => {
   return async function (dispatch) {
     try {
       const response = await Session.createSession(params);
-      console.log('the response', response);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
@@ -19,6 +23,79 @@ export const createSession = (params) => {
       if (error.response && error.response.status === 401) {
         dispatch({
           type: CREATE_SESSION,
+          payload: {error: 'There was an error creating the session'},
+        });
+      }
+    }
+  };
+};
+
+export const createSessionTitle = (params, type) => {
+  return async function (dispatch) {
+    try {
+      const response = await Session.createTitle(params, type);
+      if (response.status === 200) {
+        const data_resp = await response.data;
+        jsCookie.set('login', 'yes');
+        dispatch({
+          type: CREATE_TITLE,
+          payload: {...data_resp, error: null},
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        dispatch(
+          {
+            type: CREATE_TITLE,
+            payload: {error: 'There was an error creating the title'},
+          },
+          params.type,
+        );
+      }
+    }
+  };
+};
+
+export const getSessionData = () => {
+  return async function (dispatch) {
+    try {
+      const response = await Session.sessionData();
+      if (response.status === 200) {
+        const data_resp = await response.data;
+        jsCookie.set('login', 'yes');
+        dispatch({
+          type: GET_SESSION_DATA,
+          payload: {...data_resp, error: null},
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        dispatch({
+          type: GET_SESSION_DATA,
+          payload: {error: 'There was an error creating the session'},
+        });
+      }
+    }
+  };
+};
+
+export const getSessionListData = (id) => {
+  return async function (dispatch) {
+    try {
+      const response = await Session.getListData(id);
+
+      if (response.status === 200) {
+        const data_resp = await response.data;
+        jsCookie.set('login', 'yes');
+        dispatch({
+          type: GET_LIST_DATA,
+          payload: {...data_resp, error: null},
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        dispatch({
+          type: GET_LIST_DATA,
           payload: {error: 'There was an error creating the session'},
         });
       }

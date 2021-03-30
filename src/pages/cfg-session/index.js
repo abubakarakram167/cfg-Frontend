@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
 import EditIcon from '@material-ui/icons/Edit';
+import {Link, useHistory} from 'react-router-dom';
+import CfgElement from 'pages/cfg-element';
 import {
   Dialog,
   List,
@@ -27,6 +29,8 @@ import {
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import formatDate from 'utils/formatDate';
 
+import {useDispatch, useSelector} from 'react-redux';
+import {createSession, getSessionData} from 'redux/actions/sessionActions';
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: 'none',
@@ -51,73 +55,48 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CfgSession() {
-  const [cfgSessionData, setCfgSessionData] = useState([
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      start_date: '2020/1/1',
-      end_date: '2020/1/1',
-      total_points: 500,
-      status: 'Approved',
-    },
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      start_date: '2020/1/1',
-      end_date: '2020/1/1',
-      total_points: 500,
-      status: 'Approved',
-    },
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      start_date: '2020/1/1',
-      end_date: '2020/1/1',
-      total_points: 500,
-      status: 'Approved',
-    },
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      start_date: '2020/1/1',
-      end_date: '2020/1/1',
-      total_points: 500,
-      status: 'Approved',
-    },
-  ]);
+export default function CfgSession(props) {
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state.session);
+  const [content, setContent] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const history = useHistory();
+  useEffect(() => {
+    setContent(state.content);
+  }, [state]);
+
+  useEffect(() => {
+    dispatch(getSessionData());
+  }, []);
+
   const [currentCheckState, setCurrentCheckState] = useState(false);
 
   const classes = useStyles();
 
   const toggleCheckbox = (id) => {
-    setCfgSessionData(
-      cfgSessionData.filter((data, index) => {
-        if (id === index) {
-          data.checked = !data.checked;
-          return data;
-        }
-
-        return data;
-      }),
-    );
+    if (checked.includes(id)) {
+      setChecked(checked.filter((element) => element !== id));
+    } else {
+      setChecked([...checked, id]);
+    }
   };
 
   const toggleAll = () => {
-    setCfgSessionData(
-      cfgSessionData.filter((data, index) => {
-        data.checked = !currentCheckState;
-        setCurrentCheckState(!currentCheckState);
-        return data;
-      }),
-    );
+    if (!currentCheckState) {
+      console.log('here');
+      let arr = [];
+      content.forEach((element) => {
+        arr.push(element.id);
+      });
+      setChecked(arr);
+      setCurrentCheckState(true);
+    } else {
+      setCurrentCheckState(false);
+      setChecked([]);
+    }
   };
 
-  const [name, setName] = useState('');
+  const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [start_date, setstart_date] = useState(new Date());
   const [end_date, setend_date] = useState(new Date());
@@ -127,19 +106,19 @@ export default function CfgSession() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-    setCfgSessionData([
-      ...cfgSessionData,
-      {
-        name,
+
+    dispatch(
+      createSession({
+        title,
         author,
         start_date: formatDate(start_date),
         end_date: formatDate(end_date),
         total_points,
         status,
-      },
-    ]);
+      }),
+    );
 
-    setName('');
+    setTitle('');
     setAuthor('');
     setstart_date(new Date());
     setend_date(new Date());
@@ -161,7 +140,7 @@ export default function CfgSession() {
                 label='Name'
                 variant='filled'
                 fullWidth
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
                 required
               />
             </ListItem>
@@ -289,20 +268,25 @@ export default function CfgSession() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {cfgSessionData.map((row, index) => (
+              {content.map((row, index) => (
                 <StyledTableRow key={index}>
                   <StyledTableCell>
                     <Checkbox
-                      checked={row.checked}
+                      checked={checked.includes(row.id)}
                       onChange={() => {
-                        toggleCheckbox(index);
+                        toggleCheckbox(row.id);
                       }}
                     />
                   </StyledTableCell>
-                  <StyledTableCell>{row.name}</StyledTableCell>
-                  <StyledTableCell>{row.author}</StyledTableCell>
-                  <StyledTableCell>{row.start_date.toString()}</StyledTableCell>
-                  <StyledTableCell>{row.end_date.toString()}</StyledTableCell>
+                  <StyledTableCell>
+                    {' '}
+                    <Link to={`/admin/cfg-session/${row.id}`}>
+                      {row.title}{' '}
+                    </Link>
+                  </StyledTableCell>
+                  <StyledTableCell>{row.title}</StyledTableCell>
+                  <StyledTableCell>{row.start_date}</StyledTableCell>
+                  <StyledTableCell>{row.end_date}</StyledTableCell>
                   <StyledTableCell>{row.total_points}</StyledTableCell>
                   <StyledTableCell>{row.status}</StyledTableCell>
                 </StyledTableRow>
