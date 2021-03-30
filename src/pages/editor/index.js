@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {Container, Select, MenuItem, TextField} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
@@ -9,18 +9,27 @@ import 'suneditor/dist/css/suneditor.min.css';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import PublishIcon from '@material-ui/icons/Publish';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import {useParams} from 'react-router-dom';
+import formatDate from 'utils/formatDate';
+import {createSessionTitle} from 'redux/actions/sessionActions';
+import {useDispatch, useSelector} from 'react-redux';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 export default function Editor() {
+  const params = useParams();
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state.session);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('Enter a title');
-  const [subtitle, setSubtitle] = useState('Enter a subtitle');
+  const [sub_title, setsub_title] = useState('Enter a subtitle');
   const [appliedGroup, setAppliedGroup] = useState('');
   const [categories, setCategories] = useState([]);
   const [keywords, setKeywords] = useState([]);
   const [value, setValue] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [status, setStatus] = useState('');
-  const [points, setPoints] = useState(0);
+  const [start_date, setstart_date] = useState(new Date());
+  const [end_date, setend_date] = useState(new Date());
+  const [status, setStatus] = useState('draft');
+  const [total_points, settotal_points] = useState(0);
   const [imageData, setImageData] = useState([]);
 
   const handleEditorChange = (e) => {
@@ -36,12 +45,59 @@ export default function Editor() {
     setValue('');
   };
 
+  useEffect(() => {
+    if (state.titleCreation) {
+      setOpen1(true);
+    }
+  }, [state]);
+
+  const publish = () => {
+    let parent = null;
+    if (params.contentHeaderId === 'null') {
+      parent = params.id;
+    } else {
+      parent = params.contentHeaderId;
+    }
+
+    const tags = keywords.map((element) => {
+      return {
+        tag_type: 'keyword',
+        text: element,
+      };
+    });
+
+    dispatch(
+      createSessionTitle(
+        {
+          title,
+          sub_title,
+          details: content,
+          start_date: formatDate(start_date),
+          end_date: formatDate(end_date),
+          tags,
+          type: params.type,
+          total_points,
+          content_header_id: parseInt(parent),
+        },
+        params.type,
+      ),
+    );
+  };
+  const [open1, setOpen1] = useState(false);
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
   return (
-    <div>
+    <div className='editor-page-full-container'>
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
       <br />
+      <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
+        <Alert onClose={handleClose1} severity='success'>
+          Successfully created
+        </Alert>
+      </Snackbar>
 
       <Container>
         <div className='top-section'>
@@ -57,9 +113,9 @@ export default function Editor() {
             <div>
               <ContentEditable
                 className='ce-sub-title'
-                html={subtitle}
+                html={sub_title}
                 disabled={false}
-                onChange={(e) => setSubtitle(e.target.value)}
+                onChange={(e) => setsub_title(e.target.value)}
               />
             </div>
           </div>
@@ -69,13 +125,13 @@ export default function Editor() {
               <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
               <span className='button-text'>Preview</span>
             </button>
-            <button className='flex-button publish'>
+            <button className='flex-button publish' onClick={publish}>
               <PublishIcon style={{fill: '#ffffff'}} />{' '}
               <span className='button-text'>Publish</span>
             </button>
           </div>
         </div>
-        <div className='container'>
+        <div className='editor-container'>
           <div className='editor-side'>
             <SunEditor
               setOptions={{
@@ -102,6 +158,7 @@ export default function Editor() {
                 onChange={(e) => {
                   setCategories([...categories, e.target.value]);
                 }}
+                variant='filled'
                 fullWidth>
                 <MenuItem value={0}>
                   {categories.length > 0
@@ -180,8 +237,8 @@ export default function Editor() {
                 margin='normal'
                 fullWidth={true}
                 label='Start Date'
-                value={startDate}
-                onChange={(e) => setStartDate(e)}
+                value={start_date}
+                onChange={(e) => setstart_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -192,8 +249,8 @@ export default function Editor() {
                 format='MM/DD/yyyy'
                 margin='normal'
                 label='End Date'
-                value={endDate}
-                onChange={(e) => setEndDate(e)}
+                value={end_date}
+                onChange={(e) => setend_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -201,24 +258,26 @@ export default function Editor() {
             </div>
             <br />
             <div>
-              <TextField
+              <Select
                 variant='filled'
                 value={status}
-                onChange={(e) => setStatus(e.target.value)}
                 fullWidth
-                label='Status'
-                required
-              />
+                onChange={(e) => setStatus(e.target.value)}
+                required>
+                <MenuItem value='draft'>Draft</MenuItem>
+                <MenuItem value='saved'>Saved</MenuItem>
+                <MenuItem value={'published'}>Published</MenuItem>
+              </Select>
             </div>
             <br />
             <div>
               <TextField
                 type='number'
                 variant='filled'
-                value={points}
-                onChange={(e) => setPoints(e.target.value)}
+                value={total_points}
+                onChange={(e) => settotal_points(e.target.value)}
                 fullWidth
-                label='Points'
+                label='total_points'
                 required
               />
             </div>

@@ -14,12 +14,14 @@ import ScrumboardApp from './ScrumboardApp';
 import Auth from './Auth';
 import ChatApp from './ChatApp';
 import Wall from './Wall';
+import Session from './Session';
 
 const reducers = (history) =>
   combineReducers({
     router: connectRouter(history),
     settings: Settings,
     auth: Auth,
+    session: Session,
     mailApp: MailApp,
     dashboard: Dashboard,
     common: Common,
