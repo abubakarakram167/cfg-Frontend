@@ -7,3 +7,6 @@ export const PREFERENCES = 'PREFERENCES';
 export const DYNAMIC = 'DYNAMIC';
 export const QUIZ = 'QUIZ';
 export const CREATE_SESSION = 'CREATE_SESSION';
+export const GET_SESSION_DATA = 'GET_SESSION_DATA';
+export const GET_LIST_DATA = 'GET_LIST_DATA';
+export const CREATE_TITLE = 'CREATE_TITLE';

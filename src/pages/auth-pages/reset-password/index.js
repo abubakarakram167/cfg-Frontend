@@ -10,7 +10,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {Typography} from '@material-ui/core';
 
 const ResetPassword = () => {
   const state = useSelector((state) => state);
