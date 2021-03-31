@@ -12,17 +12,18 @@ import Preferences from 'pages/preferences';
 import MediaLibrary from 'pages/media-library';
 import MiniCfg from 'pages/mini-cfg';
 import Rewards from 'pages/rewards';
-import Editor from 'pages/editor';
-
+import Editor from 'pages/editor/index';
+import CfgElement from 'pages/cfg-element';
+import Test from 'pages/test';
 const Admin = () => {
   return (
     <Router>
       <Switch>
-        <Route path='/admin/editor'>
-          <Editor />
-        </Route>
-        <Route path='/admin' exact={true}>
+        <Route path='/admin' exact>
           <AdminHome />
+        </Route>
+        <Route path='/admin/editor/:type/:id/:contentHeaderId'>
+          <Editor />
         </Route>
         <Route path='/admin/dashboard' exact={true}>
           <Dashboard />
@@ -30,8 +31,14 @@ const Admin = () => {
         <Route path='/admin/user-management'>
           <UserManagement />
         </Route>
-        <Route path='/admin/cfg-session'>
+        <Route path='/admin/cfg-session' exact>
           <CfgSession />
+        </Route>
+        <Route path='/admin/cfg-session/:id' exact>
+          <CfgElement />
+        </Route>
+        <Route path='/admin/cfg-session/:type/:id/:contentHeaderId'>
+          <Editor />
         </Route>
         <Route path='/admin/timeline'>
           <Timeline />

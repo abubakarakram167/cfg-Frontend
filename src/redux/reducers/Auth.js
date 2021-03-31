@@ -45,6 +45,7 @@ const authReducer = (state = INIT_STATE, action) => {
       return {...state, ...payload};
     case 'REGISTER':
       payload = action.payload;
+      console.log(payload);
       return {...state, ...payload};
     default:
       return state;
