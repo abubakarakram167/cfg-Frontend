@@ -172,7 +172,6 @@ export default function UserManagement() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [open1, setOpen1] = useState(false);
-
   const userList = useSelector((state) => state.userList);
   const changeUserStatus = (status) => {
     const body = {
@@ -257,6 +256,7 @@ export default function UserManagement() {
     else if (status === 'pending') return 0;
     else return 2;
   };
+  console.log('the status', status);
 
   return (
     <div className='body-page' style={{paddingBottom: 80}}>

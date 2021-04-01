@@ -313,6 +313,7 @@ export default function Preferences() {
                       ? element.option_description
                       : ' '
                     )
+
                       .toLowerCase()
                       .startsWith(descriptionFilter),
                   )
@@ -349,9 +350,11 @@ export default function Preferences() {
                         />
                       </StyledTableCell>
                       <StyledTableCell>{row.option_name}</StyledTableCell>
+
                       <ValueTableCell size='small'>
                         {row.option_value}
                       </ValueTableCell>
+
                       <StyledTableCell>
                         {row.option_description}
                       </StyledTableCell>
