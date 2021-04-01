@@ -385,6 +385,12 @@ export default function UserManagement() {
             onClick={() => {
               setEditForm(false);
               setDialogOpen(true);
+              setUsername('');
+              setFirstName('');
+              setLastName('');
+              setEmail('');
+              setRole('candidate');
+              setStatus(0);
             }}
           />
           <Chip
