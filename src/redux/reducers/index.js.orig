@@ -14,8 +14,11 @@ import ScrumboardApp from './ScrumboardApp';
 import Auth from './Auth';
 import ChatApp from './ChatApp';
 import Wall from './Wall';
-import Preference from './Preference';
+<<<<<<< HEAD
 import Session from './Session';
+=======
+import Preference from './Preference';
+>>>>>>> Fix Bugs in user management and complete user preferneces milestone
 
 const reducers = (history) =>
   combineReducers({
