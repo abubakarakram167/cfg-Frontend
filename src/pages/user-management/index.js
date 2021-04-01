@@ -125,7 +125,6 @@ export default function UserManagement() {
       };
     });
   });
-
   if (userListData.length && !userData.length) {
     setUserData(userListData);
   }
@@ -157,7 +156,8 @@ export default function UserManagement() {
   };
   const [userId, setUserId] = useState(null);
   const [username, setUsername] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('candidate');
   const [status, setStatus] = useState(0);
@@ -174,7 +174,6 @@ export default function UserManagement() {
   const [open1, setOpen1] = useState(false);
 
   const userList = useSelector((state) => state.userList);
-
   const changeUserStatus = (status) => {
     const body = {
       status,
@@ -200,19 +199,22 @@ export default function UserManagement() {
     if (!editForm) {
       const newUser = {
         user_name: username,
-        first_name: name,
+        first_name: firstName,
+        last_name: lastName,
         email,
         role,
         status,
       };
-      console.log('the new User', newUser);
+
       await dispatch(addUserToList(newUser));
       newUser.status = getUserStatus(parseInt(status));
-      setUserData([...userData, newUser]);
+      if (!userData.map((user) => user.email).includes(newUser.email))
+        setUserData([...userData, newUser]);
     } else {
       const editUser = {
         user_name: username,
-        first_name: name,
+        first_name: firstName,
+        last_name: lastName,
         email,
         role,
         status,
@@ -229,10 +231,11 @@ export default function UserManagement() {
       setUserData(changedUserData);
     }
     setUsername('');
-    setName('');
+    setFirstName('');
+    setLastName('');
     setEmail('');
-    setRole('');
-    setStatus('');
+    setRole('candidate');
+    setStatus(0);
     setDialogOpen(false);
   };
   const resetFilters = () => {
@@ -254,7 +257,6 @@ export default function UserManagement() {
     else if (status === 'pending') return 0;
     else return 2;
   };
-  console.log('the status', status);
 
   return (
     <div className='body-page' style={{paddingBottom: 80}}>
@@ -279,11 +281,21 @@ export default function UserManagement() {
             </ListItem>
             <ListItem>
               <TextField
-                label='Name'
+                label='FirstName'
                 variant='filled'
                 fullWidth
-                onChange={(e) => setName(e.target.value)}
-                value={name}
+                onChange={(e) => setFirstName(e.target.value)}
+                value={firstName}
+                required
+              />
+            </ListItem>
+            <ListItem>
+              <TextField
+                label='LastName'
+                variant='filled'
+                fullWidth
+                onChange={(e) => setLastName(e.target.value)}
+                value={lastName}
                 required
               />
             </ListItem>
@@ -368,7 +380,7 @@ export default function UserManagement() {
           </Typography>
           <Chip
             icon={<AddCircleRoundedIcon style={{fill: 'white'}} />}
-            label={'ADD NEW User'}
+            label={'ADD NEW'}
             className='chip-style'
             onClick={() => {
               setEditForm(false);
@@ -485,24 +497,34 @@ export default function UserManagement() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {userData &&
+              {userData.length > 0 &&
                 rowsPerPage > 0 &&
                 userData
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .filter((element) =>
-                    element.user_name.toLowerCase().startsWith(usernameFilter),
+                    (element.user_name ? element.user_name : '')
+                      .toLowerCase()
+                      .startsWith(usernameFilter),
                   )
                   .filter((element) =>
-                    element.first_name.toLowerCase().startsWith(nameFilter),
+                    (element.first_name ? element.first_name : '')
+                      .toLowerCase()
+                      .startsWith(nameFilter),
                   )
                   .filter((element) =>
-                    element.email.toLowerCase().startsWith(emailFilter),
+                    (element.email ? element.email : '')
+                      .toLowerCase()
+                      .startsWith(emailFilter),
                   )
                   .filter((element) =>
-                    element.status.toLowerCase().startsWith(statusFilter),
+                    (element.status ? element.status : '')
+                      .toLowerCase()
+                      .startsWith(statusFilter),
                   )
                   .filter((element) =>
-                    element.role.toLowerCase().startsWith(roleFilter),
+                    (element.role ? element.role : '')
+                      .toLowerCase()
+                      .startsWith(roleFilter),
                   )
                   .map((row, index) => (
                     <StyledTableRow key={index}>
@@ -520,7 +542,8 @@ export default function UserManagement() {
                             setUserIds(allIds);
                             setUserId(row.id);
                             setUsername(row.user_name);
-                            setName(row.first_name);
+                            setFirstName(row.first_name);
+                            setLastName(row.last_name);
                             setEmail(row.email);
                             setRole(row.role);
                             setStatus(getStatusValue(row.status));
@@ -532,7 +555,11 @@ export default function UserManagement() {
                         {row.user_name && capitalize(row.user_name)}
                       </StyledTableCell>
                       <StyledTableCell>
-                        {row.first_name && capitalize(row.first_name)}
+                        {row.first_name &&
+                          row.last_name &&
+                          capitalize(row.first_name) +
+                            ' ' +
+                            capitalize(row.last_name)}
                       </StyledTableCell>
                       <StyledTableCell>{row.email}</StyledTableCell>
                       <StyledTableCell>
@@ -543,13 +570,15 @@ export default function UserManagement() {
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
-              <CustomTablePagination
-                rowsPerPage={rowsPerPage}
-                page={page}
-                userData={userData}
-                setPage={(page) => setPage(page)}
-                setRowsPerPage={(page) => setRowsPerPage(page)}
-              />
+              <StyledTableRow>
+                <CustomTablePagination
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  userData={userData}
+                  setPage={(page) => setPage(page)}
+                  setRowsPerPage={(page) => setRowsPerPage(page)}
+                />
+              </StyledTableRow>
             </TableBody>
           </Table>
         </TableContainer>
