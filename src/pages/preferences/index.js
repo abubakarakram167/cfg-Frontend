@@ -45,6 +45,11 @@ const StyledTableCell = withStyles((theme) => ({
     paddingBottom: 16,
   },
 }))(TableCell);
+const ValueTableCell = withStyles((theme) => ({
+  root: {
+    width: 300,
+  },
+}))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
@@ -53,6 +58,13 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
+
+const StyledTable = withStyles((theme) => ({
+  root: {
+    wordBreak: 'break-all',
+    width: '100%',
+  },
+}))(Table);
 
 const useStyles = makeStyles({
   table: {
@@ -163,7 +175,7 @@ export default function Preferences() {
     <div style={{marginBottom: 100}}>
       <Dialog open={dialogOpen}>
         <DialogTitle>
-          <div style={{minWidth: '400px'}}>Add New Preferences</div>
+          <div style={{minWidth: '400px'}}>Edit New Preferences</div>
         </DialogTitle>
         <form onSubmit={handleSubmit}>
           <List>
@@ -241,7 +253,7 @@ export default function Preferences() {
         </div>
         <br />
         <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label='customized table'>
+          <StyledTable className={classes.table} aria-label='customized table'>
             <TableHead>
               <TableRow>
                 <StyledTableCell>
@@ -297,15 +309,23 @@ export default function Preferences() {
                 preferences
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .filter((element) =>
-                    element.option_description
+                    (element.option_description
+                      ? element.option_description
+                      : ' '
+                    )
+
                       .toLowerCase()
                       .startsWith(descriptionFilter),
                   )
                   .filter((element) =>
-                    element.option_name.toLowerCase().startsWith(optionFilter),
+                    (element.option_name ? element.option_name : ' ')
+                      .toLowerCase()
+                      .startsWith(optionFilter),
                   )
                   .filter((element) =>
-                    element.option_value.toLowerCase().startsWith(valueFilter),
+                    (element.option_value ? element.option_value : ' ')
+                      .toLowerCase()
+                      .startsWith(valueFilter),
                   )
                   .map((row, index) => (
                     <StyledTableRow key={index}>
@@ -330,9 +350,11 @@ export default function Preferences() {
                         />
                       </StyledTableCell>
                       <StyledTableCell>{row.option_name}</StyledTableCell>
-                      <StyledTableCell size='small'>
+
+                      <ValueTableCell size='small'>
                         {row.option_value}
-                      </StyledTableCell>
+                      </ValueTableCell>
+
                       <StyledTableCell>
                         {row.option_description}
                       </StyledTableCell>
@@ -346,7 +368,7 @@ export default function Preferences() {
                 setRowsPerPage={(page) => setRowsPerPage(page)}
               />
             </TableBody>
-          </Table>
+          </StyledTable>
         </TableContainer>
       </Container>
     </div>
