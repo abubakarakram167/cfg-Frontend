@@ -14,6 +14,7 @@ import ScrumboardApp from './ScrumboardApp';
 import Auth from './Auth';
 import ChatApp from './ChatApp';
 import Wall from './Wall';
+import Preference from './Preference';
 
 const reducers = (history) =>
   combineReducers({
@@ -32,5 +33,6 @@ const reducers = (history) =>
     scrumboardApp: ScrumboardApp,
     chatApp: ChatApp,
     wall: Wall,
+    preference: Preference,
   });
 export default reducers;

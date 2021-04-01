@@ -26,6 +26,11 @@ import {onGetUserList} from '../../redux/actions';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import {sendMultipleForgotPasswordAction} from '../../redux/actions/authActions';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import {Show_Message} from '../../shared/constants/ActionTypes';
+
 import {
   Dialog,
   List,
@@ -154,8 +159,8 @@ export default function UserManagement() {
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
-  const [status, setStatus] = useState('');
+  const [role, setRole] = useState('candidate');
+  const [status, setStatus] = useState(0);
   const [editForm, setEditForm] = useState(false);
   const [usernameFilter, setUsernameFilter] = useState('');
   const [nameFilter, setNameFilter] = useState('');
@@ -165,7 +170,10 @@ export default function UserManagement() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [allUserIds, setUserIds] = useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [open1, setOpen1] = useState(false);
+
+  const userList = useSelector((state) => state.userList);
 
   const changeUserStatus = (status) => {
     const body = {
@@ -183,7 +191,10 @@ export default function UserManagement() {
     });
     setUserData(updatedUserData);
   };
-
+  const handleClose1 = () => {
+    setOpen1(false);
+    dispatch({type: Show_Message, payload: {message: null, success: false}});
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!editForm) {
@@ -194,8 +205,9 @@ export default function UserManagement() {
         role,
         status,
       };
-      const getResult = await dispatch(addUserToList(newUser));
-      newUser.status = status === 0 ? 'pending' : 'approved';
+      console.log('the new User', newUser);
+      await dispatch(addUserToList(newUser));
+      newUser.status = getUserStatus(parseInt(status));
       setUserData([...userData, newUser]);
     } else {
       const editUser = {
@@ -224,28 +236,34 @@ export default function UserManagement() {
     setDialogOpen(false);
   };
   const resetFilters = () => {
-    setUsernameFilter('');
-    setNameFilter('');
-    setRoleFilter('');
-    setEmailFilter('');
-    setStatusFilter('');
+    const selectedUsers = userData
+      .filter((user) => allUserIds.includes(user.id))
+      .map((user) => {
+        return user.email;
+      });
+
+    if (selectedUsers.length > 0)
+      dispatch(sendMultipleForgotPasswordAction(selectedUsers));
   };
 
   const capitalize = ([first, ...rest]) =>
     first.toUpperCase() + rest.join('').toLowerCase();
 
-  const getStatusValue = () => {
-    console.log('the status', status);
+  const getStatusValue = (status) => {
     if (status === 'approved') return 1;
     else if (status === 'pending') return 0;
     else return 2;
   };
+  console.log('the status', status);
 
   return (
-    <div className='body-page' style={{paddingBottom: 150}}>
+    <div className='body-page' style={{paddingBottom: 80}}>
       <Dialog open={dialogOpen}>
         <DialogTitle>
-          <div style={{minWidth: '400px'}}>Add New User</div>
+          <div style={{minWidth: '400px'}}>
+            {' '}
+            {editForm ? 'Edit User' : 'Add New User'}
+          </div>
         </DialogTitle>
         <form onSubmit={handleSubmit}>
           <List>
@@ -302,7 +320,7 @@ export default function UserManagement() {
                 labelId='demo-simple-select-filled-label'
                 id='demo-simple-select-filled'
                 placeholder='Role'
-                value={status ? status : 0}
+                value={status}
                 fullWidth
                 onChange={(e) => {
                   setStatus(e.target.value);
@@ -333,7 +351,17 @@ export default function UserManagement() {
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
-      <Container maxWidth='xl' style={{maxWidth: '96%'}}>
+      <Container maxWidth='xl' style={{maxWidth: '96%', marginTop: 50}}>
+        <Snackbar
+          open={userList.message}
+          autoHideDuration={6000}
+          onClose={handleClose1}>
+          <Alert
+            onClose={handleClose1}
+            severity={userList.success ? 'success' : 'error'}>
+            {userList.message}
+          </Alert>
+        </Snackbar>
         <div className='options'>
           <Typography style={{color: 'black'}} variant='h6'>
             User Management
@@ -458,36 +486,23 @@ export default function UserManagement() {
             </TableHead>
             <TableBody>
               {userData &&
-                userData &&
                 rowsPerPage > 0 &&
                 userData
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .filter(
-                    (element) =>
-                      element.user_name &&
-                      element.user_name
-                        .toLowerCase()
-                        .startsWith(usernameFilter),
+                  .filter((element) =>
+                    element.user_name.toLowerCase().startsWith(usernameFilter),
                   )
-                  .filter(
-                    (element) =>
-                      element.first_name &&
-                      element.first_name.toLowerCase().startsWith(nameFilter),
+                  .filter((element) =>
+                    element.first_name.toLowerCase().startsWith(nameFilter),
                   )
-                  .filter(
-                    (element) =>
-                      element.email &&
-                      element.email.toLowerCase().startsWith(emailFilter),
+                  .filter((element) =>
+                    element.email.toLowerCase().startsWith(emailFilter),
                   )
-                  .filter(
-                    (element) =>
-                      element.status &&
-                      element.status.toLowerCase().startsWith(statusFilter),
+                  .filter((element) =>
+                    element.status.toLowerCase().startsWith(statusFilter),
                   )
-                  .filter(
-                    (element) =>
-                      element.role &&
-                      element.role.toLowerCase().startsWith(roleFilter),
+                  .filter((element) =>
+                    element.role.toLowerCase().startsWith(roleFilter),
                   )
                   .map((row, index) => (
                     <StyledTableRow key={index}>
@@ -495,6 +510,7 @@ export default function UserManagement() {
                         <BlackCheckbox
                           checked={row.checked}
                           onChange={() => {
+                            console.log('the row status', row.status);
                             let allIds = allUserIds;
                             if (!allIds.includes(row.id)) allIds.push(row.id);
                             else
@@ -507,21 +523,23 @@ export default function UserManagement() {
                             setName(row.first_name);
                             setEmail(row.email);
                             setRole(row.role);
-                            setStatus(row.status);
+                            setStatus(getStatusValue(row.status));
                             toggleCheckbox(row.id);
                           }}
                         />
                       </StyledTableCell>
                       <StyledTableCell>
-                        {capitalize(row.user_name)}
+                        {row.user_name && capitalize(row.user_name)}
                       </StyledTableCell>
                       <StyledTableCell>
-                        {capitalize(row.first_name)}
+                        {row.first_name && capitalize(row.first_name)}
                       </StyledTableCell>
                       <StyledTableCell>{row.email}</StyledTableCell>
-                      <StyledTableCell>{capitalize(row.role)}</StyledTableCell>
                       <StyledTableCell>
-                        {capitalize(row.status)}
+                        {row.role && capitalize(row.role)}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {row.status && capitalize(row.status)}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}

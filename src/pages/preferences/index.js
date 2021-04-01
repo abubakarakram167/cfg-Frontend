@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import AdminHeader from 'pages/admin-header';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -13,6 +14,15 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
+import FilterList from '@material-ui/icons/FilterList';
+import {getUserPreferencesList} from '../../redux/actions/Preference';
+import CustomTablePagination from '../user-management/pagination';
+import EditIcon from '@material-ui/icons/Edit';
+import {editPreferenceInList} from '../../redux/actions/Preference';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import {Show_Message} from '../../shared/constants/ActionTypes';
+import '../user-management/style.css';
 import {
   Dialog,
   List,
@@ -21,6 +31,7 @@ import {
   TextField,
   Button,
 } from '@material-ui/core';
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: 'none',
@@ -28,6 +39,10 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
+    color: '#6b6b6b',
+    fontWeight: 500,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
 }))(TableCell);
 
@@ -46,44 +61,66 @@ const useStyles = makeStyles({
 });
 
 export default function Preferences() {
-  const [preferences, setPreferences] = useState([
-    {
-      checked: false,
-      option: 'Login with username',
-      value: 'Jane Doe',
-      description: 'hello world this is a description',
-    },
-    {
-      checked: false,
-      option: 'Login with username',
-      value: 'Jane Doe',
-      description: 'hello world this is a description',
-    },
-    {
-      checked: false,
-      option: 'Login with username',
-      value: 'Jane Doe',
-      description: 'hello world this is a description',
-    },
-    {
-      checked: false,
-      option: 'Login with username',
-      value: 'Jane Doe',
-      description: 'hello world this is a description',
-    },
-  ]);
+  // const [preferences, setPreferences] = useState([
+  //   {
+  //     checked: false,
+  //     option: 'Login with username',
+  //     value: 'Jane Doe',
+  //     description: 'hello world this is a description',
+  //   },
+  //   {
+  //     checked: false,
+  //     option: 'Login with username',
+  //     value: 'Jane Doe',
+  //     description: 'hello world this is a description',
+  //   },
+  //   {
+  //     checked: false,
+  //     option: 'Login with username',
+  //     value: 'Jane Doe',
+  //     description: 'hello world this is a description',
+  //   },
+  //   {
+  //     checked: false,
+  //     option: 'Login with username',
+  //     value: 'Jane Doe',
+  //     description: 'hello world this is a description',
+  //   },
+  // ]);
+  const [option, setOption] = useState('');
+  const [value, setValue] = useState('');
+  const [description, setDescription] = useState('');
+  const [optionFilter, setOptionFilter] = useState('');
+  const [valueFilter, setValueFilter] = useState('');
+  const [descriptionFilter, setDescriptionFilter] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [currentCheckState, setCurrentCheckState] = useState(false);
-
+  const [preferences, setPreferences] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [allPreferenceIds, setPreferenceIds] = useState([]);
+  const [preferenceId, setPreferenceId] = useState(null);
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const {preferenceList} = useSelector((state) => state.preference);
+  const message = useSelector((state) => state.userList);
+
+  if (preferences.length === 0 && preferenceList.length)
+    setPreferences(preferenceList);
+
+  useEffect(() => {
+    dispatch(getUserPreferencesList());
+  }, [dispatch, preferences]);
+
+  console.log('the option', optionFilter);
 
   const toggleCheckbox = (id) => {
     setPreferences(
       preferences.filter((data, index) => {
-        if (id === index) {
+        if (id === data.id) {
           data.checked = !data.checked;
           return data;
         }
-
         return data;
       }),
     );
@@ -98,22 +135,24 @@ export default function Preferences() {
       }),
     );
   };
+  const handleClose1 = () => {
+    dispatch({type: Show_Message, payload: {message: null, success: false}});
+  };
 
-  const [option, setOption] = useState('');
-  const [value, setValue] = useState('');
-  const [description, setDescription] = useState('');
-
-  const [dialogOpen, setDialogOpen] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-    setPreferences([
-      ...preferences,
-      {
-        option,
-        value,
-        description,
-      },
-    ]);
+
+    const changedPreferenceData = preferences.map((preference) => {
+      if (allPreferenceIds.includes(preference.id)) {
+        return {
+          ...preference,
+          option_value: value,
+        };
+      } else return preference;
+    });
+    dispatch(editPreferenceInList(value, changedPreferenceData));
+
+    setPreferences(changedPreferenceData);
     setOption('');
     setValue('');
     setDescription('');
@@ -121,7 +160,7 @@ export default function Preferences() {
   };
 
   return (
-    <div>
+    <div style={{marginBottom: 100}}>
       <Dialog open={dialogOpen}>
         <DialogTitle>
           <div style={{minWidth: '400px'}}>Add New Preferences</div>
@@ -133,6 +172,8 @@ export default function Preferences() {
                 label='Option'
                 variant='filled'
                 fullWidth
+                disabled={true}
+                value={option}
                 onChange={(e) => setOption(e.target.value)}
               />
             </ListItem>
@@ -140,6 +181,7 @@ export default function Preferences() {
               <TextField
                 label='Value'
                 variant='filled'
+                value={value}
                 fullWidth
                 onChange={(e) => setValue(e.target.value)}
               />
@@ -148,6 +190,8 @@ export default function Preferences() {
               <TextField
                 label='Description'
                 variant='filled'
+                disabled={true}
+                value={description}
                 fullWidth
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -176,11 +220,21 @@ export default function Preferences() {
       <br />
       <br />
       <Container>
+        <Snackbar
+          open={message.message}
+          autoHideDuration={6000}
+          onClose={handleClose1}>
+          <Alert
+            onClose={handleClose1}
+            severity={message.success ? 'success' : 'error'}>
+            {message.message}
+          </Alert>
+        </Snackbar>
         <div className='options'>
           <Typography variant='h6'>Preferences</Typography>
           <Chip
-            icon={<ControlPoint style={{fill: 'white'}} />}
-            label={'ADD NEW'}
+            icon={<EditIcon style={{fill: 'white'}} />}
+            label={'Edit Preference'}
             className='chip-style'
             onClick={() => setDialogOpen(true)}
           />
@@ -193,27 +247,104 @@ export default function Preferences() {
                 <StyledTableCell>
                   <Checkbox checked={currentCheckState} onChange={toggleAll} />
                 </StyledTableCell>
-                <StyledTableCell>Option</StyledTableCell>
-                <StyledTableCell>Value</StyledTableCell>
-                <StyledTableCell>Description</StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Option </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Option'
+                      placeholder=''
+                      value={optionFilter}
+                      onChange={(e) => setOptionFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell size='small'>
+                  <span className='column-heading'> Value </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Value'
+                      placeholder=''
+                      value={valueFilter}
+                      onChange={(e) => setValueFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell size='large'>
+                  <span className='column-heading'> Description </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Description'
+                      placeholder=''
+                      value={descriptionFilter}
+                      onChange={(e) => setDescriptionFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {preferences.map((row, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell>
-                    <Checkbox
-                      checked={row.checked}
-                      onChange={() => {
-                        toggleCheckbox(index);
-                      }}
-                    />
-                  </StyledTableCell>
-                  <StyledTableCell>{row.option}</StyledTableCell>
-                  <StyledTableCell>{row.value}</StyledTableCell>
-                  <StyledTableCell>{row.description}</StyledTableCell>
-                </StyledTableRow>
-              ))}
+              {preferences.length &&
+                rowsPerPage > 0 &&
+                preferences
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .filter((element) =>
+                    element.option_description
+                      .toLowerCase()
+                      .startsWith(descriptionFilter),
+                  )
+                  .filter((element) =>
+                    element.option_name.toLowerCase().startsWith(optionFilter),
+                  )
+                  .filter((element) =>
+                    element.option_value.toLowerCase().startsWith(valueFilter),
+                  )
+                  .map((row, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell>
+                        <Checkbox
+                          checked={row.checked}
+                          onChange={() => {
+                            console.log('the row status', row);
+                            let allIds = allPreferenceIds;
+                            if (!allIds.includes(row.id)) allIds.push(row.id);
+                            else
+                              allIds = allIds.filter(
+                                (userId) => userId !== row.id,
+                              );
+                            setPreferenceIds(allIds);
+                            setPreferenceId(row.id);
+                            setOption(row.option_name);
+                            setValue(row.option_value);
+                            setDescription(row.option_description);
+                            toggleCheckbox(row.id);
+                          }}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell>{row.option_name}</StyledTableCell>
+                      <StyledTableCell size='small'>
+                        {row.option_value}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {row.option_description}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+              <CustomTablePagination
+                rowsPerPage={rowsPerPage}
+                page={page}
+                userData={preferences}
+                setPage={(page) => setPage(page)}
+                setRowsPerPage={(page) => setRowsPerPage(page)}
+              />
             </TableBody>
           </Table>
         </TableContainer>
