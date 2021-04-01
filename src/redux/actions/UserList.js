@@ -3,6 +3,7 @@ import {
   FETCH_START,
   FETCH_SUCCESS,
   GET_USER_LIST,
+  Show_Message,
 } from '../../shared/constants/ActionTypes';
 // import Api from '../../@crema/services/ApiConfig';
 import Api from '../../utils/axios';
@@ -42,6 +43,10 @@ export const addUserToList = (body) => {
         console.log('the data in new', data);
         if (data.status === 200) {
           console.log('the data to be fetched', data);
+          dispatch({
+            type: Show_Message,
+            payload: {message: 'Record Add SuccessFully', success: true},
+          });
           dispatch({type: FETCH_SUCCESS});
         } else {
           dispatch({
@@ -57,14 +62,16 @@ export const addUserToList = (body) => {
   };
 };
 export const editUserInList = (body) => {
-  console.log('here the body in edit..', body);
   return (dispatch) => {
     dispatch({type: FETCH_START});
     Api.put('/api/users/', body)
       .then((data) => {
         if (data.status === 200) {
-          console.log('the data to be fetched', data);
           dispatch({type: FETCH_SUCCESS});
+          dispatch({
+            type: Show_Message,
+            payload: {message: 'Record Edit SuccessFully', success: true},
+          });
         } else {
           dispatch({
             type: FETCH_ERROR,
@@ -73,7 +80,10 @@ export const editUserInList = (body) => {
         }
       })
       .catch((error) => {
-        console.log('error', error.response);
+        dispatch({
+          type: Show_Message,
+          payload: {message: 'Record Not successFullEdit', success: false},
+        });
         dispatch({type: FETCH_ERROR, payload: error.message});
       });
   };

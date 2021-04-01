@@ -1,7 +1,9 @@
-import {GET_USER_LIST} from '../../shared/constants/ActionTypes';
+import {GET_USER_LIST, Show_Message} from '../../shared/constants/ActionTypes';
 
 const initialState = {
   usersList: [],
+  message: null,
+  success: false,
 };
 
 const userListReducer = (state = initialState, action) => {
@@ -11,7 +13,12 @@ const userListReducer = (state = initialState, action) => {
         ...state,
         usersList: action.payload,
       };
-
+    case Show_Message:
+      return {
+        ...state,
+        message: action.payload.message,
+        success: action.payload.success,
+      };
     default:
       return state;
   }
