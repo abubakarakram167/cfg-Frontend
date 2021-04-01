@@ -1,6 +1,7 @@
 import {LOGIN, ERROR} from './action.types';
 import Auth from '../services/auth';
 import jsCookie from 'js-cookie';
+import {Show_Message} from '../../shared/constants/ActionTypes';
 
 export const loginAction = (params) => {
   return async function (dispatch) {
@@ -32,7 +33,8 @@ export const forgotPasswordAction = (email) => {
     try {
       const response = await Auth.forgot(email);
       if (response.status === 200) {
-        const data = await response.json();
+        console.log('the response', response);
+        const data = await response.data;
         dispatch({
           type: 'FORGOT_PASSWORD',
           payload: data,
@@ -40,7 +42,51 @@ export const forgotPasswordAction = (email) => {
         });
       }
     } catch (err) {
-      console.log('the error', err.response);
+      console.log('the error is', err);
+      dispatch({
+        type: 'FORGOT_PASSWORD',
+        message: null,
+        error: 'An unexpected error occured. Please try again.',
+      });
+    }
+  };
+};
+
+export const sendMultipleForgotPasswordAction = (usersEmail) => {
+  console.log('the usersEmail', usersEmail);
+
+  return async function (dispatch) {
+    try {
+      const allEmails = [];
+      for (let email of usersEmail) {
+        allEmails.push(Auth.forgot({email}));
+      }
+      await Promise.all(allEmails);
+      dispatch({
+        type: Show_Message,
+        payload: {
+          message: `Email successFully sends to ${usersEmail.toString()}`,
+          success: true,
+        },
+      });
+      // if (response.status === 200) {
+      //   console.log("the response", response)
+      //   const data = await response.data
+      //   dispatch({
+      //     type: 'FORGOT_PASSWORD',
+      //     payload: data,
+      //     error: null,
+      //   });
+      // }
+    } catch (err) {
+      console.log('the error is', err.response);
+      dispatch({
+        type: Show_Message,
+        payload: {
+          message: `Email not succesfully sends to ${usersEmail.toString()}`,
+          success: false,
+        },
+      });
       dispatch({
         type: 'FORGOT_PASSWORD',
         message: null,

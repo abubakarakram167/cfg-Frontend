@@ -11,6 +11,9 @@ export const UPDATING_CONTENT = 'updating_content';
 export const TOGGLE_NAV_COLLAPSED = 'toggle_nav_collapsed';
 export const SET_INITIAL_PATH = 'set_initial_path';
 
+//Preferences
+export const Get_Preferences = 'getPreferences';
+
 //AUTH0
 export const UPDATE_AUTH_USER = 'update_auth_user';
 export const SET_AUTH_TOKEN = 'set_auth_token';
@@ -115,7 +118,7 @@ export const UPDATE_POST = 'update_post';
 
 //USER_LIST
 export const GET_USER_LIST = 'GET_USER_LIST';
-
+export const Show_Message = 'Show_Message';
 //ECOMMERCE_LIST
 export const GET_ECOMMERCE_LIST = 'get_ecommerce_list';
 export const SET_PRODUCT_VIEW_TYPE = 'set_product_view_type';
