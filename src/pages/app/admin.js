@@ -15,6 +15,8 @@ import Rewards from 'pages/rewards';
 import Editor from 'pages/editor/index';
 import CfgElement from 'pages/cfg-element';
 import Test from 'pages/test';
+import ContentDisplay from 'pages/content-display';
+import EditContent from 'pages/edit-content';
 const Admin = () => {
   return (
     <Router>
@@ -24,6 +26,12 @@ const Admin = () => {
         </Route>
         <Route path='/admin/editor/:type/:id/:contentHeaderId'>
           <Editor />
+        </Route>
+        <Route path='/admin/content/display/:id'>
+          <ContentDisplay />
+        </Route>
+        <Route path='/admin/content/edit/:id'>
+          <EditContent />
         </Route>
         <Route path='/admin/dashboard' exact={true}>
           <Dashboard />
