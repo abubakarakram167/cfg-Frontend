@@ -70,42 +70,6 @@ export default function CfgElement() {
       <br />
       <br />
 
-      <Dialog open={dialogOpen}>
-        <DialogTitle>
-          <div style={{minWidth: '400px'}}>Create New Title</div>
-        </DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <List>
-            <ListItem>
-              <TextField
-                variant='filled'
-                placeholder='Title'
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                fullWidth
-                required
-              />
-            </ListItem>
-            <ListItem>
-              <TextField
-                variant='filled'
-                value={totalPoints}
-                placeholder='Total Points'
-                type='number'
-                onChange={(e) => setTotalPoints(e.target.value)}
-                fullWidth
-                required
-              />
-            </ListItem>
-            <ListItem>
-              <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                <Button onClick={() => toggleDialogOpen()}>Cancel</Button>
-                <Button type='submit'>Submit</Button>
-              </div>
-            </ListItem>
-          </List>
-        </form>
-      </Dialog>
       <Container>
         <div className='options'>
           <Typography variant='h6' className='titleText'>
@@ -159,12 +123,15 @@ export default function CfgElement() {
                       <div
                         className='custom-row-design-header summary-margin-left'
                         onClick={() => console.log('take me to something new')}>
-                        {element.title}
+                        <Link to={`/admin/content/edit/${element.id}`}>
+                          {element.title}
+                        </Link>
                       </div>
                       <div className='custom-row-design-header summary-margin-left'>
-                        {element.author.first_name +
+                        {/* {element.author.first_name +
                           ' ' +
-                          element.author.last_name}
+                          element.author.last_name} */}{' '}
+                        Author not found
                       </div>
                       <div className='custom-row-design-header summary-margin-left'>
                         {formatDate(element.created_at)}
@@ -186,12 +153,15 @@ export default function CfgElement() {
                             className='custom-row-design-cfg-details subtitle-card-custom'>
                             <div className='custom-row-design-header'></div>
                             <div className='custom-row-design-header'>
-                              {subs.title}
+                              <Link to={`/admin/content/edit/${subs.id}`}>
+                                {subs.title}
+                              </Link>
                             </div>
                             <div className='custom-row-design-header'>
-                              {subs.author.first_name +
+                              {/* {subs.author.first_name +
                                 ' ' +
-                                subs.author.last_name}
+                                subs.author.last_name} */}
+                              Author not found
                             </div>
                             <div className='custom-row-design-header'>
                               {formatDate(subs.created_at)}

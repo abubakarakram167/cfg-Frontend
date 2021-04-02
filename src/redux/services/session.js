@@ -17,6 +17,14 @@ class Session {
   static getListData(id) {
     return axiosInstance.get('api/content/list/session/' + id);
   }
+  static getContentData(id) {
+    return axiosInstance.get('api/content/' + id);
+  }
+  static editTitle(params, id) {
+    return axiosInstance.put('/api/content/' + id, {
+      ...params,
+    });
+  }
 }
 
 export default Session;
