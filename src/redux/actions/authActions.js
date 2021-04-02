@@ -16,6 +16,7 @@ export const loginAction = (params) => {
         });
       }
     } catch (error) {
+      console.log('the error response', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: 'LOGIN',
