@@ -2,7 +2,7 @@
   "name": "crema",
   "version": "2.0.0",
   "private": true,
-  "homepage": "mycfg.org",
+  "homepage": "/",
   "engines": {
     "node": "14.16.0"
   },
