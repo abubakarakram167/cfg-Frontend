@@ -16,6 +16,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Link} from 'react-router-dom';
+import {getContentData, editContent} from 'redux/actions/sessionActions';
+
 export default function Editor() {
   const params = useParams();
   const dispatch = useDispatch();
@@ -35,6 +37,7 @@ export default function Editor() {
   const [createdContentId, setCreatedContentId] = useState(0);
   const [previous_page, setprevious_page] = useState('');
   const [next_page, setnext_page] = useState('');
+  const [contentType, setContentType] = useState('');
 
   const handleEditorChange = (e) => {
     setContent(e);
@@ -50,13 +53,34 @@ export default function Editor() {
   };
 
   useEffect(() => {
+    dispatch(getContentData(params.id));
+  }, [params.id]);
+
+  useEffect(() => {
     if (state.titleCreation) {
       setOpen1(true);
     }
-    if (state.createdContent) {
-      setCreatedContentId(state.createdContent.id);
+    // if (state.createdContent) {
+    //     setCreatedContentId(state.createdContent.id)
+    // }
+
+    if (state.currentContent) {
+      console.log(state.currentContent);
+      setTitle(state.currentContent.title);
+      setsub_title(state.currentContent.sub_title);
+      setContent(state.currentContent.detail);
+      setstart_date(new Date(state.currentContent.start_date));
+      setend_date(new Date(state.currentContent.end_date));
+      setStatus(state.currentContent.status);
+      settotal_points(state.currentContent.total_points);
+      setKeywords(
+        JSON.parse(state.currentContent.tags).map((element) => element.text),
+      );
+      setnext_page(state.currentContent.next_page);
+      setprevious_page(state.currentContent.previous_page);
+      setContentType(state.currentContent.type);
     }
-    console.log(state);
+    console.log(state.currentContent);
   }, [state]);
 
   const publish = () => {
@@ -73,23 +97,36 @@ export default function Editor() {
         text: element,
       };
     });
+    console.log({
+      id: params.id,
+      title,
+      sub_title,
+      detail: content,
+      start_date: formatDate(start_date),
+      end_date: formatDate(end_date),
+      tags,
+      type: contentType,
+      total_points,
+      next_page,
+      previous_page,
+    });
 
     dispatch(
-      createSessionTitle(
+      editContent(
         {
+          id: params.id,
           title,
           sub_title,
           detail: content,
           start_date: formatDate(start_date),
           end_date: formatDate(end_date),
-          tags,
-          type: params.type,
+          tags: JSON.stringify(tags),
+          type: contentType,
           total_points,
-          content_header_id: parseInt(parent),
-          previous_page,
           next_page,
+          previous_page,
         },
-        params.type,
+        params.id,
       ),
     );
   };
@@ -97,6 +134,10 @@ export default function Editor() {
   const handleClose1 = () => {
     setOpen1(false);
   };
+
+  useEffect(() => {
+    console.log(content);
+  }, [content]);
   return (
     <div className='editor-page-full-container'>
       <div className='toolbar-container'>
@@ -105,7 +146,7 @@ export default function Editor() {
       <br />
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
         <Alert onClose={handleClose1} severity='success'>
-          Successfully created
+          Record updated successfully.
         </Alert>
       </Snackbar>
 
@@ -130,9 +171,7 @@ export default function Editor() {
             </div>
           </div>
           <div className='flex-buttons-publish'>
-            <Link
-              to={`/admin/content/display/${createdContentId}`}
-              style={{pointerEvents: createdContentId === 0 ? 'none' : 'auto'}}>
+            <Link to={`/admin/content/display/${params.id}`}>
               <button className='flex-button preview'>
                 {' '}
                 <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
@@ -148,6 +187,7 @@ export default function Editor() {
         <div className='editor-container'>
           <div className='editor-side'>
             <SunEditor
+              setContents={content}
               setOptions={{
                 height: 200,
                 buttonList: [
