@@ -30,8 +30,9 @@ const StyledTablePagination = withStyles((theme) => ({
   //   display: 'none',
   // },
   // toolbar: {
-  //   display: 'inline',
-  // },
+  //   minWidth: 350,
+  //   maxWidth: 350
+  // }
 }))(TablePagination);
 
 function TablePaginationActions(props) {
@@ -121,7 +122,7 @@ export default function CustomPaginationActionsTable(props) {
 
   return (
     <StyledTablePagination
-      rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+      rowsPerPageOptions={[5, 10, 25]}
       colSpan={2}
       count={props.userData.length}
       style={{borderBottom: 0}}
