@@ -56,7 +56,6 @@ export default function Editor() {
     if (state.createdContent) {
       setCreatedContentId(state.createdContent.id);
     }
-    console.log(state);
   }, [state]);
 
   const publish = () => {
@@ -298,24 +297,24 @@ export default function Editor() {
             <br />
             <div>
               <TextField
-                type='text'
+                type='number'
                 variant='filled'
                 value={previous_page}
                 onChange={(e) => setprevious_page(e.target.value)}
                 fullWidth
-                label='previous page'
+                label='previous page id'
                 required
               />
             </div>
             <br />
             <div>
               <TextField
-                type='text'
+                type='number'
                 variant='filled'
                 value={next_page}
                 onChange={(e) => setnext_page(e.target.value)}
                 fullWidth
-                label='next page'
+                label='next page id'
                 required
               />
             </div>
@@ -328,7 +327,7 @@ export default function Editor() {
                 {imageData.map((element, index) => {
                   return (
                     <div key={index} className='image-preview'>
-                      <img src={element} alt='image data' />
+                      <img src={element} alt='data-text' />
                     </div>
                   );
                 })}

@@ -13,8 +13,7 @@ import Container from '@material-ui/core/Container';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-import InputLabel from '@material-ui/core/InputLabel';
-import ControlPoint from '@material-ui/icons/ControlPoint';
+
 import ResetIcon from '@material-ui/icons/VpnKey';
 import LockIcon from '@material-ui/icons/Lock';
 import ApproveIcon from '@material-ui/icons/CheckCircle';
@@ -40,8 +39,6 @@ import {
   updateUserStatus,
 } from '../../redux/actions/UserList';
 import './style.css';
-import userList from '@crema/services/db/userList';
-import data from 'modules/thirdParty/recharts/Area/Components/data';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -74,17 +71,6 @@ const CustomSelect = withStyles((theme) => ({
     color: '#777777',
   },
 }))(Select);
-
-const StyledTextField = withStyles((theme) => ({
-  root: {
-    borderRadius: 10,
-    borderWidth: 10,
-  },
-  input: {
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-}))(OutlinedInput);
 
 const useStyles = makeStyles({
   table: {
