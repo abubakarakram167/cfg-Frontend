@@ -7,7 +7,8 @@ console.log('baseURL:', 'https://app.mycfg.org');
 
 let user = JSON.parse(localStorage.getItem('user'));
 let options = {
-  baseURL: 'https://app.mycfg.org',
+  // baseURL: 'https://app.mycfg.org',
+  baseURL: 'http://localhost:3690',
   withCredentials: true,
 };
 if (user && user.token && user.token.token) {
