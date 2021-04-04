@@ -24,28 +24,29 @@ const RouteComponent = (props) => {
       <Router>
         <Switch>
           <Route exact path='/createPassword'>
+            <CreatePassword />
 <<<<<<< HEAD
             <CreatePassword />
-            <CreatePassword />
           </Route>
 
-          </Route>
 
 =======
-            <CreatePassword />
           </Route>
 
->>>>>>> router errors removed
+>>>>>>> 796076c4eeefbb0c0fce3f51ae5c7bc7e71eb727
           <Route exact path='/reset'>
             <ResetPassword />
           </Route>
           {Admin}
           <Route path='/'>
             <Auth />
-<<<<<<< HEAD
-=======
           </Route>
->>>>>>> router errors removed
+<<<<<<< HEAD
+          {Admin}
+          <Route path='/'>
+            <Auth />
+=======
+>>>>>>> 796076c4eeefbb0c0fce3f51ae5c7bc7e71eb727
 
           {/* <Route path='/editor'>
             <Editor />

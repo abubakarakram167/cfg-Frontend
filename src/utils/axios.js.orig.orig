@@ -11,7 +11,11 @@ let options = {
 <<<<<<< HEAD
 =======
   baseURL: 'http://localhost:3690',
-
+<<<<<<< HEAD
+>>>>>>> route error
+=======
+>>>>>>> 5b7aeab8d411ed540b197de1150461db606d8514
+>>>>>>> 796076c4eeefbb0c0fce3f51ae5c7bc7e71eb727
   withCredentials: true,
 };
 if (user && user.token && user.token.token) {

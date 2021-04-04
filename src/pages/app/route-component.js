@@ -25,9 +25,7 @@ const RouteComponent = (props) => {
         <Switch>
           <Route exact path='/createPassword'>
             <CreatePassword />
-            <CreatePassword />
           </Route>
-
 
           <Route exact path='/reset'>
             <ResetPassword />
@@ -36,8 +34,8 @@ const RouteComponent = (props) => {
           <Route path='/'>
             <Auth />
           </Route>
-          {Admin}
-          <Route path='/'>
+
+          {/* <Route path='/editor'>
             <Auth />
 
           {/* <Route path='/editor'>

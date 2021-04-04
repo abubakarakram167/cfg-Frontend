@@ -104,11 +104,7 @@ export default [
         exact
         path='/admin/rewards'
         component={withRouter(Rewards)}
-      />
-
-      {/* <Route path='/admin' exact>
-
 =======
+>>>>>>> 796076c4eeefbb0c0fce3f51ae5c7bc7e71eb727
 
->>>>>>> router errors removed
 // export default Admin;
