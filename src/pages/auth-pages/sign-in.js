@@ -9,12 +9,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {loginAction} from '../../redux/actions/authActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-import {useHistory} from 'react-router-dom';
 
 export default function SignIn({setView}) {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
-  const history = useHistory();
 
   const handleClose1 = () => {
     setOpen1(false);

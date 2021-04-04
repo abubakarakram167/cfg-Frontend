@@ -14,8 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
 import EditIcon from '@material-ui/icons/Edit';
-import {Link, useHistory} from 'react-router-dom';
-import CfgElement from 'pages/cfg-element';
+import {Link} from 'react-router-dom';
 import {
   Dialog,
   List,
@@ -60,14 +59,13 @@ export default function CfgSession(props) {
   const state = useSelector((state) => state.session);
   const [content, setContent] = useState([]);
   const [checked, setChecked] = useState([]);
-  const history = useHistory();
   useEffect(() => {
     setContent(state.content);
   }, [state]);
 
   useEffect(() => {
     dispatch(getSessionData());
-  }, []);
+  }, [dispatch]);
 
   const [currentCheckState, setCurrentCheckState] = useState(false);
 
@@ -83,7 +81,6 @@ export default function CfgSession(props) {
 
   const toggleAll = () => {
     if (!currentCheckState) {
-      console.log('here');
       let arr = [];
       content.forEach((element) => {
         arr.push(element.id);

@@ -1,4 +1,4 @@
-import {LOGIN, ERROR} from './action.types';
+import {LOGIN} from './action.types';
 import Auth from '../services/auth';
 import jsCookie from 'js-cookie';
 import {Show_Message} from '../../shared/constants/ActionTypes';
@@ -12,7 +12,7 @@ export const loginAction = (params) => {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
         dispatch({
-          type: 'LOGIN',
+          type: LOGIN,
           payload: {...data_resp, error: null},
         });
       }
@@ -20,7 +20,7 @@ export const loginAction = (params) => {
       console.log('the error response', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
-          type: 'LOGIN',
+          type: LOGIN,
           payload: {error: 'Email or password is incorrect'},
         });
       }
