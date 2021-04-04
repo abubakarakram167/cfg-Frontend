@@ -35,12 +35,7 @@ const RouteComponent = (props) => {
             <Auth />
           </Route>
 
-          {/* <Route path='/editor'>
-            <Auth />
-
-          {/* <Route path='/editor'>
-            <Editor />
-          </Route> */}
+          
         </Switch>
       </Router>
     </div>

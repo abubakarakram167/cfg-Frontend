@@ -22,8 +22,7 @@ import CfgElement from 'pages/cfg-element';
 import ContentDisplay from 'pages/content-display';
 import EditContent from 'pages/edit-content';
 import ProtectedRoute from './protectedRouter';
-// const Admin = () => {
-//   return [
+
 export default [
   <ProtectedRoute exact path='/admin' component={AdminHome} />,
   <ProtectedRoute
@@ -99,9 +98,4 @@ export default [
     component={withRouter(Rewards)}
   />,
 ];
-// };
-        exact
-        path='/admin/rewards'
-        component={withRouter(Rewards)}
 
-// export default Admin;
