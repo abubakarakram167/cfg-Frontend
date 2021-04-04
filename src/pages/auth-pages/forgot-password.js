@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import TextField from '@material-ui/core/TextField';
-import {useSelector} from 'react-redux';
+// import { useSelector } from 'react-redux';
 import {useDispatch} from 'react-redux';
 import {forgotPasswordAction} from '../../redux/actions/authActions';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -12,9 +12,9 @@ function ForgotPassword({setView}) {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
 
-  const state = useSelector((state) => {
-    return state;
-  });
+  // const state = useSelector((state) => {
+  //   return state;
+  // });
 
   const handleClose1 = () => {
     setOpen1(false);

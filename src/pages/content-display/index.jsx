@@ -7,16 +7,13 @@ import './style.css';
 import {Link} from 'react-router-dom';
 
 export default function ContentDisplay() {
-  const [contentId, setContentId] = useState(null);
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
   const [data, setData] = useState(null);
   useEffect(() => {
-    setContentId(params.id);
     dispatch(getContentData(params.id));
-    console.log(params.id);
-  }, [params.id]);
+  }, [params.id, dispatch]);
   useEffect(() => {
     if (state.currentContent) {
       setData(state.currentContent);
@@ -50,12 +47,12 @@ export default function ContentDisplay() {
       <div className='content-display-buttons-container'>
         <div className='content-display-buttons'>
           {data && data.previous_page && (
-            <Link to={data.previous_page}>
+            <Link to={`/admin/content/display/${data.previous_page}`}>
               <button className='next-prev-button'>Previous</button>
             </Link>
           )}
           {data && data.next_page && (
-            <Link to={data.next_page}>
+            <Link to={`/admin/content/display/${data.next_page}`}>
               <button className='next-prev-button'>Next</button>
             </Link>
           )}
