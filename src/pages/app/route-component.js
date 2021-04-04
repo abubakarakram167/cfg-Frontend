@@ -23,31 +23,16 @@ const RouteComponent = (props) => {
     <div>
       <Router>
         <Switch>
-          <Admin />
-          <Route path='/createPassword' exact>
+          <Route exact path='/createPassword'>
             <CreatePassword />
           </Route>
 
-          {/* <Route path='/admin'>
-            {() => {
-              if (loggedIn) {
-                return <Admin />;
-              } else {
-                return <Redirect to='/' />;
-              }
-            }}
-          </Route> */}
-          <Route path='/' exact>
-            {() => {
-              if (loggedIn) {
-                return <Redirect to='/admin' />;
-              } else {
-                return <Auth />;
-              }
-            }}
-          </Route>
-          <Route path='/reset'>
+          <Route exact path='/reset'>
             <ResetPassword />
+          </Route>
+          {Admin}
+          <Route path='/'>
+            <Auth />
           </Route>
 
           {/* <Route path='/editor'>
