@@ -100,5 +100,11 @@ export default [
   />,
 ];
 // };
+        exact
+        path='/admin/rewards'
+        component={withRouter(Rewards)}
+      />
+
+      {/* <Route path='/admin' exact>
 
 // export default Admin;

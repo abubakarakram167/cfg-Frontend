@@ -14,6 +14,7 @@ import Logo from 'assets/Logo.png';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import jsCookie from 'js-cookie';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -35,6 +36,8 @@ export default function AdminHeader() {
   const handleLogout2 = () => {
     setAnchorE2(null);
     localStorage.removeItem('auth-token');
+    jsCookie.remove('login');
+    jsCookie.remove('access');
     window.location.href = '/';
   };
 
