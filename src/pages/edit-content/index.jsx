@@ -11,7 +11,6 @@ import PublishIcon from '@material-ui/icons/Publish';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import {useParams} from 'react-router-dom';
 import formatDate from 'utils/formatDate';
-import {createSessionTitle} from 'redux/actions/sessionActions';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -34,7 +33,6 @@ export default function Editor() {
   const [status, setStatus] = useState('draft');
   const [total_points, settotal_points] = useState(0);
   const [imageData, setImageData] = useState([]);
-  const [createdContentId, setCreatedContentId] = useState(0);
   const [previous_page, setprevious_page] = useState('');
   const [next_page, setnext_page] = useState('');
   const [contentType, setContentType] = useState('');
@@ -54,61 +52,37 @@ export default function Editor() {
 
   useEffect(() => {
     dispatch(getContentData(params.id));
-  }, [params.id]);
+  }, [params.id, dispatch]);
 
   useEffect(() => {
-    if (state.titleCreation) {
+    if (state.editedContent) {
       setOpen1(true);
     }
-    // if (state.createdContent) {
-    //     setCreatedContentId(state.createdContent.id)
-    // }
 
     if (state.currentContent) {
-      console.log(state.currentContent);
-      setTitle(state.currentContent.title);
-      setsub_title(state.currentContent.sub_title);
-      setContent(state.currentContent.detail);
+      setTitle(state.currentContent.title || '');
+      setsub_title(state.currentContent.sub_title || '');
+      setContent(state.currentContent.detail || '');
       setstart_date(new Date(state.currentContent.start_date));
       setend_date(new Date(state.currentContent.end_date));
-      setStatus(state.currentContent.status);
-      settotal_points(state.currentContent.total_points);
+      setStatus(state.currentContent.status || 'draft');
+      settotal_points(state.currentContent.total_points || 0);
       setKeywords(
-        JSON.parse(state.currentContent.tags).map((element) => element.text),
+        JSON.parse(state.currentContent.tags).map((element) => element.text) ||
+          [],
       );
-      setnext_page(state.currentContent.next_page);
-      setprevious_page(state.currentContent.previous_page);
-      setContentType(state.currentContent.type);
+      setnext_page(state.currentContent.next_page || '');
+      setprevious_page(state.currentContent.previous_page || '');
+      setContentType(state.currentContent.type || '');
     }
-    console.log(state.currentContent);
   }, [state]);
 
   const publish = () => {
-    let parent = null;
-    if (params.contentHeaderId === 'null') {
-      parent = params.id;
-    } else {
-      parent = params.contentHeaderId;
-    }
-
     const tags = keywords.map((element) => {
       return {
         tag_type: 'keyword',
         text: element,
       };
-    });
-    console.log({
-      id: params.id,
-      title,
-      sub_title,
-      detail: content,
-      start_date: formatDate(start_date),
-      end_date: formatDate(end_date),
-      tags,
-      type: contentType,
-      total_points,
-      next_page,
-      previous_page,
     });
 
     dispatch(
@@ -135,9 +109,6 @@ export default function Editor() {
     setOpen1(false);
   };
 
-  useEffect(() => {
-    console.log(content);
-  }, [content]);
   return (
     <div className='editor-page-full-container'>
       <div className='toolbar-container'>
@@ -338,24 +309,24 @@ export default function Editor() {
             <br />
             <div>
               <TextField
-                type='text'
+                type='number'
                 variant='filled'
                 value={previous_page}
                 onChange={(e) => setprevious_page(e.target.value)}
                 fullWidth
-                label='previous page'
+                label='previous page id'
                 required
               />
             </div>
             <br />
             <div>
               <TextField
-                type='text'
+                type='number'
                 variant='filled'
                 value={next_page}
                 onChange={(e) => setnext_page(e.target.value)}
                 fullWidth
-                label='next page'
+                label='next page id'
                 required
               />
             </div>
@@ -368,7 +339,7 @@ export default function Editor() {
                 {imageData.map((element, index) => {
                   return (
                     <div key={index} className='image-preview'>
-                      <img src={element} alt='image data' />
+                      <img src={element} alt='data-text' />
                     </div>
                   );
                 })}

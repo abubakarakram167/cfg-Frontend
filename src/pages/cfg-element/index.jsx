@@ -4,24 +4,14 @@ import {Link} from 'react-router-dom';
 import './style.css';
 import AdminHeader from 'pages/admin-header';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  getSessionListData,
-  createSessionTitle,
-} from 'redux/actions/sessionActions';
+import {getSessionListData} from 'redux/actions/sessionActions';
 import {
   Container,
   Chip,
   Typography,
-  Dialog,
-  List,
-  ListItem,
-  TextField,
-  Button,
-  DialogTitle,
   Accordion,
   AccordionSummary,
   Checkbox,
-  FormControlLabel,
   AccordionDetails,
 } from '@material-ui/core';
 import {ControlPoint, ExpandMore} from '@material-ui/icons';
@@ -33,8 +23,8 @@ export default function CfgElement() {
   const state = useSelector((state) => state.session.contentData);
   const [data, setData] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [totalPoints, setTotalPoints] = useState(0);
+  // const [title, setTitle] = useState('');
+  // const [totalPoints, setTotalPoints] = useState(0);
   const [selectedTitle, setSelectedTitle] = useState(null);
 
   useEffect(() => {
@@ -42,7 +32,6 @@ export default function CfgElement() {
   }, []);
 
   useEffect(() => {
-    console.log(state);
     setData(state);
   }, [state]);
 
@@ -50,17 +39,17 @@ export default function CfgElement() {
     setDialogOpen(!dialogOpen);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    dispatch(
-      createSessionTitle({
-        content_header_id: parseInt(params.id),
-        title,
-        total_points: totalPoints,
-      }),
-    );
-  };
+  //   dispatch(
+  //     createSessionTitle({
+  //       content_header_id: parseInt(params.id),
+  //       title,
+  //       total_points: totalPoints,
+  //     }),
+  //   );
+  // };
 
   return (
     <div className='cfg-element-page'>
@@ -104,9 +93,6 @@ export default function CfgElement() {
               return (
                 <Accordion key={index}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    {/* <FormControlLabel control={<Checkbox />} label={
-
-                                } /> */}
                     <div className='custom-row-design-cfg-details'>
                       <div className='custom-row-design-header'>
                         <Checkbox
@@ -120,9 +106,7 @@ export default function CfgElement() {
                           }}
                         />
                       </div>
-                      <div
-                        className='custom-row-design-header summary-margin-left'
-                        onClick={() => console.log('take me to something new')}>
+                      <div className='custom-row-design-header summary-margin-left'>
                         <Link to={`/admin/content/edit/${element.id}`}>
                           {element.title}
                         </Link>
