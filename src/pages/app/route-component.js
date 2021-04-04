@@ -6,7 +6,7 @@ import Auth from 'pages/auth-pages';
 import ResetPassword from 'pages/auth-pages/reset-password/index';
 import CreatePassword from 'pages/auth-pages/create-password/index';
 import ProtectedRoute from './protectedRouter';
-import Editor from 'pages/editor';
+import AdminHeader from 'pages/auth-pages/auth-header';
 
 const RouteComponent = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -23,34 +23,21 @@ const RouteComponent = (props) => {
     <div>
       <Router>
         <Switch>
-          <ProtectedRoute exact path='/admin' component={withRouter(Admin)} />
-          {/* <Route path='/admin'>
-            {() => {
-              if (loggedIn) {
-                return <Admin />;
-              } else {
-                return <Redirect to='/' />;
-              }
-            }}
-          </Route> */}
-          <Route path='/' exact>
-            {() => {
-              if (loggedIn) {
-                return <Redirect to='/admin' />;
-              } else {
-                return <Auth />;
-              }
-            }}
-          </Route>
-          <Route path='/reset'>
-            <ResetPassword />
-          </Route>
-          <Route path='/createPassword'>
+          <Route exact path='/createPassword'>
             <CreatePassword />
           </Route>
-          <Route path='/editor'>
-            <Editor />
+
+          <Route exact path='/reset'>
+            <ResetPassword />
           </Route>
+          {Admin}
+          <Route path='/'>
+            <Auth />
+          </Route>
+
+          {/* <Route path='/editor'>
+            <Editor />
+          </Route> */}
         </Switch>
       </Router>
     </div>
