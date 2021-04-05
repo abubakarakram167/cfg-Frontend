@@ -11,6 +11,9 @@ export const UPDATING_CONTENT = 'updating_content';
 export const TOGGLE_NAV_COLLAPSED = 'toggle_nav_collapsed';
 export const SET_INITIAL_PATH = 'set_initial_path';
 
+//Media
+export const Get_Media = 'Get_Media';
+
 //Preferences
 export const Get_Preferences = 'getPreferences';
 
