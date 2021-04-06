@@ -16,6 +16,7 @@ import ChatApp from './ChatApp';
 import Wall from './Wall';
 import Preference from './Preference';
 import Session from './Session';
+import mediaReducer from './media';
 
 const reducers = (history) =>
   combineReducers({
@@ -36,5 +37,6 @@ const reducers = (history) =>
     chatApp: ChatApp,
     wall: Wall,
     preference: Preference,
+    mediaList: mediaReducer,
   });
 export default reducers;

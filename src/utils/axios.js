@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jsCookie from 'js-cookie';
 import history from './history';
-
+import baseURL from './url';
 // Set config defaults when creating the instance
 console.log('baseURL:', 'https://app.mycfg.org');
 
