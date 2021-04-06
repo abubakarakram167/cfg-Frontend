@@ -43,6 +43,17 @@
   height: 90vh;
   width: 100%;
 }
+
+.align-left {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding-left: 30px;
+  overflow-y: scroll;
+  height: 90vh;
+  width: 100%;
+}
+
 .gallery-image {
   width: 150px;
   height: 150px;
@@ -61,6 +72,23 @@
 .custom-container {
   width: 80%;
   margin-bottom: 80;
+}
+.custom-icon {
+  text-align: center;
+  justify-content: center;
+  width: 27px;
+  border-radius: 5px;
+  height: 27px;
+  background-color: gray;
+}
+
+.media-container {
+  flex: 50%;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #464343;
 }
 
 /* #f0f2f5 */

@@ -1,13 +1,13 @@
 import axios from 'axios';
 import jsCookie from 'js-cookie';
 import history from './history';
-
+import baseURL from './url';
 // Set config defaults when creating the instance
-console.log('baseURL:', 'http://localhost:3690');
+console.log('baseURL:', baseURL);
 
 let user = JSON.parse(localStorage.getItem('user'));
 let options = {
-  baseURL: 'http://localhost:3690',
+  baseURL,
   withCredentials: true,
 };
 if (user && user.token && user.token.token) {
