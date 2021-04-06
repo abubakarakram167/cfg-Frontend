@@ -98,3 +98,7 @@ export default [
     component={withRouter(Rewards)}
   />,
 ];
+<<<<<<< HEAD
+
+=======
+>>>>>>> JG # static web page changes -move deploy folder

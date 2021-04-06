@@ -9,6 +9,7 @@ const INIT_STATE = {
   titleCreation: false,
   currentContent: null,
   createdContent: null,
+  editedContent: false,
 };
 let payload = null;
 const sessionReducer = (state = INIT_STATE, action) => {
@@ -19,11 +20,13 @@ const sessionReducer = (state = INIT_STATE, action) => {
         return {
           ...state,
           error: true,
+          currentContent: null,
         };
       }
       return {
         ...state,
         content: [...state.content, payload.content],
+        currentContent: null,
       };
     case actions.GET_SESSION_DATA:
       payload = action.payload;
@@ -37,6 +40,7 @@ const sessionReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         content: [...payload.data],
+        currentContent: null,
       };
     case actions.GET_LIST_DATA:
       payload = action.payload;
@@ -44,6 +48,7 @@ const sessionReducer = (state = INIT_STATE, action) => {
         return {
           ...state,
           error: true,
+          currentContent: null,
         };
       }
       return {
@@ -51,6 +56,7 @@ const sessionReducer = (state = INIT_STATE, action) => {
         contentData: payload,
         current: payload.data.rows[0],
         titles: payload.data.titles,
+        currentContent: null,
       };
     case actions.CREATE_TITLE:
       payload = action.payload;
@@ -59,6 +65,7 @@ const sessionReducer = (state = INIT_STATE, action) => {
           ...state,
           error: true,
           titleCreation: false,
+          currentContent: null,
         };
       }
       return {
@@ -66,6 +73,7 @@ const sessionReducer = (state = INIT_STATE, action) => {
         error: null,
         titleCreation: true,
         createdContent: payload.content,
+        currentContent: null,
       };
     case actions.UPDATE_CONTENT_DATA:
       payload = action.payload;
@@ -73,15 +81,15 @@ const sessionReducer = (state = INIT_STATE, action) => {
         return {
           ...state,
           error: true,
-          titleCreation: false,
+          editedContent: false,
+          currentContent: null,
         };
       }
-      console.log(payload);
+
       return {
         ...state,
         error: null,
-        titleCreation: true,
-        createdContent: payload.content,
+        editedContent: true,
         currentContent: payload.content,
       };
     case actions.GET_CONTENT_DATA:
@@ -90,6 +98,7 @@ const sessionReducer = (state = INIT_STATE, action) => {
         return {
           ...state,
           error: true,
+          currentContent: null,
         };
       }
       return {
