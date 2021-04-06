@@ -206,6 +206,7 @@ export default function UserManagement() {
         id: userId,
       };
       editUser.status = getUserStatus(parseInt(status));
+      setUserIds([]);
       const getResult = await dispatch(editUserInList(editUser));
       editUser.status = getUserStatus(parseInt(status));
       const changedUserData = userData.map((user) => {
