@@ -3,11 +3,11 @@ import jsCookie from 'js-cookie';
 import history from './history';
 import baseURL from './url';
 // Set config defaults when creating the instance
-console.log('baseURL:', 'https://app.mycfg.org');
+console.log('baseURL:', baseURL);
 
 let user = JSON.parse(localStorage.getItem('user'));
 let options = {
-  baseURL: 'https://app.mycfg.org',
+  baseURL,
   withCredentials: true,
 };
 if (user && user.token && user.token.token) {
