@@ -13,6 +13,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import DeleteIcon from '@material-ui/icons/Delete';
 import './style.css';
+import moment from 'moment';
 
 const StyledTextField = withStyles((theme) => ({
   root: {
@@ -81,8 +82,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MediaContentScreen = () => {
+const MediaContentScreen = (props) => {
   const classes = useStyles();
+  const {selectMedia} = props;
+  console.log('the select media', props.selectMedia);
+
   return (
     <div className={classes.sidebar}>
       <div
@@ -93,7 +97,16 @@ const MediaContentScreen = () => {
           margin: '10px 0',
         }}>
         <p className={classes.labels}>URL</p>
-        <StyledTextField />
+        <StyledTextField
+          disabled
+          onChange={(e) => {
+            if (selectMedia) {
+              const newMedia = {...selectMedia, url: e.target.value};
+              props.onChangeMedia(newMedia);
+            }
+          }}
+          value={selectMedia && selectMedia.url}
+        />
       </div>
       <div
         style={{
@@ -103,7 +116,15 @@ const MediaContentScreen = () => {
           margin: '10px 0',
         }}>
         <p className={classes.labels}>Filename</p>
-        <StyledTextField />
+        <StyledTextField
+          onChange={(e) => {
+            if (selectMedia) {
+              const newMedia = {...selectMedia, fileName: e.target.value};
+              props.onChangeMedia(newMedia);
+            }
+          }}
+          value={selectMedia && selectMedia.fileName}
+        />
       </div>
       <div
         style={{
@@ -113,7 +134,19 @@ const MediaContentScreen = () => {
           margin: '10px 0',
         }}>
         <p className={classes.labels}>Description</p>
-        <StyledTextField />
+        <StyledTextField
+          onChange={(e) => {
+            if (selectMedia) {
+              const newMedia = {...selectMedia, description: e.target.value};
+              props.onChangeMedia(newMedia);
+            }
+          }}
+          value={
+            selectMedia && selectMedia.description
+              ? selectMedia.description
+              : ''
+          }
+        />
       </div>
       <div className={classes.siderBarElement}>
         <p className={classes.labels}>Uploaded By</p>
@@ -121,7 +154,9 @@ const MediaContentScreen = () => {
       </div>
       <div className={classes.siderBarElement}>
         <p className={classes.labels}>Uploaded On</p>
-        <span className={classes.customLabel}>admin</span>
+        <span className={classes.customLabel}>
+          {moment(selectMedia && selectMedia.uploadedOn).format('YYYY-MM-DD')}{' '}
+        </span>
       </div>
       <div className={classes.siderBarElement}>
         <p className={classes.labels}>Location</p>
@@ -132,19 +167,19 @@ const MediaContentScreen = () => {
           icon={<SaveIcon style={{fill: 'white'}} />}
           label={'Save'}
           className='chip-style'
-          onClick={() => {}}
+          onClick={() => props.onSave()}
         />
         <StyledChip
           icon={<CancelIcon style={{fill: 'white'}} />}
           label={'Cancel'}
           className='gray-chip'
-          onClick={() => {}}
+          onClick={() => props.onChangeMedia(null)}
         />
         <StyledChip
           icon={<DeleteIcon style={{fill: 'white'}} />}
           label={'Delete'}
           className='gray-chip'
-          onClick={() => {}}
+          onClick={() => props.onDelete()}
         />
       </div>
     </div>
