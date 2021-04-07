@@ -213,15 +213,18 @@ export default function MediaLibrary() {
           onSave={handleSave}
           acceptedFiles={['image/jpeg', 'image/png', 'video/mkv', 'video/mp4']}
           showPreviews={true}
-          maxFileSize={5000000}
+          maxFileSize={15000000}
+          filesLimit={4}
+          showFileNames={true}
           onClose={handleClose}
         />
         <div style={{paddingBottom: 50}} className='container'>
           <div className={'gallery'}>
             {filesPreview.map((element, index) => {
+              console.log('the element', element.url.split('.').pop());
               if (
                 ['jpeg', 'png', 'jpg', 'JPG', 'PNG'].includes(
-                  element.url.split('.')[2],
+                  element.url.split('.').pop(),
                 )
               ) {
                 return (
@@ -258,7 +261,7 @@ export default function MediaLibrary() {
                   </div>
                 );
               } else if (
-                ['video', 'mp4', 'mkv'].includes(element.url.split('.')[2])
+                ['video', 'mp4', 'mkv'].includes(element.url.split('.').pop())
               ) {
                 return (
                   <div
