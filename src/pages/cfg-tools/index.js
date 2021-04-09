@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -13,8 +13,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
-
 import EditIcon from '@material-ui/icons/Edit';
+import {Link} from 'react-router-dom';
+import CustomTablePagination from '../user-management/pagination';
 import {
   Dialog,
   List,
@@ -22,9 +23,14 @@ import {
   DialogTitle,
   TextField,
   Button,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import {KeyboardDatePicker} from '@material-ui/pickers';
+import formatDate from 'utils/formatDate';
 
+import {useDispatch, useSelector} from 'react-redux';
+import {createTool, getToolData, editContent} from 'redux/actions/toolActions';
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: 'none',
@@ -49,98 +55,87 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CfgTools() {
-  const [cfgToolData, setCfgToolData] = useState([
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
-      status: 'Approved',
-    },
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
-      status: 'Approved',
-    },
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
-      status: 'Approved',
-    },
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
-      status: 'Approved',
-    },
-  ]);
+export default function CfgTool(props) {
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state.tool);
+  const [content, setContent] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  console.log('the content', content);
+  useEffect(() => {
+    setContent(state.content);
+  }, [state]);
+
+  useEffect(() => {
+    dispatch(getToolData());
+  }, [dispatch]);
+
   const [currentCheckState, setCurrentCheckState] = useState(false);
 
   const classes = useStyles();
 
   const toggleCheckbox = (id) => {
-    setCfgToolData(
-      cfgToolData.filter((data, index) => {
-        if (id === index) {
-          data.checked = !data.checked;
-          return data;
-        }
-
-        return data;
-      }),
-    );
+    if (checked.includes(id)) {
+      setChecked(checked.filter((element) => element !== id));
+    } else {
+      setChecked([...checked, id]);
+    }
   };
 
   const toggleAll = () => {
-    setCfgToolData(
-      cfgToolData.filter((data, index) => {
-        data.checked = !currentCheckState;
-        setCurrentCheckState(!currentCheckState);
-        return data;
-      }),
-    );
+    if (!currentCheckState) {
+      let arr = [];
+      content.forEach((element) => {
+        arr.push(element.id);
+      });
+      setChecked(arr);
+      setCurrentCheckState(true);
+    } else {
+      setCurrentCheckState(false);
+      setChecked([]);
+    }
   };
 
-  const [name, setName] = useState('');
+  const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [totalPoints, setTotalPoints] = useState('');
-  const [status, setStatus] = useState('');
-
+  const [start_date, setstart_date] = useState(new Date());
+  const [end_date, setend_date] = useState(new Date());
+  const [total_points, settotal_points] = useState('');
+  const [status, setStatus] = useState('draft');
+  const [edit, setEdit] = useState(false);
+  const [currentIds, setCurrentIds] = useState([]);
+  const [singleId, setSingleId] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-    setCfgToolData([
-      ...cfgToolData,
-      {
-        name,
-        author,
-        startDate,
-        endDate,
-        totalPoints,
-        status,
-      },
-    ]);
-    setName('');
+
+    if (edit) {
+      dispatch(
+        editContent({
+          title,
+          type: 'tool',
+          id: singleId,
+        }),
+      );
+    } else {
+      dispatch(
+        createTool({
+          title,
+          author,
+          start_date: formatDate(start_date),
+          end_date: formatDate(end_date),
+          total_points,
+          status,
+        }),
+      );
+    }
+
+    setTitle('');
     setAuthor('');
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setTotalPoints('');
+    setstart_date(new Date());
+    setend_date(new Date());
+    settotal_points('');
     setStatus('');
     setDialogOpen(false);
   };
@@ -149,7 +144,7 @@ export default function CfgTools() {
     <div>
       <Dialog open={dialogOpen}>
         <DialogTitle>
-          <div style={{minWidth: '400px'}}>Add New CFG Tool Data</div>
+          <div style={{minWidth: '400px'}}>Add New CFG Tool</div>
         </DialogTitle>
         <form onSubmit={handleSubmit}>
           <List>
@@ -158,7 +153,9 @@ export default function CfgTools() {
                 label='Name'
                 variant='filled'
                 fullWidth
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                value={title}
               />
             </ListItem>
             <ListItem>
@@ -167,6 +164,8 @@ export default function CfgTools() {
                 variant='filled'
                 fullWidth
                 onChange={(e) => setAuthor(e.target.value)}
+                required
+                disabled={!edit}
               />
             </ListItem>
             <ListItem>
@@ -177,11 +176,13 @@ export default function CfgTools() {
                 margin='normal'
                 fullWidth={true}
                 label='Start Date'
-                value={startDate}
-                onChange={(e) => setStartDate(e)}
+                value={start_date}
+                onChange={(e) => setstart_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
+                disabled={!edit}
               />
             </ListItem>
             <ListItem>
@@ -192,11 +193,13 @@ export default function CfgTools() {
                 margin='normal'
                 fullWidth={true}
                 label='End Date'
-                value={endDate}
-                onChange={(e) => setEndDate(e)}
+                disabled={!edit}
+                value={end_date}
+                onChange={(e) => setend_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </ListItem>
             <ListItem>
@@ -204,16 +207,30 @@ export default function CfgTools() {
                 label='Total Points'
                 variant='filled'
                 fullWidth
-                onChange={(e) => setTotalPoints(e.target.value)}
+                disabled={!edit}
+                onChange={(e) => settotal_points(e.target.value)}
+                required
+                type='number'
               />
             </ListItem>
             <ListItem>
-              <TextField
-                label='Status'
+              <Select
+                labelId='demo-simple-select-filled-label'
+                id='demo-simple-select-filled'
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
                 fullWidth
-                onChange={(e) => setStatus(e.target.value)}
-              />
+                disabled={!edit}
+                label='status'
+                required>
+                <MenuItem value={''}>
+                  <em>Status</em>
+                </MenuItem>
+                <MenuItem value={'saved'}>Saved</MenuItem>
+                <MenuItem value={'draft'}>Draft</MenuItem>
+                <MenuItem value={'published'}>Published</MenuItem>
+              </Select>
             </ListItem>
             <ListItem>
               <div
@@ -240,7 +257,7 @@ export default function CfgTools() {
       <br />
       <Container>
         <div className='options'>
-          <Typography variant='h6'>CFG Tools</Typography>
+          <Typography variant='h6'>CFG Tool</Typography>
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
@@ -251,6 +268,10 @@ export default function CfgTools() {
             icon={<EditIcon style={{fill: 'white'}} />}
             label={'EDIT'}
             className='chip-style gray-chip'
+            onClick={() => {
+              setEdit(true);
+              setDialogOpen(true);
+            }}
           />
         </div>
         <br />
@@ -270,24 +291,52 @@ export default function CfgTools() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {cfgToolData.map((row, index) => (
+              {content.map((row, index) => (
                 <StyledTableRow key={index}>
                   <StyledTableCell>
                     <Checkbox
-                      checked={row.checked}
+                      checked={checked.includes(row.id)}
                       onChange={() => {
-                        toggleCheckbox(index);
+                        console.log('the row status', row);
+                        const {author} = row;
+                        let allIds = currentIds.length ? currentIds : [];
+                        if (!allIds.includes(row.id)) allIds.push(row.id);
+                        else {
+                          allIds = allIds.filter((userId) => userId !== row.id);
+                        }
+                        setSingleId(row.id);
+                        setCurrentIds(allIds);
+                        setTitle(row.title);
+                        setAuthor(author.user_name);
+                        setstart_date(new Date());
+                        setend_date(new Date());
+                        settotal_points(row.total_points);
+                        setStatus(row.status);
+                        toggleCheckbox(row.id);
                       }}
                     />
                   </StyledTableCell>
-                  <StyledTableCell>{row.name}</StyledTableCell>
-                  <StyledTableCell>{row.author}</StyledTableCell>
-                  <StyledTableCell>{row.startDate.toString()}</StyledTableCell>
-                  <StyledTableCell>{row.endDate.toString()}</StyledTableCell>
-                  <StyledTableCell>{row.totalPoints}</StyledTableCell>
+                  <StyledTableCell>
+                    {' '}
+                    <Link to={`/admin/cfg-tools/${row.id}`}>{row.title} </Link>
+                  </StyledTableCell>
+                  <StyledTableCell>{row.title}</StyledTableCell>
+                  <StyledTableCell>{row.start_date}</StyledTableCell>
+                  <StyledTableCell>{row.end_date}</StyledTableCell>
+                  <StyledTableCell>{row.total_points}</StyledTableCell>
                   <StyledTableCell>{row.status}</StyledTableCell>
                 </StyledTableRow>
               ))}
+              <StyledTableRow style={{width: 200}}>
+                <CustomTablePagination
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  userData={content}
+                  style={{width: 200}}
+                  setPage={(page) => setPage(page)}
+                  setRowsPerPage={(page) => setRowsPerPage(page)}
+                />
+              </StyledTableRow>
             </TableBody>
           </Table>
         </TableContainer>
