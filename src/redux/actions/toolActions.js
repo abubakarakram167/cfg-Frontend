@@ -15,6 +15,7 @@ export const createTool = (params) => {
     try {
       console.log('the params', params);
       const response = await Tool.createTool(params);
+      console.log('the response after creating', response);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');

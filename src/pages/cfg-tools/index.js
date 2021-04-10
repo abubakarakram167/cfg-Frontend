@@ -323,44 +323,52 @@ export default function CfgTool(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {content.map((row, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell>
-                    <Checkbox
-                      checked={checked.includes(row.id)}
-                      onChange={() => {
-                        console.log('the row status', row);
-                        const {author} = row;
-                        let allIds = currentIds.length ? currentIds : [];
-                        if (!allIds.includes(row.id)) allIds.push(row.id);
-                        else {
-                          allIds = allIds.filter((userId) => userId !== row.id);
-                        }
-                        setSingleId(row.id);
-                        setCurrentIds(allIds);
-                        setTitle(row.title);
-                        setAuthor(author.user_name);
-                        setstart_date(new Date());
-                        setend_date(new Date());
-                        settotal_points(row.total_points);
-                        setStatus(row.status);
-                        toggleCheckbox(row.id);
-                      }}
-                    />
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {' '}
-                    <Link to={`/admin/cfg-tools/${row.id}`}>{row.title} </Link>
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {row.author ? row.author.user_name : 'Name Not Present'}
-                  </StyledTableCell>
-                  <StyledTableCell>{row.start_date}</StyledTableCell>
-                  <StyledTableCell>{row.end_date}</StyledTableCell>
-                  <StyledTableCell>{row.total_points}</StyledTableCell>
-                  <StyledTableCell>{row.status}</StyledTableCell>
-                </StyledTableRow>
-              ))}
+              {content.length > 0 &&
+                rowsPerPage > 0 &&
+                content
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell>
+                        <Checkbox
+                          checked={checked.includes(row.id)}
+                          onChange={() => {
+                            console.log('the row status', row);
+                            const {author} = row;
+                            let allIds = currentIds.length ? currentIds : [];
+                            if (!allIds.includes(row.id)) allIds.push(row.id);
+                            else {
+                              allIds = allIds.filter(
+                                (userId) => userId !== row.id,
+                              );
+                            }
+                            console.log('after creating clicking row..', row);
+                            setSingleId(row.id);
+                            setCurrentIds(allIds);
+                            setTitle(row.title);
+                            setstart_date(new Date());
+                            setend_date(new Date());
+                            settotal_points(row.total_points);
+                            setStatus(row.status);
+                            toggleCheckbox(row.id);
+                          }}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {' '}
+                        <Link to={`/admin/cfg-tools/${row.id}`}>
+                          {row.title}{' '}
+                        </Link>
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {row.author ? row.author.user_name : 'Name Not Present'}
+                      </StyledTableCell>
+                      <StyledTableCell>{row.start_date}</StyledTableCell>
+                      <StyledTableCell>{row.end_date}</StyledTableCell>
+                      <StyledTableCell>{row.total_points}</StyledTableCell>
+                      <StyledTableCell>{row.status}</StyledTableCell>
+                    </StyledTableRow>
+                  ))}
               <StyledTableRow style={{width: 200}}>
                 <CustomTablePagination
                   rowsPerPage={rowsPerPage}
