@@ -31,6 +31,10 @@ import formatDate from 'utils/formatDate';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {createTool, getToolData, editContent} from 'redux/actions/toolActions';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import {Show_Message} from '../../shared/constants/ActionTypes';
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: 'none',
@@ -62,7 +66,21 @@ export default function CfgTool(props) {
   const [checked, setChecked] = useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  console.log('the content', content);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [start_date, setstart_date] = useState(new Date());
+  const [end_date, setend_date] = useState(new Date());
+  const [total_points, settotal_points] = useState('');
+  const [status, setStatus] = useState('draft');
+  const [edit, setEdit] = useState(false);
+  const [currentIds, setCurrentIds] = useState([]);
+  const [singleId, setSingleId] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const userList = useSelector((state) => state.userList);
+  const [currentCheckState, setCurrentCheckState] = useState(false);
+  const classes = useStyles();
+
   useEffect(() => {
     setContent(state.content);
   }, [state]);
@@ -70,10 +88,6 @@ export default function CfgTool(props) {
   useEffect(() => {
     dispatch(getToolData());
   }, [dispatch]);
-
-  const [currentCheckState, setCurrentCheckState] = useState(false);
-
-  const classes = useStyles();
 
   const toggleCheckbox = (id) => {
     if (checked.includes(id)) {
@@ -97,16 +111,6 @@ export default function CfgTool(props) {
     }
   };
 
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [start_date, setstart_date] = useState(new Date());
-  const [end_date, setend_date] = useState(new Date());
-  const [total_points, settotal_points] = useState('');
-  const [status, setStatus] = useState('draft');
-  const [edit, setEdit] = useState(false);
-  const [currentIds, setCurrentIds] = useState([]);
-  const [singleId, setSingleId] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -117,7 +121,20 @@ export default function CfgTool(props) {
           type: 'tool',
           id: singleId,
         }),
-      );
+      ).then((res) => {
+        if (res) {
+          const allContent = content.map((content) => {
+            if (content.id === singleId) {
+              return {
+                ...content,
+                title,
+              };
+            } else return content;
+          });
+          console.log('the allContent', allContent);
+          setContent(allContent);
+        }
+      });
     } else {
       dispatch(
         createTool({
@@ -138,6 +155,11 @@ export default function CfgTool(props) {
     settotal_points('');
     setStatus('');
     setDialogOpen(false);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+    dispatch({type: Show_Message, payload: {message: null, success: false}});
   };
 
   return (
@@ -165,7 +187,7 @@ export default function CfgTool(props) {
                 fullWidth
                 onChange={(e) => setAuthor(e.target.value)}
                 required
-                disabled={!edit}
+                disabled={edit}
               />
             </ListItem>
             <ListItem>
@@ -182,7 +204,7 @@ export default function CfgTool(props) {
                   'aria-label': 'change date',
                 }}
                 required
-                disabled={!edit}
+                disabled={edit}
               />
             </ListItem>
             <ListItem>
@@ -193,7 +215,7 @@ export default function CfgTool(props) {
                 margin='normal'
                 fullWidth={true}
                 label='End Date'
-                disabled={!edit}
+                disabled={edit}
                 value={end_date}
                 onChange={(e) => setend_date(e)}
                 KeyboardButtonProps={{
@@ -207,7 +229,7 @@ export default function CfgTool(props) {
                 label='Total Points'
                 variant='filled'
                 fullWidth
-                disabled={!edit}
+                disabled={edit}
                 onChange={(e) => settotal_points(e.target.value)}
                 required
                 type='number'
@@ -221,7 +243,7 @@ export default function CfgTool(props) {
                 onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
                 fullWidth
-                disabled={!edit}
+                disabled={edit}
                 label='status'
                 required>
                 <MenuItem value={''}>
@@ -256,6 +278,16 @@ export default function CfgTool(props) {
       <br />
       <br />
       <Container>
+        <Snackbar
+          open={userList.message}
+          autoHideDuration={6000}
+          onClose={handleClose1}>
+          <Alert
+            onClose={handleClose1}
+            severity={userList.success ? 'success' : 'error'}>
+            {userList.message}
+          </Alert>
+        </Snackbar>
         <div className='options'>
           <Typography variant='h6'>CFG Tool</Typography>
           <Chip
@@ -320,7 +352,9 @@ export default function CfgTool(props) {
                     {' '}
                     <Link to={`/admin/cfg-tools/${row.id}`}>{row.title} </Link>
                   </StyledTableCell>
-                  <StyledTableCell>{row.title}</StyledTableCell>
+                  <StyledTableCell>
+                    {row.author ? row.author.user_name : 'Name Not Present'}
+                  </StyledTableCell>
                   <StyledTableCell>{row.start_date}</StyledTableCell>
                   <StyledTableCell>{row.end_date}</StyledTableCell>
                   <StyledTableCell>{row.total_points}</StyledTableCell>

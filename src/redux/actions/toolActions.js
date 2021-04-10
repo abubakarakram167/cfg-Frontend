@@ -6,6 +6,7 @@ import {
   UPDATE_CONTENT_DATA,
   GET_LIST_DATA,
 } from './action.types';
+import {Show_Message} from '../../shared/constants/ActionTypes';
 import Tool from '../services/tool';
 import jsCookie from 'js-cookie';
 
@@ -20,6 +21,10 @@ export const createTool = (params) => {
         dispatch({
           type: CREATE_TOOL,
           payload: {...data_resp, error: null},
+        });
+        dispatch({
+          type: Show_Message,
+          payload: {message: 'Added SuccessFully', success: true},
         });
       }
     } catch (error) {
@@ -44,6 +49,10 @@ export const createToolTitle = (params, type) => {
           type: CREATE_TITLE,
           payload: {...data_resp, error: null},
         });
+        dispatch({
+          type: Show_Message,
+          payload: {message: 'Added SuccessFully', success: true},
+        });
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -60,28 +69,42 @@ export const createToolTitle = (params, type) => {
 };
 
 export const editContent = (params, type) => {
-  return async function (dispatch) {
-    try {
-      const response = await Tool.editTitle(params, type);
-      if (response.status === 200) {
-        const data_resp = await response.data;
-        jsCookie.set('login', 'yes');
-        dispatch({
-          type: UPDATE_CONTENT_DATA,
-          payload: {...data_resp, error: null},
+  return (dispatch) => {
+    return new Promise((res, rej) => {
+      Tool.editTitle(params, type)
+        .then((response) => {
+          if (response.status === 200) {
+            const data_resp = response.data;
+            jsCookie.set('login', 'yes');
+            dispatch({
+              type: UPDATE_CONTENT_DATA,
+              payload: {...data_resp, error: null},
+            });
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'Edit SuccessFully', success: true},
+            });
+            res(true);
+          } else {
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'SuccessFully Not Added', success: false},
+            });
+          }
+        })
+        .catch((error) => {
+          rej(false);
+          if (error.response && error.response.status === 401) {
+            dispatch(
+              {
+                type: UPDATE_CONTENT_DATA,
+                payload: {error: 'There was an error creating the title'},
+              },
+              params.type,
+            );
+          }
         });
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        dispatch(
-          {
-            type: UPDATE_CONTENT_DATA,
-            payload: {error: 'There was an error creating the title'},
-          },
-          params.type,
-        );
-      }
-    }
+    });
   };
 };
 
