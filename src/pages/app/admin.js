@@ -19,6 +19,7 @@ import MiniCfg from 'pages/mini-cfg';
 import Rewards from 'pages/rewards';
 import Editor from 'pages/editor/index';
 import CfgElement from 'pages/cfg-element';
+import CfgToolElement from 'pages/cfg-tool-element';
 import ContentDisplay from 'pages/content-display';
 import EditContent from 'pages/edit-content';
 import ProtectedRoute from './protectedRouter';
@@ -52,6 +53,21 @@ export default [
   />,
   <ProtectedRoute
     exact
+    path='/admin/cfg-tools'
+    component={withRouter(CfgTool)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/admin/cfg-tools/:id'
+    component={withRouter(CfgToolElement)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/admin/cfg-tools/:type/:id/:contentHeaderId'
+    component={withRouter(Editor)}
+  />,
+  <ProtectedRoute
+    exact
     path='/admin/cfg-session'
     component={withRouter(CfgSession)}
   />,
@@ -69,11 +85,6 @@ export default [
     exact
     path='/admin/timeline'
     component={withRouter(Timeline)}
-  />,
-  <ProtectedRoute
-    exact
-    path='/admin/cfg-tools'
-    component={withRouter(CfgTool)}
   />,
   <ProtectedRoute exact path='/admin/events' component={withRouter(Events)} />,
   <ProtectedRoute exact path='/admin/quiz' component={withRouter(Quiz)} />,

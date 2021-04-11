@@ -128,7 +128,7 @@ export default function CustomPaginationActionsTable(props) {
       style={{borderBottom: 0}}
       rowsPerPage={rowsPerPage}
       page={page}
-      style={{width: 400}}
+      style={{width: 200}}
       // SelectProps={{
       //   inputProps: { 'aria-label': 'rows per page' },
       //   native: true,
