@@ -15,6 +15,9 @@ import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
 import EditIcon from '@material-ui/icons/Edit';
 import {Link} from 'react-router-dom';
+import {editContent} from 'redux/actions/sessionActions';
+import CustomTablePagination from '../user-management/pagination';
+import FilterList from '@material-ui/icons/FilterList';
 import {
   Dialog,
   List,
@@ -27,9 +30,13 @@ import {
 } from '@material-ui/core';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import formatDate from 'utils/formatDate';
-
 import {useDispatch, useSelector} from 'react-redux';
 import {createSession, getSessionData} from 'redux/actions/sessionActions';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import {Show_Message} from '../../shared/constants/ActionTypes';
+import moment from 'moment';
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: 'none',
@@ -59,6 +66,8 @@ export default function CfgSession(props) {
   const state = useSelector((state) => state.session);
   const [content, setContent] = useState([]);
   const [checked, setChecked] = useState([]);
+  const [singleId, setSingleId] = useState(null);
+
   useEffect(() => {
     setContent(state.content);
   }, [state]);
@@ -68,7 +77,6 @@ export default function CfgSession(props) {
   }, [dispatch]);
 
   const [currentCheckState, setCurrentCheckState] = useState(false);
-
   const classes = useStyles();
 
   const toggleCheckbox = (id) => {
@@ -99,22 +107,62 @@ export default function CfgSession(props) {
   const [end_date, setend_date] = useState(new Date());
   const [total_points, settotal_points] = useState('');
   const [status, setStatus] = useState('draft');
-
+  const [edit, setEdit] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const userList = useSelector((state) => state.userList);
+  const [open1, setOpen1] = useState(false);
+  const [currentIds, setCurrentIds] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [nameFilter, setNameFilter] = useState('');
+  const [authorFilter, setAuthorFilter] = useState('');
+  const [startDateFilter, setStartdateFilter] = useState('');
+  const [endDateFilter, setEnddateFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [totalPointsFilter, settotalPointsFilter] = useState('');
+  const [createAtFilter, setCreateAtFilter] = useState('');
+
+  const handleClose1 = () => {
+    setOpen1(false);
+    dispatch({type: Show_Message, payload: {message: null, success: false}});
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(
-      createSession({
-        title,
-        author,
-        start_date: formatDate(start_date),
-        end_date: formatDate(end_date),
-        total_points,
-        status,
-      }),
-    );
-
+    if (edit) {
+      dispatch(
+        editContent({
+          title,
+          type: 'session',
+          id: singleId,
+        }),
+      ).then((res) => {
+        if (res) {
+          const allContent = content.map((content) => {
+            if (content.id === singleId) {
+              return {
+                ...content,
+                title,
+              };
+            } else return content;
+          });
+          console.log('the allContent', allContent);
+          setContent(allContent);
+        }
+      });
+    } else {
+      dispatch(
+        createSession({
+          title,
+          author,
+          start_date: formatDate(start_date),
+          end_date: formatDate(end_date),
+          total_points,
+          status,
+        }),
+      );
+    }
     setTitle('');
     setAuthor('');
     setstart_date(new Date());
@@ -123,6 +171,8 @@ export default function CfgSession(props) {
     setStatus('');
     setDialogOpen(false);
   };
+
+  console.log('the content', content);
 
   return (
     <div>
@@ -139,6 +189,7 @@ export default function CfgSession(props) {
                 fullWidth
                 onChange={(e) => setTitle(e.target.value)}
                 required
+                value={title}
               />
             </ListItem>
             <ListItem>
@@ -148,6 +199,7 @@ export default function CfgSession(props) {
                 fullWidth
                 onChange={(e) => setAuthor(e.target.value)}
                 required
+                disabled={edit}
               />
             </ListItem>
             <ListItem>
@@ -164,6 +216,7 @@ export default function CfgSession(props) {
                   'aria-label': 'change date',
                 }}
                 required
+                disabled={edit}
               />
             </ListItem>
             <ListItem>
@@ -180,6 +233,7 @@ export default function CfgSession(props) {
                   'aria-label': 'change date',
                 }}
                 required
+                disabled={edit}
               />
             </ListItem>
             <ListItem>
@@ -190,6 +244,7 @@ export default function CfgSession(props) {
                 onChange={(e) => settotal_points(e.target.value)}
                 required
                 type='number'
+                disabled={edit}
               />
             </ListItem>
             <ListItem>
@@ -200,6 +255,7 @@ export default function CfgSession(props) {
                 onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
                 fullWidth
+                disabled={edit}
                 label='status'
                 required>
                 <MenuItem value={''}>
@@ -234,6 +290,16 @@ export default function CfgSession(props) {
       <br />
       <br />
       <Container>
+        <Snackbar
+          open={userList.message}
+          autoHideDuration={6000}
+          onClose={handleClose1}>
+          <Alert
+            onClose={handleClose1}
+            severity={userList.success ? 'success' : 'error'}>
+            {userList.message}
+          </Alert>
+        </Snackbar>
         <div className='options'>
           <Typography variant='h6'>CFG Session</Typography>
           <Chip
@@ -246,6 +312,10 @@ export default function CfgSession(props) {
             icon={<EditIcon style={{fill: 'white'}} />}
             label={'EDIT'}
             className='chip-style gray-chip'
+            onClick={() => {
+              setEdit(true);
+              setDialogOpen(true);
+            }}
           />
         </div>
         <br />
@@ -256,38 +326,201 @@ export default function CfgSession(props) {
                 <StyledTableCell>
                   <Checkbox checked={currentCheckState} onChange={toggleAll} />
                 </StyledTableCell>
-                <StyledTableCell>Name</StyledTableCell>
-                <StyledTableCell>Author</StyledTableCell>
-                <StyledTableCell>Start Date</StyledTableCell>
-                <StyledTableCell>End Date</StyledTableCell>
-                <StyledTableCell>Total Points</StyledTableCell>
-                <StyledTableCell>Status</StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Name </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Name'
+                      placeholder=''
+                      value={nameFilter}
+                      onChange={(e) => setNameFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Author </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Author'
+                      placeholder=''
+                      value={authorFilter}
+                      onChange={(e) => setAuthorFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Start Date </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Start Date'
+                      placeholder=''
+                      value={startDateFilter}
+                      onChange={(e) => setStartdateFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> End Date </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='End Date'
+                      placeholder=''
+                      value={endDateFilter}
+                      onChange={(e) => setEnddateFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Created At </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='CreatedAt'
+                      placeholder=''
+                      value={createAtFilter}
+                      onChange={(e) => setCreateAtFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Total Points </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Total Points'
+                      placeholder=''
+                      value={totalPointsFilter}
+                      onChange={(e) => settotalPointsFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Status </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Status'
+                      placeholder=''
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {content.map((row, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell>
-                    <Checkbox
-                      checked={checked.includes(row.id)}
-                      onChange={() => {
-                        toggleCheckbox(row.id);
-                      }}
-                    />
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {' '}
-                    <Link to={`/admin/cfg-session/${row.id}`}>
-                      {row.title}{' '}
-                    </Link>
-                  </StyledTableCell>
-                  <StyledTableCell>{row.title}</StyledTableCell>
-                  <StyledTableCell>{row.start_date}</StyledTableCell>
-                  <StyledTableCell>{row.end_date}</StyledTableCell>
-                  <StyledTableCell>{row.total_points}</StyledTableCell>
-                  <StyledTableCell>{row.status}</StyledTableCell>
-                </StyledTableRow>
-              ))}
+              {content.length > 0 &&
+                rowsPerPage > 0 &&
+                content
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .filter((element) =>
+                    (element.title ? element.title : '')
+                      .toLowerCase()
+                      .startsWith(nameFilter),
+                  )
+                  .filter((element) =>
+                    (element.author ? element.author.user_name : '')
+                      .toLowerCase()
+                      .startsWith(authorFilter),
+                  )
+                  .filter((element) =>
+                    (element.start_date ? element.start_date : '')
+                      .toLowerCase()
+                      .startsWith(startDateFilter),
+                  )
+                  .filter((element) =>
+                    (element.end_date ? element.end_date : '')
+                      .toLowerCase()
+                      .startsWith(endDateFilter),
+                  )
+                  .filter((element) =>
+                    (element.status ? element.status : '')
+                      .toLowerCase()
+                      .startsWith(statusFilter),
+                  )
+                  .filter((element) =>
+                    (element.total_points
+                      ? element.total_points.toString()
+                      : ''
+                    )
+                      .toLowerCase()
+                      .startsWith(totalPointsFilter),
+                  )
+                  .filter((element) =>
+                    (element.created_at ? element.created_at.toString() : '')
+                      .toLowerCase()
+                      .startsWith(createAtFilter),
+                  )
+                  .map((row, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell>
+                        <Checkbox
+                          checked={checked.includes(row.id)}
+                          onChange={() => {
+                            let allIds = currentIds.length ? currentIds : [];
+                            if (!allIds.includes(row.id)) allIds.push(row.id);
+                            else {
+                              allIds = allIds.filter(
+                                (userId) => userId !== row.id,
+                              );
+                            }
+                            setSingleId(row.id);
+                            setCurrentIds(allIds);
+                            setTitle(row.title);
+                            setstart_date(new Date());
+                            setend_date(new Date());
+                            settotal_points(row.total_points);
+                            setStatus(row.status);
+                            toggleCheckbox(row.id);
+                          }}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {' '}
+                        <Link to={`/admin/cfg-session/${row.id}`}>
+                          {row.title}{' '}
+                        </Link>
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {row.author ? row.author.user_name : ''}
+                      </StyledTableCell>
+                      <StyledTableCell>{row.start_date}</StyledTableCell>
+                      <StyledTableCell>{row.end_date}</StyledTableCell>
+                      <StyledTableCell>
+                        {moment(row.created_at).format('YYYY-MM-DD')}
+                      </StyledTableCell>
+                      <StyledTableCell>{row.total_points}</StyledTableCell>
+                      <StyledTableCell>{row.status}</StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+              <StyledTableRow style={{width: 200}}>
+                <CustomTablePagination
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  userData={content}
+                  style={{width: 200}}
+                  setPage={(page) => setPage(page)}
+                  setRowsPerPage={(page) => setRowsPerPage(page)}
+                />
+              </StyledTableRow>
             </TableBody>
           </Table>
         </TableContainer>

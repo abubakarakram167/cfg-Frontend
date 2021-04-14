@@ -16,6 +16,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Link} from 'react-router-dom';
+
 export default function Editor() {
   const params = useParams();
   const dispatch = useDispatch();
@@ -290,7 +291,7 @@ export default function Editor() {
                 value={total_points}
                 onChange={(e) => settotal_points(e.target.value)}
                 fullWidth
-                label='total_points'
+                label='Total Points'
                 required
               />
             </div>

@@ -25,13 +25,11 @@ export default function ContentDisplay() {
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
-
       <br />
-
       <div className='titles-container-display-page'>
         <div className='title-display-container'>
           <h1>{data && data.title}</h1>
-          <h6>{data && data.sub_title}</h6>
+          {/* <h6>{data && data.sub_title}</h6> */}
         </div>
       </div>
 
