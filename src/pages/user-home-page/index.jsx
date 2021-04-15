@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import AppSideBar from './AppSidebar';
 import CreatePost from './create-post-box';
 import './style.css';
-import UserHomeHeader from './admin-header';
 import PostDetails from './post-details';
+import CommonComponent from './common-component';
 
 export default function UserHomePage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -73,62 +73,51 @@ export default function UserHomePage() {
     setDrawerOpen(!drawerOpen);
   };
   return (
-    <div>
-      {/* <button onClick={toggleDrawerOpen}>Toggle</button>
-            hello world
-            <AppSideBar drawerOpen={drawerOpen} /> */}
-      <UserHomeHeader />
+    <CommonComponent>
+      <CreatePost />
+      {fakeData.map((element, index) => {
+        const addComment = (comment, postId) => {
+          setFakeData(
+            fakeData.map((data) => {
+              if (postId === data.id) {
+                data.comments.push(
+                  createComment(data.comments.length + 1, comment),
+                );
+              }
+              return data;
+            }),
+          );
+        };
 
-      <div className='user-home-page-content'>
-        <div className='user-home-left'>Left</div>
-        <div className='user-home-center'>
-          <CreatePost />
-          {fakeData.map((element, index) => {
-            const addComment = (comment, postId) => {
-              setFakeData(
-                fakeData.map((data) => {
-                  if (postId === data.id) {
-                    data.comments.push(
-                      createComment(data.comments.length + 1, comment),
-                    );
+        const addReplyAction = (postId, commentId, replyText) => {
+          console.log('add reply executed');
+          console.log(postId);
+          console.log(commentId);
+          setFakeData(
+            fakeData.map((data) => {
+              if (postId === data.id) {
+                data.comments.map((comment) => {
+                  if (comment.id === commentId) {
+                    comment.commentReplies.push(replyText);
                   }
-                  return data;
-                }),
-              );
-            };
+                  return comment;
+                });
+              }
+              console.log(data);
+              return data;
+            }),
+          );
+        };
 
-            const addReplyAction = (postId, commentId, replyText) => {
-              console.log('add reply executed');
-              console.log(postId);
-              console.log(commentId);
-              setFakeData(
-                fakeData.map((data) => {
-                  if (postId === data.id) {
-                    data.comments.map((comment) => {
-                      if (comment.id === commentId) {
-                        comment.commentReplies.push(replyText);
-                      }
-                      return comment;
-                    });
-                  }
-                  console.log(data);
-                  return data;
-                }),
-              );
-            };
-
-            return (
-              <PostDetails
-                key={index}
-                post={element}
-                addCommentData={addComment}
-                addReplyAction={addReplyAction}
-              />
-            );
-          })}
-        </div>
-        <div className='user-home-right'>Right</div>
-      </div>
-    </div>
+        return (
+          <PostDetails
+            key={index}
+            post={element}
+            addCommentData={addComment}
+            addReplyAction={addReplyAction}
+          />
+        );
+      })}
+    </CommonComponent>
   );
 }
