@@ -53,6 +53,18 @@
   border: 2px solid gainsboro;
 }
 
+.center-user-page {
+  display: flex;
+}
+
+.user-page-icon-container {
+  fill: white;
+  color: white;
+  font-size: 60;
+  margin: 0px 40px;
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 955px) {
   .container-header {
     justify-content: center;

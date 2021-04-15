@@ -15,6 +15,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
+import {Group, CardGiftcard, Bookmark} from '@material-ui/icons';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -59,14 +60,7 @@ export default function AdminHeader() {
             <div className='left-user-info'>
               <Avatar alt='User Avatar' src={Logo} className='logo-style' />
               {/* <Link to='/admin'> */}
-              <Home
-                style={{
-                  fill: '#ffffff',
-                  marginRight: '10px',
-                  marginLeft: '10px',
-                  fontSize: 30,
-                }}
-              />
+
               {/* </Link> */}
             </div>
             <div className='search-bar'>
@@ -145,6 +139,20 @@ export default function AdminHeader() {
                   </div>
                 </MenuItem>
               </Menu>
+            </div>
+          </div>
+          <div className='center-user-page'>
+            <div className='user-page-icon-container'>
+              <Home style={{fontSize: 35}} />
+            </div>
+            <div className='user-page-icon-container'>
+              <Group style={{fontSize: 35}} />
+            </div>
+            <div className='user-page-icon-container'>
+              <Bookmark style={{fontSize: 35}} />
+            </div>
+            <div className='user-page-icon-container'>
+              <CardGiftcard style={{fontSize: 35}} />
             </div>
           </div>
           <div className='right'>

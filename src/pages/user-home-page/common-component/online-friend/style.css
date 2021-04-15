@@ -1,0 +1,9 @@
+.right-online-friend {
+  display: flex;
+  align-items: center;
+  margin: 5px 0px;
+}
+
+.online-friend-name {
+  margin-left: 10px;
+}
