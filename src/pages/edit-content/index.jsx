@@ -16,6 +16,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Link} from 'react-router-dom';
 import {getContentData, editContent} from 'redux/actions/sessionActions';
+import moment from 'moment';
 
 export default function Editor() {
   const params = useParams();
@@ -60,6 +61,7 @@ export default function Editor() {
     }
 
     if (state.currentContent) {
+      console.log('the state', state);
       setTitle(state.currentContent.title || '');
       setsub_title(state.currentContent.sub_title || '');
       setContent(state.currentContent.detail || '');
@@ -98,6 +100,7 @@ export default function Editor() {
           type: contentType,
           total_points,
           next_page,
+          updated_at: moment(moment()).format('YYYY-MM-DD'),
           previous_page,
         },
         params.id,
@@ -108,6 +111,7 @@ export default function Editor() {
   const handleClose1 = () => {
     setOpen1(false);
   };
+  console.log('the state', state);
 
   return (
     <div className='editor-page-full-container'>
@@ -213,6 +217,17 @@ export default function Editor() {
             <br />
 
             <div>
+              <Select
+                labelId='demo-customized-select-label'
+                id='demo-customized-select'
+                value={appliedGroup}
+                onChange={(e) => setAppliedGroup(e.target.value)}
+                fullWidth
+                label='Apply to Groups'
+                variant='filled'></Select>
+            </div>
+
+            {/* <div>
               <TextField
                 variant='filled'
                 value={appliedGroup}
@@ -221,7 +236,7 @@ export default function Editor() {
                 label='Apply to Groups'
                 required
               />
-            </div>
+            </div> */}
 
             <br />
             <div>
@@ -302,7 +317,7 @@ export default function Editor() {
                 value={total_points}
                 onChange={(e) => settotal_points(e.target.value)}
                 fullWidth
-                label='total_points'
+                label='Total Points'
                 required
               />
             </div>
