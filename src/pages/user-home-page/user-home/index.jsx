@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import AppSideBar from './AppSidebar';
-import CreatePost from './create-post-box';
+// import AppSideBar from '../../AppSidebar';
+import CreatePost from '../create-post-box';
 import './style.css';
-import PostDetails from './post-details';
-import CommonComponent from './common-component';
+import PostDetails from '../post-details';
+import CommonComponent from '../common-component';
 
 export default function UserHomePage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -90,9 +90,6 @@ export default function UserHomePage() {
         };
 
         const addReplyAction = (postId, commentId, replyText) => {
-          console.log('add reply executed');
-          console.log(postId);
-          console.log(commentId);
           setFakeData(
             fakeData.map((data) => {
               if (postId === data.id) {

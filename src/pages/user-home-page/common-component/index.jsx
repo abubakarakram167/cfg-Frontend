@@ -52,9 +52,15 @@ export default function CommonComponent(props) {
                   }}>
                   <div>My Conversations</div>
                   {conversationExtended ? (
-                    <ExpandLess onClick={toggleExpansion} />
+                    <ExpandLess
+                      onClick={toggleExpansion}
+                      style={{cursor: 'pointer'}}
+                    />
                   ) : (
-                    <ExpandMore onClick={toggleExpansion} />
+                    <ExpandMore
+                      onClick={toggleExpansion}
+                      style={{cursor: 'pointer'}}
+                    />
                   )}
                 </div>
               </ListItemText>

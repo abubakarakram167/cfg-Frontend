@@ -16,6 +16,7 @@ import clsx from 'clsx';
 import {red} from '@material-ui/core/colors';
 import {MoreVert, ExpandMore, Share, Favorite} from '@material-ui/icons';
 import Comment from './comment';
+import './style.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,7 +85,7 @@ export default function RecipeReviewCard({
       )}
       <CardContent>
         <Typography variant='body2' color='textSecondary' component='p'>
-          {post.caption}
+          <span className='caption-text'>{post.caption}</span>
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
