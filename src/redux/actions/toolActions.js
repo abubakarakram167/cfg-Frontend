@@ -148,6 +148,7 @@ export const getToolListData = (id) => {
         });
       }
     } catch (error) {
+      console.log('on the error', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: GET_LIST_DATA,

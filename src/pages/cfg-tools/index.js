@@ -16,6 +16,7 @@ import ControlPoint from '@material-ui/icons/ControlPoint';
 import EditIcon from '@material-ui/icons/Edit';
 import {Link} from 'react-router-dom';
 import CustomTablePagination from '../user-management/pagination';
+import moment from 'moment';
 import {
   Dialog,
   List,
@@ -128,6 +129,10 @@ export default function CfgTool(props) {
               return {
                 ...content,
                 title,
+                total_points,
+                status,
+                start_date: moment(start_date).format('YYYY-MM-DD'),
+                end_date: moment(end_date).format('YYYY-MM-DD'),
               };
             } else return content;
           });
@@ -187,7 +192,7 @@ export default function CfgTool(props) {
                 fullWidth
                 onChange={(e) => setAuthor(e.target.value)}
                 required
-                disabled={edit}
+                value={author}
               />
             </ListItem>
             <ListItem>
@@ -204,7 +209,6 @@ export default function CfgTool(props) {
                   'aria-label': 'change date',
                 }}
                 required
-                disabled={edit}
               />
             </ListItem>
             <ListItem>
@@ -215,7 +219,6 @@ export default function CfgTool(props) {
                 margin='normal'
                 fullWidth={true}
                 label='End Date'
-                disabled={edit}
                 value={end_date}
                 onChange={(e) => setend_date(e)}
                 KeyboardButtonProps={{
@@ -229,9 +232,9 @@ export default function CfgTool(props) {
                 label='Total Points'
                 variant='filled'
                 fullWidth
-                disabled={edit}
                 onChange={(e) => settotal_points(e.target.value)}
                 required
+                value={total_points}
                 type='number'
               />
             </ListItem>
@@ -243,7 +246,7 @@ export default function CfgTool(props) {
                 onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
                 fullWidth
-                disabled={edit}
+                value={status}
                 label='status'
                 required>
                 <MenuItem value={''}>
