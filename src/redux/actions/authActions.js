@@ -1,7 +1,11 @@
 import {LOGIN} from './action.types';
 import Auth from '../services/auth';
 import jsCookie from 'js-cookie';
-import {Show_Message} from '../../shared/constants/ActionTypes';
+import {
+  Show_Message,
+  UPDATE_AUTH_USER,
+  UPDATE_NEW_USER,
+} from '../../shared/constants/ActionTypes';
 
 export const loginAction = (params) => {
   return async function (dispatch) {
@@ -11,6 +15,10 @@ export const loginAction = (params) => {
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
+        dispatch({
+          type: UPDATE_NEW_USER,
+          payload: getUserObject(data_resp.user),
+        });
         dispatch({
           type: LOGIN,
           payload: {...data_resp, error: null},
@@ -25,6 +33,16 @@ export const loginAction = (params) => {
         });
       }
     }
+  };
+};
+
+const getUserObject = (user) => {
+  return {
+    uid: user.sub,
+    displayName: user.first_name,
+    email: user.email,
+    photoURL: user.picture,
+    token: user.sub,
   };
 };
 

@@ -22,6 +22,8 @@ import {
 } from '@material-ui/core';
 import {ControlPoint, ExpandMore} from '@material-ui/icons';
 import {formatDate} from 'utils/stampToFormat';
+import moment from 'moment';
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: 'none',
@@ -113,8 +115,8 @@ export default function CfgElement() {
 
         <div>
           <div className='custom-row-design-cfg-details'>
-            <div></div>
-            <StyledTableCell style={{position: 'relative', right: 60}}>
+            <StyledTableCell></StyledTableCell>
+            <StyledTableCell>
               <span className='column-heading'> Name </span>
               <div style={{display: 'flex', alignItems: 'center'}}>
                 <TextField
@@ -128,7 +130,7 @@ export default function CfgElement() {
                 <FilterList style={{fill: 'black', fontSize: 30}} />
               </div>
             </StyledTableCell>
-            <StyledTableCell style={{position: 'relative', right: 10}}>
+            <StyledTableCell>
               <span className='column-heading'> Author </span>
               <div style={{display: 'flex', alignItems: 'center'}}>
                 <TextField
@@ -241,25 +243,23 @@ export default function CfgElement() {
                             }}
                           />
                         </div>
-                        <div
-                          className='custom-row-design-header'
-                          style={{position: 'relative', right: 50}}>
+                        <div className='custom-row-design-header summary-margin-left-concise'>
                           <Link to={`/admin/content/edit/${element.id}`}>
                             {element.title}
                           </Link>
                         </div>
-                        <div className='custom-row-design-header'>
+                        <div className='custom-row-design-header summary-margin-left-concise'>
                           {/* {element.author.first_name +
                           ' ' +
                           element.author.last_name} */}{' '}
                           Author not found
                         </div>
                         <div className='custom-row-design-header summary-margin-left'>
-                          {formatDate(
+                          {moment(
                             element.updated_at
                               ? element.updated_at
                               : element.created_at,
-                          )}
+                          ).format('YYYY-MM-DD HH:mm')}
                         </div>
                         <div className='custom-row-design-header summary-margin-left'>
                           {element.total_points}

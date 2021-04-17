@@ -2,6 +2,7 @@ import {
   SET_AUTH_TOKEN,
   SIGNOUT_AUTH_SUCCESS,
   UPDATE_AUTH_USER,
+  UPDATE_NEW_USER,
 } from '../../shared/constants/ActionTypes';
 
 const INIT_STATE = {
@@ -9,6 +10,7 @@ const INIT_STATE = {
   token: null,
   message: null,
   error: null,
+  newUser: {},
 };
 let payload = null;
 const authReducer = (state = INIT_STATE, action) => {
@@ -17,6 +19,12 @@ const authReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         user: action.payload,
+      };
+    }
+    case UPDATE_NEW_USER: {
+      return {
+        ...state,
+        newUser: action.payload,
       };
     }
     case SIGNOUT_AUTH_SUCCESS: {

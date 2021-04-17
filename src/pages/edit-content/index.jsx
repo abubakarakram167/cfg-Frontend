@@ -17,6 +17,7 @@ import Alert from '@material-ui/lab/Alert';
 import {Link} from 'react-router-dom';
 import {getContentData, editContent} from 'redux/actions/sessionActions';
 import moment from 'moment';
+import {InputBase} from '@material-ui/core';
 
 export default function Editor() {
   const params = useParams();
@@ -37,6 +38,8 @@ export default function Editor() {
   const [previous_page, setprevious_page] = useState('');
   const [next_page, setnext_page] = useState('');
   const [contentType, setContentType] = useState('');
+  const [groups, setGroups] = useState([]);
+  const [groupValue, setGroupValue] = useState('');
 
   const handleEditorChange = (e) => {
     setContent(e);
@@ -49,6 +52,12 @@ export default function Editor() {
     e.preventDefault();
     setKeywords([...keywords, value]);
     setValue('');
+  };
+
+  const handleGroupSubmit = (e) => {
+    e.preventDefault();
+    setGroups([...groups, groupValue]);
+    setGroupValue('');
   };
 
   useEffect(() => {
@@ -129,21 +138,27 @@ export default function Editor() {
         <div className='top-section'>
           <div>
             <div>
-              <ContentEditable
+              {/* <ContentEditable
                 className='ce-title'
                 html={title}
                 disabled={false}
                 onChange={(e) => setTitle(e.target.value)}
+                onFocus = {()=> setTitle('')}
+              /> */}
+              <InputBase
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
+                placeholder='Enter a title'
               />
             </div>
-            <div>
+            {/* <div>
               <ContentEditable
                 className='ce-sub-title'
                 html={sub_title}
                 disabled={false}
                 onChange={(e) => setsub_title(e.target.value)}
               />
-            </div>
+            </div> */}
           </div>
           <div className='flex-buttons-publish'>
             <Link to={`/admin/content/display/${params.id}`}>
@@ -164,7 +179,7 @@ export default function Editor() {
             <SunEditor
               setContents={content}
               setOptions={{
-                height: 200,
+                height: 630,
                 buttonList: [
                   ['bold', 'italic', 'underline'],
                   ['list'],
@@ -216,7 +231,7 @@ export default function Editor() {
             </div>
             <br />
 
-            <div>
+            {/* <div>
               <Select
                 labelId='demo-customized-select-label'
                 id='demo-customized-select'
@@ -225,7 +240,7 @@ export default function Editor() {
                 fullWidth
                 label='Apply to Groups'
                 variant='filled'></Select>
-            </div>
+            </div> */}
 
             {/* <div>
               <TextField
@@ -237,6 +252,33 @@ export default function Editor() {
                 required
               />
             </div> */}
+
+            <div>
+              {groups.map((element, index) => {
+                return (
+                  <Chip
+                    label={element}
+                    key={index}
+                    className='chip-style'
+                    onDelete={() => {
+                      setGroups(groups.filter((value) => value !== element));
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <div>
+              <form onSubmit={handleGroupSubmit}>
+                <TextField
+                  variant='filled'
+                  value={groupValue}
+                  onSubmit={(e) => setGroups([...groups, e.target.value])}
+                  onChange={(e) => setGroupValue(e.target.value)}
+                  fullWidth
+                  label='Groups'
+                />
+              </form>
+            </div>
 
             <br />
             <div>
@@ -288,6 +330,7 @@ export default function Editor() {
                 variant='filled'
                 format='MM/DD/yyyy'
                 margin='normal'
+                fullWidth={true}
                 label='End Date'
                 value={end_date}
                 onChange={(e) => setend_date(e)}

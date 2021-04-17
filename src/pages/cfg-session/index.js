@@ -64,9 +64,12 @@ const useStyles = makeStyles({
 export default function CfgSession(props) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
+  const auth = useSelector((state) => state);
   const [content, setContent] = useState([]);
   const [checked, setChecked] = useState([]);
   const [singleId, setSingleId] = useState(null);
+
+  console.log('the auth..', auth);
 
   useEffect(() => {
     setContent(state.content);
@@ -134,6 +137,10 @@ export default function CfgSession(props) {
       dispatch(
         editContent({
           title,
+          author,
+          start_date,
+          total_points,
+          end_date,
           type: 'session',
           id: singleId,
         }),
@@ -141,9 +148,14 @@ export default function CfgSession(props) {
         if (res) {
           const allContent = content.map((content) => {
             if (content.id === singleId) {
+              const authorName = {...content.author, user_name: author};
               return {
                 ...content,
                 title,
+                total_points,
+                status,
+                start_date: moment(start_date).format('YYYY-MM-DD'),
+                end_date: moment(end_date).format('YYYY-MM-DD'),
               };
             } else return content;
           });
@@ -199,7 +211,7 @@ export default function CfgSession(props) {
                 fullWidth
                 onChange={(e) => setAuthor(e.target.value)}
                 required
-                disabled={edit}
+                value={author}
               />
             </ListItem>
             <ListItem>
@@ -216,7 +228,6 @@ export default function CfgSession(props) {
                   'aria-label': 'change date',
                 }}
                 required
-                disabled={edit}
               />
             </ListItem>
             <ListItem>
@@ -233,7 +244,6 @@ export default function CfgSession(props) {
                   'aria-label': 'change date',
                 }}
                 required
-                disabled={edit}
               />
             </ListItem>
             <ListItem>
@@ -244,7 +254,7 @@ export default function CfgSession(props) {
                 onChange={(e) => settotal_points(e.target.value)}
                 required
                 type='number'
-                disabled={edit}
+                value={total_points}
               />
             </ListItem>
             <ListItem>
@@ -255,7 +265,6 @@ export default function CfgSession(props) {
                 onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
                 fullWidth
-                disabled={edit}
                 label='status'
                 required>
                 <MenuItem value={''}>
@@ -357,6 +366,20 @@ export default function CfgSession(props) {
                 <StyledTableCell>
                   <span className='column-heading'> Start Date </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
+                    {/* <KeyboardDatePicker
+                      disableToolbar
+                      variant='inline'
+                      format='MM/DD/yyyy'
+                      margin='normal'
+                      fullWidth={true}
+                      label='Start Date'
+                      onChange={(e) =>  {
+                        setStartdateFilter( moment(e).format('YYYY-MM-DD') )
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    /> */}
                     <TextField
                       variant='filled'
                       size='small'
@@ -383,12 +406,12 @@ export default function CfgSession(props) {
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
-                  <span className='column-heading'> Created At </span>
+                  <span className='column-heading'> Created On </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
                     <TextField
                       variant='filled'
                       size='small'
-                      label='CreatedAt'
+                      label='Created On'
                       placeholder=''
                       value={createAtFilter}
                       onChange={(e) => setCreateAtFilter(e.target.value)}
@@ -482,6 +505,7 @@ export default function CfgSession(props) {
                                 (userId) => userId !== row.id,
                               );
                             }
+                            console.log('the author clicked', row);
                             setSingleId(row.id);
                             setCurrentIds(allIds);
                             setTitle(row.title);
@@ -490,6 +514,7 @@ export default function CfgSession(props) {
                             settotal_points(row.total_points);
                             setStatus(row.status);
                             toggleCheckbox(row.id);
+                            setAuthor(row.author.user_name);
                           }}
                         />
                       </StyledTableCell>
@@ -505,7 +530,7 @@ export default function CfgSession(props) {
                       <StyledTableCell>{row.start_date}</StyledTableCell>
                       <StyledTableCell>{row.end_date}</StyledTableCell>
                       <StyledTableCell>
-                        {moment(row.created_at).format('YYYY-MM-DD')}
+                        {moment(row.created_at).format('YYYY-MM-DD  HH:mm')}
                       </StyledTableCell>
                       <StyledTableCell>{row.total_points}</StyledTableCell>
                       <StyledTableCell>{row.status}</StyledTableCell>
