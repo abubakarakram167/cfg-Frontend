@@ -12,8 +12,10 @@ import AppLayout from '@crema/core/AppLayout';
 import AuthRoutes from '@crema/utility/AuthRoutes';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import {history} from './redux/store';
-import UserHome from 'pages/user-home-page/user-connections';
-
+import UserConnections from 'pages/user-home-page/user-connections';
+import UserHome from 'pages/user-home-page/user-home';
+import UserRewards from 'pages/user-home-page/user-rewards';
+import UserAchievements from 'pages/user-home-page/user-achievement';
 const store = configureStore();
 
 const App = () => (
