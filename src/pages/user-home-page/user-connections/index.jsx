@@ -10,6 +10,7 @@ import {
   AddCircle,
 } from '@material-ui/icons';
 import {Button} from '@material-ui/core';
+import CommonComponent from '../common-component';
 
 import './style.css';
 export default function UserConnections() {
@@ -64,99 +65,105 @@ export default function UserConnections() {
     },
   ];
 
-  return (
+  const left = (
     <div>
-      <UserPageHeader />
-      <div className='user-connection-container'>
-        <div className='user-connection-container-left'>
-          <div className='requests-section'>
-            <div style={{display: 'flex', alignItems: 'center'}}>
-              <GroupAdd style={{color: 'green', marginRight: '5px'}} />
-              <strong>Connection Requests</strong>
-            </div>
-            {!requestsExpanded ? (
-              <ExpandMore onClick={toggleRequestsExpanded} />
-            ) : (
-              <ExpandLess onClick={toggleRequestsExpanded} />
-            )}
-          </div>
-          <div className='requests-section-list'>
-            {requestsExpanded &&
-              requestsFakeData.map((element, index) => {
-                if (element.type === 'request') {
-                  return (
-                    <UserInfoBox
-                      key={index}
-                      userData={element}
-                      setSelected={setSelected}
-                    />
-                  );
-                }
-              })}
-          </div>
-          <br />
-          <div className='requests-section'>
-            <div style={{display: 'flex', alignItems: 'center'}}>
-              <Mail style={{color: '#E09B3B', marginRight: '5px'}} />
-              <strong>Requests Sent</strong>
-            </div>
-            {!requestSent ? (
-              <ExpandMore onClick={toggleRequestsSent} />
-            ) : (
-              <ExpandLess onClick={toggleRequestsSent} />
-            )}
-          </div>
-          <div className='requests-section-list'>
-            {requestSent &&
-              requestsFakeData.map((element, index) => {
-                if (element.type === 'sent') {
-                  return (
-                    <UserInfoBox
-                      key={index}
-                      userData={element}
-                      setSelected={setSelected}
-                    />
-                  );
-                }
-              })}
-          </div>
+      <div className='requests-section'>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <GroupAdd style={{color: 'green', marginRight: '5px'}} />
+          <strong>Connection Requests</strong>
         </div>
-        <div className='user-connection-container-center'>
-          {currentlySelected && <UserDetails element={currentlySelected} />}
+        {!requestsExpanded ? (
+          <ExpandMore onClick={toggleRequestsExpanded} />
+        ) : (
+          <ExpandLess onClick={toggleRequestsExpanded} />
+        )}
+      </div>
+      <div className='requests-section-list'>
+        {requestsExpanded &&
+          requestsFakeData.map((element, index) => {
+            if (element.type === 'request') {
+              return (
+                <UserInfoBox
+                  key={index}
+                  userData={element}
+                  setSelected={setSelected}
+                />
+              );
+            }
+          })}
+      </div>
+      <br />
+      <div className='requests-section'>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <Mail style={{color: '#E09B3B', marginRight: '5px'}} />
+          <strong>Requests Sent</strong>
         </div>
-        <div className='user-connection-container-right'>
-          <br />
-          <div className='requests-section'>
-            <div style={{display: 'flex', alignItems: 'center'}}>
-              <Mail style={{color: '#E09B3B', marginRight: '5px'}} />
-              <strong>My Connections</strong>
-            </div>
-            {!connectionsView ? (
-              <ExpandMore onClick={toggleConnectionView} />
-            ) : (
-              <ExpandLess onClick={toggleConnectionView} />
-            )}{' '}
-            <AddCircle style={{color: 'white', marginRight: '5px'}} />{' '}
-            <Button color='secondary' variant='contained'>
-              Add Friend
-            </Button>
-          </div>
-          <div className='requests-section-list'>
-            {connectionsView &&
-              requestsFakeData.map((element, index) => {
-                if (element.type === 'connection') {
-                  return (
-                    <UserInfoBox
-                      userData={element}
-                      key={index}
-                      setSelected={setSelected}
-                    />
-                  );
-                }
-              })}
-          </div>
-        </div>
+        {!requestSent ? (
+          <ExpandMore onClick={toggleRequestsSent} />
+        ) : (
+          <ExpandLess onClick={toggleRequestsSent} />
+        )}
+      </div>
+      <div className='requests-section-list'>
+        {requestSent &&
+          requestsFakeData.map((element, index) => {
+            if (element.type === 'sent') {
+              return (
+                <UserInfoBox
+                  key={index}
+                  userData={element}
+                  setSelected={setSelected}
+                />
+              );
+            }
+          })}
       </div>
     </div>
+  );
+
+  const right = (
+    <div>
+      <br />
+      <Button color='secondary' variant='contained' fullWidth>
+        Add Friend
+      </Button>
+      <br />
+      <br />
+      <div className='requests-section'>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <Mail style={{color: '#E09B3B', marginRight: '5px'}} />
+          <strong>My Connections</strong>
+        </div>
+        {!connectionsView ? (
+          <ExpandMore onClick={toggleConnectionView} />
+        ) : (
+          <ExpandLess onClick={toggleConnectionView} />
+        )}{' '}
+      </div>
+      <div className='requests-section-list'>
+        {connectionsView &&
+          requestsFakeData.map((element, index) => {
+            if (element.type === 'connection') {
+              return (
+                <UserInfoBox
+                  userData={element}
+                  key={index}
+                  setSelected={setSelected}
+                />
+              );
+            }
+          })}
+      </div>
+    </div>
+  );
+  return (
+    <CommonComponent left={left} right={right}>
+      {currentlySelected && <UserDetails element={currentlySelected} />}
+    </CommonComponent>
   );
 }
