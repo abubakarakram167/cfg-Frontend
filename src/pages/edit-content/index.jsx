@@ -15,9 +15,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Link} from 'react-router-dom';
-import {getContentData, editContent} from 'redux/actions/sessionActions';
+import {
+  getContentData,
+  editContent,
+  getSessionListData,
+} from 'redux/actions/sessionActions';
 import moment from 'moment';
 import {InputBase} from '@material-ui/core';
+import {Show_Message} from '../../shared/constants/ActionTypes';
+import InfoIcon from '@material-ui/icons/Info';
 
 export default function Editor() {
   const params = useParams();
@@ -40,6 +46,8 @@ export default function Editor() {
   const [contentType, setContentType] = useState('');
   const [groups, setGroups] = useState([]);
   const [groupValue, setGroupValue] = useState('');
+  const [accumulativeTitlePoints, setAccumulativeTitlePoints] = useState(0);
+  const [originalTotalPoints, setOriginalTotalPoints] = useState(0);
 
   const handleEditorChange = (e) => {
     setContent(e);
@@ -62,13 +70,38 @@ export default function Editor() {
 
   useEffect(() => {
     dispatch(getContentData(params.id));
-  }, [params.id, dispatch]);
+    dispatch(getContentData(params.content_id));
+  }, [params.id, params.content_id, dispatch]);
+
+  useEffect(() => {
+    dispatch(getSessionListData(params.content_id));
+  }, []);
 
   useEffect(() => {
     if (state.editedContent) {
       setOpen1(true);
     }
 
+    if (state.titles && state.titles.rows && state.titles.rows.length) {
+      let totalPoints = 0;
+
+      state.titles.rows.map((row) => {
+        if (
+          row &&
+          row.total_points <= state.current.total_points &&
+          row.id !== parseInt(params.id)
+        )
+          totalPoints = totalPoints + row.total_points;
+      });
+
+      const totalPointsSpecific = state.titles.rows.filter((allTitles) => {
+        return allTitles.id === parseInt(params.id);
+      });
+
+      settotal_points(totalPointsSpecific[0].total_points);
+      setAccumulativeTitlePoints(totalPoints);
+    }
+    if (state.current) setOriginalTotalPoints(state.current.total_points || 0);
     if (state.currentContent) {
       console.log('the state', state);
       setTitle(state.currentContent.title || '');
@@ -77,7 +110,6 @@ export default function Editor() {
       setstart_date(new Date(state.currentContent.start_date));
       setend_date(new Date(state.currentContent.end_date));
       setStatus(state.currentContent.status || 'draft');
-      settotal_points(state.currentContent.total_points || 0);
       setKeywords(
         JSON.parse(state.currentContent.tags).map((element) => element.text) ||
           [],
@@ -96,31 +128,63 @@ export default function Editor() {
       };
     });
 
-    dispatch(
-      editContent(
-        {
-          id: params.id,
-          title,
-          sub_title,
-          detail: content,
-          start_date: formatDate(start_date),
-          end_date: formatDate(end_date),
-          tags: JSON.stringify(tags),
-          type: contentType,
-          total_points,
-          next_page,
-          updated_at: moment(moment()).format('YYYY-MM-DD'),
-          previous_page,
+    if (
+      parseInt(total_points) + parseInt(accumulativeTitlePoints) >
+      parseInt(originalTotalPoints)
+    ) {
+      dispatch({
+        type: Show_Message,
+        payload: {
+          message: 'Cannot be edit.Please follow the requirements',
+          success: false,
         },
-        params.id,
-      ),
-    );
+      });
+      setTimeout(() => {
+        dispatch({
+          type: Show_Message,
+          payload: {message: null, success: true},
+        });
+      }, 5000);
+    } else {
+      dispatch(
+        editContent(
+          {
+            id: params.id,
+            title,
+            sub_title,
+            detail: content,
+            start_date: formatDate(start_date),
+            end_date: formatDate(end_date),
+            tags: JSON.stringify(tags),
+            type: contentType,
+            total_points,
+            next_page,
+            updated_at: moment(moment()).format('YYYY-MM-DD'),
+            previous_page,
+          },
+          params.id,
+        ),
+      );
+    }
   };
   const [open1, setOpen1] = useState(false);
   const handleClose1 = () => {
     setOpen1(false);
   };
-  console.log('the state', state);
+  const userList = useSelector((state) => state.userList);
+
+  console.log(
+    'the manipulation',
+    parseInt(originalTotalPoints) -
+      parseInt(accumulativeTitlePoints) +
+      parseInt(total_points),
+  );
+  console.log(
+    'the original accumulative total_point',
+    originalTotalPoints,
+    accumulativeTitlePoints,
+    total_points,
+  );
 
   return (
     <div className='editor-page-full-container'>
@@ -128,6 +192,18 @@ export default function Editor() {
         <AdminHeader />
       </div>
       <br />
+      {userList.message && (
+        <Snackbar
+          open={userList.message}
+          autoHideDuration={6000}
+          onClose={handleClose1}>
+          <Alert
+            onClose={handleClose1}
+            severity={userList.success ? 'success' : 'error'}>
+            {userList.message}
+          </Alert>
+        </Snackbar>
+      )}
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
         <Alert onClose={handleClose1} severity='success'>
           Record updated successfully.
@@ -182,6 +258,7 @@ export default function Editor() {
                 height: 630,
                 buttonList: [
                   ['bold', 'italic', 'underline'],
+                  ['indent', 'outdent'],
                   ['list'],
                   ['fontColor'],
                   ['fontSize'],
@@ -358,11 +435,27 @@ export default function Editor() {
                 type='number'
                 variant='filled'
                 value={total_points}
-                onChange={(e) => settotal_points(e.target.value)}
+                onChange={(e) => settotal_points(parseInt(e.target.value))}
                 fullWidth
                 label='Total Points'
                 required
               />
+              {parseInt(total_points) + parseInt(accumulativeTitlePoints) >
+                parseInt(originalTotalPoints) && (
+                <p className='total-points-text'>
+                  <InfoIcon
+                    style={{
+                      fill: 'red',
+                      fontSize: 18,
+                      position: 'relative',
+                      top: 3,
+                    }}
+                  />{' '}
+                  The total points for this title cannot be exceed than
+                  {parseInt(originalTotalPoints) -
+                    parseInt(accumulativeTitlePoints)}
+                </p>
+              )}
             </div>
             <br />
             <div>

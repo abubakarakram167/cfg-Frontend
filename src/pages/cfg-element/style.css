@@ -57,3 +57,11 @@
 .subtitle-card-custom:nth-child(odd) {
   background-color: #e8f8ff;
 }
+.accordian-dropdown {
+  position: relative;
+  left: 20px;
+}
+.accordian-dropdown-extra {
+  position: relative;
+  left: 28px;
+}

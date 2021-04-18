@@ -38,7 +38,7 @@ export default [
   />,
   <ProtectedRoute
     exact
-    path='/admin/content/edit/:id'
+    path='/admin/content/edit/:id/:content_id'
     component={withRouter(EditContent)}
   />,
   <ProtectedRoute

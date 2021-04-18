@@ -21,6 +21,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import {ControlPoint, ExpandMore} from '@material-ui/icons';
+import {InputBase} from '@material-ui/core';
 import {formatDate} from 'utils/stampToFormat';
 import moment from 'moment';
 
@@ -84,8 +85,12 @@ export default function CfgElement() {
   //     }),
   //   );
   // };
-  if (data.data) console.log('after it', data.data);
-
+  console.log('the data', data);
+  const parentTotalPoints =
+    data && data.data && data.data.rows.length
+      ? data.data.rows[0].total_points
+      : 0;
+  console.log('the parent total', parentTotalPoints);
   return (
     <div className='cfg-element-page'>
       <div>
@@ -117,7 +122,7 @@ export default function CfgElement() {
           <div className='custom-row-design-cfg-details'>
             <StyledTableCell></StyledTableCell>
             <StyledTableCell>
-              <span className='column-heading'> Name </span>
+              <span className='column-heading'> Name</span>
               <div style={{display: 'flex', alignItems: 'center'}}>
                 <TextField
                   variant='filled'
@@ -227,84 +232,93 @@ export default function CfgElement() {
                   .startsWith(createAtFilter),
               )
               .map((element, index) => {
-                return (
-                  <Accordion key={index}>
-                    <AccordionSummary expandIcon={<ExpandMore />}>
-                      <div className='custom-row-design-cfg-details'>
-                        <div className='custom-row-design-header'>
-                          <Checkbox
-                            checked={element.id === selectedTitle}
-                            onClick={() => {
-                              if (selectedTitle !== element.id) {
-                                setSelectedTitle(element.id);
-                              } else {
-                                setSelectedTitle(null);
-                              }
-                            }}
-                          />
+                console.log('the element', element);
+                console.log('the parent data', data);
+                if (element.total_points <= parentTotalPoints) {
+                  return (
+                    <Accordion key={index}>
+                      <AccordionSummary expandIcon={<ExpandMore />}>
+                        <div className='custom-row-design-cfg-details'>
+                          <div className='custom-row-design-header'>
+                            <Checkbox
+                              checked={element.id === selectedTitle}
+                              onClick={() => {
+                                if (selectedTitle !== element.id) {
+                                  setSelectedTitle(element.id);
+                                } else {
+                                  setSelectedTitle(null);
+                                }
+                              }}
+                            />
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left-concise'>
+                            <Link
+                              to={`/admin/content/edit/${element.id}/${params.id}`}>
+                              {element.title}
+                            </Link>
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left-concise'>
+                            {/* {element.author.first_name +
+                            ' ' +
+                            element.author.last_name} */}{' '}
+                            Author not found
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left'>
+                            {moment(
+                              element.updated_at
+                                ? element.updated_at
+                                : element.created_at,
+                            ).format('YYYY-MM-DD HH:mm')}
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left'>
+                            {element.total_points}
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left-more'>
+                            {element.status}
+                          </div>
                         </div>
-                        <div className='custom-row-design-header summary-margin-left-concise'>
-                          <Link to={`/admin/content/edit/${element.id}`}>
-                            {element.title}
-                          </Link>
-                        </div>
-                        <div className='custom-row-design-header summary-margin-left-concise'>
-                          {/* {element.author.first_name +
-                          ' ' +
-                          element.author.last_name} */}{' '}
-                          Author not found
-                        </div>
-                        <div className='custom-row-design-header summary-margin-left'>
-                          {moment(
-                            element.updated_at
-                              ? element.updated_at
-                              : element.created_at,
-                          ).format('YYYY-MM-DD HH:mm')}
-                        </div>
-                        <div className='custom-row-design-header summary-margin-left'>
-                          {element.total_points}
-                        </div>
-                        <div className='custom-row-design-header summary-margin-left'>
-                          {element.status}
-                        </div>
-                      </div>
-                    </AccordionSummary>
+                      </AccordionSummary>
 
-                    <AccordionDetails>
-                      <div className='subtitles-container-custom'>
-                        {element.subtitles.rows.map((subs, index) => {
-                          return (
-                            <div
-                              key={index}
-                              className='custom-row-design-cfg-details subtitle-card-custom'>
-                              <div className='custom-row-design-header'></div>
-                              <div className='custom-row-design-header'>
-                                <Link to={`/admin/content/edit/${subs.id}`}>
-                                  {subs.title}
-                                </Link>
+                      <AccordionDetails>
+                        <div className='subtitles-container-custom'>
+                          {element.subtitles.rows.map((subs, index) => {
+                            return (
+                              <div
+                                key={index}
+                                className='custom-row-design-cfg-details subtitle-card-custom'>
+                                <div className='custom-row-design-header'></div>
+                                <div className='custom-row-design-header accordian-dropdown'>
+                                  <Link to={`/admin/content/edit/${subs.id}`}>
+                                    {subs.title}
+                                  </Link>
+                                </div>
+                                <div className='custom-row-design-header accordian-dropdown'>
+                                  {/* {subs.author.first_name +
+                                  ' ' +
+                                  subs.author.last_name} */}
+                                  Author not found
+                                </div>
+                                <div className='custom-row-design-header accordian-dropdown-extra'>
+                                  {moment(
+                                    subs.updated_at
+                                      ? subs.updated_at
+                                      : subs.created_at,
+                                  ).format('YYYY-MM-DD HH:mm')}
+                                </div>
+                                <div className='custom-row-design-header accordian-dropdown-extra'>
+                                  {subs.total_points}
+                                </div>
+                                <div className='custom-row-design-header accordian-dropdown'>
+                                  {subs.status}
+                                </div>
                               </div>
-                              <div className='custom-row-design-header'>
-                                {/* {subs.author.first_name +
-                                ' ' +
-                                subs.author.last_name} */}
-                                Author not found
-                              </div>
-                              <div className='custom-row-design-header'>
-                                {formatDate(subs.updated_at)}
-                              </div>
-                              <div className='custom-row-design-header'>
-                                {subs.total_points}
-                              </div>
-                              <div className='custom-row-design-header'>
-                                {subs.status}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </AccordionDetails>
-                  </Accordion>
-                );
+                            );
+                          })}
+                        </div>
+                      </AccordionDetails>
+                    </Accordion>
+                  );
+                } else return null;
               })}
         </div>
         <StyledTableRow style={{width: 400}}>

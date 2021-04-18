@@ -18,6 +18,9 @@ import {Link} from 'react-router-dom';
 import {editContent} from 'redux/actions/sessionActions';
 import CustomTablePagination from '../user-management/pagination';
 import FilterList from '@material-ui/icons/FilterList';
+import jsCookie from 'js-cookie';
+import {Spinner} from 'react-bootstrap';
+import {CircleSpinner} from 'react-spinners-kit';
 import {
   Dialog,
   List,
@@ -69,14 +72,13 @@ export default function CfgSession(props) {
   const [checked, setChecked] = useState([]);
   const [singleId, setSingleId] = useState(null);
 
-  console.log('the auth..', auth);
-
   useEffect(() => {
     setContent(state.content);
   }, [state]);
 
   useEffect(() => {
     dispatch(getSessionData());
+    setAuthor(JSON.parse(jsCookie.get('user')).first_name);
   }, [dispatch]);
 
   const [currentCheckState, setCurrentCheckState] = useState(false);
@@ -184,8 +186,6 @@ export default function CfgSession(props) {
     setDialogOpen(false);
   };
 
-  console.log('the content', content);
-
   return (
     <div>
       <Dialog open={dialogOpen}>
@@ -211,6 +211,7 @@ export default function CfgSession(props) {
                 fullWidth
                 onChange={(e) => setAuthor(e.target.value)}
                 required
+                disabled
                 value={author}
               />
             </ListItem>
@@ -449,6 +450,7 @@ export default function CfgSession(props) {
                 </StyledTableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
               {content.length > 0 &&
                 rowsPerPage > 0 &&
@@ -505,7 +507,6 @@ export default function CfgSession(props) {
                                 (userId) => userId !== row.id,
                               );
                             }
-                            console.log('the author clicked', row);
                             setSingleId(row.id);
                             setCurrentIds(allIds);
                             setTitle(row.title);
@@ -514,7 +515,6 @@ export default function CfgSession(props) {
                             settotal_points(row.total_points);
                             setStatus(row.status);
                             toggleCheckbox(row.id);
-                            setAuthor(row.author.user_name);
                           }}
                         />
                       </StyledTableCell>
@@ -525,7 +525,7 @@ export default function CfgSession(props) {
                         </Link>
                       </StyledTableCell>
                       <StyledTableCell>
-                        {row.author ? row.author.user_name : ''}
+                        {row.author ? row.author.user_name : ' '}
                       </StyledTableCell>
                       <StyledTableCell>{row.start_date}</StyledTableCell>
                       <StyledTableCell>{row.end_date}</StyledTableCell>
