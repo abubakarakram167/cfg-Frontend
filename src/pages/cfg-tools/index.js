@@ -17,6 +17,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import {Link} from 'react-router-dom';
 import CustomTablePagination from '../user-management/pagination';
 import moment from 'moment';
+import jsCookie from 'js-cookie';
+import FilterList from '@material-ui/icons/FilterList';
 import {
   Dialog,
   List,
@@ -81,6 +83,13 @@ export default function CfgTool(props) {
   const userList = useSelector((state) => state.userList);
   const [currentCheckState, setCurrentCheckState] = useState(false);
   const classes = useStyles();
+  const [nameFilter, setNameFilter] = useState('');
+  const [authorFilter, setAuthorFilter] = useState('');
+  const [startDateFilter, setStartdateFilter] = useState('');
+  const [endDateFilter, setEnddateFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [totalPointsFilter, settotalPointsFilter] = useState('');
+  const [createAtFilter, setCreateAtFilter] = useState('');
 
   useEffect(() => {
     setContent(state.content);
@@ -88,6 +97,7 @@ export default function CfgTool(props) {
 
   useEffect(() => {
     dispatch(getToolData());
+    setAuthor(JSON.parse(jsCookie.get('user')).first_name);
   }, [dispatch]);
 
   const toggleCheckbox = (id) => {
@@ -192,6 +202,7 @@ export default function CfgTool(props) {
                 fullWidth
                 onChange={(e) => setAuthor(e.target.value)}
                 required
+                disabled
                 value={author}
               />
             </ListItem>
@@ -317,12 +328,90 @@ export default function CfgTool(props) {
                 <StyledTableCell>
                   <Checkbox checked={currentCheckState} onChange={toggleAll} />
                 </StyledTableCell>
-                <StyledTableCell>Name</StyledTableCell>
-                <StyledTableCell>Author</StyledTableCell>
-                <StyledTableCell>Start Date</StyledTableCell>
-                <StyledTableCell>End Date</StyledTableCell>
-                <StyledTableCell>Total Points</StyledTableCell>
-                <StyledTableCell>Status</StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Name </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Name'
+                      placeholder=''
+                      value={nameFilter}
+                      onChange={(e) => setNameFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Author </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Author'
+                      placeholder=''
+                      value={authorFilter}
+                      onChange={(e) => setAuthorFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Start Date </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Start Date'
+                      placeholder=''
+                      value={startDateFilter}
+                      onChange={(e) => setStartdateFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> End Date </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='End Date'
+                      placeholder=''
+                      value={endDateFilter}
+                      onChange={(e) => setEnddateFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Total Points </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Total Points'
+                      placeholder=''
+                      value={totalPointsFilter}
+                      onChange={(e) => settotalPointsFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Status </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Status'
+                      placeholder=''
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -330,6 +419,44 @@ export default function CfgTool(props) {
                 rowsPerPage > 0 &&
                 content
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .filter((element) =>
+                    (element.title ? element.title : '')
+                      .toLowerCase()
+                      .startsWith(nameFilter),
+                  )
+                  .filter((element) =>
+                    (element.author ? element.author.user_name : '')
+                      .toLowerCase()
+                      .startsWith(authorFilter),
+                  )
+                  .filter((element) =>
+                    (element.start_date ? element.start_date : '')
+                      .toLowerCase()
+                      .startsWith(startDateFilter),
+                  )
+                  .filter((element) =>
+                    (element.end_date ? element.end_date : '')
+                      .toLowerCase()
+                      .startsWith(endDateFilter),
+                  )
+                  .filter((element) =>
+                    (element.status ? element.status : '')
+                      .toLowerCase()
+                      .startsWith(statusFilter),
+                  )
+                  .filter((element) =>
+                    (element.total_points
+                      ? element.total_points.toString()
+                      : ''
+                    )
+                      .toLowerCase()
+                      .startsWith(totalPointsFilter),
+                  )
+                  .filter((element) =>
+                    (element.created_at ? element.created_at.toString() : '')
+                      .toLowerCase()
+                      .startsWith(createAtFilter),
+                  )
                   .map((row, index) => (
                     <StyledTableRow key={index}>
                       <StyledTableCell>
@@ -345,7 +472,6 @@ export default function CfgTool(props) {
                                 (userId) => userId !== row.id,
                               );
                             }
-                            console.log('after creating clicking row..', row);
                             setSingleId(row.id);
                             setCurrentIds(allIds);
                             setTitle(row.title);
@@ -359,7 +485,7 @@ export default function CfgTool(props) {
                       </StyledTableCell>
                       <StyledTableCell>
                         {' '}
-                        <Link to={`/admin/cfg-tools/${row.id}`}>
+                        <Link to={`/admin/content/edit/${row.id}`}>
                           {row.title}{' '}
                         </Link>
                       </StyledTableCell>

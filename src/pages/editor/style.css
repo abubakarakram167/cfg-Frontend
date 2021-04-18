@@ -87,3 +87,10 @@
   color: white;
   font-weight: 600;
 }
+
+.total-points-text {
+  font-size: 13px;
+  margin-top: 10px;
+  color: red;
+  font-weight: 400;
+}

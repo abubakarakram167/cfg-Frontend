@@ -21,12 +21,12 @@ const authReducer = (state = INIT_STATE, action) => {
         user: action.payload,
       };
     }
-    case UPDATE_NEW_USER: {
+    case UPDATE_NEW_USER:
       return {
         ...state,
         newUser: action.payload,
       };
-    }
+
     case SIGNOUT_AUTH_SUCCESS: {
       return {
         ...state,

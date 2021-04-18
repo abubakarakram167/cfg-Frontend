@@ -11,14 +11,11 @@ export const loginAction = (params) => {
   return async function (dispatch) {
     try {
       const response = await Auth.login(params);
-      console.log('the response', response);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
-        dispatch({
-          type: UPDATE_NEW_USER,
-          payload: getUserObject(data_resp.user),
-        });
+        jsCookie.set('user', data_resp.user);
+
         dispatch({
           type: LOGIN,
           payload: {...data_resp, error: null},
