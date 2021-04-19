@@ -1,0 +1,22 @@
+.comment-card {
+  width: 100%;
+  box-shadow: 0px 1px 2px gainsboro;
+  padding: 20px;
+  margin: 5px 0px;
+}
+
+.comment-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.comment-card-content-left {
+  display: flex;
+  align-items: center;
+}
+.comment-text {
+  margin-left: 20px;
+}
+.comment-card-reply-section {
+  margin-left: 60px;
+}

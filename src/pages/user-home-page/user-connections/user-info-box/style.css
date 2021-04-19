@@ -1,0 +1,9 @@
+.user-info-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info-card-action-button {
+  margin: 0px 4px;
+}
