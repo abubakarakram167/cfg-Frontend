@@ -11,7 +11,16 @@
   margin-right: 20px;
 }
 .summary-margin-left {
-  margin-left: 0px;
+  padding: 16px;
+  padding-left: 35px;
+}
+.summary-margin-left-more {
+  padding: 16px;
+  padding-left: 50px;
+}
+.summary-margin-left-concise {
+  padding: 16px;
+  padding-left: 15px;
 }
 .chip-style {
   margin: 10px !important;
@@ -56,12 +65,4 @@
 
 .subtitle-card-custom:nth-child(odd) {
   background-color: #e8f8ff;
-}
-.accordian-dropdown {
-  position: relative;
-  left: 20px;
-}
-.accordian-dropdown-extra {
-  position: relative;
-  left: 28px;
 }

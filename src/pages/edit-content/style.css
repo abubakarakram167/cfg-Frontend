@@ -7,13 +7,14 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  padding-bottom: 50px;
 }
 
 .editor-side {
-  width: 76%;
+  width: 70%;
 }
 .options-side {
-  width: 22%;
+  width: 25%;
 }
 .ce-title {
   margin: 10px 0px;

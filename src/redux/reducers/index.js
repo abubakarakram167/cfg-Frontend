@@ -16,6 +16,8 @@ import ChatApp from './ChatApp';
 import Wall from './Wall';
 import Preference from './Preference';
 import Session from './Session';
+import Tool from './Tool';
+import mediaReducer from './media';
 
 const reducers = (history) =>
   combineReducers({
@@ -23,6 +25,7 @@ const reducers = (history) =>
     settings: Settings,
     auth: Auth,
     session: Session,
+    tool: Tool,
     mailApp: MailApp,
     dashboard: Dashboard,
     common: Common,
@@ -36,5 +39,6 @@ const reducers = (history) =>
     chatApp: ChatApp,
     wall: Wall,
     preference: Preference,
+    mediaList: mediaReducer,
   });
 export default reducers;

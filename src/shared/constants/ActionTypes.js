@@ -7,9 +7,14 @@ export const HIDE_MESSAGE = 'hide_message';
 export const TOGGLE_APP_DRAWER = 'toggle_app_drawer';
 export const UPDATING_CONTENT = 'updating_content';
 
+export const UPDATE_NEW_USER = 'UPDATE_NEW_USER';
+
 //APP SETTING
 export const TOGGLE_NAV_COLLAPSED = 'toggle_nav_collapsed';
 export const SET_INITIAL_PATH = 'set_initial_path';
+
+//Media
+export const Get_Media = 'Get_Media';
 
 //Preferences
 export const Get_Preferences = 'getPreferences';
