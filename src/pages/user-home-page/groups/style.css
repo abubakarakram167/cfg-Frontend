@@ -1,0 +1,22 @@
+.group-searcher {
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  outline: none;
+  border: 1px solid gainsboro;
+  font-size: 20px;
+  display: none;
+  margin: 10px 0px;
+}
+
+@media only screen and (max-width: 600px) {
+  .group-searcher {
+    display: block;
+  }
+  .app-card-bottom-text {
+    font-size: 10px;
+  }
+  .create-post-app-card-bottom-box {
+    margin: 0px 2px;
+  }
+}

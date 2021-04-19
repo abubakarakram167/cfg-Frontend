@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => {
       paddingLeft: 0,
       paddingTop: 0,
       paddingBottom: 0,
-      width: '19rem',
+      width: '80%',
       maxHeight: '100vh',
       [theme.breakpoints.up('xl')]: {
         width: '21.6rem',

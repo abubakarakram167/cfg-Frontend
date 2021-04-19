@@ -14,7 +14,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import {fromPairs} from 'lodash';
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    maxWidth: '100%',
   },
   large: {
     width: '60px',
@@ -40,7 +40,7 @@ export default function UserInfo(props) {
                 className={classes.large}
               />
               <div>
-                <Typography gutterBottom variant='h5' component='h2'>
+                <Typography gutterBottom variant='p'>
                   <strong>{props.userData.name}</strong>
                 </Typography>
                 <Typography

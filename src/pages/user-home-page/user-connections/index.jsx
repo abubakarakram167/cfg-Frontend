@@ -123,12 +123,6 @@ export default function UserConnections() {
 
   const right = (
     <div>
-      <br />
-      <Button color='secondary' variant='contained' fullWidth>
-        Add Friend
-      </Button>
-      <br />
-      <br />
       <div className='requests-section'>
         <div
           style={{
@@ -159,11 +153,20 @@ export default function UserConnections() {
             }
           })}
       </div>
+      <br />
+      <Button color='secondary' variant='contained' fullWidth>
+        Add Friend
+      </Button>
     </div>
   );
   return (
     <CommonComponent left={left} right={right}>
       {currentlySelected && <UserDetails element={currentlySelected} />}
+
+      <div className='mobile-connections-view'>
+        {left}
+        {right}
+      </div>
     </CommonComponent>
   );
 }

@@ -24,6 +24,7 @@ import {
   ExpandMore,
   ExpandLess,
 } from '@material-ui/icons';
+import {Link} from 'react-router-dom';
 
 export default function UserHomePage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -34,6 +35,8 @@ export default function UserHomePage() {
   const [fakeData, setFakeData] = useState([
     {
       id: 1,
+
+      group: 'test group',
       caption: 'hello sir jermaine',
       media:
         'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
@@ -47,6 +50,8 @@ export default function UserHomePage() {
     },
     {
       id: 2,
+      group: 'test group',
+
       caption: 'hello sir jermaine',
       media:
         'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
@@ -66,6 +71,8 @@ export default function UserHomePage() {
     {
       id: 3,
       caption: 'hello sir jermaine',
+      group: 'test group',
+
       media: '',
       comments: [
         {
@@ -136,36 +143,46 @@ export default function UserHomePage() {
           </ListItemText>
         </List>
       </Collapse>
-      <ListItem>
-        <ListItemIcon>
-          <Group style={{color: 'brown'}} />
-        </ListItemIcon>
-        <ListItemText primary='My CFG Family' />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <People style={{color: 'green'}} />
-        </ListItemIcon>
-        <ListItemText primary='Groups' />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <Event style={{color: 'blue'}} />
-        </ListItemIcon>
-        <ListItemText primary='Events' />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <Build />
-        </ListItemIcon>
-        <ListItemText primary='CFG Tools' />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <ChatBubble style={{color: 'red'}} />
-        </ListItemIcon>
-        <ListItemText primary='Host A Conversation' />
-      </ListItem>
+      <Link to='/home/user-connections'>
+        <ListItem>
+          <ListItemIcon>
+            <Group style={{color: 'brown'}} />
+          </ListItemIcon>
+          <ListItemText primary='My CFG Family' />
+        </ListItem>
+      </Link>
+      <Link to='/home/user-groups'>
+        <ListItem>
+          <ListItemIcon>
+            <People style={{color: 'green'}} />
+          </ListItemIcon>
+          <ListItemText primary='Groups' />
+        </ListItem>
+      </Link>
+      <Link to='/home/user-events'>
+        <ListItem>
+          <ListItemIcon>
+            <Event style={{color: 'blue'}} />
+          </ListItemIcon>
+          <ListItemText primary='Events' />
+        </ListItem>
+      </Link>
+      <Link to='/home/cfg-tools'>
+        <ListItem>
+          <ListItemIcon>
+            <Build />
+          </ListItemIcon>
+          <ListItemText primary='CFG Tools' />
+        </ListItem>
+      </Link>
+      <Link to='/home/host-a-conversation'>
+        <ListItem>
+          <ListItemIcon>
+            <ChatBubble style={{color: 'red'}} />
+          </ListItemIcon>
+          <ListItemText primary='Host A Conversation' />
+        </ListItem>
+      </Link>
     </List>
   );
 

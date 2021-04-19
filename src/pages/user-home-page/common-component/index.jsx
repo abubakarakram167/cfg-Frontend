@@ -11,9 +11,6 @@ export default function CommonComponent(props) {
   };
   return (
     <div>
-      {/* <button onClick={toggleDrawerOpen}>Toggle</button>
-                hello world
-                <AppSideBar drawerOpen={drawerOpen} /> */}
       <UserHomeHeader />
 
       <div className='user-home-page-content'>
@@ -24,18 +21,3 @@ export default function CommonComponent(props) {
     </div>
   );
 }
-
-// <div>
-//   {/* <button onClick={toggleDrawerOpen}>Toggle</button>
-//         hello world
-//         <AppSideBar drawerOpen={drawerOpen} /> */}
-//   <UserHomeHeader />
-
-//   <div className='user-home-page-content'>
-//     <div className='user-home-left'>Left</div>
-//     <div className='user-home-center'>
-
-//     </div>
-//     <div className='user-home-right'>Right</div>
-//   </div>
-// </div>

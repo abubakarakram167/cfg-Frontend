@@ -34,6 +34,7 @@ export default function CreatePostBox() {
     <div>
       <Dialog
         open={open}
+        fullWidth
         onClose={handleClose}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'>
@@ -60,7 +61,7 @@ export default function CreatePostBox() {
               </span>
             </div>
             <TextField
-              style={{width: '100%', minWidth: '450px'}}
+              style={{width: '100%'}}
               id='standard-multiline-static'
               multiline
               variant='filled'

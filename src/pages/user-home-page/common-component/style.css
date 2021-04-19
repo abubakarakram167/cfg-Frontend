@@ -6,25 +6,37 @@
   background-color: #f9f9f9;
 }
 .user-home-left {
-  width: 18%;
+  width: 21%;
   height: 100vh;
   padding: 10px;
 }
 .user-home-center {
-  width: 64%;
+  width: 56%;
   overflow-y: auto;
   height: 100vh;
   padding-top: 20px;
 }
 .user-home-right {
-  width: 18%;
+  width: 21%;
   height: 100vh;
   padding: 10px;
   overflow-y: scroll;
 }
-
 .left-first-expander {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .user-home-right {
+    display: none;
+  }
+  .user-home-left {
+    display: none;
+  }
+  .user-home-center {
+    width: 100%;
+    padding: 10px;
+  }
 }

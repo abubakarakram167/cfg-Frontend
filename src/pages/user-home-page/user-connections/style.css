@@ -10,6 +10,9 @@
   overflow-y: scroll;
   padding: 20px;
 }
+.mobile-connections-view {
+  display: none;
+}
 .user-connection-container-center {
   height: 100vh;
   width: 50%;
@@ -29,4 +32,16 @@
 }
 .requests-section-list {
   margin-top: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+  .mobile-connections-view {
+    display: block;
+  }
+  .requests-section-list {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }

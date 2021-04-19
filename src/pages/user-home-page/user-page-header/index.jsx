@@ -16,6 +16,7 @@ import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
 import {Group, CardGiftcard, Bookmark} from '@material-ui/icons';
+import AppSideBar from '../AppSidebar';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -43,6 +44,7 @@ export default function AdminHeader() {
   };
 
   const [anchorE2, setAnchorE2] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleClick2 = (event) => {
     setAnchorE2(event.currentTarget);
@@ -51,11 +53,15 @@ export default function AdminHeader() {
   const handleClose2 = () => {
     setAnchorE2(null);
   };
+  const toggleDrawerOpen = () => {
+    setDrawerOpen(!drawerOpen);
+  };
 
   return (
     <div>
+      <AppSideBar drawerOpen={drawerOpen}>Hello </AppSideBar>
       <AppHeader>
-        <div className='container-header'>
+        <div className='user-heder-container-header'>
           <div className='left'>
             <div className='left-user-info'>
               <Avatar alt='User Avatar' src={Logo} className='logo-style' />
@@ -113,22 +119,16 @@ export default function AdminHeader() {
                   </div>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <div className='mobile-menu-item'>
-                    <div className='icon'>
-                      <AccountCircle style={{fill: 'black'}} />
+                  <Link to='/home/userProfile'>
+                    <div className='mobile-menu-item'>
+                      <div className='icon'>
+                        <AccountCircle style={{fill: 'black'}} />
+                      </div>
+                      <div className='user-name-text'>
+                        <Typography>My Profile</Typography>
+                      </div>
                     </div>
-                    <div className='user-name-text'>
-                      <Typography>My Profile</Typography>
-                    </div>
-                  </div>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <div className='mobile-menu-item'>
-                    <div className='icon'>
-                      <VisibilityIcon style={{fill: 'black'}} />
-                    </div>
-                    <div className='user-name-text'>Preview as User</div>
-                  </div>
+                  </Link>
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <div className='mobile-menu-item'>
@@ -143,16 +143,24 @@ export default function AdminHeader() {
           </div>
           <div className='center-user-page'>
             <div className='user-page-icon-container'>
-              <Home style={{fontSize: 35}} />
+              <Link to='/home'>
+                <Home style={{fontSize: 35}} />
+              </Link>
             </div>
             <div className='user-page-icon-container'>
-              <Group style={{fontSize: 35}} />
+              <Link to='/home/user-groups'>
+                <Group style={{fontSize: 35}} />
+              </Link>
             </div>
             <div className='user-page-icon-container'>
-              <Bookmark style={{fontSize: 35}} />
+              <Link to='/home/user-achievements'>
+                <Bookmark style={{fontSize: 35}} />
+              </Link>
             </div>
             <div className='user-page-icon-container'>
-              <CardGiftcard style={{fontSize: 35}} />
+              <Link to='/home/user-rewards'>
+                <CardGiftcard style={{fontSize: 35}} />
+              </Link>
             </div>
           </div>
           <div className='right'>
@@ -176,23 +184,18 @@ export default function AdminHeader() {
                 open={Boolean(anchorE2)}
                 onClose={handleClose2}>
                 <MenuItem onClick={handleClose2}>
-                  <div className='mobile-menu-item'>
-                    <div className='icon'>
-                      <AccountCircle style={{fill: 'black'}} />
+                  <Link to='/home/user-profile'>
+                    <div className='mobile-menu-item'>
+                      <div className='icon'>
+                        <AccountCircle style={{fill: 'black'}} />
+                      </div>
+                      <div className='user-name-text'>
+                        <Typography>My Profile</Typography>
+                      </div>
                     </div>
-                    <div className='user-name-text'>
-                      <Typography>My Profile</Typography>
-                    </div>
-                  </div>
+                  </Link>
                 </MenuItem>
-                <MenuItem onClick={handleClose2}>
-                  <div className='mobile-menu-item'>
-                    <div className='icon'>
-                      <VisibilityIcon style={{fill: 'black'}} />
-                    </div>
-                    <div className='user-name-text'>Preview as User</div>
-                  </div>
-                </MenuItem>
+
                 <MenuItem onClick={handleLogout2}>
                   <div className='mobile-menu-item'>
                     <div className='icon'>
@@ -203,6 +206,15 @@ export default function AdminHeader() {
                 </MenuItem>
               </Menu>
             </div>
+          </div>
+        </div>
+        <div className='mobile-header'>
+          <div className='mobile-header-content'>
+            <MenuIcon
+              onClick={toggleDrawerOpen}
+              style={{color: 'white', fontSize: 40}}
+            />{' '}
+            <span className='mobile-company-header-tite'>JMMB Foundation</span>
           </div>
         </div>
       </AppHeader>
