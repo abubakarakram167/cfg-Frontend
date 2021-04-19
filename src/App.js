@@ -30,8 +30,8 @@ const App = () => (
                 <AppLayout />
               </AuthRoutes>
             </ConnectedRouter> */}
-            <UserHome />
-            {/* <MainApp /> */}
+            {/* <UserHome /> */}
+            <MainApp />
           </LocaleProvider>
         </CremaStyleProvider>
       </CremaThemeProvider>

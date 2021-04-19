@@ -14,7 +14,13 @@ import {
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import {red} from '@material-ui/core/colors';
-import {MoreVert, ExpandMore, Share, Favorite} from '@material-ui/icons';
+import {
+  MoreVert,
+  ExpandMore,
+  Share,
+  Favorite,
+  ArrowRight,
+} from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
 
@@ -47,7 +53,7 @@ export default function RecipeReviewCard({
   addReplyAction,
 }) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(true);
+  const [expanded, setExpanded] = React.useState(false);
   const [comment, setComment] = React.useState('');
 
   const handleExpandClick = () => {
@@ -73,7 +79,7 @@ export default function RecipeReviewCard({
             <MoreVert />
           </IconButton>
         }
-        title='Simple Group Name'
+        title={`Jermaine Gray > ${post.group}`}
         subheader='September 14, 2016'
       />
       {post.media && (

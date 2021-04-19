@@ -22,6 +22,15 @@ import CfgElement from 'pages/cfg-element';
 import ContentDisplay from 'pages/content-display';
 import EditContent from 'pages/edit-content';
 import ProtectedRoute from './protectedRouter';
+import UserHome from 'pages/user-home-page/user-home';
+import UserRewards from 'pages/user-home-page/user-rewards';
+import UserConnections from 'pages/user-home-page/user-connections';
+import UserAchievements from 'pages/user-home-page/user-achievement';
+import UserGroup from 'pages/user-home-page/groups';
+import UserProfile from 'pages/user-home-page/user-profile';
+import UserEvents from 'pages/user-home-page/user-events';
+import HostAConversation from 'pages/user-home-page/host-a-conversation';
+import HomeCFGTools from 'pages/user-home-page/cfg-tools';
 // const Admin = () => {
 //   return [
 export default [
@@ -97,6 +106,47 @@ export default [
     exact
     path='/admin/rewards'
     component={withRouter(Rewards)}
+  />,
+  <ProtectedRoute exact path='/home' component={withRouter(UserHome)} />,
+  <ProtectedRoute
+    exact
+    path='/home/user-rewards'
+    component={withRouter(UserRewards)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-achievements'
+    component={withRouter(UserAchievements)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-connections'
+    component={withRouter(UserConnections)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-groups'
+    component={withRouter(UserGroup)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-profile'
+    component={withRouter(UserProfile)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-events'
+    component={withRouter(UserEvents)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/host-a-conversation'
+    component={withRouter(HostAConversation)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/cfg-tools'
+    component={withRouter(HomeCFGTools)}
   />,
 ];
 // };

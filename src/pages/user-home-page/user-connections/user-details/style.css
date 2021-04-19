@@ -23,3 +23,18 @@
   padding: 10px;
   text-align: center;
 }
+
+@media only screen and (max-width: 600px) {
+  .user-details-bottom-section {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    text-align: center;
+  }
+  .user-details-bottom-section-right {
+    width: 100%;
+  }
+  .user-details-bottom-section-left {
+    width: 100%;
+  }
+}
