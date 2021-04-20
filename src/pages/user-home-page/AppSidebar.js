@@ -11,6 +11,7 @@ import {
   ListItemText,
   ListItemIcon,
   Collapse,
+  Avatar,
 } from '@material-ui/core';
 import {
   ExpandLess,
@@ -22,6 +23,8 @@ import {
   Group,
   Forum,
   Home,
+  AccountCircle,
+  Bookmark,
 } from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 const AppSidebar = (props) => {
@@ -34,7 +37,7 @@ const AppSidebar = (props) => {
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
-  console.log(props.drawerOpen);
+
   const classes = useStyles({});
   return (
     <Drawer
@@ -45,9 +48,65 @@ const AppSidebar = (props) => {
         root: clsx(props.variant),
         paper: clsx(props.variant),
       }}
-      style={{position: 'absolute'}}>
+      style={{position: 'absolute', overflowY: 'scroll'}}>
       <div style={{width: '350px'}}>
+        <div
+          style={{
+            textAlign: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+            padding: '10px',
+            alignItems: 'center',
+            flexDirection: 'column',
+          }}>
+          <div
+            style={{
+              color: '#EB1B29',
+              fontSize: '25px',
+              fontWeight: 600,
+              marginBottom: '10px',
+            }}>
+            JMMB Foundation
+          </div>
+          <Avatar
+            style={{
+              width: '250px',
+              height: '250px',
+              border: '1px solid gainsboro',
+            }}
+            src='https://www.history.com/.image/t_share/MTc5MzY2ODYwNDIzMTc3NTQ5/michelle-obama-gettyimages-1138043297.jpg'
+            alt='michelle obama'
+          />
+          <div
+            style={{
+              color: 'black',
+              fontSize: '25px',
+              fontWeight: 600,
+              marginTop: '10px',
+            }}>
+            Michelle Obama
+          </div>
+        </div>
+        <br />
+        <hr />
+        <br />
         <List>
+          <Link to='/home/user-profile'>
+            <ListItem>
+              <ListItemIcon>
+                <AccountCircle style={{color: 'red'}} />
+              </ListItemIcon>
+              <ListItemText primary='My profile' />
+            </ListItem>
+          </Link>
+          <Link to='/home/user-achievements'>
+            <ListItem>
+              <ListItemIcon>
+                <Bookmark style={{color: 'red'}} />
+              </ListItemIcon>
+              <ListItemText primary='My Achievements' />
+            </ListItem>
+          </Link>
           <Link to='/home'>
             <ListItem>
               <ListItemIcon>
@@ -122,7 +181,7 @@ const AppSidebar = (props) => {
           <Link to='/home/cfg-tools'>
             <ListItem>
               <ListItemIcon>
-                <Build />
+                <Build style={{color: 'red'}} />
               </ListItemIcon>
               <ListItemText primary='CFG Tools' />
             </ListItem>

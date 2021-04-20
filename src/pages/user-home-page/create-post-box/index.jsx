@@ -77,13 +77,13 @@ export default function CreatePostBox() {
               <Save /> <span className='app-card-bottom-text'>Save</span>
             </button>
             <div className='create-post-action-icons'>
-              <Videocam />
+              <Videocam style={{color: 'red'}} />
             </div>
             <div className='create-post-action-icons'>
-              <PermMedia />
+              <PermMedia style={{color: 'red'}} />
             </div>
             <div className='create-post-action-icons'>
-              <EmojiEmotions />
+              <EmojiEmotions style={{color: 'red'}} />
             </div>
           </div>
         </DialogActions>
@@ -101,15 +101,15 @@ export default function CreatePostBox() {
           </div>
           <div className='create-post-app-card-bottom'>
             <div className='create-post-app-card-bottom-box'>
-              <Videocam />{' '}
+              <Videocam style={{color: 'red'}} />{' '}
               <span className='app-card-bottom-text'>Live Video</span>
             </div>
             <div className='create-post-app-card-bottom-box'>
-              <PermMedia />{' '}
+              <PermMedia style={{color: 'red'}} />{' '}
               <span className='app-card-bottom-text'>Photo/Video</span>
             </div>
             <div className='create-post-app-card-bottom-box'>
-              <EmojiEmotions />{' '}
+              <EmojiEmotions style={{color: 'red'}} />{' '}
               <span className='app-card-bottom-text'>Feeling</span>
             </div>
           </div>
