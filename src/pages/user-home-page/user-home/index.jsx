@@ -274,7 +274,6 @@ export default function UserHomePage() {
                   return comment;
                 });
               }
-              console.log(data);
               return data;
             }),
           );

@@ -160,6 +160,7 @@ export default function UserAcievement() {
 
   return (
     <CommonComponent left={left} right={right}>
+      <div className='user-achievement-mobile-view'>{right}</div>
       {achievementCardFakeData.map((element, index) => {
         return (
           <div key={index} className='achievement-card-style'>
