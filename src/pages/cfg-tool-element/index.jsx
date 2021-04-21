@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import './style.css';
 import AdminHeader from 'pages/admin-header';
 import {useDispatch, useSelector} from 'react-redux';
-import {getSessionListData} from 'redux/actions/sessionActions';
+import {getToolListData} from 'redux/actions/toolActions';
 import {
   Container,
   Chip,
@@ -20,7 +20,8 @@ import {formatDate} from 'utils/stampToFormat';
 export default function CfgElement() {
   const dispatch = useDispatch();
   const params = useParams();
-  const state = useSelector((state) => state.session.contentData);
+  const state = useSelector((state) => state.tool.contentData);
+  console.log('the state', state);
   const [data, setData] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   // const [title, setTitle] = useState('');
@@ -28,7 +29,7 @@ export default function CfgElement() {
   const [selectedTitle, setSelectedTitle] = useState(null);
 
   useEffect(() => {
-    dispatch(getSessionListData(params.id));
+    dispatch(getToolListData(params.id));
   }, []);
 
   useEffect(() => {
@@ -62,10 +63,12 @@ export default function CfgElement() {
       <Container>
         <div className='options'>
           <Typography variant='h6' className='titleText'>
-            {data.data && data.data.rows.length && data.data.rows[0].title}
+            {data.data && data.data.rows.length
+              ? data.data.rows[0].title
+              : null}
           </Typography>
           <Link
-            to={`/admin/cfg-session/${selectedTitle ? 'sub-title' : 'title'}/${
+            to={`/admin/cfg-tools/${selectedTitle ? 'sub-title' : 'title'}/${
               params.id
             }/${selectedTitle}`}>
             <Chip
