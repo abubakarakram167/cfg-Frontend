@@ -5,6 +5,7 @@ import './style.css';
 import AdminHeader from 'pages/admin-header';
 import {useDispatch, useSelector} from 'react-redux';
 import {getToolListData} from 'redux/actions/toolActions';
+import CustomTablePagination from '../user-management/pagination';
 import {
   Container,
   Chip,
@@ -24,6 +25,8 @@ export default function CfgElement() {
   console.log('the state', state);
   const [data, setData] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   // const [title, setTitle] = useState('');
   // const [totalPoints, setTotalPoints] = useState(0);
   const [selectedTitle, setSelectedTitle] = useState(null);
@@ -39,6 +42,8 @@ export default function CfgElement() {
   const toggleDialogOpen = () => {
     setDialogOpen(!dialogOpen);
   };
+
+  console.log('the data', data);
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -92,81 +97,112 @@ export default function CfgElement() {
           </div>
           <br />
           {data.data &&
-            data?.data.titles.rows.map((element, index) => {
-              return (
-                <Accordion key={index}>
-                  <AccordionSummary expandIcon={<ExpandMore />}>
-                    <div className='custom-row-design-cfg-details'>
-                      <div className='custom-row-design-header'>
-                        <Checkbox
-                          checked={element.id === selectedTitle}
-                          onClick={() => {
-                            if (selectedTitle !== element.id) {
-                              setSelectedTitle(element.id);
-                            } else {
-                              setSelectedTitle(null);
-                            }
-                          }}
-                        />
-                      </div>
-                      <div className='custom-row-design-header summary-margin-left'>
-                        <Link to={`/admin/content/edit/${element.id}`}>
-                          {element.title}
-                        </Link>
-                      </div>
-                      <div className='custom-row-design-header summary-margin-left'>
-                        {/* {element.author.first_name +
+            data?.data.titles.rows
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              // .filter((element) =>
+              // (element.title ? element.title : '')
+              //   .toLowerCase()
+              //   .startsWith(nameFilter),
+              // )
+              // .filter((element) =>
+              //   (element.author ? element.author.user_name: '')
+              //     .toLowerCase()
+              //     .startsWith(authorFilter),
+              // )
+              // .filter((element) =>
+              //   (element.start_date ? element.start_date : '')
+              //     .toLowerCase()
+              //     .startsWith(startDateFilter),
+              // )
+              // .filter((element) =>
+              // (element.end_date ? element.end_date : '')
+              //   .toLowerCase()
+              //   .startsWith(endDateFilter),
+              // )
+              // .filter((element) =>
+              //   (element.status ? element.status : '')
+              //     .toLowerCase()
+              //     .startsWith(statusFilter),
+              // ).filter((element) =>
+              // (element.total_points ? element.total_points.toString() : '')
+              //   .toLowerCase()
+              //   .startsWith( totalPointsFilter ),
+              // )
+              .map((element, index) => {
+                return (
+                  <Accordion key={index}>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <div className='custom-row-design-cfg-details'>
+                        <div className='custom-row-design-header'>
+                          <Checkbox
+                            checked={element.id === selectedTitle}
+                            onClick={() => {
+                              if (selectedTitle !== element.id) {
+                                setSelectedTitle(element.id);
+                              } else {
+                                setSelectedTitle(null);
+                              }
+                            }}
+                          />
+                        </div>
+                        <div className='custom-row-design-header summary-margin-left'>
+                          <Link to={`/admin/content/edit/${element.id}`}>
+                            {element.title}
+                          </Link>
+                        </div>
+                        <div className='custom-row-design-header summary-margin-left'>
+                          {/* {element.author.first_name +
                           ' ' +
                           element.author.last_name} */}{' '}
-                        Author not found
+                          Author not found
+                        </div>
+                        <div className='custom-row-design-header summary-margin-left'>
+                          {formatDate(element.created_at)}
+                        </div>
+                        <div className='custom-row-design-header summary-margin-left'>
+                          {element.total_points}
+                        </div>
+                        <div className='custom-row-design-header summary-margin-left'>
+                          {element.status}
+                        </div>
                       </div>
-                      <div className='custom-row-design-header summary-margin-left'>
-                        {formatDate(element.created_at)}
-                      </div>
-                      <div className='custom-row-design-header summary-margin-left'>
-                        {element.total_points}
-                      </div>
-                      <div className='custom-row-design-header summary-margin-left'>
-                        {element.status}
-                      </div>
-                    </div>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <div className='subtitles-container-custom'>
-                      {element.subtitles.rows.map((subs, index) => {
-                        return (
-                          <div
-                            key={index}
-                            className='custom-row-design-cfg-details subtitle-card-custom'>
-                            <div className='custom-row-design-header'></div>
-                            <div className='custom-row-design-header'>
-                              <Link to={`/admin/content/edit/${subs.id}`}>
-                                {subs.title}
-                              </Link>
-                            </div>
-                            <div className='custom-row-design-header'>
-                              {/* {subs.author.first_name +
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <div className='subtitles-container-custom'>
+                        {element.subtitles.rows.map((subs, index) => {
+                          return (
+                            <div
+                              key={index}
+                              className='custom-row-design-cfg-details subtitle-card-custom'>
+                              <div className='custom-row-design-header'></div>
+                              <div className='custom-row-design-header'>
+                                <Link to={`/admin/content/edit/${subs.id}`}>
+                                  {subs.title}
+                                </Link>
+                              </div>
+                              <div className='custom-row-design-header'>
+                                {/* {subs.author.first_name +
                                 ' ' +
                                 subs.author.last_name} */}
-                              Author not found
+                                Author not found
+                              </div>
+                              <div className='custom-row-design-header'>
+                                {formatDate(subs.created_at)}
+                              </div>
+                              <div className='custom-row-design-header'>
+                                {subs.total_points}
+                              </div>
+                              <div className='custom-row-design-header'>
+                                {subs.status}
+                              </div>
                             </div>
-                            <div className='custom-row-design-header'>
-                              {formatDate(subs.created_at)}
-                            </div>
-                            <div className='custom-row-design-header'>
-                              {subs.total_points}
-                            </div>
-                            <div className='custom-row-design-header'>
-                              {subs.status}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
-              );
-            })}
+                          );
+                        })}
+                      </div>
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
         </div>
       </Container>
     </div>

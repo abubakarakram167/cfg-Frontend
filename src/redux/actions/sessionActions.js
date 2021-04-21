@@ -6,6 +6,7 @@ import {
   GET_CONTENT_DATA,
   UPDATE_CONTENT_DATA,
 } from './action.types';
+import {Show_Message} from '../../shared/constants/ActionTypes';
 import Session from '../services/session';
 import jsCookie from 'js-cookie';
 
@@ -43,6 +44,10 @@ export const createSessionTitle = (params, type) => {
           type: CREATE_TITLE,
           payload: {...data_resp, error: null},
         });
+        dispatch({
+          type: Show_Message,
+          payload: {message: 'Added SuccessFully', success: true},
+        });
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -58,31 +63,97 @@ export const createSessionTitle = (params, type) => {
   };
 };
 
+// export const createSessionTitle = (params, type) => {
+//   return async function (dispatch) {
+//     try {
+//       const response = await Session.createTitle(params, type);
+//       if (response.status === 200) {
+//         const data_resp = await response.data;
+//         jsCookie.set('login', 'yes');
+//         dispatch({
+//           type: CREATE_TITLE,
+//           payload: {...data_resp, error: null},
+//         });
+//       }
+//     } catch (error) {
+//       if (error.response && error.response.status === 401) {
+//         dispatch(
+//           {
+//             type: CREATE_TITLE,
+//             payload: {error: 'There was an error creating the title'},
+//           },
+//           params.type,
+//         );
+//       }
+//     }
+//   };
+// };
+
 export const editContent = (params, type) => {
-  return async function (dispatch) {
-    try {
-      const response = await Session.editTitle(params, type);
-      if (response.status === 200) {
-        const data_resp = await response.data;
-        jsCookie.set('login', 'yes');
-        dispatch({
-          type: UPDATE_CONTENT_DATA,
-          payload: {...data_resp, error: null},
+  return (dispatch) => {
+    return new Promise((res, rej) => {
+      Session.editTitle(params, type)
+        .then((response) => {
+          if (response.status === 200) {
+            const data_resp = response.data;
+            jsCookie.set('login', 'yes');
+            dispatch({
+              type: UPDATE_CONTENT_DATA,
+              payload: {...data_resp, error: null},
+            });
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'Edit SuccessFully', success: true},
+            });
+            res(true);
+          } else {
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'SuccessFully Not Added', success: false},
+            });
+          }
+        })
+        .catch((error) => {
+          rej(false);
+          if (error.response && error.response.status === 401) {
+            dispatch(
+              {
+                type: UPDATE_CONTENT_DATA,
+                payload: {error: 'There was an error creating the title'},
+              },
+              params.type,
+            );
+          }
         });
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        dispatch(
-          {
-            type: UPDATE_CONTENT_DATA,
-            payload: {error: 'There was an error creating the title'},
-          },
-          params.type,
-        );
-      }
-    }
+    });
   };
 };
+
+// export const editContent = (params, type) => {
+//   return async function (dispatch) {
+//     try {
+//       const response = await Session.editTitle(params, type);
+//       if (response.status === 200) {
+//         const data_resp = await response.data;
+//         jsCookie.set('login', 'yes');
+//         dispatch({
+//           type: UPDATE_CONTENT_DATA,
+//           payload: {...data_resp, error: null},
+//         });
+//       }
+//     } catch (error) {
+//       if (error.response && error.response.status === 401) {
+//         dispatch(
+//           {
+//             type: UPDATE_CONTENT_DATA,
+//             payload: {error: 'There was an error creating the title'},
+//           },
+//           params.type,
+//         );
+//       }
+//     }
+//   };
+// };
 
 export const getSessionData = () => {
   return async function (dispatch) {

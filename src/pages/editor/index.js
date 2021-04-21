@@ -11,11 +11,20 @@ import PublishIcon from '@material-ui/icons/Publish';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import {useParams} from 'react-router-dom';
 import formatDate from 'utils/formatDate';
-import {createSessionTitle} from 'redux/actions/sessionActions';
+import {
+  createSessionTitle,
+  getContentData,
+  getSessionListData,
+} from 'redux/actions/sessionActions';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Link} from 'react-router-dom';
+import {InputBase} from '@material-ui/core';
+import {getToolData} from 'redux/actions/toolActions';
+import {Show_Message} from '../../shared/constants/ActionTypes';
+import InfoIcon from '@material-ui/icons/Info';
+
 export default function Editor() {
   const params = useParams();
   const dispatch = useDispatch();
@@ -35,12 +44,26 @@ export default function Editor() {
   const [createdContentId, setCreatedContentId] = useState(0);
   const [previous_page, setprevious_page] = useState('');
   const [next_page, setnext_page] = useState('');
+  const [contentType, setContentType] = useState('');
+  const [groups, setGroups] = useState([]);
+  const [groupValue, setGroupValue] = useState('');
+  const [accumulativeTitlePoints, setAccumulativeTitlePoints] = useState(0);
+  const [originalTotalPoints, setOriginalTotalPoints] = useState(0);
+
+  const {id} = useParams();
+  console.log('here the state', state);
 
   const handleEditorChange = (e) => {
     setContent(e);
     setImageData(
       e.split('"').filter((element) => element.startsWith('data:image')),
     );
+  };
+
+  const handleGroupSubmit = (e) => {
+    e.preventDefault();
+    setGroups([...groups, groupValue]);
+    setGroupValue('');
   };
 
   const handleKeywordSubmit = (e) => {
@@ -50,9 +73,46 @@ export default function Editor() {
   };
 
   useEffect(() => {
+    dispatch(getContentData(params.id));
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    dispatch(getSessionListData(params.id));
+  }, []);
+
+  useEffect(() => {
     if (state.titleCreation) {
       setOpen1(true);
     }
+
+    if (state.titles && state.titles.rows && state.titles.rows.length) {
+      let totalPoints = 0;
+
+      state.titles.rows.map((row) => {
+        if (row && row.total_points <= state.current.total_points)
+          totalPoints = totalPoints + row.total_points;
+      });
+      settotal_points(state.current.total_points - totalPoints);
+      setAccumulativeTitlePoints(totalPoints);
+    }
+
+    if (state.currentContent) {
+      setTitle(state.currentContent.title || '');
+      setsub_title(state.currentContent.sub_title || '');
+      setContent(state.currentContent.detail || '');
+      setstart_date(new Date(state.currentContent.start_date));
+      setend_date(new Date(state.currentContent.end_date));
+      setStatus(state.currentContent.status || 'draft');
+      setKeywords(
+        JSON.parse(state.currentContent.tags).map((element) => element.text) ||
+          [],
+      );
+      setOriginalTotalPoints(state.currentContent.total_points || 0);
+      setnext_page(state.currentContent.next_page || '');
+      setprevious_page(state.currentContent.previous_page || '');
+      setContentType(state.currentContent.type || '');
+    }
+
     if (state.createdContent) {
       setCreatedContentId(state.createdContent.id);
     }
@@ -73,38 +133,77 @@ export default function Editor() {
       };
     });
 
-    dispatch(
-      createSessionTitle(
-        {
-          title,
-          sub_title,
-          detail: content,
-          start_date: formatDate(start_date),
-          end_date: formatDate(end_date),
-          tags,
-          type: params.type,
-          total_points,
-          content_header_id: parseInt(parent),
-          previous_page,
-          next_page,
+    if (
+      parseInt(total_points) + parseInt(accumulativeTitlePoints) >
+      originalTotalPoints
+    ) {
+      dispatch({
+        type: Show_Message,
+        payload: {
+          message: 'Cannot be added.Please follow the requirements',
+          success: false,
         },
-        params.type,
-      ),
-    );
+      });
+      setTimeout(() => {
+        dispatch({
+          type: Show_Message,
+          payload: {message: null, success: true},
+        });
+      }, 5000);
+    } else {
+      dispatch(
+        createSessionTitle(
+          {
+            title,
+            sub_title,
+            detail: content,
+            start_date: formatDate(start_date),
+            end_date: formatDate(end_date),
+            tags,
+            type: params.type,
+            total_points,
+            content_header_id: parseInt(parent),
+            previous_page,
+            next_page,
+          },
+          params.type,
+        ),
+      );
+    }
   };
   const [open1, setOpen1] = useState(false);
   const handleClose1 = () => {
     setOpen1(false);
   };
+  const userList = useSelector((state) => state.userList);
+
+  console.log(
+    'the manipulation',
+    parseInt(total_points) + parseInt(accumulativeTitlePoints),
+  );
+  console.log('the original', originalTotalPoints);
+
   return (
     <div className='editor-page-full-container'>
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
       <br />
+      {userList.message && (
+        <Snackbar
+          open={userList.message}
+          autoHideDuration={6000}
+          onClose={handleClose1}>
+          <Alert
+            onClose={handleClose1}
+            severity={userList.success ? 'success' : 'error'}>
+            {userList.message}
+          </Alert>
+        </Snackbar>
+      )}
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
         <Alert onClose={handleClose1} severity='success'>
-          Successfully created
+          Record updated successfully.
         </Alert>
       </Snackbar>
 
@@ -112,26 +211,30 @@ export default function Editor() {
         <div className='top-section'>
           <div>
             <div>
-              <ContentEditable
+              {/* <ContentEditable
                 className='ce-title'
                 html={title}
                 disabled={false}
                 onChange={(e) => setTitle(e.target.value)}
+                onFocus = {()=> setTitle('')}
+              /> */}
+              <InputBase
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
+                placeholder='Enter a title'
               />
             </div>
-            <div>
+            {/* <div>
               <ContentEditable
                 className='ce-sub-title'
                 html={sub_title}
                 disabled={false}
                 onChange={(e) => setsub_title(e.target.value)}
               />
-            </div>
+            </div> */}
           </div>
           <div className='flex-buttons-publish'>
-            <Link
-              to={`/admin/content/display/${createdContentId}`}
-              style={{pointerEvents: createdContentId === 0 ? 'none' : 'auto'}}>
+            <Link to={`/admin/content/display/${params.id}`}>
               <button className='flex-button preview'>
                 {' '}
                 <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
@@ -147,10 +250,12 @@ export default function Editor() {
         <div className='editor-container'>
           <div className='editor-side'>
             <SunEditor
+              setContents={content}
               setOptions={{
-                height: 200,
+                height: 630,
                 buttonList: [
                   ['bold', 'italic', 'underline'],
+                  ['indent', 'outdent'],
                   ['list'],
                   ['fontColor'],
                   ['fontSize'],
@@ -200,7 +305,18 @@ export default function Editor() {
             </div>
             <br />
 
-            <div>
+            {/* <div>
+              <Select
+                labelId='demo-customized-select-label'
+                id='demo-customized-select'
+                value={appliedGroup}
+                onChange={(e) => setAppliedGroup(e.target.value)}
+                fullWidth
+                label='Apply to Groups'
+                variant='filled'></Select>
+            </div> */}
+
+            {/* <div>
               <TextField
                 variant='filled'
                 value={appliedGroup}
@@ -209,6 +325,33 @@ export default function Editor() {
                 label='Apply to Groups'
                 required
               />
+            </div> */}
+
+            <div>
+              {groups.map((element, index) => {
+                return (
+                  <Chip
+                    label={element}
+                    key={index}
+                    className='chip-style'
+                    onDelete={() => {
+                      setGroups(groups.filter((value) => value !== element));
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <div>
+              <form onSubmit={handleGroupSubmit}>
+                <TextField
+                  variant='filled'
+                  value={groupValue}
+                  onSubmit={(e) => setGroups([...groups, e.target.value])}
+                  onChange={(e) => setGroupValue(e.target.value)}
+                  fullWidth
+                  label='Groups'
+                />
+              </form>
             </div>
 
             <br />
@@ -261,6 +404,7 @@ export default function Editor() {
                 variant='filled'
                 format='MM/DD/yyyy'
                 margin='normal'
+                fullWidth={true}
                 label='End Date'
                 value={end_date}
                 onChange={(e) => setend_date(e)}
@@ -290,9 +434,24 @@ export default function Editor() {
                 value={total_points}
                 onChange={(e) => settotal_points(e.target.value)}
                 fullWidth
-                label='total_points'
+                label='Total Points'
                 required
               />
+              {parseInt(total_points) + parseInt(accumulativeTitlePoints) >
+                originalTotalPoints && (
+                <p className='total-points-text'>
+                  <InfoIcon
+                    style={{
+                      fill: 'red',
+                      fontSize: 18,
+                      position: 'relative',
+                      top: 3,
+                    }}
+                  />{' '}
+                  The total points for this title cannot be exceed than{' '}
+                  {originalTotalPoints - accumulativeTitlePoints}
+                </p>
+              )}
             </div>
             <br />
             <div>
