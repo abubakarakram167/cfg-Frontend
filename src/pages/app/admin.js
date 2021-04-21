@@ -31,8 +31,10 @@ import UserProfile from 'pages/user-home-page/user-profile';
 import UserEvents from 'pages/user-home-page/user-events';
 import HostAConversation from 'pages/user-home-page/host-a-conversation';
 import HomeCFGTools from 'pages/user-home-page/cfg-tools';
-// const Admin = () => {
-//   return [
+import CfgToolsPage from 'pages/user-home-page/cfg-tools-page';
+import Learn from 'pages/user-home-page/learn';
+import AllInboxPage from 'pages/user-home-page/all-in-box';
+
 export default [
   <ProtectedRoute exact path='/admin' component={AdminHome} />,
   <ProtectedRoute
@@ -147,6 +149,21 @@ export default [
     exact
     path='/home/cfg-tools'
     component={withRouter(HomeCFGTools)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/cfg-tools/:id'
+    component={withRouter(CfgToolsPage)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/cfg-tools/:id/:learnId'
+    component={withRouter(Learn)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/all-in-box'
+    component={withRouter(AllInboxPage)}
   />,
 ];
 // };

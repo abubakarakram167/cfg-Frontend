@@ -1,0 +1,16 @@
+.learn-data-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+}
+.learn-data-box {
+  width: 30%;
+  margin: 5px;
+}
+@media only screen and (max-width: 900px) {
+  .learn-data-box {
+    width: 45%;
+    margin: 5px;
+  }
+}
