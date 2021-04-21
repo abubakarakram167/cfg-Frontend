@@ -113,6 +113,7 @@ export default function CustomPaginationActionsTable(props) {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    props.onChangeSendRequest(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
