@@ -61,7 +61,10 @@ export default function RewardCard(props) {
       </CardActionArea>
       <CardActions>
         <div className={classes.actionArea}>
-          <Button variant='contained' color='secondary'>
+          <Button
+            variant='contained'
+            color='secondary'
+            onClick={props.toggleOpen}>
             <Redeem style={{color: 'white', marginRight: '5px'}} /> Redeem
           </Button>
         </div>

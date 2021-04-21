@@ -15,9 +15,14 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
-import {Group, CardGiftcard, Bookmark} from '@material-ui/icons';
+import {
+  Group,
+  CardGiftcard,
+  Bookmark,
+  ShoppingBasket,
+} from '@material-ui/icons';
 import AppSideBar from '../AppSidebar';
-
+import AllInboxIcon from '@material-ui/icons/AllInbox';
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -59,7 +64,9 @@ export default function AdminHeader() {
 
   return (
     <div>
-      <AppSideBar drawerOpen={drawerOpen}>Hello </AppSideBar>
+      <AppSideBar drawerOpen={drawerOpen} toggleDrawerOpen={toggleDrawerOpen}>
+        Hello{' '}
+      </AppSideBar>
       <AppHeader>
         <div className='user-heder-container-header'>
           <div className='left'>
@@ -173,6 +180,11 @@ export default function AdminHeader() {
             <div className='right-icons'>
               <div className='icon'>
                 <NotificationIcon style={{fill: '#ffffff'}} />
+              </div>
+              <div className='icon'>
+                <Link to='/home/all-in-box'>
+                  <ShoppingBasket style={{fill: '#ffffff'}} />
+                </Link>
               </div>
               <div className='icon' onClick={handleClick2}>
                 <SettingsIcon style={{fill: '#ffffff'}} />

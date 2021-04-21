@@ -25,6 +25,7 @@ import {
   Home,
   AccountCircle,
   Bookmark,
+  Cancel,
 } from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 const AppSidebar = (props) => {
@@ -65,8 +66,14 @@ const AppSidebar = (props) => {
               fontSize: '25px',
               fontWeight: 600,
               marginBottom: '10px',
+              display: 'flex',
+              alignItems: 'center',
             }}>
-            JMMB Foundation
+            JMMB Foundation{' '}
+            <Cancel
+              onClick={props.toggleDrawerOpen}
+              style={{marginLeft: '10px'}}
+            />
           </div>
           <Avatar
             style={{

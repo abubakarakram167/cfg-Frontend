@@ -1,0 +1,16 @@
+.learn-content-buttons {
+  text-align: right;
+  padding: 10px;
+}
+.learn-title {
+  font-weight: 600;
+  color: #e09b3b;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.learn-content {
+  font-size: 18px;
+  line-height: 30px;
+  margin: 20px 0px;
+}
