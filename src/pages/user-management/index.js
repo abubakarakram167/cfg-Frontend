@@ -116,8 +116,9 @@ export default function UserManagement() {
   }
 
   useEffect(() => {
-    dispatch(onGetUserList());
+    dispatch(onGetUserList({page: 0}));
   }, [dispatch]);
+
   const classes = useStyles();
   const toggleCheckbox = (id) => {
     setUserData(
@@ -568,6 +569,10 @@ export default function UserManagement() {
                   rowsPerPage={rowsPerPage}
                   page={page}
                   userData={userData}
+                  onChangeSendRequest={(page) => {
+                    console.log('the page', page);
+                    dispatch(onGetUserList({page}));
+                  }}
                   setPage={(page) => setPage(page)}
                   setRowsPerPage={(page) => setRowsPerPage(page)}
                 />
