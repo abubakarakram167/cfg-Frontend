@@ -1,0 +1,42 @@
+.user-home-page-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}
+.user-home-left {
+  width: 21%;
+  height: 100vh;
+  padding: 10px;
+}
+.user-home-center {
+  width: 56%;
+  overflow-y: auto;
+  height: 100vh;
+  padding-top: 20px;
+}
+.user-home-right {
+  width: 21%;
+  height: 100vh;
+  padding: 10px;
+  overflow-y: scroll;
+}
+.left-first-expander {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media only screen and (max-width: 970px) {
+  .user-home-right {
+    display: none;
+  }
+  .user-home-left {
+    display: none;
+  }
+  .user-home-center {
+    width: 100%;
+    padding: 10px;
+  }
+}
