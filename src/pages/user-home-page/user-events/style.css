@@ -1,0 +1,15 @@
+.upcoming-events {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.upcoming-event {
+  width: 32%;
+  margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 970px) {
+  .upcoming-event {
+    width: 49%;
+  }
+}

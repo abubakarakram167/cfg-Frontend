@@ -1,0 +1,49 @@
+.user-profile-cfg {
+  display: flex;
+  width: 100%;
+}
+.user-profile-cfg-left {
+  width: 50%;
+  border-right: 1px solid gainsboro;
+  padding: 10px;
+}
+
+.user-profile-cfg-right {
+  width: 50%;
+  padding: 10px;
+}
+.user-cfg-achievement-container {
+  display: flex;
+  align-items: center;
+}
+.cfg-achievement-icon-container {
+  /* margin-right: 10px; */
+}
+.cfg-achievement-info-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0px 10px;
+}
+
+@media only screen and (max-width: 600px) {
+  .user-profile-cfg {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+  }
+  .user-profile-cfg-left {
+    width: 100%;
+    border-bottom: 1px solid gainsboro;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .user-profile-cfg-right {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+  }
+  .user-cfg-achievement-container {
+    justify-content: center;
+  }
+}

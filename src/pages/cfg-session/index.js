@@ -126,6 +126,9 @@ export default function CfgSession(props) {
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
   const [createAtFilter, setCreateAtFilter] = useState('');
+  const [category, setCategory] = useState('CFG Session');
+
+  console.log('the content', content);
 
   const handleClose1 = () => {
     setOpen1(false);
@@ -161,7 +164,6 @@ export default function CfgSession(props) {
               };
             } else return content;
           });
-          console.log('the allContent', allContent);
           setContent(allContent);
         }
       });
@@ -178,7 +180,6 @@ export default function CfgSession(props) {
       );
     }
     setTitle('');
-    setAuthor('');
     setstart_date(new Date());
     setend_date(new Date());
     settotal_points('');
@@ -204,7 +205,7 @@ export default function CfgSession(props) {
                 value={title}
               />
             </ListItem>
-            <ListItem>
+            {/* <ListItem>
               <TextField
                 label='Author'
                 variant='filled'
@@ -214,7 +215,7 @@ export default function CfgSession(props) {
                 disabled
                 value={author}
               />
-            </ListItem>
+            </ListItem> */}
             <ListItem>
               <KeyboardDatePicker
                 disableToolbar
@@ -252,12 +253,25 @@ export default function CfgSession(props) {
                 label='Total Points'
                 variant='filled'
                 fullWidth
-                onChange={(e) => settotal_points(e.target.value)}
+                onChange={(e) => settotal_points(parseInt(e.target.value))}
                 required
                 type='number'
                 value={total_points}
               />
             </ListItem>
+            {/* <ListItem>
+              <Select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                variant='filled'
+                fullWidth
+                label='category'
+                required>
+                <MenuItem value={'session'}>CFG Session</MenuItem>
+                <MenuItem value={'event'}>Events</MenuItem>
+                <MenuItem value={'tool'}>CFG Tools</MenuItem>
+              </Select>
+            </ListItem> */}
             <ListItem>
               <Select
                 labelId='demo-simple-select-filled-label'
@@ -316,7 +330,14 @@ export default function CfgSession(props) {
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
             className='chip-style'
-            onClick={() => setDialogOpen(true)}
+            onClick={() => {
+              setDialogOpen(true);
+              setTitle('');
+              setstart_date(new Date());
+              setend_date(new Date());
+              settotal_points('');
+              setStatus('draft');
+            }}
           />
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
@@ -329,7 +350,7 @@ export default function CfgSession(props) {
           />
         </div>
         <br />
-        <TableContainer component={Paper}>
+        <TableContainer style={{marginBottom: 50}} component={Paper}>
           <Table className={classes.table} aria-label='customized table'>
             <TableHead>
               <TableRow>
@@ -370,11 +391,13 @@ export default function CfgSession(props) {
                     {/* <KeyboardDatePicker
                       disableToolbar
                       variant='inline'
-                      format='MM/DD/yyyy'
+                      format='YYYY-MM-DD'
                       margin='normal'
+                      // value={startDateFilter ? startDateFilter : '' }
                       fullWidth={true}
                       label='Start Date'
                       onChange={(e) =>  {
+                        debugger
                         setStartdateFilter( moment(e).format('YYYY-MM-DD') )
                       }}
                       KeyboardButtonProps={{
@@ -455,6 +478,9 @@ export default function CfgSession(props) {
               {content.length > 0 &&
                 rowsPerPage > 0 &&
                 content
+                  .sort(function (a, b) {
+                    return new Date(b.created_at) - new Date(a.created_at);
+                  })
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .filter((element) =>
                     (element.title ? element.title : '')
@@ -525,7 +551,7 @@ export default function CfgSession(props) {
                         </Link>
                       </StyledTableCell>
                       <StyledTableCell>
-                        {row.author ? row.author.user_name : ' '}
+                        {row.author ? row.author.first_name : ' '}
                       </StyledTableCell>
                       <StyledTableCell>{row.start_date}</StyledTableCell>
                       <StyledTableCell>{row.end_date}</StyledTableCell>
@@ -536,12 +562,11 @@ export default function CfgSession(props) {
                       <StyledTableCell>{row.status}</StyledTableCell>
                     </StyledTableRow>
                   ))}
-              <StyledTableRow style={{width: 200}}>
+              <StyledTableRow>
                 <CustomTablePagination
                   rowsPerPage={rowsPerPage}
                   page={page}
                   userData={content}
-                  style={{width: 200}}
                   setPage={(page) => setPage(page)}
                   setRowsPerPage={(page) => setRowsPerPage(page)}
                 />

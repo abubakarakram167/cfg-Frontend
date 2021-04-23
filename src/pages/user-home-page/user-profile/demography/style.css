@@ -1,0 +1,13 @@
+.demographics-data {
+  display: flex;
+  width: 100%;
+}
+.demographics-key {
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 30px;
+  margin-bottom: 10px;
+}
+.demographics-value {
+  font-size: 14px;
+}
