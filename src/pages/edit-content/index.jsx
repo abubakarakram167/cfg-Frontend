@@ -104,7 +104,7 @@ export default function Editor() {
     if (state.current) setOriginalTotalPoints(state.current.total_points || 0);
     if (state.currentContent) {
       console.log('the state', state);
-      setTitle(state.currentContent.title || '');
+      setTitle(params.title || '');
       setsub_title(state.currentContent.sub_title || '');
       setContent(state.currentContent.detail || '');
       setstart_date(new Date(state.currentContent.start_date));
