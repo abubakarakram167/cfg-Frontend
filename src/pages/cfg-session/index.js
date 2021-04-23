@@ -126,6 +126,7 @@ export default function CfgSession(props) {
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
   const [createAtFilter, setCreateAtFilter] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [category, setCategory] = useState('CFG Session');
 
   console.log('the content', content);
@@ -387,35 +388,69 @@ export default function CfgSession(props) {
                 </StyledTableCell>
                 <StyledTableCell>
                   <span className='column-heading'> Start Date </span>
-                  <div style={{display: 'flex', alignItems: 'center'}}>
-                    {/* <KeyboardDatePicker
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <KeyboardDatePicker
                       disableToolbar
-                      variant='inline'
+                      style={{backgroundColor: '#eaeaea', paddingtop: 5}}
+                      variant='filled'
                       format='YYYY-MM-DD'
-                      margin='normal'
-                      // value={startDateFilter ? startDateFilter : '' }
+                      autoOk={true}
+                      value={startDateFilter === '' ? null : startDateFilter}
                       fullWidth={true}
+                      // keyboardIcon = {null}
                       label='Start Date'
-                      onChange={(e) =>  {
-                        debugger
-                        setStartdateFilter( moment(e).format('YYYY-MM-DD') )
+                      onChange={(e) => {
+                        if (e && e !== '')
+                          setStartdateFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else setStartdateFilter('');
                       }}
                       KeyboardButtonProps={{
                         'aria-label': 'change date',
                       }}
-                    /> */}
-                    <TextField
-                      variant='filled'
-                      size='small'
-                      label='Start Date'
-                      placeholder=''
-                      value={startDateFilter}
-                      onChange={(e) => setStartdateFilter(e.target.value)}
                     />
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
+                  <span className='column-heading'> End Date </span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      style={{backgroundColor: '#eaeaea', paddingTop: 5}}
+                      variant='filled'
+                      format='YYYY-MM-DD'
+                      autoOk={true}
+                      value={endDateFilter === '' ? null : endDateFilter}
+                      fullWidth={true}
+                      // keyboardIcon = {null}
+                      label='End Date'
+                      onChange={(e) => {
+                        if (e && e !== '')
+                          setEnddateFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else setEnddateFilter('');
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                {/* <StyledTableCell>
                   <span className='column-heading'> End Date </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
                     <TextField
@@ -428,8 +463,40 @@ export default function CfgSession(props) {
                     />
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
-                </StyledTableCell>
+                </StyledTableCell> */}
                 <StyledTableCell>
+                  <span className='column-heading'> Created On </span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      style={{backgroundColor: '#eaeaea', paddingTop: 5}}
+                      variant='filled'
+                      format='YYYY-MM-DD'
+                      autoOk={true}
+                      value={createAtFilter === '' ? null : createAtFilter}
+                      fullWidth={true}
+                      // keyboardIcon = {null}
+                      label='Creat On'
+                      onChange={(e) => {
+                        if (e && e !== '')
+                          setCreateAtFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else setCreateAtFilter('');
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                {/* <StyledTableCell>
                   <span className='column-heading'> Created On </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
                     <TextField
@@ -442,7 +509,7 @@ export default function CfgSession(props) {
                     />
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
-                </StyledTableCell>
+                </StyledTableCell> */}
                 <StyledTableCell>
                   <span className='column-heading'> Total Points </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
