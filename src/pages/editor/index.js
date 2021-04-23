@@ -30,7 +30,7 @@ export default function Editor() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
   const [content, setContent] = useState('');
-  const [title, setTitle] = useState('Enter a title');
+  const [title, setTitle] = useState('');
   const [sub_title, setsub_title] = useState('Enter a subtitle');
   const [appliedGroup, setAppliedGroup] = useState('');
   const [categories, setCategories] = useState([]);
@@ -97,7 +97,6 @@ export default function Editor() {
     }
 
     if (state.currentContent) {
-      setTitle(state.currentContent.title || '');
       setsub_title(state.currentContent.sub_title || '');
       setContent(state.currentContent.detail || '');
       setstart_date(new Date(state.currentContent.start_date));
@@ -119,28 +118,64 @@ export default function Editor() {
   }, [state]);
 
   const publish = () => {
-    let parent = null;
-    if (params.contentHeaderId === 'null') {
-      parent = params.id;
+    let cfgSessionStatus = state.current.status;
+    if (cfgSessionStatus === 'published') {
+      let parent = null;
+      if (params.contentHeaderId === 'null') {
+        parent = params.id;
+      } else {
+        parent = params.contentHeaderId;
+      }
+
+      const tags = keywords.map((element) => {
+        return {
+          tag_type: 'keyword',
+          text: element,
+        };
+      });
+
+      if (
+        parseInt(total_points) + parseInt(accumulativeTitlePoints) >
+        originalTotalPoints
+      ) {
+        dispatch({
+          type: Show_Message,
+          payload: {
+            message: 'Cannot be added.Please follow the requirements',
+            success: false,
+          },
+        });
+        setTimeout(() => {
+          dispatch({
+            type: Show_Message,
+            payload: {message: null, success: true},
+          });
+        }, 5000);
+      } else {
+        dispatch(
+          createSessionTitle(
+            {
+              title,
+              sub_title,
+              detail: content,
+              start_date: formatDate(start_date),
+              end_date: formatDate(end_date),
+              tags,
+              type: params.type,
+              total_points,
+              content_header_id: parseInt(parent),
+              previous_page,
+              next_page,
+            },
+            params.type,
+          ),
+        );
+      }
     } else {
-      parent = params.contentHeaderId;
-    }
-
-    const tags = keywords.map((element) => {
-      return {
-        tag_type: 'keyword',
-        text: element,
-      };
-    });
-
-    if (
-      parseInt(total_points) + parseInt(accumulativeTitlePoints) >
-      originalTotalPoints
-    ) {
       dispatch({
         type: Show_Message,
         payload: {
-          message: 'Cannot be added.Please follow the requirements',
+          message: 'Session must be published in order to publish the content.',
           success: false,
         },
       });
@@ -149,26 +184,7 @@ export default function Editor() {
           type: Show_Message,
           payload: {message: null, success: true},
         });
-      }, 5000);
-    } else {
-      dispatch(
-        createSessionTitle(
-          {
-            title,
-            sub_title,
-            detail: content,
-            start_date: formatDate(start_date),
-            end_date: formatDate(end_date),
-            tags,
-            type: params.type,
-            total_points,
-            content_header_id: parseInt(parent),
-            previous_page,
-            next_page,
-          },
-          params.type,
-        ),
-      );
+      }, 3000);
     }
   };
   const [open1, setOpen1] = useState(false);
@@ -211,27 +227,13 @@ export default function Editor() {
         <div className='top-section'>
           <div>
             <div>
-              {/* <ContentEditable
-                className='ce-title'
-                html={title}
-                disabled={false}
-                onChange={(e) => setTitle(e.target.value)}
-                onFocus = {()=> setTitle('')}
-              /> */}
               <InputBase
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
                 placeholder='Enter a title'
+                style={{fontSize: 20}}
               />
             </div>
-            {/* <div>
-              <ContentEditable
-                className='ce-sub-title'
-                html={sub_title}
-                disabled={false}
-                onChange={(e) => setsub_title(e.target.value)}
-              />
-            </div> */}
           </div>
           <div className='flex-buttons-publish'>
             <Link to={`/admin/content/display/${params.id}`}>
@@ -304,29 +306,6 @@ export default function Editor() {
               </Select>
             </div>
             <br />
-
-            {/* <div>
-              <Select
-                labelId='demo-customized-select-label'
-                id='demo-customized-select'
-                value={appliedGroup}
-                onChange={(e) => setAppliedGroup(e.target.value)}
-                fullWidth
-                label='Apply to Groups'
-                variant='filled'></Select>
-            </div> */}
-
-            {/* <div>
-              <TextField
-                variant='filled'
-                value={appliedGroup}
-                onChange={(e) => setAppliedGroup(e.target.value)}
-                fullWidth
-                label='Apply to Groups'
-                required
-              />
-            </div> */}
-
             <div>
               {groups.map((element, index) => {
                 return (

@@ -20,3 +20,7 @@
 .green-chip {
   background-color: #0ab804 !important;
 }
+
+.MuiTextField-root {
+  background-color: gray;
+}

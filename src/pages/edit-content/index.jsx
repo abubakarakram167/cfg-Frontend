@@ -225,6 +225,7 @@ export default function Editor() {
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
                 placeholder='Enter a title'
+                style={{fontSize: 20}}
               />
             </div>
             {/* <div>

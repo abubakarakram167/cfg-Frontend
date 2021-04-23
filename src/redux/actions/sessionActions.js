@@ -16,10 +16,18 @@ export const createSession = (params) => {
       const response = await Session.createSession(params);
       if (response.status === 200) {
         const data_resp = await response.data;
+        data_resp.content.author = {
+          first_name: JSON.parse(jsCookie.get('user')).first_name,
+          user_name: JSON.parse(jsCookie.get('user')).user_name,
+        };
         jsCookie.set('login', 'yes');
         dispatch({
           type: CREATE_SESSION,
           payload: {...data_resp, error: null},
+        });
+        dispatch({
+          type: Show_Message,
+          payload: {message: 'Session Added SuccessFully', success: true},
         });
       }
     } catch (error) {
