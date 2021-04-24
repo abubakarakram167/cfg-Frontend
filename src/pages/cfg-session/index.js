@@ -148,6 +148,7 @@ export default function CfgSession(props) {
           total_points,
           end_date,
           type: 'session',
+          status,
           id: singleId,
         }),
       ).then((res) => {

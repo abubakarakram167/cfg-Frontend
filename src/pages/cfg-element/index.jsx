@@ -10,6 +10,7 @@ import {getSessionListData} from 'redux/actions/sessionActions';
 import CustomTablePagination from '../user-management/pagination';
 import FilterList from '@material-ui/icons/FilterList';
 import TableCell from '@material-ui/core/TableCell';
+import jsCookie from 'js-cookie';
 import {
   Container,
   Chip,
@@ -232,8 +233,6 @@ export default function CfgElement() {
                   .startsWith(createAtFilter),
               )
               .map((element, index) => {
-                console.log('the element', element);
-                console.log('the parent data', data);
                 if (element.total_points <= parentTotalPoints) {
                   return (
                     <Accordion key={index}>
@@ -253,15 +252,12 @@ export default function CfgElement() {
                           </div>
                           <div className='custom-row-design-header summary-margin-left-concise'>
                             <Link
-                              to={`/admin/content/edit/${element.id}/${params.id}`}>
+                              to={`/admin/content/edit/${element.id}/${params.id}/${element.title}`}>
                               {element.title}
                             </Link>
                           </div>
                           <div className='custom-row-design-header summary-margin-left-concise'>
-                            {/* {element.author.first_name +
-                            ' ' +
-                            element.author.last_name} */}{' '}
-                            Author not found
+                            {JSON.parse(jsCookie.get('user')).first_name}
                           </div>
                           <div className='custom-row-design-header summary-margin-left'>
                             {moment(
@@ -296,7 +292,7 @@ export default function CfgElement() {
                                   {/* {subs.author.first_name +
                                   ' ' +
                                   subs.author.last_name} */}
-                                  Author not found
+                                  {JSON.parse(jsCookie.get('user')).first_name}
                                 </div>
                                 <div className='custom-row-design-header accordian-dropdown-extra'>
                                   {moment(
