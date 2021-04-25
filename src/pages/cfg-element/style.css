@@ -65,3 +65,7 @@
   position: relative;
   left: 28px;
 }
+.custom-pagination {
+  text-align: -webkit-right;
+  background-color: #efeeee;
+}

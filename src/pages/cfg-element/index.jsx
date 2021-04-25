@@ -317,16 +317,15 @@ export default function CfgElement() {
                 } else return null;
               })}
         </div>
-        <StyledTableRow style={{width: 400}}>
+        <div className='custom-pagination'>
           <CustomTablePagination
             rowsPerPage={rowsPerPage}
             page={page}
             userData={data && data.titles ? data.titles.rows : []}
-            style={{width: 400}}
             setPage={(page) => setPage(page)}
             setRowsPerPage={(page) => setRowsPerPage(page)}
           />
-        </StyledTableRow>
+        </div>
       </Container>
     </div>
   );
