@@ -119,6 +119,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.0.1",
     "suneditor-react": "^2.16.0",
     "typescript": "^3.8.3",
     "use-url-search-params": "^2.3.13",
