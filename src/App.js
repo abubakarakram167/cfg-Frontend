@@ -15,7 +15,6 @@ import UserConnections from 'pages/user-home-page/user-connections';
 import UserHome from 'pages/user-home-page/user-home';
 import UserRewards from 'pages/user-home-page/user-rewards';
 import UserAchievements from 'pages/user-home-page/user-achievement';
-import Socket from './socket';
 const store = configureStore();
 
 const App = () => (
