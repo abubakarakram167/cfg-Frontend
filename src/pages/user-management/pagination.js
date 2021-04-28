@@ -113,6 +113,7 @@ export default function CustomPaginationActionsTable(props) {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    if (props.onChangeSendRequest) props.onChangeSendRequest(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -123,16 +124,10 @@ export default function CustomPaginationActionsTable(props) {
   return (
     <StyledTablePagination
       rowsPerPageOptions={[5, 10, 25]}
-      colSpan={2}
       count={props.userData.length}
       style={{borderBottom: 0}}
       rowsPerPage={rowsPerPage}
       page={page}
-      style={{width: 400}}
-      // SelectProps={{
-      //   inputProps: { 'aria-label': 'rows per page' },
-      //   native: true,
-      // }}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
       ActionsComponent={TablePaginationActions}

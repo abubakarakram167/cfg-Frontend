@@ -1,0 +1,126 @@
+.user-heder-container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+  height: 10vh !important;
+}
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+}
+.right-icons {
+  display: flex;
+}
+.right-user-info {
+  display: flex;
+  color: white;
+  align-items: center;
+  margin-right: 40px;
+}
+.user-name-text {
+  margin-left: 10px;
+}
+.icon {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.search-bar {
+  position: relative;
+}
+
+.left-user-info {
+  display: flex;
+  align-items: center;
+}
+
+.menu-drop-down {
+  display: none;
+}
+.mobile-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.logo-style {
+  border: 2px solid gainsboro;
+}
+
+.center-user-page {
+  display: flex;
+}
+
+.user-page-icon-container {
+  fill: white;
+  color: white;
+  font-size: 60;
+  margin: 0px 40px;
+  cursor: pointer;
+}
+
+.user-page-icon-container a {
+  fill: white;
+  color: white;
+  font-size: 60;
+  cursor: pointer;
+}
+a {
+  color: black;
+  text-decoration: none;
+}
+@media only screen and (max-width: 955px) {
+  .user-heder-container-header {
+    justify-content: center;
+    height: 10vh !important;
+  }
+  .left {
+    margin-left: 120px;
+  }
+  .right {
+    display: none;
+  }
+  .left-user-info {
+    position: relative;
+    left: -110px;
+  }
+  .menu-drop-down {
+    display: block;
+  }
+  .icon {
+    margin-left: 8px;
+  }
+}
+
+.mobile-header {
+  display: none;
+}
+
+@media only screen and (max-width: 970px) {
+  .user-heder-container-header {
+    display: none;
+    width: 100%;
+  }
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: center !important;
+    position: relative;
+  }
+  .mobile-header-content {
+    display: flex;
+    align-items: center;
+  }
+  .mobile-company-header-tite {
+    font-weight: bold;
+    font-size: 25px;
+    color: white;
+    margin-left: 20px;
+  }
+}

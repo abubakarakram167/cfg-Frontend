@@ -1,0 +1,501 @@
+[33mcommit e566693164e72716ea5d4667735715e86721ce28[m[33m ([m[1;36mHEAD -> [m[1;32mcms-abrar[m[33m)[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Sun Apr 18 23:38:14 2021 +0600
+
+    standardized the layout for responsive design
+
+[33mcommit be7c526bbae38a39fc2675c2d4ee077a02c75244[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Sat Apr 17 16:03:20 2021 +0600
+
+    user connections
+
+[33mcommit 317a0aa63ac0dce2427d49b488445a85ab2a77c6[m
+Author: Abrar Farhad <abrarfarhad@Abrars-Mac-mini.local>
+Date:   Fri Apr 16 02:13:47 2021 +0600
+
+    home page
+
+[33mcommit 0348ca2f17be6dbdfb7fdaf25e4f9391fd1df246[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Tue Apr 13 23:34:59 2021 +0600
+
+    migrating to new pc
+
+[33mcommit 8ab7403a1dd6efe00d1edfcb1c796f2aff5cd060[m
+Merge: 62ca6e4 5c81e0b
+Author: Hassan Yousaf <hassanyousaf6565@gmail.com>
+Date:   Mon Apr 5 04:22:04 2021 +0500
+
+    Merge branch 'master' of https://github.com/Computer-Expertz-Ltd/jmmbcfg-frontend
+
+[33mcommit 62ca6e431f3999db0d4ddfb620d731faae9c7b82[m
+Author: Hassan Yousaf <hassanyousaf6565@gmail.com>
+Date:   Mon Apr 5 04:18:37 2021 +0500
+
+    logout function fix
+
+[33mcommit 5c81e0b29786982eff938c2712806e76a472365c[m
+Author: Hassan Yousaf <hassanyousaf6565@gmail.com>
+Date:   Mon Apr 5 02:54:32 2021 +0500
+
+    router errors removed
+
+[33mcommit e1ed29e5a306f38456396772d889794e0ca41c37[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Mon Apr 5 02:35:19 2021 +0600
+
+    route error
+
+[33mcommit 13924bc769dc6b7cc5a4efe6afb58070e3eb6cd2[m
+Author: Hassan Yousaf <hassanyousaf6565@gmail.com>
+Date:   Mon Apr 5 02:54:32 2021 +0500
+
+    router errors removed
+
+[33mcommit e05c44010687bf3e75d399e51f915d7f7ba96910[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Mon Apr 5 02:35:19 2021 +0600
+
+    route error
+
+[33mcommit acabe522a8fbd4cb687e7a4ee7c77716b71d3fa7[m
+Merge: 0febcc1 7f938ce
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Apr 2 12:35:26 2021 -0500
+
+    Merge pull request #42 from Computer-Expertz-Ltd/cms-abrar
+    
+    Cms abrar
+
+[33mcommit 7f938cedbd26e3f184adafe09f076402ffa3dd61[m
+Merge: 5d5d41e d803fa2
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Fri Apr 2 23:27:14 2021 +0600
+
+    Merge branch 'cms-abrar' of https://github.com/Computer-Expertz-Ltd/jmmbcfg-frontend into cms-abrar
+
+[33mcommit 5d5d41ed6c2656ef576140a29009e3642925b9f0[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Fri Apr 2 23:26:32 2021 +0600
+
+    preview
+
+[33mcommit 0febcc1d7f68c50f8a5a2e31cf4cd086337f5c55[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Apr 2 04:12:52 2021 -0500
+
+    Update .env
+
+[33mcommit 2ea4c61f43411917aa19b39bf40f62688fec222f[m
+Merge: f54f42f f01d3e0
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Thu Apr 1 16:44:14 2021 -0500
+
+    Merge pull request #39 from Computer-Expertz-Ltd/fix-redux-store-structure-according-to-new-standard
+    
+    Fix redux store structure according to new standard
+
+[33mcommit f01d3e06bf5545259bf46e13eb3269a05576a7c9[m[33m ([m[1;31morigin/fix-redux-store-structure-according-to-new-standard[m[33m)[m
+Author: abubakar <abubakarakram167@gmail.com>
+Date:   Fri Apr 2 00:27:30 2021 +0500
+
+    Fix add user with wrong edit info
+
+[33mcommit ba9cc5b51445ee2d7f766853394ecc3091faffdf[m
+Merge: b857935 0d1bffd
+Author: abubakar <abubakarakram167@gmail.com>
+Date:   Fri Apr 2 00:11:56 2021 +0500
+
+    solve conflict issues while pushing
+
+[33mcommit b85793546f14a5108835c8860ed2ca7491309345[m
+Author: abubakar <abubakarakram167@gmail.com>
+Date:   Thu Apr 1 23:43:01 2021 +0500
+
+    Fix some issue in user management and implement user enhacements and update preferences
+
+[33mcommit f54f42f977563feed582be06de14b9ddee5f5d40[m
+Merge: 3df0f86 0d1bffd
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Thu Apr 1 07:43:22 2021 -0500
+
+    Merge pull request #38 from Computer-Expertz-Ltd/fix-redux-store-structure-according-to-new-standard
+    
+    JG # Fix issess with redax reducer
+
+[33mcommit 0d1bffd35d5097cea2cda7676d120b9bfad3fead[m
+Author: jesseframework <jgray@cpxzgroup.com>
+Date:   Thu Apr 1 07:42:52 2021 -0500
+
+    JG # Fix issess with redax reducer
+
+[33mcommit 3df0f861be428166fd58d26ef1b572001864eff4[m
+Merge: f273a23 3a5e8f4
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Thu Apr 1 07:27:49 2021 -0500
+
+    Merge pull request #37 from Computer-Expertz-Ltd/fix-redux-store-structure-according-to-new-standard
+    
+    Fix Bugs in user management and complete user preferneces milestone
+
+[33mcommit 3a5e8f44940ed95725b0b4fb455364b92ed770ca[m
+Author: abubakar <abubakarakram167@gmail.com>
+Date:   Thu Apr 1 12:54:41 2021 +0500
+
+    Fix Bugs in user management and complete user preferneces milestone
+
+[33mcommit f93fabf995c749521eb9a6580dd6fa121762d6c2[m
+Author: abubakar <abubakarakram167@gmail.com>
+Date:   Thu Apr 1 12:54:41 2021 +0500
+
+    Fix Bugs in user management and complete user preferneces milestone
+
+[33mcommit f273a2307def25d051b16675b41f949d64be1f1f[m
+Author: gray_vps <jgray@cpxz.us>
+Date:   Wed Mar 31 16:32:35 2021 -0500
+
+    JG # static web page changes
+
+[33mcommit 22f060767c721de05005bff931b88d09078d9fc9[m
+Merge: 81f84ec d803fa2
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Tue Mar 30 10:51:59 2021 -0500
+
+    Merge pull request #35 from Computer-Expertz-Ltd/cms-abrar
+    
+    Cms abrar
+
+[33mcommit d803fa2a25974a81b5b8dee17f6517fc4f4e1a86[m
+Merge: 8091b0f 44f994c
+Author: jesseframework <jgray@cpxzgroup.com>
+Date:   Tue Mar 30 10:51:00 2021 -0500
+
+    Merge branch 'cms-abrar' of github.com:Computer-Expertz-Ltd/jmmbcfg-frontend into cms-abrar
+
+[33mcommit 8091b0f114afb7fd5dfea01bd15b307dff8b25e3[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Tue Mar 30 21:01:06 2021 +0600
+
+    cms-abrar
+
+[33mcommit 68094edb83cbf349e388c936404c06deb9f3fee4[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Sat Mar 27 16:27:32 2021 +0600
+
+    set for calling api
+
+[33mcommit 44f994cbb52bfbcebd6b054b1e969f759a8d70a9[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Tue Mar 30 21:01:06 2021 +0600
+
+    cms-abrar
+
+[33mcommit 81f84ecc2bee1d90907ce73b9cbd8c691aeca917[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Tue Mar 30 04:54:05 2021 -0500
+
+    Update axios.js
+
+[33mcommit 5368094667e38de2705d3cd93c01beb4df6ccaeb[m
+Merge: eb578a3 f6a7879
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Mon Mar 29 16:41:41 2021 -0500
+
+    Merge pull request #31 from Computer-Expertz-Ltd/fix-redux-store-structure-according-to-new-standard
+    
+    Fix redux store structure according to new standard
+
+[33mcommit f6a787979bd00ca9d07e35a4e826a1927a5decfc[m
+Author: abubakar <abubakarakram167@gmail.com>
+Date:   Tue Mar 30 02:36:48 2021 +0500
+
+    add select and required restriction to user add
+
+[33mcommit 08992b254a2ee505dd6cfb16e46fd264339501f6[m
+Author: abubakar <abubakarakram167@gmail.com>
+Date:   Mon Mar 29 23:38:06 2021 +0500
+
+    update user management design
+
+[33mcommit eb578a39cea14ff980cdf3dfc59f62f00e539388[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Mon Mar 29 10:35:47 2021 -0500
+
+    Update .env
+
+[33mcommit 774ff567107cf572c0098df611b91e2d6b119262[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Mon Mar 29 04:55:15 2021 -0500
+
+    Update .env
+
+[33mcommit 3661dc742bb626a04fcc2c0c7d3068164e950a3f[m
+Merge: 1608188 b08ed46
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Mon Mar 29 04:52:39 2021 -0500
+
+    Merge pull request #28 from Computer-Expertz-Ltd/fix-redux-store-structure-according-to-new-standard
+    
+    complete crud operations of user management and sync its design with xd
+
+[33mcommit b08ed46d9873f583e8538255a3cc5ffb731157bd[m
+Author: abubakar <abubakarakram167@gmail.com>
+Date:   Mon Mar 29 07:54:00 2021 +0500
+
+    complete crud operations of user management and sync its design with xd
+
+[33mcommit 16081880a18120f97a0334c9c888760b87fad4f0[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Sun Mar 28 10:43:26 2021 -0500
+
+    Update Procfile
+
+[33mcommit 537eb27be1a3497f00d36b49a0042287efd85e73[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Sun Mar 28 09:24:27 2021 -0500
+
+    Update Procfile
+
+[33mcommit 429cae94009a0e6f67ad52d684970c056345497f[m
+Merge: d47a45d 9abc2be
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Sun Mar 28 00:53:03 2021 -0500
+
+    Merge pull request #26 from Computer-Expertz-Ltd/fix-redux-store-structure-according-to-new-standard
+    
+    Change redux store structure according to new standard
+
+[33mcommit 92cd998b7be691e4fb419f201c86c4e57a5caf40[m
+Author: abrar farhad <abrar.farhad.af@gmail.com>
+Date:   Sat Mar 27 16:27:32 2021 +0600
+
+    set for calling api
+
+[33mcommit 9abc2be4286e9bbb0f246bed0096c2fd06a3dc12[m[33m ([m[1;32mfix-redux-store-structure-according-to-new-standard[m[33m)[m
+Author: abubakar <abubakarakram167@gmail.com>
+Date:   Fri Mar 26 00:18:59 2021 +0500
+
+    Change redux store structure according to new standard
+
+[33mcommit d47a45dd87dd645ec9cb386e03fe882d3ab0ccb0[m[33m ([m[1;32mdev[m[33m)[m
+Author: jesseframework <jgray@cpxzgroup.com>
+Date:   Wed Mar 24 08:50:06 2021 -0500
+
+    JG # Update index.html with compant name and fav icon
+
+[33mcommit 480a1c3cc070fef681397e524601347cb15501c5[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Wed Mar 24 04:51:59 2021 -0500
+
+    Update url.js
+
+[33mcommit 11bf5b937d23721652e1c907ce582c3f51afe213[m
+Merge: 255f3f5 39ad864
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Wed Mar 24 04:22:31 2021 -0500
+
+    Merge pull request #23 from Computer-Expertz-Ltd/master
+    
+    Master
+
+[33mcommit 39ad864003dded47f61cd8d52eeb31e6e886747d[m
+Merge: 18bee6c 255f3f5
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Wed Mar 24 04:21:36 2021 -0500
+
+    Merge pull request #22 from Computer-Expertz-Ltd/dev
+    
+    update server address
+
+[33mcommit 255f3f59e45397e2ff2ee0445784574feaa4fae8[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Wed Mar 24 04:15:19 2021 -0500
+
+    Update url.js
+
+[33mcommit 18bee6c067d365c161aa3ab413fc4df8ded606ff[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Tue Mar 23 22:34:31 2021 -0500
+
+    Update Procfile
+
+[33mcommit 1879cd454a10a6c63c6b842fea6ecd99fe2f1953[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Tue Mar 23 21:40:57 2021 -0500
+
+    Update Procfile
+
+[33mcommit 4aa629c5628e29b4c6c2b6768a3b9620211b7efc[m
+Merge: 701e5a7 4203157
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Tue Mar 23 19:48:14 2021 -0500
+
+    Merge pull request #17 from Computer-Expertz-Ltd/master
+    
+    Delete 01-commands.config
+
+[33mcommit 4203157d7607f67f7ed5a210cadfd1ce9f298c66[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Tue Mar 23 19:47:47 2021 -0500
+
+    Delete 01-commands.config
+
+[33mcommit 701e5a7abc74d0ddfc17a0e671fcad605b268805[m
+Merge: 72ab7b9 3aeabb3
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Tue Mar 23 18:29:38 2021 -0500
+
+    Merge pull request #16 from Computer-Expertz-Ltd/cfg-cms
+    
+    Cfg cms
+
+[33mcommit 3aeabb3ae9aae323c28e1ce29846c422bf07cc51[m
+Merge: ef65cc4 ee8a60f
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Tue Mar 23 18:26:24 2021 -0500
+
+    Merge pull request #15 from Computer-Expertz-Ltd/master
+    
+    Master
+
+[33mcommit ee8a60fd65934c459757f65bc29d7c949f68528f[m
+Merge: c00c03d 72ab7b9
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Tue Mar 23 18:25:47 2021 -0500
+
+    Merge pull request #14 from Computer-Expertz-Ltd/dev
+    
+    JG # FrontEnd Backend Integration
+
+[33mcommit 72ab7b95bf21e6cf21c8e65dad745885076d5e47[m
+Author: jesseframework <jgray@cpxzgroup.com>
+Date:   Tue Mar 23 18:19:47 2021 -0500
+
+    JG # FrontEnd Backend Integration
+
+[33mcommit ef65cc4f29bd53041075bff84fa6b48667bb3c54[m
+Author: jesseframework <jgray@cpxzgroup.com>
+Date:   Tue Mar 23 14:01:01 2021 -0500
+
+    JG # FrontEnd Backend Integration
+
+[33mcommit efbaa967ea2e343b39c7c80a157b32b9d5d1967b[m[33m ([m[1;31morigin/cfg-cms-session[m[33m)[m
+Author: jesseframework <jgray@cpxzgroup.com>
+Date:   Tue Mar 23 12:58:32 2021 -0500
+
+    JG # FrontEnd Backend Integration
+
+[33mcommit 6204fec1e23e75cd08d181d853df4a220048f5cb[m
+Author: jesseframework <jgray@cpxzgroup.com>
+Date:   Mon Mar 22 12:25:23 2021 -0500
+
+    JG # FrontEnd Backend Integration
+
+[33mcommit c00c03d46d613bcdc9ece260d7d6e8b6f08d5e69[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Sat Mar 20 16:34:42 2021 -0500
+
+    Update Procfile
+
+[33mcommit 589cea0725f3b5805c92ee93ab8dc5507eb615a7[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Sat Mar 20 15:09:45 2021 -0500
+
+    Update Procfile
+
+[33mcommit 91480d08da822615eaaefa5f8271135500622219[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 22:46:08 2021 -0500
+
+    Update package.json
+
+[33mcommit d975fb4119535a5766232b7a4584024e31c3d5fc[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 22:05:34 2021 -0500
+
+    Update package.json
+
+[33mcommit 507396488bc7cd836cfd6815ff2d70cc62b0027e[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 05:47:08 2021 -0500
+
+    Update Procfile
+
+[33mcommit 4a41e9fb5b47d75e98f06936b45314d626826002[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 05:42:25 2021 -0500
+
+    Update Procfile
+
+[33mcommit 1e4e81e016ec0d2c67011f2766d2e730e8c58143[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 05:34:45 2021 -0500
+
+    Update Procfile
+
+[33mcommit 04aca20c3af9e687d0b7664f2fd9d72ce0306858[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 05:24:14 2021 -0500
+
+    Update Procfile
+
+[33mcommit e2bfcb3246cc9ec9b2c7f1ff4f67a0dfe8f8946a[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 05:18:40 2021 -0500
+
+    Update Procfile
+
+[33mcommit 70f94c65388fdf1e304e6dda3784b5fc24088923[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 05:13:05 2021 -0500
+
+    Update Procfile
+
+[33mcommit 19124e3f1bb4cdfa9887edaae92607a23a13aa53[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 01:48:57 2021 -0500
+
+    Update Procfile
+
+[33mcommit 6be103b508d6db47c74ee21bc1199548ee570a58[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 01:22:02 2021 -0500
+
+    Update Procfile
+
+[33mcommit 40a929c8abc28fa6f865f129db351f04b74fbd01[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Fri Mar 19 01:16:46 2021 -0500
+
+    Create Procfile
+
+[33mcommit f80e90c1be9f9b742959aa9574f8f60d6761691b[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Thu Mar 18 22:55:42 2021 -0500
+
+    Delete deployapp.config
+
+[33mcommit a85afc9d49e4b4818a291f7bf1bcc66720a86ae2[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Thu Mar 18 22:28:59 2021 -0500
+
+    Update deployapp.config
+
+[33mcommit 23cbf10b53ffdca7726e5f89dab28a18277cca84[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Thu Mar 18 22:23:36 2021 -0500
+
+    Create deployapp.config
+
+[33mcommit 5f5cde3e562637594a036c146c97ac209c46da19[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Thu Mar 18 22:17:54 2021 -0500
+
+    Delete Procfile
+
+[33mcommit 62265e88204e3e2824e9227e9545ac5d0379939f[m
+Author: Jesse Framework <61049847+jesseframework@users.noreply.github.com>
+Date:   Thu Mar 18 21:53:28 2021 -0500
+
+    Create Procfile

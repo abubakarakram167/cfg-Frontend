@@ -15,6 +15,12 @@ import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
 import EditIcon from '@material-ui/icons/Edit';
 import {Link} from 'react-router-dom';
+import {editContent} from 'redux/actions/sessionActions';
+import CustomTablePagination from '../user-management/pagination';
+import FilterList from '@material-ui/icons/FilterList';
+import jsCookie from 'js-cookie';
+import {Spinner} from 'react-bootstrap';
+import {CircleSpinner} from 'react-spinners-kit';
 import {
   Dialog,
   List,
@@ -27,9 +33,13 @@ import {
 } from '@material-ui/core';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import formatDate from 'utils/formatDate';
-
 import {useDispatch, useSelector} from 'react-redux';
 import {createSession, getSessionData} from 'redux/actions/sessionActions';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import {Show_Message} from '../../shared/constants/ActionTypes';
+import moment from 'moment';
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: 'none',
@@ -57,18 +67,21 @@ const useStyles = makeStyles({
 export default function CfgSession(props) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
+  const auth = useSelector((state) => state);
   const [content, setContent] = useState([]);
   const [checked, setChecked] = useState([]);
+  const [singleId, setSingleId] = useState(null);
+
   useEffect(() => {
     setContent(state.content);
   }, [state]);
 
   useEffect(() => {
     dispatch(getSessionData());
+    setAuthor(JSON.parse(jsCookie.get('user')).first_name);
   }, [dispatch]);
 
   const [currentCheckState, setCurrentCheckState] = useState(false);
-
   const classes = useStyles();
 
   const toggleCheckbox = (id) => {
@@ -99,24 +112,76 @@ export default function CfgSession(props) {
   const [end_date, setend_date] = useState(new Date());
   const [total_points, settotal_points] = useState('');
   const [status, setStatus] = useState('draft');
-
+  const [edit, setEdit] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const userList = useSelector((state) => state.userList);
+  const [open1, setOpen1] = useState(false);
+  const [currentIds, setCurrentIds] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [nameFilter, setNameFilter] = useState('');
+  const [authorFilter, setAuthorFilter] = useState('');
+  const [startDateFilter, setStartdateFilter] = useState('');
+  const [endDateFilter, setEnddateFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [totalPointsFilter, settotalPointsFilter] = useState('');
+  const [createAtFilter, setCreateAtFilter] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [category, setCategory] = useState('CFG Session');
+
+  console.log('the content', content);
+
+  const handleClose1 = () => {
+    setOpen1(false);
+    dispatch({type: Show_Message, payload: {message: null, success: false}});
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(
-      createSession({
-        title,
-        author,
-        start_date: formatDate(start_date),
-        end_date: formatDate(end_date),
-        total_points,
-        status,
-      }),
-    );
-
+    if (edit) {
+      dispatch(
+        editContent({
+          title,
+          author,
+          start_date,
+          total_points,
+          end_date,
+          type: 'session',
+          status,
+          id: singleId,
+        }),
+      ).then((res) => {
+        if (res) {
+          const allContent = content.map((content) => {
+            if (content.id === singleId) {
+              const authorName = {...content.author, user_name: author};
+              return {
+                ...content,
+                title,
+                total_points,
+                status,
+                start_date: moment(start_date).format('YYYY-MM-DD'),
+                end_date: moment(end_date).format('YYYY-MM-DD'),
+              };
+            } else return content;
+          });
+          setContent(allContent);
+        }
+      });
+    } else {
+      dispatch(
+        createSession({
+          title,
+          author,
+          start_date: formatDate(start_date),
+          end_date: formatDate(end_date),
+          total_points,
+          status,
+        }),
+      );
+    }
     setTitle('');
-    setAuthor('');
     setstart_date(new Date());
     setend_date(new Date());
     settotal_points('');
@@ -139,17 +204,20 @@ export default function CfgSession(props) {
                 fullWidth
                 onChange={(e) => setTitle(e.target.value)}
                 required
+                value={title}
               />
             </ListItem>
-            <ListItem>
+            {/* <ListItem>
               <TextField
                 label='Author'
                 variant='filled'
                 fullWidth
                 onChange={(e) => setAuthor(e.target.value)}
                 required
+                disabled
+                value={author}
               />
-            </ListItem>
+            </ListItem> */}
             <ListItem>
               <KeyboardDatePicker
                 disableToolbar
@@ -187,11 +255,25 @@ export default function CfgSession(props) {
                 label='Total Points'
                 variant='filled'
                 fullWidth
-                onChange={(e) => settotal_points(e.target.value)}
+                onChange={(e) => settotal_points(parseInt(e.target.value))}
                 required
                 type='number'
+                value={total_points}
               />
             </ListItem>
+            {/* <ListItem>
+              <Select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                variant='filled'
+                fullWidth
+                label='category'
+                required>
+                <MenuItem value={'session'}>CFG Session</MenuItem>
+                <MenuItem value={'event'}>Events</MenuItem>
+                <MenuItem value={'tool'}>CFG Tools</MenuItem>
+              </Select>
+            </ListItem> */}
             <ListItem>
               <Select
                 labelId='demo-simple-select-filled-label'
@@ -234,60 +316,329 @@ export default function CfgSession(props) {
       <br />
       <br />
       <Container>
+        <Snackbar
+          open={userList.message}
+          autoHideDuration={6000}
+          onClose={handleClose1}>
+          <Alert
+            onClose={handleClose1}
+            severity={userList.success ? 'success' : 'error'}>
+            {userList.message}
+          </Alert>
+        </Snackbar>
         <div className='options'>
           <Typography variant='h6'>CFG Session</Typography>
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
             className='chip-style'
-            onClick={() => setDialogOpen(true)}
+            onClick={() => {
+              setDialogOpen(true);
+              setTitle('');
+              setstart_date(new Date());
+              setend_date(new Date());
+              settotal_points('');
+              setStatus('draft');
+            }}
           />
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
             label={'EDIT'}
             className='chip-style gray-chip'
+            onClick={() => {
+              setEdit(true);
+              setDialogOpen(true);
+            }}
           />
         </div>
         <br />
-        <TableContainer component={Paper}>
+        <TableContainer style={{marginBottom: 50}} component={Paper}>
           <Table className={classes.table} aria-label='customized table'>
             <TableHead>
               <TableRow>
                 <StyledTableCell>
                   <Checkbox checked={currentCheckState} onChange={toggleAll} />
                 </StyledTableCell>
-                <StyledTableCell>Name</StyledTableCell>
-                <StyledTableCell>Author</StyledTableCell>
-                <StyledTableCell>Start Date</StyledTableCell>
-                <StyledTableCell>End Date</StyledTableCell>
-                <StyledTableCell>Total Points</StyledTableCell>
-                <StyledTableCell>Status</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {content.map((row, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell>
-                    <Checkbox
-                      checked={checked.includes(row.id)}
-                      onChange={() => {
-                        toggleCheckbox(row.id);
+                <StyledTableCell>
+                  <span className='column-heading'> Name </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Name'
+                      placeholder=''
+                      value={nameFilter}
+                      onChange={(e) => setNameFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Author </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Author'
+                      placeholder=''
+                      value={authorFilter}
+                      onChange={(e) => setAuthorFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Start Date </span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      style={{backgroundColor: '#eaeaea', paddingtop: 5}}
+                      variant='filled'
+                      format='YYYY-MM-DD'
+                      autoOk={true}
+                      value={startDateFilter === '' ? null : startDateFilter}
+                      fullWidth={true}
+                      // keyboardIcon = {null}
+                      label='Start Date'
+                      onChange={(e) => {
+                        if (e && e !== '')
+                          setStartdateFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else setStartdateFilter('');
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
                       }}
                     />
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {' '}
-                    <Link to={`/admin/cfg-session/${row.id}`}>
-                      {row.title}{' '}
-                    </Link>
-                  </StyledTableCell>
-                  <StyledTableCell>{row.title}</StyledTableCell>
-                  <StyledTableCell>{row.start_date}</StyledTableCell>
-                  <StyledTableCell>{row.end_date}</StyledTableCell>
-                  <StyledTableCell>{row.total_points}</StyledTableCell>
-                  <StyledTableCell>{row.status}</StyledTableCell>
-                </StyledTableRow>
-              ))}
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> End Date </span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      style={{backgroundColor: '#eaeaea', paddingTop: 5}}
+                      variant='filled'
+                      format='YYYY-MM-DD'
+                      autoOk={true}
+                      value={endDateFilter === '' ? null : endDateFilter}
+                      fullWidth={true}
+                      // keyboardIcon = {null}
+                      label='End Date'
+                      onChange={(e) => {
+                        if (e && e !== '')
+                          setEnddateFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else setEnddateFilter('');
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                {/* <StyledTableCell>
+                  <span className='column-heading'> End Date </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='End Date'
+                      placeholder=''
+                      value={endDateFilter}
+                      onChange={(e) => setEnddateFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell> */}
+                <StyledTableCell>
+                  <span className='column-heading'> Created On </span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      style={{backgroundColor: '#eaeaea', paddingTop: 5}}
+                      variant='filled'
+                      format='YYYY-MM-DD'
+                      autoOk={true}
+                      value={createAtFilter === '' ? null : createAtFilter}
+                      fullWidth={true}
+                      // keyboardIcon = {null}
+                      label='Creat On'
+                      onChange={(e) => {
+                        if (e && e !== '')
+                          setCreateAtFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else setCreateAtFilter('');
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                {/* <StyledTableCell>
+                  <span className='column-heading'> Created On </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Created On'
+                      placeholder=''
+                      value={createAtFilter}
+                      onChange={(e) => setCreateAtFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell> */}
+                <StyledTableCell>
+                  <span className='column-heading'> Total Points </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Total Points'
+                      placeholder=''
+                      value={totalPointsFilter}
+                      onChange={(e) => settotalPointsFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Status </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Status'
+                      placeholder=''
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {content.length > 0 &&
+                rowsPerPage > 0 &&
+                content
+                  .sort(function (a, b) {
+                    return new Date(b.created_at) - new Date(a.created_at);
+                  })
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .filter((element) =>
+                    (element.title ? element.title : '')
+                      .toLowerCase()
+                      .startsWith(nameFilter),
+                  )
+                  .filter((element) =>
+                    (element.author ? element.author.user_name : '')
+                      .toLowerCase()
+                      .startsWith(authorFilter),
+                  )
+                  .filter((element) =>
+                    (element.start_date ? element.start_date : '')
+                      .toLowerCase()
+                      .startsWith(startDateFilter),
+                  )
+                  .filter((element) =>
+                    (element.end_date ? element.end_date : '')
+                      .toLowerCase()
+                      .startsWith(endDateFilter),
+                  )
+                  .filter((element) =>
+                    (element.status ? element.status : '')
+                      .toLowerCase()
+                      .startsWith(statusFilter),
+                  )
+                  .filter((element) =>
+                    (element.total_points
+                      ? element.total_points.toString()
+                      : ''
+                    )
+                      .toLowerCase()
+                      .startsWith(totalPointsFilter),
+                  )
+                  .filter((element) =>
+                    (element.created_at ? element.created_at.toString() : '')
+                      .toLowerCase()
+                      .startsWith(createAtFilter),
+                  )
+                  .map((row, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell>
+                        <Checkbox
+                          checked={checked.includes(row.id)}
+                          onChange={() => {
+                            let allIds = currentIds.length ? currentIds : [];
+                            if (!allIds.includes(row.id)) allIds.push(row.id);
+                            else {
+                              allIds = allIds.filter(
+                                (userId) => userId !== row.id,
+                              );
+                            }
+                            setSingleId(row.id);
+                            setCurrentIds(allIds);
+                            setTitle(row.title);
+                            setstart_date(new Date());
+                            setend_date(new Date());
+                            settotal_points(row.total_points);
+                            setStatus(row.status);
+                            toggleCheckbox(row.id);
+                          }}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {' '}
+                        <Link to={`/admin/cfg-session/${row.id}`}>
+                          {row.title}{' '}
+                        </Link>
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {row.author ? row.author.first_name : ' '}
+                      </StyledTableCell>
+                      <StyledTableCell>{row.start_date}</StyledTableCell>
+                      <StyledTableCell>{row.end_date}</StyledTableCell>
+                      <StyledTableCell>
+                        {moment(row.created_at).format('YYYY-MM-DD  HH:mm')}
+                      </StyledTableCell>
+                      <StyledTableCell>{row.total_points}</StyledTableCell>
+                      <StyledTableCell>{row.status}</StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+              <StyledTableRow>
+                <CustomTablePagination
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  userData={content}
+                  setPage={(page) => setPage(page)}
+                  setRowsPerPage={(page) => setRowsPerPage(page)}
+                />
+              </StyledTableRow>
             </TableBody>
           </Table>
         </TableContainer>

@@ -1,0 +1,18 @@
+.summary-block {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  justify-content: space-between;
+}
+.summary-block-title {
+  font-size: 20;
+  font-weight: 600;
+}
+.summary-block-points {
+  font-size: 20;
+  font-weight: 600;
+}
+.summary-buttons {
+  display: flex;
+  justify-content: center;
+}

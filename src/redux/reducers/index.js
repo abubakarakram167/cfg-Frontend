@@ -16,6 +16,7 @@ import ChatApp from './ChatApp';
 import Wall from './Wall';
 import Preference from './Preference';
 import Session from './Session';
+import Tool from './Tool';
 import mediaReducer from './media';
 
 const reducers = (history) =>
@@ -24,6 +25,7 @@ const reducers = (history) =>
     settings: Settings,
     auth: Auth,
     session: Session,
+    tool: Tool,
     mailApp: MailApp,
     dashboard: Dashboard,
     common: Common,

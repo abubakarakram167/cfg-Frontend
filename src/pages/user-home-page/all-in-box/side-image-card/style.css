@@ -1,0 +1,30 @@
+.side-image-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.side-image-left {
+  border: 1px solid gainsboro;
+  padding: 2px;
+  border-radius: 5px;
+}
+
+.side-image-card-text {
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 5px;
+}
+.side-image-card-left {
+  display: flex;
+  align-items: center;
+}
+.side-image-card-right {
+  display: flex;
+  align-items: center;
+}
+.points-text {
+  font-size: 20px;
+  font-weight: 600;
+  margin-right: 5px;
+  color: red;
+}

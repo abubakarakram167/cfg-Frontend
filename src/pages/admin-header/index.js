@@ -133,7 +133,9 @@ export default function AdminHeader() {
                     <div className='icon'>
                       <VisibilityIcon style={{fill: 'black'}} />
                     </div>
-                    <div className='user-name-text'>Preview as User</div>
+                    <div className='user-name-text'>
+                      <Link to='/home'>Preview as User</Link>
+                    </div>
                   </div>
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
@@ -182,7 +184,9 @@ export default function AdminHeader() {
                     <div className='icon'>
                       <VisibilityIcon style={{fill: 'black'}} />
                     </div>
-                    <div className='user-name-text'>Preview as User</div>
+                    <div className='user-name-text'>
+                      <Link to='/home'>Preview as User</Link>
+                    </div>
                   </div>
                 </MenuItem>
                 <MenuItem onClick={handleLogout2}>

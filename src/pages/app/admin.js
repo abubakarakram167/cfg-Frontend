@@ -19,9 +19,22 @@ import MiniCfg from 'pages/mini-cfg';
 import Rewards from 'pages/rewards';
 import Editor from 'pages/editor/index';
 import CfgElement from 'pages/cfg-element';
+import CfgToolElement from 'pages/cfg-tool-element';
 import ContentDisplay from 'pages/content-display';
 import EditContent from 'pages/edit-content';
 import ProtectedRoute from './protectedRouter';
+import UserHome from 'pages/user-home-page/user-home';
+import UserRewards from 'pages/user-home-page/user-rewards';
+import UserConnections from 'pages/user-home-page/user-connections';
+import UserAchievements from 'pages/user-home-page/user-achievement';
+import UserGroup from 'pages/user-home-page/groups';
+import UserProfile from 'pages/user-home-page/user-profile';
+import UserEvents from 'pages/user-home-page/user-events';
+import HostAConversation from 'pages/user-home-page/host-a-conversation';
+import HomeCFGTools from 'pages/user-home-page/cfg-tools';
+import CfgToolsPage from 'pages/user-home-page/cfg-tools-page';
+import Learn from 'pages/user-home-page/learn';
+import AllInboxPage from 'pages/user-home-page/all-in-box';
 
 export default [
   <ProtectedRoute exact path='/admin' component={AdminHome} />,
@@ -37,7 +50,7 @@ export default [
   />,
   <ProtectedRoute
     exact
-    path='/admin/content/edit/:id'
+    path='/admin/content/edit/:id/:content_id/:title'
     component={withRouter(EditContent)}
   />,
   <ProtectedRoute
@@ -49,6 +62,21 @@ export default [
     exact
     path='/admin/user-management'
     component={withRouter(UserManagement)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/admin/cfg-tools'
+    component={withRouter(CfgTool)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/admin/cfg-tools/:id'
+    component={withRouter(CfgToolElement)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/admin/cfg-tools/:type/:id/:contentHeaderId/:title'
+    component={withRouter(Editor)}
   />,
   <ProtectedRoute
     exact
@@ -69,11 +97,6 @@ export default [
     exact
     path='/admin/timeline'
     component={withRouter(Timeline)}
-  />,
-  <ProtectedRoute
-    exact
-    path='/admin/cfg-tools'
-    component={withRouter(CfgTool)}
   />,
   <ProtectedRoute exact path='/admin/events' component={withRouter(Events)} />,
   <ProtectedRoute exact path='/admin/quiz' component={withRouter(Quiz)} />,
@@ -96,5 +119,61 @@ export default [
     exact
     path='/admin/rewards'
     component={withRouter(Rewards)}
+  />,
+  <ProtectedRoute exact path='/home' component={withRouter(UserHome)} />,
+  <ProtectedRoute
+    exact
+    path='/home/user-rewards'
+    component={withRouter(UserRewards)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-achievements'
+    component={withRouter(UserAchievements)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-connections'
+    component={withRouter(UserConnections)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-groups'
+    component={withRouter(UserGroup)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-profile'
+    component={withRouter(UserProfile)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/user-events'
+    component={withRouter(UserEvents)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/host-a-conversation'
+    component={withRouter(HostAConversation)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/cfg-tools'
+    component={withRouter(HomeCFGTools)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/cfg-tools/:id'
+    component={withRouter(CfgToolsPage)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/cfg-tools/:id/:learnId'
+    component={withRouter(Learn)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/all-in-box'
+    component={withRouter(AllInboxPage)}
   />,
 ];
