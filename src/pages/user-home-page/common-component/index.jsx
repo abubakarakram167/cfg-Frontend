@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import UserHomeHeader from '../user-page-header';
-// import { socket } from '../../../socket'
 import {socket} from '../../../socket';
 import './style.css';
+import {socketEnums} from 'utils/socketEnums';
 
 export default function CommonComponent(props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -11,21 +11,9 @@ export default function CommonComponent(props) {
     setConversationExtended(!conversationExtended);
   };
   useEffect(() => {
-    alert('hello');
-
-    // Add a connect listener
-    socket.on('connect', () => {
-      alert('Connected!');
-      console.log(socket.id);
-    });
-    socket.on('post', function (post) {
-      alert(post);
-    });
-    socket.on('post', function (post) {
-      alert(post);
-    });
-    socket.emit('login', 'hello from client');
-    alert(socket.id);
+    socket.connectAction();
+    console.log(socket.onAction(socketEnums.post));
+    socket.emitAction(socketEnums.login, 'hello from the new client');
   }, []);
 
   return (

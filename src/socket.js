@@ -7,15 +7,18 @@ class Socket {
   }
   connectAction() {
     this.socket.on('connect', () => {
-      console.log('socket has been connected successfully');
+      console.log(
+        'socket has been connected successfully socketId is',
+        this.socket.id,
+      );
     });
   }
   emitAction(emitType, args) {
     this.socket.emit(emitType, args);
   }
-  onAction(onActionType, value) {
-    console.log(value);
+  onAction(onActionType) {
+    this.socket.on(onActionType, (value) => value);
   }
 }
 
-export const socket = io.connect(url);
+export const socket = new Socket(url);
