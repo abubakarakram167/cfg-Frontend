@@ -86,7 +86,6 @@ export default function SignIn({setView}) {
           <div style={{display: 'flex', alignItems: 'center'}}>
             <Checkbox /> <span>Remember Me</span>
           </div>
-
           <div
             style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}
             onClick={() => setView(3)}>
@@ -116,7 +115,11 @@ export default function SignIn({setView}) {
           <img src={Google} width='40px' alt='' />
           <img src={Mail} width='60px' alt='' />
           <img src={Twitter} width='40px' alt='' />
-          <img src={Facebook} width='40px' alt='' />
+          <img
+            src={Facebook}
+            style={{height: 30, width: 30, position: 'relative', top: 5}}
+            alt=''
+          />
         </div>
         <div style={{width: '100%', marginTop: '10px'}}>
           Don't have an account?{' '}

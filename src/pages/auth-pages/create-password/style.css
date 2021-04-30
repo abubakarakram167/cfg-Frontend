@@ -48,6 +48,18 @@
   color: #eb1b29;
 }
 
+.not-password-match {
+  text-align: left;
+  margin-top: 20px;
+  color: red;
+}
+.quick-reg-datepicker .MuiInput-underline:before {
+  height: 45 !important;
+}
+.quick-reg-datepicker .MuiInput-underline:after {
+  height: 45 !important;
+}
+
 @media only screen and (max-width: 600px) {
   .appCard {
     width: 90%;

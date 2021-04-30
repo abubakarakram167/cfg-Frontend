@@ -62,7 +62,7 @@ export default function SignUp({setView}) {
           label='First Name'
           fullWidth
           variant='filled'
-          style={{marginTop: '20px', marginBottom: '20px'}}
+          style={{marginTop: '10px', marginBottom: '10px'}}
           required
           onChange={(e) => setFirstName(e.target.value)}
         />
@@ -72,7 +72,7 @@ export default function SignUp({setView}) {
           label='Last Name'
           fullWidth
           variant='filled'
-          style={{marginTop: '20px', marginBottom: '20px'}}
+          style={{marginTop: '10px', marginBottom: '10px'}}
           required
           onChange={(e) => setLastName(e.target.value)}
         />
@@ -84,7 +84,7 @@ export default function SignUp({setView}) {
           fullWidth
           variant='filled'
           required
-          style={{marginTop: '20px', marginBottom: '20px'}}
+          style={{marginTop: '10px', marginBottom: '10px'}}
           onChange={(e) => setEmail(e.target.value)}
         />
 
