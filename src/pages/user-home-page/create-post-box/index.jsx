@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AppCard from '@crema/core/AppCard';
 import './style.css';
 import {
@@ -18,8 +18,16 @@ import {
   Save,
   Close,
 } from '@material-ui/icons';
+import {useDispatch} from 'react-redux';
+import {createUserPost} from 'redux/actions/UserPost';
+
 export default function CreatePostBox() {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(createUserPost({content: 'hello world', status: 'approved'}));
+  }, []);
 
   const handleClickOpen = () => {
     console.log('hello');

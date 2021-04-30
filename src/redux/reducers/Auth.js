@@ -40,14 +40,19 @@ const authReducer = (state = INIT_STATE, action) => {
       };
     }
     case 'FORGOT_PASSWORD':
-      payload = action;
+      payload = action.payload;
       return {...state, payload};
     case 'LOGIN':
+      console.log('here');
       payload = action.payload;
+
       if (payload.token) {
         localStorage.setItem('auth-token', payload.token);
       }
-      return {...state, ...payload};
+      if (payload.user) {
+        localStorage.setItem('current-user', JSON.stringify(payload.user));
+      }
+      return {...state, user: payload.user, token: payload.token};
     case 'RESET_PASSWORD':
       payload = action.payload;
       return {...state, ...payload};

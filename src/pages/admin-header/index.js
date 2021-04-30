@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AppHeader from '@crema/core/AppsContainer/AppsHeader';
 import SearchBar from '@crema/core/SearchBar';
 import './style.css';
@@ -15,8 +15,15 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
+import {useSelector} from 'react-redux';
 
 export default function AdminHeader() {
+  const [username, setUsername] = useState('');
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    setUsername(user.first_name + ' ' + user.last_name);
+  }, []);
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -95,7 +102,7 @@ export default function AdminHeader() {
                   <div className='mobile-menu-item'>
                     <Avatar alt='User Avatar' src={UserAvatar} />
                     <div className='user-name-text'>
-                      <Typography>Username</Typography>
+                      <Typography>{username}</Typography>
                     </div>
                   </div>
                 </MenuItem>
@@ -153,7 +160,7 @@ export default function AdminHeader() {
             <div className='right-user-info'>
               <Avatar alt='User Avatar' src={UserAvatar} />
               <div className='user-name-text'>
-                <Typography>Username</Typography>
+                <Typography>{username}</Typography>
               </div>
             </div>
             <div className='right-icons'>
