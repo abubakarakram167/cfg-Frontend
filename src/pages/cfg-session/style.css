@@ -12,6 +12,15 @@
   padding-left: 10px !important;
   padding-right: 10px !important;
 }
+.chip-style-id {
+  margin: 10px !important;
+  background-color: black !important;
+  font-weight: 600;
+  color: white !important;
+  cursor: pointer !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
 
 .gray-chip {
   background-color: gray !important;
@@ -23,4 +32,7 @@
 
 .MuiTextField-root {
   background-color: gray;
+}
+.quick-reg-datepicker input {
+  height: 45px;
 }

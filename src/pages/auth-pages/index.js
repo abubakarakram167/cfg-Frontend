@@ -6,7 +6,7 @@ import ForgotPassword from './forgot-password';
 import {Container} from '@material-ui/core';
 import SignUpMessage from 'pages/auth-pages/sign-up-message';
 import './style.css';
-import Logo from 'assets/jmmb_2.png';
+import Logo from 'assets/Logo.png';
 import {useDispatch} from 'react-redux';
 import LogoImage from 'assets/jmmb-foundation.png';
 // import {
@@ -40,7 +40,12 @@ export default function Index() {
           <div className='right-box'>
             <div className='auth-card main'>
               <div className='image-container'>
-                <img src={Logo} className='logo-image-screen' alt='logo' />
+                <img
+                  style={{width: 200}}
+                  src={Logo}
+                  className='logo-image-screen'
+                  alt='logo'
+                />
               </div>
 
               {/* <AppCard> */}
