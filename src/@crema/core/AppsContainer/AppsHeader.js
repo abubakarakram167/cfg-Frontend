@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme) => ({
     background: '#EB1B29',
     boxShadow: '0px 1px 2px gainsboro',
     alignItems: 'center',
-    borderBottom: `1px solid ${grey[300]}`,
     [theme.breakpoints.up('xl')]: {
       height: 77,
     },
