@@ -21,15 +21,29 @@ import {
   Bookmark,
   ShoppingBasket,
 } from '@material-ui/icons';
+import {useSelector, useDispatch} from 'react-redux';
 import AppSideBar from '../AppSidebar';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
+import {setCurrentUser} from 'redux/actions/authActions';
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState('');
+  const dispatch = useDispatch();
+
+  const state = useSelector((state) => {
+    return state.auth;
+  });
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
-    setUsername(user.first_name + ' ' + user.last_name);
+    dispatch(setCurrentUser(user));
   }, []);
+
+  useEffect(() => {
+    if (state.user) {
+      setUsername(state.user.first_name + ' ' + state.user.last_name);
+    }
+  }, [state]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

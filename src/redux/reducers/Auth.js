@@ -4,6 +4,7 @@ import {
   UPDATE_AUTH_USER,
   UPDATE_NEW_USER,
 } from '../../shared/constants/ActionTypes';
+import * as actions from '../actions/action.types';
 
 const INIT_STATE = {
   user: null,
@@ -60,6 +61,25 @@ const authReducer = (state = INIT_STATE, action) => {
       payload = action.payload;
       console.log(payload);
       return {...state, ...payload};
+    case actions.SET_CURRENT_USER:
+      payload = action.payload;
+      if (payload.action) {
+        return {...state, error: payload.error};
+      }
+      return {...state, user: payload};
+
+    case actions.UPDATE_USER:
+      payload = action.payload;
+      console.log(payload);
+      if (payload.error) {
+        return {
+          ...state,
+          error: 'There was an error updating the user',
+        };
+      }
+      const user = {...state.user, ...payload.newData};
+      localStorage.setItem('current-user', JSON.stringify(user));
+      return {...state, user};
     default:
       return state;
   }

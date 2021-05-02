@@ -15,14 +15,25 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setCurrentUser} from 'redux/actions/authActions';
 
 export default function AdminHeader() {
   const [username, setUsername] = useState('');
+  const dispatch = useDispatch();
+  const state = useSelector((state) => {
+    return state.auth;
+  });
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
-    setUsername(user.first_name + ' ' + user.last_name);
+    dispatch(setCurrentUser(user));
   }, []);
+
+  useEffect(() => {
+    if (state.user) {
+      setUsername(state.user.first_name + ' ' + state.user.last_name);
+    }
+  }, [state]);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
