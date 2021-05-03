@@ -21,7 +21,7 @@ const CreatePassword = () => {
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
+    if (password === confirmPassword && password.length >= 7) {
       setPassword('');
       dispatch(passwordResetAction({token, password}));
     }
@@ -84,17 +84,21 @@ const CreatePassword = () => {
               value={password}
               name='password_input'
               required
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               variant='filled'
               placeholder='Password'
             />
-            <PasswordStrengthBar
-              password={password}
-              default={2}
-              isRequired={true}
-            />
+            <PasswordStrengthBar password={password} />
+            {password && password.length <= 6 && (
+              <p className='not-password-match'>
+                {' '}
+                Password shouldn't be weak.{' '}
+              </p>
+            )}
             <TextField
-              style={{marginTop: 30}}
+              style={{marginTop: 10}}
               fullWidth
               type='password'
               value={confirmPassword}
