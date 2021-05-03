@@ -27,6 +27,7 @@ export default function Index() {
 
   return (
     <div style={{height: '100vh'}} className='whole-auth'>
+      <div></div>
       <div className='toolbar-container' style={{width: '100%'}}>
         <Header />
       </div>
@@ -40,12 +41,7 @@ export default function Index() {
           <div className='right-box'>
             <div className='auth-card main'>
               <div className='image-container'>
-                <img
-                  style={{width: 200}}
-                  src={Logo}
-                  className='logo-image-screen'
-                  alt='logo'
-                />
+                <img src={Logo} className='logo-image-screen' alt='logo' />
               </div>
 
               {/* <AppCard> */}

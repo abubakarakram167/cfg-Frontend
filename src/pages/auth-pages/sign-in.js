@@ -9,10 +9,39 @@ import {useDispatch, useSelector} from 'react-redux';
 import {loginAction} from '../../redux/actions/authActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import './style.css';
+import {withStyles, makeStyles} from '@material-ui/core/styles';
+import PersonIcon from '@material-ui/icons/Person';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
+const StyledFormField = withStyles((theme) => ({}))(TextField);
+
+const useStyles = makeStyles({
+  root: {
+    '& .MuiFilledInput-input': {
+      height: '5vh',
+    },
+    '& .MuiFormLabel-root': {
+      fontSize: '0.8em',
+      marginLeft: 25,
+    },
+  },
+  secondRoot: {
+    '& .MuiFilledInput-input': {
+      height: '2vh',
+    },
+    '& .MuiFormLabel-root': {
+      fontSize: '0.8em',
+      marginLeft: 25,
+    },
+  },
+});
 
 export default function SignIn({setView}) {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [currentHeight, setCurrentheight] = useState(0);
+  const classes = useStyles();
 
   const handleClose1 = () => {
     setOpen1(false);
@@ -33,6 +62,9 @@ export default function SignIn({setView}) {
 
     dispatch(loginAction({email, password}));
   };
+  window.addEventListener('resize', () => {
+    setCurrentheight(window.innerHeight);
+  });
 
   useEffect(() => {
     if (state.auth.error) {
@@ -43,6 +75,7 @@ export default function SignIn({setView}) {
     }
   }, [state]);
 
+  console.log('the current ', currentHeight);
   return (
     <div className='sign-in-box'>
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
@@ -62,7 +95,15 @@ export default function SignIn({setView}) {
           label='Email'
           fullWidth
           variant='filled'
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <PersonIcon style={{fontSize: 15}} />
+              </InputAdornment>
+            ),
+          }}
           required
+          className={currentHeight >= 600 ? classes.root : classes.secondRoot}
           onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
@@ -71,7 +112,15 @@ export default function SignIn({setView}) {
           label='Password'
           fullWidth
           variant='filled'
+          className={currentHeight >= 600 ? classes.root : classes.secondRoot}
           style={{marginTop: '20px', marginBottom: '20px'}}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <PersonIcon style={{fontSize: 15}} />
+              </InputAdornment>
+            ),
+          }}
           required
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -82,6 +131,8 @@ export default function SignIn({setView}) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            height: currentHeight >= 600 ? '5vh' : '2vh',
+            fontSize: currentHeight <= 600 && 12,
           }}>
           <div style={{display: 'flex', alignItems: 'center'}}>
             <Checkbox /> <span>Remember Me</span>
@@ -93,12 +144,7 @@ export default function SignIn({setView}) {
           </div>
         </div>
         <button className='action-button'>Sign In</button>
-        <div
-          style={{
-            borderTop: '1px solid gainsboro',
-            width: '100%',
-            marginTop: '10px',
-          }}>
+        <div className='orHeader'>
           <div style={{position: 'relative', top: '-12px'}}>
             <span
               style={{
@@ -112,16 +158,12 @@ export default function SignIn({setView}) {
         </div>
 
         <div className='icons'>
-          <img src={Google} width='40px' alt='' />
-          <img src={Mail} width='60px' alt='' />
-          <img src={Twitter} width='40px' alt='' />
-          <img
-            src={Facebook}
-            style={{height: 30, width: 30, position: 'relative', top: 5}}
-            alt=''
-          />
+          <img src={Google} alt='' />
+          <img src={Mail} alt='' />
+          <img src={Twitter} alt='' />
+          <img src={Facebook} alt='' />
         </div>
-        <div style={{width: '100%', marginTop: '10px'}}>
+        <div className='last-container'>
           Don't have an account?{' '}
           <span
             style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}

@@ -13,6 +13,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('xl')]: {
       height: 77,
     },
+    position: 'relative',
+    top: 3,
   },
   checkboxRoot: {
     marginRight: 8,
