@@ -74,7 +74,7 @@ export default function Editor() {
   }, [params.id, params.content_id, dispatch]);
 
   useEffect(() => {
-    dispatch(getSessionListData(params.content_id));
+    dispatch(getSessionListData(params.content_id, params.type));
   }, []);
 
   useEffect(() => {
@@ -82,7 +82,12 @@ export default function Editor() {
       setOpen1(true);
     }
 
-    if (state.titles && state.titles.rows && state.titles.rows.length) {
+    if (
+      state.titles &&
+      state.titles.rows &&
+      state.titles.rows.length &&
+      state.current
+    ) {
       let totalPoints = 0;
 
       state.titles.rows.map((row) => {
@@ -156,7 +161,7 @@ export default function Editor() {
             start_date: formatDate(start_date),
             end_date: formatDate(end_date),
             tags: JSON.stringify(tags),
-            type: contentType,
+            type: params.contentType,
             total_points,
             next_page,
             updated_at: moment(moment()).format('YYYY-MM-DD'),

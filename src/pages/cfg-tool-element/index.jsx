@@ -242,7 +242,7 @@ export default function CfgElement() {
                           </div>
                           <div className='custom-row-design-header summary-margin-left-concise'>
                             <Link
-                              to={`/admin/content/edit/${element.id}/${params.id}/${element.title}`}>
+                              to={`/admin/content/edit/${element.id}/${params.id}/${element.title}/session/${element.type}`}>
                               {element.title}
                             </Link>
                           </div>
