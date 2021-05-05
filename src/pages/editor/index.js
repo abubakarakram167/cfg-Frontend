@@ -127,7 +127,6 @@ export default function Editor() {
       } else {
         parent = params.contentHeaderId;
       }
-
       const tags = keywords.map((element) => {
         return {
           tag_type: 'keyword',

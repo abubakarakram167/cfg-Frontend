@@ -140,6 +140,7 @@ export default function CfgTool(props) {
           start_date,
           total_points,
           end_date,
+          status,
           id: singleId,
         }),
       ).then((res) => {

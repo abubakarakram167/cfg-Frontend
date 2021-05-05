@@ -45,6 +45,7 @@ export const createSessionTitle = (params, type) => {
   return async function (dispatch) {
     try {
       const response = await Session.createTitle(params, type);
+      console.log('the response', response);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');

@@ -100,7 +100,7 @@ export default function CfgElement() {
           <Link
             to={`/admin/cfg-session/${selectedTitle ? 'sub-title' : 'title'}/${
               params.id
-            }/session`}>
+            }/${selectedTitle}/session`}>
             <Chip
               icon={<ControlPoint style={{fill: 'white'}} />}
               label={'ADD NEW'}
