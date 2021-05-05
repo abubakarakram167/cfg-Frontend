@@ -77,7 +77,7 @@ export default function Editor() {
   }, [id, dispatch]);
 
   useEffect(() => {
-    dispatch(getSessionListData(params.id));
+    dispatch(getSessionListData(params.id, params.contentHeaderId));
   }, []);
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export default function Editor() {
 
     if (state.currentContent) {
       setsub_title(state.currentContent.sub_title || '');
-      setContent(state.currentContent.detail || '');
+      setContent('');
       setstart_date(new Date(state.currentContent.start_date));
       setend_date(new Date(state.currentContent.end_date));
       setStatus(state.currentContent.status || 'draft');
@@ -118,6 +118,7 @@ export default function Editor() {
   }, [state]);
 
   const publish = () => {
+    console.log('the status', state);
     let cfgSessionStatus = state.current.status;
     if (cfgSessionStatus === 'published') {
       let parent = null;
@@ -197,7 +198,7 @@ export default function Editor() {
     'the manipulation',
     parseInt(total_points) + parseInt(accumulativeTitlePoints),
   );
-  console.log('the original', originalTotalPoints);
+  console.log('the state in create content', state);
 
   return (
     <div className='editor-page-full-container'>
@@ -253,6 +254,7 @@ export default function Editor() {
           <div className='editor-side'>
             <SunEditor
               setContents={content}
+              defaultValue=''
               setOptions={{
                 height: 630,
                 buttonList: [

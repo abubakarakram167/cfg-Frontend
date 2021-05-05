@@ -14,8 +14,8 @@ class Session {
   static sessionData() {
     return axiosInstance.get('/api/content/list/session?_count=100');
   }
-  static getListData(id) {
-    return axiosInstance.get('api/content/list/session/' + id);
+  static getListData(id, type) {
+    return axiosInstance.get(`/api/content/list/content/${type}/` + id);
   }
   static getContentData(id) {
     return axiosInstance.get('api/content/' + id);

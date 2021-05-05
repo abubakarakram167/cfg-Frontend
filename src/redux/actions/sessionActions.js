@@ -58,6 +58,7 @@ export const createSessionTitle = (params, type) => {
         });
       }
     } catch (error) {
+      console.log('the error', error.response);
       if (error.response && error.response.status === 401) {
         dispatch(
           {
@@ -176,7 +177,7 @@ export const getSessionData = () => {
         });
       }
     } catch (error) {
-      console.log('the erroeeee ', error.response.data);
+      console.log('the erroeeee ', error);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: GET_SESSION_DATA,
@@ -187,10 +188,10 @@ export const getSessionData = () => {
   };
 };
 
-export const getSessionListData = (id) => {
+export const getSessionListData = (id, type) => {
   return async function (dispatch) {
     try {
-      const response = await Session.getListData(id);
+      const response = await Session.getListData(id, type);
 
       if (response.status === 200) {
         const data_resp = await response.data;
@@ -201,6 +202,7 @@ export const getSessionListData = (id) => {
         });
       }
     } catch (error) {
+      console.log('the error', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: GET_LIST_DATA,

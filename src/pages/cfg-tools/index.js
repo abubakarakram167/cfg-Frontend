@@ -549,9 +549,8 @@ export default function CfgTool(props) {
                         </StyledTableCell>
                         <StyledTableCell>
                           {' '}
-                          <Link
-                            to={`/admin/content/edit/${row.id}/null/${row.title}`}>
-                            {row.title}{' '}
+                          <Link to={`/admin/cfg-tools/${row.id}`}>
+                            {row.title}
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>

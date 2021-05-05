@@ -13,6 +13,7 @@ import './style.css';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import PersonIcon from '@material-ui/icons/Person';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import LockIcon from '@material-ui/icons/Lock';
 
 const StyledFormField = withStyles((theme) => ({}))(TextField);
 
@@ -41,6 +42,7 @@ export default function SignIn({setView}) {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [currentHeight, setCurrentheight] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
   const classes = useStyles();
 
   const handleClose1 = () => {
@@ -67,7 +69,17 @@ export default function SignIn({setView}) {
   });
 
   useEffect(() => {
+    console.log('the state.auth', state.auth);
+
     if (state.auth.error) {
+      if (
+        state.auth.error ===
+        'Your account is disabled for multiple invalid attempts. Please try again in 30 minutes'
+      )
+        setErrorMessage(
+          'Your account is disabled for multiple invalid attempts. Please try again in 30 minutes',
+        );
+      else setErrorMessage('Email or password is inCorrect');
       setOpen2(true);
     }
     if (state.auth.user) {
@@ -75,7 +87,6 @@ export default function SignIn({setView}) {
     }
   }, [state]);
 
-  console.log('the current ', currentHeight);
   return (
     <div className='sign-in-box'>
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
@@ -85,7 +96,7 @@ export default function SignIn({setView}) {
       </Snackbar>
       <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
         <Alert onClose={handleClose2} severity='error'>
-          Email or password is incorrect.
+          {errorMessage}
         </Alert>
       </Snackbar>
       <form className='forms' onSubmit={handleSubmit}>
@@ -117,7 +128,7 @@ export default function SignIn({setView}) {
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
-                <PersonIcon style={{fontSize: 15}} />
+                <LockIcon style={{fontSize: 15}} />
               </InputAdornment>
             ),
           }}
