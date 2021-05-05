@@ -22,11 +22,11 @@ export const loginAction = (params) => {
         });
       }
     } catch (error) {
-      console.log('the error response in login', error.response);
+      console.log('the error', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: LOGIN,
-          payload: {error: 'Email or password is incorrect'},
+          payload: {error: error.response.data.message},
         });
       }
     }

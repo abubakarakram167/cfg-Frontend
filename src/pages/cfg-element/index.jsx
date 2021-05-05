@@ -62,7 +62,7 @@ export default function CfgElement() {
   const [selectedTitle, setSelectedTitle] = useState(null);
 
   useEffect(() => {
-    dispatch(getSessionListData(params.id));
+    dispatch(getSessionListData(params.id, 'session'));
   }, []);
 
   useEffect(() => {
@@ -72,6 +72,8 @@ export default function CfgElement() {
   const toggleDialogOpen = () => {
     setDialogOpen(!dialogOpen);
   };
+
+  console.log('the data', data);
 
   const parentTotalPoints =
     data && data.data && data.data.rows.length
@@ -98,7 +100,7 @@ export default function CfgElement() {
           <Link
             to={`/admin/cfg-session/${selectedTitle ? 'sub-title' : 'title'}/${
               params.id
-            }/${selectedTitle}`}>
+            }/${selectedTitle}/session`}>
             <Chip
               icon={<ControlPoint style={{fill: 'white'}} />}
               label={'ADD NEW'}
