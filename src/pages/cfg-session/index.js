@@ -646,7 +646,7 @@ export default function CfgSession(props) {
                         </Link>
                       </StyledTableCell>
                       <StyledTableCell>
-                        {row.author ? row.author.first_name : ' '}
+                        {row.author ? row.author.user_name : ' '}
                       </StyledTableCell>
                       <StyledTableCell>{row.start_date}</StyledTableCell>
                       <StyledTableCell>{row.end_date}</StyledTableCell>

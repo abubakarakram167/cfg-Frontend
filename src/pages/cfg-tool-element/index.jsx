@@ -22,8 +22,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import {ControlPoint, ExpandMore} from '@material-ui/icons';
-import {InputBase} from '@material-ui/core';
-import {formatDate} from 'utils/stampToFormat';
+import {KeyboardDatePicker} from '@material-ui/pickers';
 import moment from 'moment';
 
 const StyledTableCell = withStyles((theme) => ({
@@ -44,6 +43,19 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
+const useStyles = makeStyles({
+  table: {
+    minWidth: 700,
+  },
+  root: {
+    '& .MuiInputBase-root': {
+      height: 45,
+      paddingLeft: 10,
+      color: '#020101',
+    },
+  },
+});
+
 export default function CfgElement() {
   const dispatch = useDispatch();
   const params = useParams();
@@ -60,6 +72,7 @@ export default function CfgElement() {
   const [totalPointsFilter, settotalPointsFilter] = useState('');
   const [createAtFilter, setCreateAtFilter] = useState('');
   const [selectedTitle, setSelectedTitle] = useState(null);
+  const classes = useStyles();
 
   useEffect(() => {
     dispatch(getSessionListData(params.id, 'tool'));
@@ -73,10 +86,13 @@ export default function CfgElement() {
     setDialogOpen(!dialogOpen);
   };
 
+  console.log('the data', data);
+
   const parentTotalPoints =
     data && data.data && data.data.rows.length
       ? data.data.rows[0].total_points
       : 0;
+  console.log('the start', startDateFilter);
 
   return (
     <div className='cfg-element-page'>
@@ -108,7 +124,6 @@ export default function CfgElement() {
           </Link>
         </div>
         <br />
-
         <div>
           <div className='custom-row-design-cfg-details'>
             <StyledTableCell></StyledTableCell>
@@ -118,7 +133,6 @@ export default function CfgElement() {
                 <TextField
                   variant='filled'
                   size='small'
-                  label='Name'
                   placeholder=''
                   value={nameFilter}
                   onChange={(e) => setNameFilter(e.target.value)}
@@ -132,7 +146,7 @@ export default function CfgElement() {
                 <TextField
                   variant='filled'
                   size='small'
-                  label='Author'
+                  // label='Author'
                   placeholder=''
                   value={authorFilter}
                   onChange={(e) => setAuthorFilter(e.target.value)}
@@ -141,6 +155,44 @@ export default function CfgElement() {
               </div>
             </StyledTableCell>
             <StyledTableCell>
+              <span className='column-heading'> Date Published </span>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  height: 40,
+                  position: 'relative',
+                  top: 5,
+                }}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  style={{backgroundColor: '#eaeaea'}}
+                  variant='filled'
+                  format='YYYY-MM-DD'
+                  autoOk={true}
+                  value={startDateFilter === '' ? null : startDateFilter}
+                  fullWidth={true}
+                  // placeholder='Start date'
+                  className={classes.root}
+                  onChange={(e) => {
+                    console.log(
+                      'the tme',
+                      moment(e).format('YYYY-MM-DD').toString(),
+                    );
+                    if (e && e !== '')
+                      setStartdateFilter(
+                        moment(e).format('YYYY-MM-DD').toString(),
+                      );
+                    else setStartdateFilter('');
+                  }}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+                <FilterList style={{fill: 'black', fontSize: 30}} />
+              </div>
+            </StyledTableCell>
+            {/* <StyledTableCell>
               <span className='column-heading'> Date Published </span>
               <div style={{display: 'flex', alignItems: 'center'}}>
                 <TextField
@@ -153,14 +205,14 @@ export default function CfgElement() {
                 />
                 <FilterList style={{fill: 'black', fontSize: 30}} />
               </div>
-            </StyledTableCell>
+            </StyledTableCell> */}
             <StyledTableCell>
               <span className='column-heading'>Points </span>
               <div style={{display: 'flex', alignItems: 'center'}}>
                 <TextField
                   variant='filled'
                   size='small'
-                  label='Total Points'
+                  // label='Total Points'
                   placeholder=''
                   value={totalPointsFilter}
                   onChange={(e) => settotalPointsFilter(e.target.value)}
@@ -174,7 +226,7 @@ export default function CfgElement() {
                 <TextField
                   variant='filled'
                   size='small'
-                  label='Status'
+                  // label='Status'
                   placeholder=''
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
@@ -186,6 +238,7 @@ export default function CfgElement() {
           <br />
           {data.data &&
             data?.data.titles.rows
+              .filter((content) => content.title !== '')
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .filter((element) =>
                 (element.title ? element.title : '')
@@ -223,6 +276,7 @@ export default function CfgElement() {
                   .startsWith(createAtFilter),
               )
               .map((element, index) => {
+                console.log('the element', element);
                 if (element.total_points <= parentTotalPoints) {
                   return (
                     <Accordion key={index}>
@@ -247,14 +301,10 @@ export default function CfgElement() {
                             </Link>
                           </div>
                           <div className='custom-row-design-header summary-margin-left-concise'>
-                            {JSON.parse(jsCookie.get('user')).first_name}
+                            {JSON.parse(jsCookie.get('user')).user_name}
                           </div>
                           <div className='custom-row-design-header summary-margin-left'>
-                            {moment(
-                              element.updated_at
-                                ? element.updated_at
-                                : element.created_at,
-                            ).format('YYYY-MM-DD HH:mm')}
+                            {element.start_date}
                           </div>
                           <div className='custom-row-design-header summary-margin-left'>
                             {element.total_points}
@@ -274,7 +324,8 @@ export default function CfgElement() {
                                 className='custom-row-design-cfg-details subtitle-card-custom'>
                                 <div className='custom-row-design-header'></div>
                                 <div className='custom-row-design-header accordian-dropdown'>
-                                  <Link to={`/admin/content/edit/${subs.id}`}>
+                                  <Link
+                                    to={`/admin/content/edit/${subs.id}/${params.id}/${subs.title}/session/${subs.type}`}>
                                     {subs.title}
                                   </Link>
                                 </div>
@@ -282,7 +333,7 @@ export default function CfgElement() {
                                   {/* {subs.author.first_name +
                                   ' ' +
                                   subs.author.last_name} */}
-                                  {JSON.parse(jsCookie.get('user')).first_name}
+                                  {JSON.parse(jsCookie.get('user')).user_name}
                                 </div>
                                 <div className='custom-row-design-header accordian-dropdown-extra'>
                                   {moment(
