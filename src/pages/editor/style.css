@@ -94,3 +94,8 @@
   color: red;
   font-weight: 400;
 }
+
+.showErrorMessage {
+  color: red;
+  font-weight: 300;
+}

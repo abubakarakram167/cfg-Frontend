@@ -97,6 +97,7 @@ export default function CfgTool(props) {
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
   const [createAtFilter, setCreateAtFilter] = useState('');
+  const [category, setCategories] = useState([]);
 
   useEffect(() => {
     setContent(state.content);
@@ -163,16 +164,24 @@ export default function CfgTool(props) {
         }
       });
     } else {
-      dispatch(
-        createTool({
-          title,
-          author,
-          start_date: formatDate(start_date),
-          end_date: formatDate(end_date),
-          total_points,
-          status,
-        }),
-      );
+      let allContents = state.content;
+      if (allContents.filter((content) => content.title === title).length > 0) {
+        dispatch({
+          type: Show_Message,
+          payload: {message: 'Title already Exist', success: false},
+        });
+      } else {
+        dispatch(
+          createTool({
+            title,
+            author,
+            start_date: formatDate(start_date),
+            end_date: formatDate(end_date),
+            total_points,
+            status,
+          }),
+        );
+      }
     }
 
     setTitle('');
@@ -207,17 +216,6 @@ export default function CfgTool(props) {
                 value={title}
               />
             </ListItem>
-            {/* <ListItem>
-              <TextField
-                label='Author'
-                variant='filled'
-                fullWidth
-                onChange={(e) => setAuthor(e.target.value)}
-                required
-                disabled
-                value={author}
-              />
-            </ListItem> */}
             <ListItem>
               <KeyboardDatePicker
                 disableToolbar
@@ -261,6 +259,24 @@ export default function CfgTool(props) {
                 type='number'
               />
             </ListItem>
+            {/* <ListItem>
+              <Select
+                labelId='demo-customized-select-label'
+                id='demo-customized-select'
+                value={0}
+                onChange={(e) => {
+                  setCategories(e.target.value);
+                }}
+                variant='filled'
+                value = {category}
+                fullWidth>
+                <MenuItem value={'CFG Session'}>CFG Session</MenuItem>
+                <MenuItem value={'Events'}>Events</MenuItem>
+                <MenuItem value={'Quiz'}>Quiz</MenuItem>
+                <MenuItem value={'Rewards'}>Rewards</MenuItem>
+                <MenuItem value={'CFG Tools'}>CFG Tools</MenuItem>
+              </Select>
+            </ListItem> */}
             <ListItem>
               <Select
                 labelId='demo-simple-select-filled-label'
@@ -523,6 +539,7 @@ export default function CfgTool(props) {
                       .startsWith(createAtFilter),
                   )
                   .map((row, index) => {
+                    console.log('the row', row);
                     return (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
