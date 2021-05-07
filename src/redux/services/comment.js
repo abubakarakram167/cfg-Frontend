@@ -1,4 +1,4 @@
-import axiosInstance from '../../utils/axiox';
+import axiosInstance from '../../utils/axios';
 
 class Comments {
   static addComment(params) {
