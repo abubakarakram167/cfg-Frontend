@@ -5,7 +5,7 @@ import baseURL from './url';
 
 // Set config defaults when creating the instance
 console.log('baseURL:', baseURL);
-export const baseUrl = 'http://localhost:3690';
+export const baseUrl = baseURL;
 let user = JSON.parse(localStorage.getItem('user'));
 let options = {
   baseURL,
