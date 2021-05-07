@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-const url = 'http://localhost:3690';
+const url = 'https://devapp.mycfg.org';
 
 class Socket {
   constructor(url) {
