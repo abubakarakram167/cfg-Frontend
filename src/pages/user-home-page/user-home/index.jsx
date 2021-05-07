@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 // import AppSideBar from '../../AppSidebar';
 import CreatePost from '../create-post-box';
 import './style.css';
@@ -25,21 +25,34 @@ import {
   ExpandLess,
 } from '@material-ui/icons';
 import {Link} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUserPost} from 'redux/actions/UserPost';
+import {baseUrl} from 'utils/axios';
 
 export default function UserHomePage() {
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.userPost.posts);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [conversationExtended, setConversationExtended] = useState(false);
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
+
+  useEffect(() => {
+    dispatch(getUserPost());
+  }, []);
+
+  useEffect(() => {
+    console.log(posts);
+  }, [posts]);
+
   const [fakeData, setFakeData] = useState([
     {
       id: 1,
 
       group: 'test group',
       caption: 'hello sir jermaine',
-      media:
-        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
+      media: '',
       comments: [
         {
           id: 1,
@@ -249,43 +262,44 @@ export default function UserHomePage() {
   return (
     <CommonComponent left={left} right={right}>
       <CreatePost />
-      {fakeData.map((element, index) => {
-        const addComment = (comment, postId) => {
-          setFakeData(
-            fakeData.map((data) => {
-              if (postId === data.id) {
-                data.comments.push(
-                  createComment(data.comments.length + 1, comment),
-                );
-              }
-              return data;
-            }),
-          );
-        };
+      {posts.map((element, index) => {
+        // const addComment = (comment, postId) => {
+        //   setFakeData(
+        //     fakeData.map((data) => {
+        //       if (postId === data.id) {
+        //         data.comments.push(
+        //           createComment(data.comments.length + 1, comment),
+        //         );
+        //       }
+        //       return data;
+        //     }),
+        //   );
+        // };
 
-        const addReplyAction = (postId, commentId, replyText) => {
-          setFakeData(
-            fakeData.map((data) => {
-              if (postId === data.id) {
-                data.comments.map((comment) => {
-                  if (comment.id === commentId) {
-                    comment.commentReplies.push(replyText);
-                  }
-                  return comment;
-                });
-              }
-              return data;
-            }),
-          );
-        };
+        // const addReplyAction = (postId, commentId, replyText) => {
+        //   setFakeData(
+        //     fakeData.map((data) => {
+        //       if (postId === data.id) {
+        //         data.comments.map((comment) => {
+        //           if (comment.id === commentId) {
+        //             comment.commentReplies.push(replyText);
+        //           }
+        //           return comment;
+        //         });
+        //       }
+        //       return data;
+        //     }),
+        //   );
+        // };
 
         return (
-          <PostDetails
-            key={index}
-            post={element}
-            addCommentData={addComment}
-            addReplyAction={addReplyAction}
-          />
+          <div key={index} style={{margin: '20px 0px'}}>
+            <PostDetails
+              post={element}
+              // addCommentData={addComment}
+              // addReplyAction={addReplyAction}
+            />
+          </div>
         );
       })}
     </CommonComponent>

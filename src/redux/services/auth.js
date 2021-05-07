@@ -34,5 +34,9 @@ class Auth {
   static getPreferences(params) {
     return axiosInstance.get('/api/preferences/list');
   }
+
+  static updateUser(params) {
+    return axiosInstance.put('/api/users', {...params});
+  }
 }
 export default Auth;

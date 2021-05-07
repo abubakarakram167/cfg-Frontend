@@ -14,11 +14,15 @@ import ScrumboardApp from './ScrumboardApp';
 import Auth from './Auth';
 import ChatApp from './ChatApp';
 import Wall from './Wall';
-<<<<<<< HEAD
-import Session from './Session';
-=======
 import Preference from './Preference';
->>>>>>> Fix Bugs in user management and complete user preferneces milestone
+import Session from './Session';
+<<<<<<< HEAD
+import Tool from './Tool';
+import mediaReducer from './media';
+=======
+import UserPost from './UserPost';
+import Comment from './Comments';
+>>>>>>> creating acions and reducers
 
 const reducers = (history) =>
   combineReducers({
@@ -26,6 +30,12 @@ const reducers = (history) =>
     settings: Settings,
     auth: Auth,
     session: Session,
+<<<<<<< HEAD
+    tool: Tool,
+=======
+    comment: Comment,
+    userPost: UserPost,
+>>>>>>> creating acions and reducers
     mailApp: MailApp,
     dashboard: Dashboard,
     common: Common,
@@ -39,5 +49,6 @@ const reducers = (history) =>
     chatApp: ChatApp,
     wall: Wall,
     preference: Preference,
+    mediaList: mediaReducer,
   });
 export default reducers;

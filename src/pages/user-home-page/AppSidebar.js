@@ -28,6 +28,8 @@ import {
   Cancel,
 } from '@material-ui/icons';
 import {Link} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {baseUrl} from 'utils/axios';
 const AppSidebar = (props) => {
   const [navCollapsed, setnavCollapsed] = useState(true);
 
@@ -40,6 +42,10 @@ const AppSidebar = (props) => {
   };
 
   const classes = useStyles({});
+  const user = useSelector((state) => {
+    return state.auth.user;
+  });
+
   return (
     <Drawer
       anchor={props.position}
@@ -81,8 +87,8 @@ const AppSidebar = (props) => {
               height: '250px',
               border: '1px solid gainsboro',
             }}
-            src='https://www.history.com/.image/t_share/MTc5MzY2ODYwNDIzMTc3NTQ5/michelle-obama-gettyimages-1138043297.jpg'
-            alt='michelle obama'
+            src={user && baseUrl + '/static/' + user.photo_url}
+            alt={user && user.first_name + ' ' + user.last_name}
           />
           <div
             style={{
@@ -91,7 +97,7 @@ const AppSidebar = (props) => {
               fontWeight: 600,
               marginTop: '10px',
             }}>
-            Michelle Obama
+            {user && user.first_name + ' ' + user.last_name}
           </div>
         </div>
         <br />

@@ -1,9 +1,8 @@
-import React, {useState, useEFfect} from 'react';
+import React, {useState, useEffect} from 'react';
 import UserHomeHeader from '../user-page-header';
-// import { socket } from '../../../socket'
-import io from 'socket.io-client';
+import {socket} from '../../../socket';
 import './style.css';
-const url = 'ws://localhost:3690';
+import {socketEnums} from 'utils/socketEnums';
 
 export default function CommonComponent(props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -11,7 +10,11 @@ export default function CommonComponent(props) {
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
-  const socket = io(url);
+  useEffect(() => {
+    socket.connectAction();
+    console.log(socket.onAction(socketEnums.post));
+    socket.emitAction(socketEnums.login, 'hello from the new client');
+  }, []);
 
   return (
     <div>
