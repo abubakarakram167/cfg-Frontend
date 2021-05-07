@@ -25,10 +25,19 @@ import {useSelector, useDispatch} from 'react-redux';
 import AppSideBar from '../AppSidebar';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import {setCurrentUser} from 'redux/actions/authActions';
+import {baseUrl} from 'utils/axios';
+import {Card, List, ListItem} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import Search from 'redux/services/search';
+import Friend from 'redux/services/friends';
+
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState('');
-  const dispatch = useDispatch();
+  const [image, setImage] = useState('');
+  const dispatch = useDispatch('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [resultVisibility, setResultVisibility] = useState(false);
 
   const state = useSelector((state) => {
     return state.auth;
@@ -42,6 +51,7 @@ export default function AdminHeader() {
   useEffect(() => {
     if (state.user) {
       setUsername(state.user.first_name + ' ' + state.user.last_name);
+      setImage(state.user.photo_url);
     }
   }, [state]);
 
@@ -80,6 +90,17 @@ export default function AdminHeader() {
   const toggleDrawerOpen = () => {
     setDrawerOpen(!drawerOpen);
   };
+  const searchUser = async (e) => {
+    e.persist();
+    const searchTerm = e.target.value;
+    const data = await Search.userSearch(searchTerm);
+    setSearchResults(data.data.users);
+    setResultVisibility(true);
+  };
+
+  const sendFriendRequest = async (id) => {
+    const data = await Friend.sendFriendRequest({userId: id});
+  };
 
   return (
     <div>
@@ -96,7 +117,41 @@ export default function AdminHeader() {
               {/* </Link> */}
             </div>
             <div className='search-bar'>
-              <SearchBar />
+              <SearchBar onChange={searchUser} />
+              {searchResults.length > 0 && resultVisibility && (
+                <div className='user-search-results'>
+                  <Card>
+                    <List>
+                      <ListItem style={{justifyContent: 'space-between'}}>
+                        <h5>Search Results</h5>
+                        <CloseIcon
+                          onClick={() => setResultVisibility(false)}
+                          style={{cursor: 'pointer'}}
+                        />
+                      </ListItem>
+                      {searchResults.map((element, index) => {
+                        return (
+                          <ListItem
+                            key={index}
+                            style={{justifyContent: 'space-between'}}>
+                            <div>
+                              {element.first_name} {element.last_name}
+                            </div>
+                            <div>
+                              <Button
+                                variant='contained'
+                                color='secondary'
+                                onClick={() => sendFriendRequest(element.id)}>
+                                Send Request
+                              </Button>
+                            </div>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </Card>
+                </div>
+              )}
             </div>
             <div className='menu-drop-down'>
               <Button
@@ -119,7 +174,10 @@ export default function AdminHeader() {
                 onClose={handleClose}>
                 <MenuItem onClick={handleClose}>
                   <div className='mobile-menu-item'>
-                    <Avatar alt='User Avatar' src={UserAvatar} />
+                    <Avatar
+                      alt='User Avatar'
+                      src={image && baseUrl + '/static/' + image}
+                    />
                     <div className='user-name-text'>
                       <Typography>{username}</Typography>
                     </div>
@@ -191,7 +249,10 @@ export default function AdminHeader() {
           </div>
           <div className='right'>
             <div className='right-user-info'>
-              <Avatar alt='User Avatar' src={UserAvatar} />
+              <Avatar
+                alt='User Avatar'
+                src={image && 0 && baseUrl + '/static/' + image}
+              />
               <div className='user-name-text'>
                 <Typography>{username}</Typography>
               </div>

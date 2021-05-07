@@ -10,9 +10,9 @@ export default function UserProfile() {
     <CommonComponent left='' right=''>
       <BioCard />
       <br />
-      <CfgCard />
-      <br />
-      <GoalCard />
+      {/* <CfgCard /> */}
+      {/* <br /> */}
+      {/* <GoalCard /> */}
       <br />
       <DemographyCard />
     </CommonComponent>

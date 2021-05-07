@@ -32,8 +32,17 @@
   cursor: pointer;
 }
 
-.search-bar {
+.admin-search-bar {
   position: relative;
+}
+.admin-search-results {
+  position: absolute;
+  width: 310px;
+}
+.admin-search-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between !important;
 }
 
 .left-user-info {

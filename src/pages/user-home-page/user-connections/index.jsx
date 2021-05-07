@@ -11,6 +11,7 @@ import {
 } from '@material-ui/icons';
 import {Button} from '@material-ui/core';
 import CommonComponent from '../common-component';
+import Friend from 'redux/services/friends';
 
 import './style.css';
 export default function UserConnections() {
@@ -18,7 +19,14 @@ export default function UserConnections() {
   const [requestSent, setRequestsSent] = useState(true);
   const [connectionsView, setConnectionView] = useState(true);
   const [currentlySelected, setCurrentlySelected] = useState(null);
+  const [friendRequests, setFriendRequests] = useState([]);
+  const [sentFriendRequests, setSentFriendRequests] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [reloadData, setReloadData] = useState(true);
 
+  const toggleReloadData = () => {
+    setReloadData(!reloadData);
+  };
   const setSelected = (element) => {
     setCurrentlySelected(element);
   };
@@ -33,37 +41,38 @@ export default function UserConnections() {
   const toggleRequestsExpanded = () => {
     setRequestsExpanded(!requestsExpanded);
   };
+  async function getRequests() {
+    const data = await Friend.getFriendRequests();
+    if (data) {
+      if (data.data) {
+        setFriendRequests(data.data);
+      }
+    }
+  }
 
-  const requestsFakeData = [
-    {
-      name: 'Kamala Harris',
-      image:
-        'https://mediad.publicbroadcasting.net/p/shared/npr/styles/x_large/nprshared/202011/881415541.jpg',
-      mutualCount: 2,
-      type: 'request',
-    },
-    {
-      name: 'Donald Trump',
-      image:
-        'https://bsmedia.business-standard.com/_media/bs/img/article/2021-02/23/full/1614048401-668.jpg',
-      mutualCount: 2,
-      type: 'request',
-    },
-    {
-      name: 'Joe Biden',
-      image:
-        'https://www.aljazeera.com/wp-content/uploads/2020/08/cdad9943b3564adbb0c4747ab7819375_18.jpeg?fit=1000%2C561',
-      mutualCount: 2,
-      type: 'sent',
-    },
-    {
-      name: 'Barack Obama',
-      image:
-        'https://assets.vogue.com/photos/59839f025ce7e830e273e428/master/w_2560%2Cc_limit/00-lede-barack-obama-five-things.jpg',
-      mutualCount: 1,
-      type: 'connection',
-    },
-  ];
+  async function getSentRequests() {
+    const data = await Friend.getSentFriendRequests();
+    if (data) {
+      if (data.data) {
+        setSentFriendRequests(data.data);
+      }
+    }
+  }
+
+  async function getFriends() {
+    const data = await Friend.getFriends();
+    if (data) {
+      if (data.data) {
+        setFriends(data.data);
+      }
+    }
+  }
+
+  useEffect(() => {
+    getFriends();
+    getRequests();
+    getSentRequests();
+  }, [reloadData]);
 
   const left = (
     <div>
@@ -78,20 +87,21 @@ export default function UserConnections() {
           <ExpandLess onClick={toggleRequestsExpanded} />
         )}
       </div>
-      <div className='requests-section-list'>
-        {requestsExpanded &&
-          requestsFakeData.map((element, index) => {
-            if (element.type === 'request') {
-              return (
-                <UserInfoBox
-                  key={index}
-                  userData={element}
-                  setSelected={setSelected}
-                />
-              );
-            }
+      {requestsExpanded && (
+        <div className='requests-section-list'>
+          {friendRequests.map((element, index) => {
+            return (
+              <UserInfoBox
+                key={index}
+                type={'request'}
+                userId={element.userId}
+                setSelected={setSelected}
+                toggleReloadData={toggleReloadData}
+              />
+            );
           })}
-      </div>
+        </div>
+      )}
       <br />
       <div className='requests-section'>
         <div style={{display: 'flex', alignItems: 'center'}}>
@@ -106,16 +116,16 @@ export default function UserConnections() {
       </div>
       <div className='requests-section-list'>
         {requestSent &&
-          requestsFakeData.map((element, index) => {
-            if (element.type === 'sent') {
-              return (
-                <UserInfoBox
-                  key={index}
-                  userData={element}
-                  setSelected={setSelected}
-                />
-              );
-            }
+          sentFriendRequests.map((element, index) => {
+            return (
+              <UserInfoBox
+                key={index}
+                userId={element.userId}
+                setSelected={setSelected}
+                type={'sent'}
+                toggleReloadData={toggleReloadData}
+              />
+            );
           })}
       </div>
     </div>
@@ -141,22 +151,23 @@ export default function UserConnections() {
       </div>
       <div className='requests-section-list'>
         {connectionsView &&
-          requestsFakeData.map((element, index) => {
-            if (element.type === 'connection') {
-              return (
-                <UserInfoBox
-                  userData={element}
-                  key={index}
-                  setSelected={setSelected}
-                />
-              );
-            }
+          friends.map((element, index) => {
+            console.log('connection', element);
+            return (
+              <UserInfoBox
+                userId={element}
+                type={'connection'}
+                key={index}
+                setSelected={setSelected}
+                toggleReloadData={toggleReloadData}
+              />
+            );
           })}
       </div>
       <br />
-      <Button color='secondary' variant='contained' fullWidth>
+      {/* <Button color='secondary' variant='contained' fullWidth>
         Add Friend
-      </Button>
+      </Button> */}
     </div>
   );
   return (

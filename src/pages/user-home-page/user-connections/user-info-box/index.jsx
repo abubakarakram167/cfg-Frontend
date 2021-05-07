@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -12,6 +12,8 @@ import {Cancel, CheckCircle, Visibility} from '@material-ui/icons';
 import './style.css';
 import GroupIcon from '@material-ui/icons/Group';
 import {fromPairs} from 'lodash';
+import Friend from 'redux/services/friends';
+import {baseUrl} from 'utils/axios';
 const useStyles = makeStyles({
   root: {
     maxWidth: '100%',
@@ -22,26 +24,67 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UserInfo(props) {
+export default function UserInfo({
+  userId,
+  type,
+  setSelected,
+  toggleReloadData,
+}) {
   const classes = useStyles();
+
+  const [userData, setUserData] = useState({
+    image: '',
+    first_name: '',
+    last_name: '',
+    photo_url: '',
+  });
+
+  const approveRequest = async () => {
+    const data = await Friend.approveFriendRequest({userId});
+    toggleReloadData();
+  };
+
+  const deleteRequest = async () => {
+    const data = await Friend.deleteFriendRequest({userId});
+    toggleReloadData();
+  };
+
+  useEffect(() => {
+    async function getUserDetails() {
+      const data = await Friend.getUserDetails(userId);
+      console.log(data);
+      if (data) {
+        if (data.data) {
+          setUserData(data.data);
+        }
+      }
+    }
+
+    getUserDetails();
+  }, []);
 
   return (
     <div style={{boxShadow: '0px 1px 2px gainsboro', margin: '20px 0px'}}>
       <Card className={classes.root}>
         <CardActionArea
           onClick={() => {
-            props.setSelected(props.userData);
+            setSelected(userData);
           }}>
           <CardContent>
             <div className='user-info-card-content'>
               <Avatar
-                src={props.userData.image}
-                alt={props.userData.name}
+                src={
+                  userData.photo_url &&
+                  baseUrl + '/static/' + userData.photo_url
+                }
+                alt={userData.first_name}
                 className={classes.large}
               />
               <div>
                 <Typography gutterBottom variant='p'>
-                  <strong>{props.userData.name}</strong>
+                  <strong>
+                    {userData.first_name} {userData.last_name}
+                  </strong>
                 </Typography>
                 <Typography
                   variant='body2'
@@ -51,10 +94,7 @@ export default function UserInfo(props) {
                   <GroupIcon
                     style={{color: 'green', fontSize: 25, marginRight: '5px'}}
                   />
-                  <strong>
-                    {' '}
-                    {props.userData.mutualCount} mutual connections
-                  </strong>
+                  <strong> Coming mutual connections</strong>
                 </Typography>
               </div>
             </div>
@@ -62,10 +102,14 @@ export default function UserInfo(props) {
         </CardActionArea>
         <CardActions style={{textAlign: 'center'}}>
           <div style={{margin: 'auto', display: 'flex', alignItems: 'center'}}>
-            {props.userData.type === 'request' && (
+            {type === 'request' && (
               <>
                 <div className='user-info-card-action-button'>
-                  <Button size='small' color='secondary' variant='contained'>
+                  <Button
+                    size='small'
+                    color='secondary'
+                    variant='contained'
+                    onClick={approveRequest}>
                     <CheckCircle style={{color: 'white', marginRight: '5px'}} />
                     Confirm
                   </Button>
@@ -74,24 +118,25 @@ export default function UserInfo(props) {
                   <Button
                     size='small'
                     variant='contained'
-                    className='user-info-card-action-button'>
+                    className='user-info-card-action-button'
+                    onClick={deleteRequest}>
                     <Cancel style={{color: '#1D1D2F', marginRight: '5px'}} />{' '}
                     Reject
                   </Button>
                 </div>
               </>
             )}
-            {props.userData.type === 'sent' && (
+            {type === 'sent' && (
               <>
                 <div className={{margin: 'auto'}}>
-                  <Button variant='contained'>
+                  <Button variant='contained' onClick={deleteRequest}>
                     <Cancel style={{color: '#1D1D2F', marginRight: '5px'}} />{' '}
                     Cancel Request
                   </Button>
                 </div>
               </>
             )}
-            {props.userData.type === 'connection' && (
+            {type === 'connection' && (
               <>
                 <div className={{margin: 'auto'}}>
                   <Button variant='contained' color='secondary'>
