@@ -1,8 +1,9 @@
 import {LOGIN} from './action.types';
 import Auth from '../services/auth';
 import jsCookie from 'js-cookie';
-import {
 import * as actions from './action.types';
+import {
+  Show_Message,
   UPDATE_AUTH_USER,
   UPDATE_NEW_USER,
 } from '../../shared/constants/ActionTypes';
