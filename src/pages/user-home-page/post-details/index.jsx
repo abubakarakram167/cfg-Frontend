@@ -81,7 +81,6 @@ export default function RecipeReviewCard({post}) {
     const data = await Comments.getPostComments(post.id);
     if (data) {
       if (data.data) {
-        console.log(data.data);
         setComments(data.data);
       }
     }
@@ -97,7 +96,6 @@ export default function RecipeReviewCard({post}) {
   };
   const addComment = async (e) => {
     if (e.key === 'Enter' && comment.length > 0) {
-      console.log(post.id);
       await Comments.addComment({
         post_id: post.id,
         content: comment,
@@ -147,7 +145,7 @@ export default function RecipeReviewCard({post}) {
           <Avatar
             aria-label='recipe'
             className={classes.avatar}
-            src={baseUrl + '/static/' + user.photo_url}
+            src={baseUrl + 'static/' + user.photo_url}
           />
         }
         action={
@@ -161,7 +159,7 @@ export default function RecipeReviewCard({post}) {
       {post.media && (
         <CardMedia
           className={classes.media}
-          image={baseUrl + '/static/' + post.media}
+          image={baseUrl + 'static/' + post.media}
           title='Paella dish'
         />
       )}
@@ -171,8 +169,8 @@ export default function RecipeReviewCard({post}) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label='add to favorites'>
-          <Favorite style={{color: 'red'}} onClick={likeAction} />
+        <IconButton aria-label='add to favorites' onClick={likeAction}>
+          <Favorite style={{color: 'red'}} />
           <div style={{marginLeft: '10px'}}>{loveCount}</div>
         </IconButton>
         {/* <IconButton aria-label='share'>

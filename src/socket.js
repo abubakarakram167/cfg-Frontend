@@ -1,5 +1,7 @@
 import io from 'socket.io-client';
-const url = 'http://localhost:3690';
+import {baseUrl} from './utils/axios';
+
+const url = baseUrl;
 
 class Socket {
   constructor(url) {

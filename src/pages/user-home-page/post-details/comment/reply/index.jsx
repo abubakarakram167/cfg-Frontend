@@ -30,7 +30,7 @@ const Reply = ({reply}) => {
         <div className='reply-card-content-left'>
           <Avatar
             alt='user-avatar'
-            src={baseUrl + '/static/' + user.photo_url}
+            src={baseUrl + 'static/' + user.photo_url}
           />
           <div style={{display: 'flex', flexDirection: 'column'}}>
             <div

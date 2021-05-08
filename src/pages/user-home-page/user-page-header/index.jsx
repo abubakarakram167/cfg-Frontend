@@ -176,7 +176,11 @@ export default function AdminHeader() {
                   <div className='mobile-menu-item'>
                     <Avatar
                       alt='User Avatar'
-                      src={image && baseUrl + '/static/' + image}
+                      src={
+                        state &&
+                        state.user &&
+                        baseUrl + 'static/' + state.user.photo_url
+                      }
                     />
                     <div className='user-name-text'>
                       <Typography>{username}</Typography>
@@ -251,7 +255,11 @@ export default function AdminHeader() {
             <div className='right-user-info'>
               <Avatar
                 alt='User Avatar'
-                src={image && 0 && baseUrl + '/static/' + image}
+                src={
+                  state &&
+                  state.user &&
+                  baseUrl + 'static/' + state.user.photo_url
+                }
               />
               <div className='user-name-text'>
                 <Typography>{username}</Typography>

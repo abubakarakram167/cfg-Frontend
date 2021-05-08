@@ -263,42 +263,9 @@ export default function UserHomePage() {
     <CommonComponent left={left} right={right}>
       <CreatePost />
       {posts.map((element, index) => {
-        // const addComment = (comment, postId) => {
-        //   setFakeData(
-        //     fakeData.map((data) => {
-        //       if (postId === data.id) {
-        //         data.comments.push(
-        //           createComment(data.comments.length + 1, comment),
-        //         );
-        //       }
-        //       return data;
-        //     }),
-        //   );
-        // };
-
-        // const addReplyAction = (postId, commentId, replyText) => {
-        //   setFakeData(
-        //     fakeData.map((data) => {
-        //       if (postId === data.id) {
-        //         data.comments.map((comment) => {
-        //           if (comment.id === commentId) {
-        //             comment.commentReplies.push(replyText);
-        //           }
-        //           return comment;
-        //         });
-        //       }
-        //       return data;
-        //     }),
-        //   );
-        // };
-
         return (
           <div key={index} style={{margin: '20px 0px'}}>
-            <PostDetails
-              post={element}
-              // addCommentData={addComment}
-              // addReplyAction={addReplyAction}
-            />
+            <PostDetails post={element} />
           </div>
         );
       })}

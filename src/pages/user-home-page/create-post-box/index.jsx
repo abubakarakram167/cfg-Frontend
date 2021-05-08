@@ -89,7 +89,7 @@ export default function CreatePostBox() {
             <div className='create-post-dialog-user-info'>
               <Avatar
                 alt='user-avatar'
-                src={baseUrl + '/static/' + user.photo_url}
+                src={baseUrl + 'static/' + user.photo_url}
               />
               <span className='app-card-bottom-text'>
                 {user.first_name} {user.last_name}
