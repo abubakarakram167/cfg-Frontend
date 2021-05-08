@@ -87,7 +87,7 @@ const AppSidebar = (props) => {
               height: '250px',
               border: '1px solid gainsboro',
             }}
-            src={user && baseUrl + '/static/' + user.photo_url}
+            src={user && baseUrl + 'static/' + user.photo_url}
             alt={user && user.first_name + ' ' + user.last_name}
           />
           <div

@@ -40,7 +40,7 @@ export default function Comment({comment, addReplyAction, replies}) {
           <div className='comment-card-content-left'>
             <Avatar
               alt='user-avatar'
-              src={baseUrl + '/static/' + user.photo_url}
+              src={baseUrl + 'static/' + user.photo_url}
             />
             <div style={{display: 'flex', flexDirection: 'column'}}>
               <div
