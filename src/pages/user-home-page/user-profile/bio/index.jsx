@@ -100,7 +100,7 @@ export default function BioCard() {
         <CardActionArea>
           <CardMedia
             className={classes.media}
-            image={baseUrl + '/static/' + image}
+            image={baseUrl + 'static/' + image}
             title='user-photo'
           />
           <CardContent>

@@ -1,7 +1,11 @@
 import io from 'socket.io-client';
+<<<<<<< HEAD
+const url = 'https://devapp.mycfg.org';
+=======
 import {baseUrl} from './utils/axios';
 
 const url = baseUrl;
+>>>>>>> url fixes
 
 class Socket {
   constructor(url) {
