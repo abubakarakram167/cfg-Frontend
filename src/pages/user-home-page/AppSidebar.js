@@ -12,6 +12,7 @@ import {
   ListItemIcon,
   Collapse,
   Avatar,
+  Button,
 } from '@material-ui/core';
 import {
   ExpandLess,
@@ -26,12 +27,34 @@ import {
   AccountCircle,
   Bookmark,
   Cancel,
+  CardGiftcard,
 } from '@material-ui/icons';
+import SearchBar from '@crema/core/SearchBar';
+import SearchIcon from '@material-ui/icons/Search';
+
 import {Link} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {baseUrl} from 'utils/axios';
+import {Card} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import Search from 'redux/services/search';
+import Friend from 'redux/services/friends';
+import './sidestyle.css';
 const AppSidebar = (props) => {
+  const [searchResults, setSearchResults] = useState([]);
+  const [resultVisibility, setResultVisibility] = useState(false);
   const [navCollapsed, setnavCollapsed] = useState(true);
+  const searchUser = async (e) => {
+    e.persist();
+    const searchTerm = e.target.value;
+    const data = await Search.userSearch(searchTerm);
+    setSearchResults(data.data.users);
+    setResultVisibility(true);
+  };
+
+  const sendFriendRequest = async (id) => {
+    const data = await Friend.sendFriendRequest({userId: id});
+  };
 
   const handleToggleDrawer = () => {
     setnavCollapsed(!navCollapsed);
@@ -104,22 +127,54 @@ const AppSidebar = (props) => {
         <hr />
         <br />
         <List>
-          <Link to='/home/user-profile'>
-            <ListItem>
-              <ListItemIcon>
-                <AccountCircle style={{color: 'red'}} />
-              </ListItemIcon>
-              <ListItemText primary='My profile' />
-            </ListItem>
-          </Link>
-          <Link to='/home/user-achievements'>
-            <ListItem>
-              <ListItemIcon>
-                <Bookmark style={{color: 'red'}} />
-              </ListItemIcon>
-              <ListItemText primary='My Achievements' />
-            </ListItem>
-          </Link>
+          <ListItem>
+            <div className='side-search-bar'>
+              <div className='search-body'>
+                <ListItemIcon>
+                  <SearchIcon style={{color: 'red'}} />
+                </ListItemIcon>
+                <input
+                  className='side-search-input'
+                  type='text'
+                  onChange={searchUser}
+                />
+              </div>
+              {searchResults.length > 0 && resultVisibility && (
+                <div className='user-search-results'>
+                  <Card>
+                    <List>
+                      <ListItem style={{justifyContent: 'space-between'}}>
+                        <h5>Search Results</h5>
+                        <CloseIcon
+                          onClick={() => setResultVisibility(false)}
+                          style={{cursor: 'pointer'}}
+                        />
+                      </ListItem>
+                      {searchResults.map((element, index) => {
+                        return (
+                          <ListItem
+                            key={index}
+                            style={{justifyContent: 'space-between'}}>
+                            <div>
+                              {element.first_name} {element.last_name}
+                            </div>
+                            <div>
+                              <Button
+                                variant='contained'
+                                color='secondary'
+                                onClick={() => sendFriendRequest(element.id)}>
+                                Send Request
+                              </Button>
+                            </div>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </Card>
+                </div>
+              )}
+            </div>
+          </ListItem>
           <Link to='/home'>
             <ListItem>
               <ListItemIcon>
@@ -128,6 +183,32 @@ const AppSidebar = (props) => {
               <ListItemText primary='Home' />
             </ListItem>
           </Link>
+          <Link to='/home/user-profile'>
+            <ListItem>
+              <ListItemIcon>
+                <AccountCircle style={{color: 'red'}} />
+              </ListItemIcon>
+              <ListItemText primary='My profile' />
+            </ListItem>
+          </Link>
+          <Link to='/home/user-groups'>
+            <ListItem>
+              <ListItemIcon>
+                <People style={{color: 'red'}} />
+              </ListItemIcon>
+              <ListItemText primary='Groups' />
+            </ListItem>
+          </Link>
+
+          <Link to='/home/user-rewards'>
+            <ListItem>
+              <ListItemIcon>
+                <CardGiftcard style={{color: 'red'}} />
+              </ListItemIcon>
+              <ListItemText primary='Rewards' />
+            </ListItem>
+          </Link>
+
           <ListItem>
             <ListItemIcon>
               <Forum style={{color: 'red'}} />
@@ -156,6 +237,14 @@ const AppSidebar = (props) => {
               </div>
             </ListItemText>
           </ListItem>
+          <Link to='/home/user-achievements'>
+            <ListItem>
+              <ListItemIcon>
+                <Bookmark style={{color: 'red'}} />
+              </ListItemIcon>
+              <ListItemText primary='My Achievements' />
+            </ListItem>
+          </Link>
           <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
             <List>
               <ListItemText style={{paddingLeft: '60px'}}>
@@ -175,14 +264,7 @@ const AppSidebar = (props) => {
               <ListItemText primary='My CFG Family' />
             </ListItem>
           </Link>
-          <Link to='/home/user-groups'>
-            <ListItem>
-              <ListItemIcon>
-                <People style={{color: 'red'}} />
-              </ListItemIcon>
-              <ListItemText primary='Groups' />
-            </ListItem>
-          </Link>
+
           <Link to='/home/user-events'>
             <ListItem>
               <ListItemIcon>

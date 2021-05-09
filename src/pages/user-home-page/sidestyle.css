@@ -1,0 +1,14 @@
+.search-body {
+  align-items: center;
+  display: flex;
+}
+.side-search-input {
+  border: none;
+  background: gainsboro;
+  padding: 10px;
+  font-size: 12px;
+  border-radius: 20px;
+  outline: none;
+  width: 250px;
+  box-shadow: 0px 1px 2px gainsboro;
+}
