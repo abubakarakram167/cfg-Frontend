@@ -135,6 +135,7 @@ export const getToolData = () => {
 };
 
 export const getToolListData = (id) => {
+  console.log(typeof id);
   return async function (dispatch) {
     try {
       const response = await Tool.getListData(id);

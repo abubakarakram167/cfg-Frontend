@@ -15,7 +15,7 @@ class Session {
     return axiosInstance.get('/api/content/list/tool?_count=100');
   }
   static getListData(id) {
-    return axiosInstance.get('api/content/list/tool/' + id);
+    return axiosInstance.get('api/content/list/content/tool/' + id);
   }
   static getContentData(id) {
     return axiosInstance.get('api/content/' + id);
