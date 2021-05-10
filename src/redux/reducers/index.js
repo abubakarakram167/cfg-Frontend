@@ -18,6 +18,8 @@ import Preference from './Preference';
 import Session from './Session';
 import Tool from './Tool';
 import mediaReducer from './media';
+import UserPost from './UserPost';
+import Comment from './Comments';
 
 const reducers = (history) =>
   combineReducers({
@@ -26,6 +28,8 @@ const reducers = (history) =>
     auth: Auth,
     session: Session,
     tool: Tool,
+    comment: Comment,
+    userPost: UserPost,
     mailApp: MailApp,
     dashboard: Dashboard,
     common: Common,

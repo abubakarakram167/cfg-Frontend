@@ -1,9 +1,15 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router';
 import CommonComponent from '../common-component';
 import Banner from './banner';
 import LearnCard from './learn-card';
 import './style.css';
+import {useDispatch, useSelector} from 'react-redux';
+import {getToolListData} from '../../../redux/actions/toolActions';
+
 export default function CfgToolsPage() {
+  const params = useParams();
+
   const fakeLearnData = [
     {
       id: 1,
@@ -49,6 +55,17 @@ export default function CfgToolsPage() {
     },
   ];
 
+  const dispatch = useDispatch();
+  const titles = useSelector((state) => state.tool.titles.rows);
+
+  useEffect(() => {
+    dispatch(getToolListData(parseInt(params.id)));
+  }, []);
+
+  useEffect(() => {
+    console.log(titles);
+  }, [titles]);
+
   return (
     <CommonComponent left={''} right={''}>
       <Banner
@@ -58,13 +75,14 @@ export default function CfgToolsPage() {
       />
       <br />
       <div className='learn-data-container'>
-        {fakeLearnData.map((element, index) => {
-          return (
-            <div className='learn-data-box' key={index}>
-              <LearnCard element={element} />
-            </div>
-          );
-        })}
+        {titles &&
+          titles.map((element, index) => {
+            return (
+              <div className='learn-data-box' key={index}>
+                <LearnCard element={element} />
+              </div>
+            );
+          })}
       </div>
     </CommonComponent>
   );

@@ -50,7 +50,7 @@ export default [
   />,
   <ProtectedRoute
     exact
-    path='/admin/content/edit/:id/:content_id/:title'
+    path='/admin/content/edit/:id/:content_id/:title/:type/:contentType'
     component={withRouter(EditContent)}
   />,
   <ProtectedRoute
@@ -75,7 +75,7 @@ export default [
   />,
   <ProtectedRoute
     exact
-    path='/admin/cfg-tools/:type/:id/:contentHeaderId/:title'
+    path='/admin/cfg-tools/:type/:id/:contentHeaderId/cfgType'
     component={withRouter(Editor)}
   />,
   <ProtectedRoute
@@ -90,7 +90,7 @@ export default [
   />,
   <ProtectedRoute
     exact
-    path='/admin/cfg-session/:type/:id/:contentHeaderId'
+    path='/admin/cfg-session/:type/:id/:contentHeaderId/:cfgType'
     component={withRouter(Editor)}
   />,
   <ProtectedRoute

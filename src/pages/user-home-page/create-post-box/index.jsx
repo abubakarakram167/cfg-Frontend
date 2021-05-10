@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AppCard from '@crema/core/AppCard';
 import './style.css';
 import {
@@ -18,16 +18,48 @@ import {
   Save,
   Close,
 } from '@material-ui/icons';
+import {useDispatch, useSelector} from 'react-redux';
+import {createUserPost} from 'redux/actions/UserPost';
+import Media from 'redux/services/media';
+import {baseUrl} from 'utils/axios';
 export default function CreatePostBox() {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const [content, setContent] = useState('');
+  const [media, setMedia] = useState(null);
+  const [user, setUser] = useState({
+    first_name: '',
+    last_name: '',
+    user_name: '',
+    photo_url: '',
+  });
+  const currentUser = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (currentUser) {
+      setUser(currentUser);
+    }
+  }, [currentUser]);
 
   const handleClickOpen = () => {
-    console.log('hello');
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleSave = () => {
+    setOpen(false);
+    dispatch(createUserPost({content, status: 'published', media}));
+  };
+  const handleFile = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('media', file);
+    const data = await Media.addMedia(formData);
+    const photo_url = data.data[0].file_name;
+    setMedia(photo_url);
   };
 
   return (
@@ -55,9 +87,12 @@ export default function CreatePostBox() {
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
             <div className='create-post-dialog-user-info'>
-              <Avatar alt='user-avatar' />
+              <Avatar
+                alt='user-avatar'
+                src={baseUrl + 'static/' + user.photo_url}
+              />
               <span className='app-card-bottom-text'>
-                Current Loggedin user
+                {user.first_name} {user.last_name}
               </span>
             </div>
             <TextField
@@ -67,25 +102,36 @@ export default function CreatePostBox() {
               variant='filled'
               rows={4}
               fullwidth
-              placeholder='How are you feeling in the momen?'
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder='How are you feeling in the moment?'
             />
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{width: '100%'}}>
-          <div className='create-post-dialog-action-content'>
-            <button className='create-post-button' onClick={handleClose}>
-              <Save /> <span className='app-card-bottom-text'>Save</span>
-            </button>
-            <div className='create-post-action-icons'>
-              <Videocam style={{color: 'red'}} />
+          <input
+            type='file'
+            name=''
+            id='media-upload'
+            style={{display: 'none'}}
+            onChange={handleFile}
+          />
+          <label htmlFor='media-upload'>
+            <div className='create-post-dialog-action-content'>
+              <button className='create-post-button' onClick={handleSave}>
+                <Save /> <span className='app-card-bottom-text'>Save</span>
+              </button>
+              <div className='create-post-action-icons'>
+                <Videocam style={{color: 'red'}} />
+              </div>
+              <div className='create-post-action-icons'>
+                <PermMedia style={{color: 'red'}} />
+              </div>
+              <div className='create-post-action-icons'>
+                <EmojiEmotions style={{color: 'red'}} />
+              </div>
             </div>
-            <div className='create-post-action-icons'>
-              <PermMedia style={{color: 'red'}} />
-            </div>
-            <div className='create-post-action-icons'>
-              <EmojiEmotions style={{color: 'red'}} />
-            </div>
-          </div>
+          </label>
         </DialogActions>
       </Dialog>
       <AppCard>

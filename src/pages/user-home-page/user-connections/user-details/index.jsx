@@ -9,7 +9,8 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import './style.css';
 import {Bookmark, Score} from '@material-ui/icons';
-
+import {baseUrl} from 'utils/axios';
+import UserAvatar from 'assets/user-avatar.png';
 const useStyles = makeStyles({
   root: {
     width: '100%',
@@ -22,18 +23,21 @@ const useStyles = makeStyles({
 
 export default function UserDetails(props) {
   const classes = useStyles();
-
   return (
     <Card className={classes.root}>
       {/* <CardActionArea> */}
       <CardMedia
         className={classes.media}
-        image={props.element.image}
-        title={props.element.name}
+        image={
+          props.element.photo_url
+            ? baseUrl + '/static/' + props.element.photo_url
+            : UserAvatar
+        }
+        title={props.element.first_name + ' ' + props.element.last_name}
       />
       <CardContent>
         <Typography gutterBottom variant='h5' component='h2'>
-          {props.element.name}
+          {props.element.first_name + ' ' + props.element.last_name}
         </Typography>
         <div className='bio-text'>Bio</div>
         <Typography
@@ -41,10 +45,11 @@ export default function UserDetails(props) {
           color='textSecondary'
           component='p'
           style={{fontSize: '15px'}}>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum in
+          {/* Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum in
           debitis eveniet, harum vitae dolor adipisci, veritatis autem quo
           minima deleniti placeat neque, tenetur laboriosam dolore quibusdam
-          enim exercitationem similique.
+          enim exercitationem similique. */}
+          bio not being returned
         </Typography>
         <br />
         <hr style={{color: 'gainsboro'}} />

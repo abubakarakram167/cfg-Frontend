@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Card,
   CardHeader,
@@ -23,6 +23,12 @@ import {
 } from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
+import Friend from 'redux/services/friends';
+import {baseUrl} from 'utils/axios';
+import Comments from 'redux/services/comment';
+import {useDispatch} from 'react-redux';
+import {updateUserPost} from 'redux/actions/UserPost';
+import Posts from 'redux/services/post';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,22 +53,88 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard({
-  post,
-  addCommentData,
-  addReplyAction,
-}) {
+export default function RecipeReviewCard({post}) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [comment, setComment] = React.useState('');
+  const [user, setUser] = useState({
+    first_name: '',
+    last_name: '',
+    user_name: '',
+    photo_url: '',
+  });
+  const [loveCount, setLoveCount] = useState(post.love_count || 0);
+  const dispatch = useDispatch();
+
+  const [comments, setComments] = useState([]);
+
+  async function getUserData() {
+    const data = await Friend.getUserDetails(post.user_id);
+    if (data) {
+      if (data.data) {
+        setUser(data.data);
+      }
+    }
+  }
+
+  async function getPostComments() {
+    const data = await Comments.getPostComments(post.id);
+    if (data) {
+      if (data.data) {
+        setComments(data.data);
+      }
+    }
+  }
+
+  useEffect(() => {
+    getUserData();
+    getPostComments();
+  }, []);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const addComment = (e) => {
+  const addComment = async (e) => {
     if (e.key === 'Enter' && comment.length > 0) {
-      addCommentData(comment, post.id);
+      await Comments.addComment({
+        post_id: post.id,
+        content: comment,
+      });
+      getPostComments();
       setComment('');
+    }
+  };
+  function timeConverter(UNIX_timestamp) {
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = date + ' ' + month;
+    return time;
+  }
+
+  const likeAction = async () => {
+    const data = await Posts.updatePost(post.id, {love_count: loveCount + 1});
+
+    if (data.status === 200) {
+      setLoveCount(loveCount + 1);
     }
   };
 
@@ -70,37 +142,40 @@ export default function RecipeReviewCard({
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          <Avatar aria-label='recipe' className={classes.avatar}>
-            R
-          </Avatar>
+          <Avatar
+            aria-label='recipe'
+            className={classes.avatar}
+            src={baseUrl + 'static/' + user.photo_url}
+          />
         }
         action={
           <IconButton aria-label='settings'>
             <MoreVert />
           </IconButton>
         }
-        title={`Jermaine Gray > ${post.group}`}
-        subheader='September 14, 2016'
+        title={`${user.first_name} ${user.last_name}`}
+        subheader={timeConverter(Date.parse(post.createdAt))}
       />
       {post.media && (
         <CardMedia
           className={classes.media}
-          image={post.media}
+          image={baseUrl + 'static/' + post.media}
           title='Paella dish'
         />
       )}
       <CardContent>
         <Typography variant='body2' color='textSecondary' component='p'>
-          <span className='caption-text'>{post.caption}</span>
+          <span className='caption-text'>{post.content}</span>
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label='add to favorites'>
-          <Favorite />
+        <IconButton aria-label='add to favorites' onClick={likeAction}>
+          <Favorite style={{color: 'red'}} />
+          <div style={{marginLeft: '10px'}}>{loveCount}</div>
         </IconButton>
-        <IconButton aria-label='share'>
+        {/* <IconButton aria-label='share'>
           <Share />
-        </IconButton>
+        </IconButton> */}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
@@ -113,17 +188,25 @@ export default function RecipeReviewCard({
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
-          {post.comments.map((element, index) => {
-            const addReplyDataAction = (replyText) => {
-              addReplyAction(post.id, element.id, replyText);
+          {comments.map((comment, index) => {
+            const addReplyDataAction = async (replyText) => {
+              await Comments.addComment({
+                post_id: post.id,
+                content: replyText,
+                parent_id: comment.id,
+              });
+              getPostComments();
             };
-            return (
-              <Comment
-                key={index}
-                comment={element}
-                addReplyAction={addReplyDataAction}
-              />
-            );
+            if (comment.parent_id === null) {
+              return (
+                <Comment
+                  key={index}
+                  comment={comment}
+                  addReplyAction={addReplyDataAction}
+                  replies={comment.replies}
+                />
+              );
+            }
           })}
           <TextField
             label='comment'

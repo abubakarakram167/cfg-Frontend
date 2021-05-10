@@ -20,10 +20,12 @@ import {
   editContent,
   getSessionListData,
 } from 'redux/actions/sessionActions';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import moment from 'moment';
 import {InputBase} from '@material-ui/core';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import InfoIcon from '@material-ui/icons/Info';
+import {useHistory} from 'react-router-dom';
 
 export default function Editor() {
   const params = useParams();
@@ -48,6 +50,7 @@ export default function Editor() {
   const [groupValue, setGroupValue] = useState('');
   const [accumulativeTitlePoints, setAccumulativeTitlePoints] = useState(0);
   const [originalTotalPoints, setOriginalTotalPoints] = useState(0);
+  const history = useHistory();
 
   const handleEditorChange = (e) => {
     setContent(e);
@@ -70,11 +73,11 @@ export default function Editor() {
 
   useEffect(() => {
     dispatch(getContentData(params.id));
-    dispatch(getContentData(params.content_id));
+    // dispatch(getContentData(params.content_id));
   }, [params.id, params.content_id, dispatch]);
 
   useEffect(() => {
-    dispatch(getSessionListData(params.content_id));
+    dispatch(getSessionListData(params.id, params.type));
   }, []);
 
   useEffect(() => {
@@ -82,7 +85,12 @@ export default function Editor() {
       setOpen1(true);
     }
 
-    if (state.titles && state.titles.rows && state.titles.rows.length) {
+    if (
+      state.titles &&
+      state.titles.rows &&
+      state.titles.rows.length &&
+      state.current
+    ) {
       let totalPoints = 0;
 
       state.titles.rows.map((row) => {
@@ -97,8 +105,10 @@ export default function Editor() {
       const totalPointsSpecific = state.titles.rows.filter((allTitles) => {
         return allTitles.id === parseInt(params.id);
       });
-
-      settotal_points(totalPointsSpecific[0].total_points);
+      // debugger
+      settotal_points(
+        totalPointsSpecific.length ? totalPointsSpecific[0].total_points : 0,
+      );
       setAccumulativeTitlePoints(totalPoints);
     }
     if (state.current) setOriginalTotalPoints(state.current.total_points || 0);
@@ -107,25 +117,62 @@ export default function Editor() {
       setTitle(params.title || '');
       setsub_title(state.currentContent.sub_title || '');
       setContent(state.currentContent.detail || '');
-      setstart_date(new Date(state.currentContent.start_date));
-      setend_date(new Date(state.currentContent.end_date));
-      setStatus(state.currentContent.status || 'draft');
-      setKeywords(
-        JSON.parse(state.currentContent.tags).map((element) => element.text) ||
-          [],
+      setstart_date(
+        moment(state.currentContent.start_date).format('MM/DD/yyyy'),
       );
+      setend_date(moment(state.currentContent.end_date).format('MM/DD/yyyy'));
+      setStatus(state.currentContent.status || 'draft');
+      const allTags = JSON.parse(state.currentContent.tags);
+      let specificTags;
+      specificTags = allTags
+        .filter((tag) => {
+          if (tag.tag_type === 'keyword') return true;
+          else return false;
+        })
+        .map((element) => element.text);
+      setKeywords(specificTags.length ? specificTags : []);
+      specificTags = allTags
+        .filter((tag) => {
+          if (tag.tag_type === 'group') return true;
+          else return false;
+        })
+        .map((element) => element.text);
+      setGroups(specificTags);
+
+      specificTags = allTags
+        .filter((tag) => {
+          if (tag.tag_type === 'category') return true;
+          else return false;
+        })
+        .map((element) => element.text);
+      setCategories(specificTags);
       setnext_page(state.currentContent.next_page || '');
       setprevious_page(state.currentContent.previous_page || '');
       setContentType(state.currentContent.type || '');
     }
   }, [state]);
-
   const publish = () => {
-    const tags = keywords.map((element) => {
-      return {
+    let totalTags = [];
+
+    keywords.map((element) => {
+      totalTags.push({
         tag_type: 'keyword',
         text: element,
-      };
+      });
+    });
+
+    groups.map((element) => {
+      totalTags.push({
+        tag_type: 'group',
+        text: element,
+      });
+    });
+
+    categories.map((element) => {
+      totalTags.push({
+        tag_type: 'category',
+        text: element,
+      });
     });
 
     if (
@@ -153,10 +200,10 @@ export default function Editor() {
             title,
             sub_title,
             detail: content,
-            start_date: formatDate(start_date),
-            end_date: formatDate(end_date),
-            tags: JSON.stringify(tags),
-            type: contentType,
+            start_date: start_date,
+            end_date: end_date,
+            tags: JSON.stringify(totalTags),
+            type: params.contentType,
             total_points,
             next_page,
             updated_at: moment(moment()).format('YYYY-MM-DD'),
@@ -164,7 +211,13 @@ export default function Editor() {
           },
           params.id,
         ),
-      );
+      ).then((response) => {
+        if (response) {
+          setTimeout(() => {
+            history.push(`/admin/content/display/${params.id}`);
+          }, 1000);
+        }
+      });
     }
   };
   const [open1, setOpen1] = useState(false);
@@ -178,12 +231,6 @@ export default function Editor() {
     parseInt(originalTotalPoints) -
       parseInt(accumulativeTitlePoints) +
       parseInt(total_points),
-  );
-  console.log(
-    'the original accumulative total_point',
-    originalTotalPoints,
-    accumulativeTitlePoints,
-    total_points,
   );
 
   return (
@@ -212,30 +259,29 @@ export default function Editor() {
 
       <Container>
         <div className='top-section'>
-          <div>
-            <div>
-              {/* <ContentEditable
-                className='ce-title'
-                html={title}
-                disabled={false}
+          <div style={{width: '100%'}}>
+            <div style={{width: '100%'}}>
+              <TextareaAutosize
                 onChange={(e) => setTitle(e.target.value)}
-                onFocus = {()=> setTitle('')}
-              /> */}
-              <InputBase
+                value={title}
+                placeholder='Enter a title'
+                style={{
+                  fontSize: 25,
+                  width: '88%',
+                  border: 'none',
+                  backgroundColor: '#f9f9f9',
+                  color: 'gray',
+                }}
+                aria-label='empty textarea'
+                placeholder='Empty'
+              />
+              {/* <InputBase
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
                 placeholder='Enter a title'
                 style={{fontSize: 20}}
-              />
+              /> */}
             </div>
-            {/* <div>
-              <ContentEditable
-                className='ce-sub-title'
-                html={sub_title}
-                disabled={false}
-                onChange={(e) => setsub_title(e.target.value)}
-              />
-            </div> */}
           </div>
           <div className='flex-buttons-publish'>
             <Link to={`/admin/content/display/${params.id}`}>
@@ -308,29 +354,6 @@ export default function Editor() {
               </Select>
             </div>
             <br />
-
-            {/* <div>
-              <Select
-                labelId='demo-customized-select-label'
-                id='demo-customized-select'
-                value={appliedGroup}
-                onChange={(e) => setAppliedGroup(e.target.value)}
-                fullWidth
-                label='Apply to Groups'
-                variant='filled'></Select>
-            </div> */}
-
-            {/* <div>
-              <TextField
-                variant='filled'
-                value={appliedGroup}
-                onChange={(e) => setAppliedGroup(e.target.value)}
-                fullWidth
-                label='Apply to Groups'
-                required
-              />
-            </div> */}
-
             <div>
               {groups.map((element, index) => {
                 return (
@@ -398,7 +421,9 @@ export default function Editor() {
                 fullWidth={true}
                 label='Start Date'
                 value={start_date}
-                onChange={(e) => setstart_date(e)}
+                onChange={(e) => {
+                  setstart_date(moment(e).format('MM/DD/yyyy'));
+                }}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -411,7 +436,9 @@ export default function Editor() {
                 fullWidth={true}
                 label='End Date'
                 value={end_date}
-                onChange={(e) => setend_date(e)}
+                onChange={(e) => {
+                  setend_date(moment(e).format('MM/DD/yyyy'));
+                }}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './style.css';
 import AppCard from '@crema/core/AppCard';
-import Logo from 'assets/jmmb_2.png';
+import Logo from 'assets/Logo.png';
 import {TextField} from '@material-ui/core';
 import queryString from 'query-string';
 import {passwordResetAction} from '../../../redux/actions/authActions';
@@ -10,18 +10,21 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
+import ReactPasswordStrength from 'react-password-strength';
+import PasswordStrengthBar from 'react-password-strength-bar';
 
 const CreatePassword = () => {
   const state = useSelector((state) => state);
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [token, setToken] = useState();
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(token);
-    console.log(password);
-    setPassword('');
-    dispatch(passwordResetAction({token, password}));
+    if (password === confirmPassword && password.length >= 7) {
+      setPassword('');
+      dispatch(passwordResetAction({token, password}));
+    }
   };
   const handleClose1 = () => {
     setOpen1(false);
@@ -61,7 +64,13 @@ const CreatePassword = () => {
       <div className='appCard'>
         <AppCard>
           <div className='image-logo'>
-            <img src={Logo} alt='logo' />
+            <img
+              style={{
+                height: 150,
+              }}
+              src={Logo}
+              alt='logo'
+            />
           </div>
           <div>
             <h3>Create your password</h3>
@@ -73,11 +82,36 @@ const CreatePassword = () => {
               fullWidth
               type='password'
               value={password}
+              name='password_input'
               required
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               variant='filled'
-              placeholder='password'
+              placeholder='Password'
             />
+            <PasswordStrengthBar password={password} />
+            {password && password.length <= 6 && (
+              <p className='not-password-match'>
+                {' '}
+                Password shouldn't be weak.{' '}
+              </p>
+            )}
+            <TextField
+              style={{marginTop: 10}}
+              fullWidth
+              type='password'
+              value={confirmPassword}
+              required
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+              }}
+              variant='filled'
+              placeholder='Confirm Password'
+            />
+            {password && confirmPassword && password !== confirmPassword && (
+              <p className='not-password-match'> Password Don't match </p>
+            )}
             <br />
             <button className='submit-button' type='submit'>
               CREATE PASSWORD

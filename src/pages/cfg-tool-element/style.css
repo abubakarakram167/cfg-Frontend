@@ -66,3 +66,7 @@
 .subtitle-card-custom:nth-child(odd) {
   background-color: #e8f8ff;
 }
+.cfg-tool-container {
+  max-width: 5000px;
+  width: 96%;
+}

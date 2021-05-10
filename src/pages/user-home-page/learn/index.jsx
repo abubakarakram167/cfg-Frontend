@@ -4,11 +4,24 @@ import CommonComponent from '../common-component';
 import Banner from './banner';
 import {Button} from '@material-ui/core';
 import './style.css';
+import {getContentData} from '../../../redux/actions/toolActions';
+import {useDispatch, useSelector} from 'react-redux';
 export default function Learn() {
   const params = useParams();
   const history = useHistory();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentContent, setCurrentContent] = useState(null);
+  const dispatch = useDispatch();
+  const content = useSelector((state) => state.tool.currentContent);
+
+  useEffect(() => {
+    console.log(params.learnId);
+    dispatch(getContentData(params.learnId));
+  }, []);
+
+  useEffect(() => {
+    console.log(content);
+  }, [content]);
 
   useEffect(() => {
     setCurrentContent(
@@ -66,16 +79,11 @@ export default function Learn() {
     },
   ];
 
-  const setPrevious = () => {
-    setCurrentContent(fakeLearnData[currentIndex - 1]);
-    setCurrentIndex(currentIndex - 1);
-    history.push(`/home/cfg-tools/4/${fakeLearnData[currentIndex - 1].id}`);
+  const setPrevious = (id) => {
+    history.push(`/home/cfg-tools/4/${id}`);
   };
-  const setNext = () => {
-    setCurrentContent(fakeLearnData[currentIndex + 1]);
-    setCurrentIndex(currentIndex + 1);
-    params.id = fakeLearnData[currentIndex + 1].id;
-    history.push(`/home/cfg-tools/4/${fakeLearnData[currentIndex + 1].id}`);
+  const setNext = (id) => {
+    history.push(`/home/cfg-tools/4/${id}`);
   };
 
   return (
@@ -87,23 +95,27 @@ export default function Learn() {
       />
       <br />
 
-      {currentContent && (
+      {content && (
         <div>
-          <span className='learn-title'>{currentContent.title}</span>
+          <span className='learn-title'>{content.title}</span>
           <br />
-          <div className='learn-content'>{currentContent.content}</div>
+          <div
+            className='learn-content'
+            dangerouslySetInnerHTML={{__html: content.detail}}></div>
           <br />
           <div className='learn-content-buttons'>
-            {currentIndex > 0 && (
-              <Button variant='contained' onClick={setPrevious}>
+            {content && content.previous_page && (
+              <Button
+                variant='contained'
+                onClick={() => setPrevious(content.previous_page)}>
                 Previous
               </Button>
             )}
-            {currentIndex < fakeLearnData.length - 1 && (
+            {content && content.next_page && (
               <Button
                 variant='contained'
                 style={{marginLeft: '10px'}}
-                onClick={setNext}>
+                onClick={() => setNext(content.next_page)}>
                 Next
               </Button>
             )}

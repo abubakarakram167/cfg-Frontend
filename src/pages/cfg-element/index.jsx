@@ -59,12 +59,10 @@ export default function CfgElement() {
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
   const [createAtFilter, setCreateAtFilter] = useState('');
-  // const [title, setTitle] = useState('');
-  // const [totalPoints, setTotalPoints] = useState(0);
   const [selectedTitle, setSelectedTitle] = useState(null);
 
   useEffect(() => {
-    dispatch(getSessionListData(params.id));
+    dispatch(getSessionListData(params.id, 'session'));
   }, []);
 
   useEffect(() => {
@@ -75,23 +73,13 @@ export default function CfgElement() {
     setDialogOpen(!dialogOpen);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   dispatch(
-  //     createSessionTitle({
-  //       content_header_id: parseInt(params.id),
-  //       title,
-  //       total_points: totalPoints,
-  //     }),
-  //   );
-  // };
   console.log('the data', data);
+
   const parentTotalPoints =
     data && data.data && data.data.rows.length
       ? data.data.rows[0].total_points
       : 0;
-  console.log('the parent total', parentTotalPoints);
+
   return (
     <div className='cfg-element-page'>
       <div>
@@ -100,7 +88,11 @@ export default function CfgElement() {
       <br />
       <br />
 
-      <Container>
+      <Container
+        style={{
+          maxWidth: 5000,
+          width: '96%',
+        }}>
         <div className='options'>
           <Typography variant='h6' className='titleText'>
             {data.data && data.data.rows.length && data.data.rows[0].title}
@@ -108,7 +100,7 @@ export default function CfgElement() {
           <Link
             to={`/admin/cfg-session/${selectedTitle ? 'sub-title' : 'title'}/${
               params.id
-            }/${selectedTitle}`}>
+            }/${selectedTitle}/session`}>
             <Chip
               icon={<ControlPoint style={{fill: 'white'}} />}
               label={'ADD NEW'}
@@ -252,7 +244,7 @@ export default function CfgElement() {
                           </div>
                           <div className='custom-row-design-header summary-margin-left-concise'>
                             <Link
-                              to={`/admin/content/edit/${element.id}/${params.id}/${element.title}`}>
+                              to={`/admin/content/edit/${element.id}/${params.id}/${element.title}/session/${element.type}`}>
                               {element.title}
                             </Link>
                           </div>

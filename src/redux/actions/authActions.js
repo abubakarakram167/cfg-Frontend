@@ -1,12 +1,12 @@
 import {LOGIN} from './action.types';
 import Auth from '../services/auth';
 import jsCookie from 'js-cookie';
+import * as actions from './action.types';
 import {
   Show_Message,
   UPDATE_AUTH_USER,
   UPDATE_NEW_USER,
 } from '../../shared/constants/ActionTypes';
-
 export const loginAction = (params) => {
   return async function (dispatch) {
     try {
@@ -22,11 +22,11 @@ export const loginAction = (params) => {
         });
       }
     } catch (error) {
-      console.log('the error response', error.response);
+      console.log('the error', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: LOGIN,
-          payload: {error: 'Email or password is incorrect'},
+          payload: {error: error.response.data.message},
         });
       }
     }
@@ -158,4 +158,46 @@ export const passwordResetAction = (data) => {
       });
     }
   };
+};
+
+export const updateUser = (data) => {
+  return async function (dispatch) {
+    try {
+      const response = await Auth.updateUser(data);
+      if (response.status === 200) {
+        const data_resp = response.data;
+        console.log(data_resp);
+        jsCookie.set('login', 'yes');
+        dispatch({
+          type: actions.UPDATE_USER,
+          payload: {...data_resp, message: 'success', newData: data},
+          error: null,
+        });
+      }
+    } catch (error) {
+      console.log(error.message);
+      dispatch({
+        type: actions.UPDATE_USER,
+        payload: {
+          error: 'An unexpected error occured. Please try again.',
+        },
+      });
+    }
+  };
+};
+
+export const setCurrentUser = (data) => {
+  try {
+    return {
+      type: actions.SET_CURRENT_USER,
+      payload: data,
+    };
+  } catch {
+    return {
+      type: actions.SET_CURRENT_USER,
+      payload: {
+        error: 'There was an error setting the user',
+      },
+    };
+  }
 };

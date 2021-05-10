@@ -43,31 +43,38 @@ export const createSession = (params) => {
 
 export const createSessionTitle = (params, type) => {
   return async function (dispatch) {
-    try {
-      const response = await Session.createTitle(params, type);
-      if (response.status === 200) {
-        const data_resp = await response.data;
-        jsCookie.set('login', 'yes');
-        dispatch({
-          type: CREATE_TITLE,
-          payload: {...data_resp, error: null},
+    return new Promise((res, rej) => {
+      Session.createTitle(params, type)
+        .then((response) => {
+          console.log('the response', response);
+          if (response.status === 200) {
+            const data_resp = response.data;
+            jsCookie.set('login', 'yes');
+            dispatch({
+              type: CREATE_TITLE,
+              payload: {...data_resp, error: null},
+            });
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'Added SuccessFully', success: true},
+            });
+            res(data_resp);
+          }
+        })
+        .catch((error) => {
+          rej(false);
+          console.log('the error', error.response);
+          if (error.response && error.response.status === 401) {
+            dispatch(
+              {
+                type: CREATE_TITLE,
+                payload: {error: 'There was an error creating the title'},
+              },
+              params.type,
+            );
+          }
         });
-        dispatch({
-          type: Show_Message,
-          payload: {message: 'Added SuccessFully', success: true},
-        });
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        dispatch(
-          {
-            type: CREATE_TITLE,
-            payload: {error: 'There was an error creating the title'},
-          },
-          params.type,
-        );
-      }
-    }
+    });
   };
 };
 
@@ -176,7 +183,7 @@ export const getSessionData = () => {
         });
       }
     } catch (error) {
-      console.log('the erroeeee ', error.response.data);
+      console.log('the erroeeee ', error);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: GET_SESSION_DATA,
@@ -187,10 +194,10 @@ export const getSessionData = () => {
   };
 };
 
-export const getSessionListData = (id) => {
+export const getSessionListData = (id, type) => {
   return async function (dispatch) {
     try {
-      const response = await Session.getListData(id);
+      const response = await Session.getListData(id, type);
 
       if (response.status === 200) {
         const data_resp = await response.data;
@@ -201,6 +208,7 @@ export const getSessionListData = (id) => {
         });
       }
     } catch (error) {
+      console.log('the error', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: GET_LIST_DATA,
@@ -217,6 +225,7 @@ export const getContentData = (id) => {
       const response = await Session.getContentData(id);
       if (response.status === 200) {
         const data_resp = await response.data;
+        console.log('the content data', data_resp);
         jsCookie.set('login', 'yes');
         dispatch({
           type: GET_CONTENT_DATA,

@@ -1,23 +1,28 @@
-.auth-card {
-  padding: 20px;
+.makeStyles-root-5 .MuiFilledInput-input {
+  height: 2vh;
+}
+
+.logo-image-screen {
+  width: 60%;
+}
+
+.sign-in-box {
+  flex: 1;
+}
+
+.right-box {
+  width: 70%;
   display: flex;
   flex-direction: column;
-  text-align: center;
-  background-color: #ffffff;
-
-  width: 50%;
-}
-.right-box {
-  width: 100%;
-  height: 60vh;
-  position: relative;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .main {
-  width: 511px;
+  width: 80%;
   box-shadow: 0px 1px 2px gainsboro;
-  position: absolute;
-  top: 100px;
-  right: 50px;
+  margin: auto;
+  border-radius: 12px;
+  height: 100%;
 }
 .container-auth {
   display: flex;
@@ -26,6 +31,17 @@
 }
 .image-container {
   text-align: center;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.auth-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background-color: #ffffff;
+  justify-content: space-evenly;
 }
 .forms {
   text-align: center;
@@ -37,6 +53,7 @@
 
 .toolbar-container {
   width: 100%;
+  background-color: red;
 }
 
 .action-button {
@@ -54,21 +71,41 @@
   margin-bottom: 10px;
   cursor: pointer;
   outline: none;
+  font-size: 15px;
 }
-.logo-image-screen {
+/* .logo-image-screen {
   top: -113px;
   position: absolute;
   right: 76px;
-}
+} */
 
 .icons {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  height: 5vh;
 }
 
 .icons img {
   cursor: pointer;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  top: 5px;
+}
+
+.icons .different-img {
+  cursor: pointer;
+  width: 25%;
+  height: 100%;
+  position: relative;
+}
+.different-img-twitter {
+  height: 80px;
+}
+
+.different-img-facebook {
+  height: 50px;
 }
 
 .message-text {
@@ -77,17 +114,18 @@
 
 .left-box {
   background-image: url('../../assets/jmmb-foundation.png');
-  width: 100%;
+  /* width: 100%; */
   background-color: #f0f2f5;
   display: flex;
   align-items: stretch;
-  width: 75%;
+  /* width: 75%; */
   height: 91.75vh;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: -265px;
-  border-top-right-radius: 50%;
-  border-bottom-right-radius: 50%;
+  border-radius: 5% / 50%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .whole-auth {
@@ -95,9 +133,9 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .left-box {
+  /* .left-box {
     display: none;
-  }
+  } */
   .main {
     width: 100%;
     position: unset;
@@ -110,38 +148,189 @@
     position: unset;
   }
 }
+.orHeader {
+  border-top: 1px solid gainsboro;
+  width: 100%;
+  margin-top: 10px;
+  height: 5vh;
+  font-size: 2.2vh;
+}
 
-@media only screen and (min-width: 1281px) {
-  .right-box {
-    margin-top: 140px;
-  }
+@media only screen and (max-width: 992px) {
   .left-box {
-    background-position: -467px;
+    background-position: -200px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    width: 100%;
+    background-position: 0;
   }
-  .logo-image-screen {
+  .right-box {
     position: absolute;
-    left: 100px;
+  }
+  .container-auth {
+    justify-content: center;
+    align-items: flex-end;
+    display: flex;
+    overflow-y: scroll;
+    height: 80%;
   }
 }
 
-@media only screen and (max-width: 1024px) and (min-width: 1023px) {
-  .right-box {
-    margin-top: 140px;
+@media only screen and (max-height: 992px) {
+  .container-auth {
+    overflow-y: scroll;
+  }
+}
+@media only screen and (max-height: 500px) {
+  .action-button {
+    height: 1vh;
+    font-size: 5px;
+    padding: 7px;
+  }
+  .orHeader {
+    height: 3vh;
+    font-size: 1.2vh;
+  }
+  .last-container {
+    margin-top: 0px;
+    font-size: 5px;
+  }
+  .icons img {
+    width: 20px;
+    height: 20px;
+  }
+}
+@media only screen and (max-width: 992px) {
+  .main {
+    opacity: 0.7;
+  }
+}
+
+@media only screen and (max-width: 1300px) and (min-width: 1000px) {
+  .left-box {
+    background-position: -100px;
+  }
+}
+
+@media only screen and (max-height: 2000px) and (min-height: 1700px) {
+  .icons img {
+    cursor: pointer;
+    width: 80px;
+    height: 80px;
     position: relative;
+    top: 5px;
+  }
+  .last-container {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    background-size: cover;
+    margin-top: 25px;
+    font-size: 30px;
+  }
+}
+
+@media only screen and (max-height: 2300px) and (min-height: 2001px) {
+  .icons img {
+    cursor: pointer;
+    width: 120px;
+    height: 120px;
+    position: relative;
+    top: 5px;
   }
 
+  .last-container {
+    width: 100%;
+    margin-top: 30px;
+    font-size: 40px;
+  }
+}
+
+@media only screen and (max-height: 2600px) and (min-height: 2301px) {
+  .icons img {
+    cursor: pointer;
+    width: 150px;
+    height: 150px;
+    position: relative;
+    top: 5px;
+  }
+
+  .last-container {
+    width: 100%;
+    margin-top: 50px;
+    font-size: 45px;
+  }
+}
+
+@media only screen and (max-height: 2900px) and (min-height: 2601px) {
+  .icons img {
+    cursor: pointer;
+    width: 180px;
+    height: 180px;
+    position: relative;
+    top: 5px;
+  }
+  .last-container {
+    width: 100%;
+    margin-top: 70px;
+    font-size: 60px;
+  }
+}
+
+@media only screen and (min-width: 1281px) {
   .left-box {
-    display: none;
+    background-position: 0px;
+    width: 100%;
   }
-  .main {
-    width: 60%;
-    position: unset;
+}
+
+@media only screen and (max-width: 992px) {
+  .right-box {
+    width: 90%;
   }
+}
+
+@media only screen and (max-width: 992px) {
+  .right-box {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 992px) and (min-width: 800px) {
   .logo-image-screen {
-    position: unset;
+    width: 22%;
+  }
+}
+
+@media only screen and (max-width: 799px) and (min-width: 600px) {
+  .logo-image-screen {
+    width: 15%;
+  }
+}
+@media only screen and (max-width: 599px) and (min-width: 400px) {
+  .logo-image-screen {
+    width: 15%;
+  }
+}
+
+@media only screen and (max-width: 399px) and (min-width: 200px) {
+  .logo-image-screen {
+    width: 5%;
+  }
+}
+
+@media only screen and (max-height: 599px) and (min-height: 400px) {
+  .MuiFilledInput-input {
+    height: 2vh;
+  }
+}
+
+@media only screen and (max-width: 1300px) and (min-width: 992px) {
+  .left-box {
+    width: 100%;
+  }
+}
+@media only screen and (min-height: 501px) {
+  .last-container {
+    width: 100%;
+    margin-top: 20px;
+    font-size: 15px;
   }
 }

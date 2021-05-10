@@ -60,6 +60,13 @@ const useStyles = makeStyles({
   table: {
     minWidth: 700,
   },
+  root: {
+    '& .MuiInputBase-root': {
+      height: 45,
+      paddingLeft: 10,
+      color: '#020101',
+    },
+  },
 });
 
 export default function CfgTool(props) {
@@ -90,6 +97,7 @@ export default function CfgTool(props) {
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
   const [createAtFilter, setCreateAtFilter] = useState('');
+  const [category, setCategories] = useState([]);
 
   useEffect(() => {
     setContent(state.content);
@@ -97,7 +105,7 @@ export default function CfgTool(props) {
 
   useEffect(() => {
     dispatch(getToolData());
-    setAuthor(JSON.parse(jsCookie.get('user')).first_name);
+    setAuthor(JSON.parse(jsCookie.get('user')).user_name);
   }, [dispatch]);
 
   const toggleCheckbox = (id) => {
@@ -130,6 +138,10 @@ export default function CfgTool(props) {
         editContent({
           title,
           type: 'tool',
+          start_date,
+          total_points,
+          end_date,
+          status,
           id: singleId,
         }),
       ).then((res) => {
@@ -146,21 +158,30 @@ export default function CfgTool(props) {
               };
             } else return content;
           });
-          console.log('the allContent', allContent);
+          toggleCheckbox(singleId);
+          setSingleId(null);
           setContent(allContent);
         }
       });
     } else {
-      dispatch(
-        createTool({
-          title,
-          author,
-          start_date: formatDate(start_date),
-          end_date: formatDate(end_date),
-          total_points,
-          status,
-        }),
-      );
+      let allContents = state.content;
+      if (allContents.filter((content) => content.title === title).length > 0) {
+        dispatch({
+          type: Show_Message,
+          payload: {message: 'Title already Exist', success: false},
+        });
+      } else {
+        dispatch(
+          createTool({
+            title,
+            author,
+            start_date: formatDate(start_date),
+            end_date: formatDate(end_date),
+            total_points,
+            status,
+          }),
+        );
+      }
     }
 
     setTitle('');
@@ -196,17 +217,6 @@ export default function CfgTool(props) {
               />
             </ListItem>
             <ListItem>
-              <TextField
-                label='Author'
-                variant='filled'
-                fullWidth
-                onChange={(e) => setAuthor(e.target.value)}
-                required
-                disabled
-                value={author}
-              />
-            </ListItem>
-            <ListItem>
               <KeyboardDatePicker
                 disableToolbar
                 variant='inline'
@@ -214,7 +224,7 @@ export default function CfgTool(props) {
                 margin='normal'
                 fullWidth={true}
                 label='Start Date'
-                value={start_date}
+                value={moment(start_date).format('MM/DD/yyyy')}
                 onChange={(e) => setstart_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
@@ -230,7 +240,7 @@ export default function CfgTool(props) {
                 margin='normal'
                 fullWidth={true}
                 label='End Date'
-                value={end_date}
+                value={moment(end_date).format('MM/DD/yyyy')}
                 onChange={(e) => setend_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
@@ -249,6 +259,24 @@ export default function CfgTool(props) {
                 type='number'
               />
             </ListItem>
+            {/* <ListItem>
+              <Select
+                labelId='demo-customized-select-label'
+                id='demo-customized-select'
+                value={0}
+                onChange={(e) => {
+                  setCategories(e.target.value);
+                }}
+                variant='filled'
+                value = {category}
+                fullWidth>
+                <MenuItem value={'CFG Session'}>CFG Session</MenuItem>
+                <MenuItem value={'Events'}>Events</MenuItem>
+                <MenuItem value={'Quiz'}>Quiz</MenuItem>
+                <MenuItem value={'Rewards'}>Rewards</MenuItem>
+                <MenuItem value={'CFG Tools'}>CFG Tools</MenuItem>
+              </Select>
+            </ListItem> */}
             <ListItem>
               <Select
                 labelId='demo-simple-select-filled-label'
@@ -291,7 +319,11 @@ export default function CfgTool(props) {
       </div>
       <br />
       <br />
-      <Container>
+      <Container
+        style={{
+          maxWidth: 5000,
+          width: '96%',
+        }}>
         <Snackbar
           open={userList.message}
           autoHideDuration={6000}
@@ -308,15 +340,25 @@ export default function CfgTool(props) {
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
             className='chip-style'
-            onClick={() => setDialogOpen(true)}
+            onClick={() => {
+              if (singleId) toggleCheckbox(singleId);
+              setSingleId(null);
+              setEdit(false);
+              setDialogOpen(true);
+              setTitle('');
+              setstart_date(new Date());
+              setend_date(new Date());
+              settotal_points('');
+              setStatus('draft');
+            }}
           />
           <Chip
-            icon={<EditIcon style={{fill: 'white'}} />}
+            icon={<EditIcon style={{fill: 'white', fontSize: 20}} />}
             label={'EDIT'}
             className='chip-style gray-chip'
             onClick={() => {
               setEdit(true);
-              setDialogOpen(true);
+              if (singleId) setDialogOpen(true);
             }}
           />
         </div>
@@ -358,28 +400,64 @@ export default function CfgTool(props) {
                 </StyledTableCell>
                 <StyledTableCell>
                   <span className='column-heading'> Start Date </span>
-                  <div style={{display: 'flex', alignItems: 'center'}}>
-                    <TextField
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      height: 40,
+                    }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      style={{backgroundColor: '#eaeaea'}}
                       variant='filled'
-                      size='small'
-                      label='Start Date'
-                      placeholder=''
-                      value={startDateFilter}
-                      onChange={(e) => setStartdateFilter(e.target.value)}
+                      format='YYYY-MM-DD'
+                      autoOk={true}
+                      value={startDateFilter === '' ? null : startDateFilter}
+                      fullWidth={true}
+                      placeholder='Start date'
+                      className={classes.root}
+                      onChange={(e) => {
+                        if (e && e !== '')
+                          setStartdateFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else setStartdateFilter('');
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
                     />
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
                   <span className='column-heading'> End Date </span>
-                  <div style={{display: 'flex', alignItems: 'center'}}>
-                    <TextField
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      height: 40,
+                    }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      style={{backgroundColor: '#eaeaea'}}
                       variant='filled'
-                      size='small'
-                      label='End Date'
-                      placeholder=''
-                      value={endDateFilter}
-                      onChange={(e) => setEnddateFilter(e.target.value)}
+                      format='YYYY-MM-DD'
+                      autoOk={true}
+                      value={endDateFilter === '' ? null : endDateFilter}
+                      fullWidth={true}
+                      placeholder='End date'
+                      className={classes.root}
+                      onChange={(e) => {
+                        if (e && e !== '')
+                          setEnddateFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else setEnddateFilter('');
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
                     />
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
@@ -418,6 +496,9 @@ export default function CfgTool(props) {
               {content.length > 0 &&
                 rowsPerPage > 0 &&
                 content
+                  .sort(function (a, b) {
+                    return new Date(b.created_at) - new Date(a.created_at);
+                  })
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .filter((element) =>
                     (element.title ? element.title : '')
@@ -457,48 +538,51 @@ export default function CfgTool(props) {
                       .toLowerCase()
                       .startsWith(createAtFilter),
                   )
-                  .map((row, index) => (
-                    <StyledTableRow key={index}>
-                      <StyledTableCell>
-                        <Checkbox
-                          checked={checked.includes(row.id)}
-                          onChange={() => {
-                            console.log('the row status', row);
-                            const {author} = row;
-                            let allIds = currentIds.length ? currentIds : [];
-                            if (!allIds.includes(row.id)) allIds.push(row.id);
-                            else {
-                              allIds = allIds.filter(
-                                (userId) => userId !== row.id,
-                              );
-                            }
-                            setSingleId(row.id);
-                            setCurrentIds(allIds);
-                            setTitle(row.title);
-                            setstart_date(new Date());
-                            setend_date(new Date());
-                            settotal_points(row.total_points);
-                            setStatus(row.status);
-                            toggleCheckbox(row.id);
-                          }}
-                        />
-                      </StyledTableCell>
-                      <StyledTableCell>
-                        {' '}
-                        <Link
-                          to={`/admin/content/edit/${row.id}/null/${row.title}`}>
-                          {row.title}{' '}
-                        </Link>
-                      </StyledTableCell>
-                      <StyledTableCell>
-                        {row.author ? row.author.user_name : 'Name Not Present'}
-                      </StyledTableCell>
-                      <StyledTableCell>{row.start_date}</StyledTableCell>
-                      <StyledTableCell>{row.end_date}</StyledTableCell>
-                      <StyledTableCell>{row.total_points}</StyledTableCell>
-                      <StyledTableCell>{row.status}</StyledTableCell>
-                    </StyledTableRow>
-                  ))}
+                  .map((row, index) => {
+                    console.log('the row', row);
+                    return (
+                      <StyledTableRow key={index}>
+                        <StyledTableCell>
+                          <Checkbox
+                            checked={checked.includes(row.id)}
+                            onChange={() => {
+                              const {author} = row;
+                              let allIds = currentIds.length ? currentIds : [];
+                              if (!allIds.includes(row.id)) allIds.push(row.id);
+                              else {
+                                allIds = allIds.filter(
+                                  (userId) => userId !== row.id,
+                                );
+                              }
+                              setSingleId(row.id);
+                              setCurrentIds(allIds);
+                              setTitle(row.title);
+                              setstart_date(row.start_date);
+                              setend_date(row.end_date);
+                              settotal_points(row.total_points);
+                              setStatus(row.status);
+                              toggleCheckbox(row.id);
+                            }}
+                          />
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          {' '}
+                          <Link to={`/admin/cfg-tools/${row.id}`}>
+                            {row.title}
+                          </Link>
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          {row.author
+                            ? row.author.user_name
+                            : 'Name Not Present'}
+                        </StyledTableCell>
+                        <StyledTableCell>{row.start_date}</StyledTableCell>
+                        <StyledTableCell>{row.end_date}</StyledTableCell>
+                        <StyledTableCell>{row.total_points}</StyledTableCell>
+                        <StyledTableCell>{row.status}</StyledTableCell>
+                      </StyledTableRow>
+                    );
+                  })}
               <StyledTableRow style={{width: 200}}>
                 <CustomTablePagination
                   rowsPerPage={rowsPerPage}

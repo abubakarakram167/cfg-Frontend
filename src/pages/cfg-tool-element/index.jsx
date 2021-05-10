@@ -4,8 +4,13 @@ import {Link} from 'react-router-dom';
 import './style.css';
 import AdminHeader from 'pages/admin-header';
 import {useDispatch, useSelector} from 'react-redux';
-import {getToolListData} from 'redux/actions/toolActions';
+import {withStyles, makeStyles} from '@material-ui/core/styles';
+import TableRow from '@material-ui/core/TableRow';
+import {getSessionListData} from 'redux/actions/sessionActions';
 import CustomTablePagination from '../user-management/pagination';
+import FilterList from '@material-ui/icons/FilterList';
+import TableCell from '@material-ui/core/TableCell';
+import jsCookie from 'js-cookie';
 import {
   Container,
   Chip,
@@ -14,25 +19,63 @@ import {
   AccordionSummary,
   Checkbox,
   AccordionDetails,
+  TextField,
 } from '@material-ui/core';
 import {ControlPoint, ExpandMore} from '@material-ui/icons';
-import {formatDate} from 'utils/stampToFormat';
+import {KeyboardDatePicker} from '@material-ui/pickers';
+import moment from 'moment';
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: 'none',
+    color: theme.palette.common.black,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 700,
+  },
+  root: {
+    '& .MuiInputBase-root': {
+      height: 45,
+      paddingLeft: 10,
+      color: '#020101',
+    },
+  },
+});
 
 export default function CfgElement() {
   const dispatch = useDispatch();
   const params = useParams();
-  const state = useSelector((state) => state.tool.contentData);
-  console.log('the state', state);
+  const state = useSelector((state) => state.session.contentData);
   const [data, setData] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  // const [title, setTitle] = useState('');
-  // const [totalPoints, setTotalPoints] = useState(0);
+  const [nameFilter, setNameFilter] = useState('');
+  const [authorFilter, setAuthorFilter] = useState('');
+  const [startDateFilter, setStartdateFilter] = useState('');
+  const [endDateFilter, setEnddateFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [totalPointsFilter, settotalPointsFilter] = useState('');
+  const [createAtFilter, setCreateAtFilter] = useState('');
   const [selectedTitle, setSelectedTitle] = useState(null);
+  const classes = useStyles();
 
   useEffect(() => {
-    dispatch(getToolListData(params.id));
+    dispatch(getSessionListData(params.id, 'tool'));
   }, []);
 
   useEffect(() => {
@@ -45,17 +88,11 @@ export default function CfgElement() {
 
   console.log('the data', data);
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   dispatch(
-  //     createSessionTitle({
-  //       content_header_id: parseInt(params.id),
-  //       title,
-  //       total_points: totalPoints,
-  //     }),
-  //   );
-  // };
+  const parentTotalPoints =
+    data && data.data && data.data.rows.length
+      ? data.data.rows[0].total_points
+      : 0;
+  console.log('the start', startDateFilter);
 
   return (
     <div className='cfg-element-page'>
@@ -65,17 +102,19 @@ export default function CfgElement() {
       <br />
       <br />
 
-      <Container>
+      <Container
+        style={{
+          maxWidth: 5000,
+          width: '96%',
+        }}>
         <div className='options'>
           <Typography variant='h6' className='titleText'>
-            {data.data && data.data.rows.length
-              ? data.data.rows[0].title
-              : null}
+            {data.data && data.data.rows.length && data.data.rows[0].title}
           </Typography>
           <Link
-            to={`/admin/cfg-tools/${selectedTitle ? 'sub-title' : 'title'}/${
+            to={`/admin/cfg-session/${selectedTitle ? 'sub-title' : 'title'}/${
               params.id
-            }/${selectedTitle}`}>
+            }/${selectedTitle}/tool`}>
             <Chip
               icon={<ControlPoint style={{fill: 'white'}} />}
               label={'ADD NEW'}
@@ -85,124 +124,248 @@ export default function CfgElement() {
           </Link>
         </div>
         <br />
-
         <div>
           <div className='custom-row-design-cfg-details'>
-            <div></div>
-            <div className='custom-row-design-header'>Title</div>
-            <div className='custom-row-design-header'>Author</div>
-            <div className='custom-row-design-header'>Date Published</div>
-            <div className='custom-row-design-header'>Points</div>
-            <div className='custom-row-design-header'>Status</div>
+            <StyledTableCell></StyledTableCell>
+            <StyledTableCell>
+              <span className='column-heading'> Name</span>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <TextField
+                  variant='filled'
+                  size='small'
+                  placeholder=''
+                  value={nameFilter}
+                  onChange={(e) => setNameFilter(e.target.value)}
+                />
+                <FilterList style={{fill: 'black', fontSize: 30}} />
+              </div>
+            </StyledTableCell>
+            <StyledTableCell>
+              <span className='column-heading'> Author </span>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <TextField
+                  variant='filled'
+                  size='small'
+                  // label='Author'
+                  placeholder=''
+                  value={authorFilter}
+                  onChange={(e) => setAuthorFilter(e.target.value)}
+                />
+                <FilterList style={{fill: 'black', fontSize: 30}} />
+              </div>
+            </StyledTableCell>
+            <StyledTableCell>
+              <span className='column-heading'> Date Published </span>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  height: 40,
+                  position: 'relative',
+                  top: 5,
+                }}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  style={{backgroundColor: '#eaeaea'}}
+                  variant='filled'
+                  format='YYYY-MM-DD'
+                  autoOk={true}
+                  value={startDateFilter === '' ? null : startDateFilter}
+                  fullWidth={true}
+                  // placeholder='Start date'
+                  className={classes.root}
+                  onChange={(e) => {
+                    console.log(
+                      'the tme',
+                      moment(e).format('YYYY-MM-DD').toString(),
+                    );
+                    if (e && e !== '')
+                      setStartdateFilter(
+                        moment(e).format('YYYY-MM-DD').toString(),
+                      );
+                    else setStartdateFilter('');
+                  }}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+                <FilterList style={{fill: 'black', fontSize: 30}} />
+              </div>
+            </StyledTableCell>
+            {/* <StyledTableCell>
+              <span className='column-heading'> Date Published </span>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <TextField
+                  variant='filled'
+                  size='small'
+                  label='Start Date'
+                  placeholder=''
+                  value={startDateFilter}
+                  onChange={(e) => setStartdateFilter(e.target.value)}
+                />
+                <FilterList style={{fill: 'black', fontSize: 30}} />
+              </div>
+            </StyledTableCell> */}
+            <StyledTableCell>
+              <span className='column-heading'>Points </span>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <TextField
+                  variant='filled'
+                  size='small'
+                  // label='Total Points'
+                  placeholder=''
+                  value={totalPointsFilter}
+                  onChange={(e) => settotalPointsFilter(e.target.value)}
+                />
+                <FilterList style={{fill: 'black', fontSize: 30}} />
+              </div>
+            </StyledTableCell>
+            <StyledTableCell>
+              <span className='column-heading'> Status </span>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <TextField
+                  variant='filled'
+                  size='small'
+                  // label='Status'
+                  placeholder=''
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                />
+                <FilterList style={{fill: 'black', fontSize: 30}} />
+              </div>
+            </StyledTableCell>
           </div>
           <br />
           {data.data &&
             data?.data.titles.rows
+              .filter((content) => content.title !== '')
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              // .filter((element) =>
-              // (element.title ? element.title : '')
-              //   .toLowerCase()
-              //   .startsWith(nameFilter),
-              // )
-              // .filter((element) =>
-              //   (element.author ? element.author.user_name: '')
-              //     .toLowerCase()
-              //     .startsWith(authorFilter),
-              // )
-              // .filter((element) =>
-              //   (element.start_date ? element.start_date : '')
-              //     .toLowerCase()
-              //     .startsWith(startDateFilter),
-              // )
-              // .filter((element) =>
-              // (element.end_date ? element.end_date : '')
-              //   .toLowerCase()
-              //   .startsWith(endDateFilter),
-              // )
-              // .filter((element) =>
-              //   (element.status ? element.status : '')
-              //     .toLowerCase()
-              //     .startsWith(statusFilter),
-              // ).filter((element) =>
-              // (element.total_points ? element.total_points.toString() : '')
-              //   .toLowerCase()
-              //   .startsWith( totalPointsFilter ),
-              // )
+              .filter((element) =>
+                (element.title ? element.title : '')
+                  .toLowerCase()
+                  .startsWith(nameFilter),
+              )
+              .filter((element) =>
+                (element.author ? element.author.user_name : '')
+                  .toLowerCase()
+                  .startsWith(authorFilter),
+              )
+              .filter((element) =>
+                (element.start_date ? element.start_date : '')
+                  .toLowerCase()
+                  .startsWith(startDateFilter),
+              )
+              .filter((element) =>
+                (element.end_date ? element.end_date : '')
+                  .toLowerCase()
+                  .startsWith(endDateFilter),
+              )
+              .filter((element) =>
+                (element.status ? element.status : '')
+                  .toLowerCase()
+                  .startsWith(statusFilter),
+              )
+              .filter((element) =>
+                (element.total_points ? element.total_points.toString() : '')
+                  .toLowerCase()
+                  .startsWith(totalPointsFilter),
+              )
+              .filter((element) =>
+                (element.created_at ? element.created_at.toString() : '')
+                  .toLowerCase()
+                  .startsWith(createAtFilter),
+              )
               .map((element, index) => {
-                return (
-                  <Accordion key={index}>
-                    <AccordionSummary expandIcon={<ExpandMore />}>
-                      <div className='custom-row-design-cfg-details'>
-                        <div className='custom-row-design-header'>
-                          <Checkbox
-                            checked={element.id === selectedTitle}
-                            onClick={() => {
-                              if (selectedTitle !== element.id) {
-                                setSelectedTitle(element.id);
-                              } else {
-                                setSelectedTitle(null);
-                              }
-                            }}
-                          />
+                console.log('the element', element);
+                if (element.total_points <= parentTotalPoints) {
+                  return (
+                    <Accordion key={index}>
+                      <AccordionSummary expandIcon={<ExpandMore />}>
+                        <div className='custom-row-design-cfg-details'>
+                          <div className='custom-row-design-header'>
+                            <Checkbox
+                              checked={element.id === selectedTitle}
+                              onClick={() => {
+                                if (selectedTitle !== element.id) {
+                                  setSelectedTitle(element.id);
+                                } else {
+                                  setSelectedTitle(null);
+                                }
+                              }}
+                            />
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left-concise'>
+                            <Link
+                              to={`/admin/content/edit/${element.id}/${params.id}/${element.title}/session/${element.type}`}>
+                              {element.title}
+                            </Link>
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left-concise'>
+                            {JSON.parse(jsCookie.get('user')).user_name}
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left'>
+                            {element.start_date}
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left'>
+                            {element.total_points}
+                          </div>
+                          <div className='custom-row-design-header summary-margin-left-more'>
+                            {element.status}
+                          </div>
                         </div>
-                        <div className='custom-row-design-header summary-margin-left'>
-                          <Link to={`/admin/content/edit/${element.id}`}>
-                            {element.title}
-                          </Link>
-                        </div>
-                        <div className='custom-row-design-header summary-margin-left'>
-                          {/* {element.author.first_name +
-                          ' ' +
-                          element.author.last_name} */}{' '}
-                          Author not found
-                        </div>
-                        <div className='custom-row-design-header summary-margin-left'>
-                          {formatDate(element.created_at)}
-                        </div>
-                        <div className='custom-row-design-header summary-margin-left'>
-                          {element.total_points}
-                        </div>
-                        <div className='custom-row-design-header summary-margin-left'>
-                          {element.status}
-                        </div>
-                      </div>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <div className='subtitles-container-custom'>
-                        {element.subtitles.rows.map((subs, index) => {
-                          return (
-                            <div
-                              key={index}
-                              className='custom-row-design-cfg-details subtitle-card-custom'>
-                              <div className='custom-row-design-header'></div>
-                              <div className='custom-row-design-header'>
-                                <Link to={`/admin/content/edit/${subs.id}`}>
-                                  {subs.title}
-                                </Link>
+                      </AccordionSummary>
+
+                      <AccordionDetails>
+                        <div className='subtitles-container-custom'>
+                          {element.subtitles.rows.map((subs, index) => {
+                            return (
+                              <div
+                                key={index}
+                                className='custom-row-design-cfg-details subtitle-card-custom'>
+                                <div className='custom-row-design-header'></div>
+                                <div className='custom-row-design-header accordian-dropdown'>
+                                  <Link
+                                    to={`/admin/content/edit/${subs.id}/${params.id}/${subs.title}/session/${subs.type}`}>
+                                    {subs.title}
+                                  </Link>
+                                </div>
+                                <div className='custom-row-design-header accordian-dropdown'>
+                                  {/* {subs.author.first_name +
+                                  ' ' +
+                                  subs.author.last_name} */}
+                                  {JSON.parse(jsCookie.get('user')).user_name}
+                                </div>
+                                <div className='custom-row-design-header accordian-dropdown-extra'>
+                                  {moment(
+                                    subs.updated_at
+                                      ? subs.updated_at
+                                      : subs.created_at,
+                                  ).format('YYYY-MM-DD HH:mm')}
+                                </div>
+                                <div className='custom-row-design-header accordian-dropdown-extra'>
+                                  {subs.total_points}
+                                </div>
+                                <div className='custom-row-design-header accordian-dropdown'>
+                                  {subs.status}
+                                </div>
                               </div>
-                              <div className='custom-row-design-header'>
-                                {/* {subs.author.first_name +
-                                ' ' +
-                                subs.author.last_name} */}
-                                Author not found
-                              </div>
-                              <div className='custom-row-design-header'>
-                                {formatDate(subs.created_at)}
-                              </div>
-                              <div className='custom-row-design-header'>
-                                {subs.total_points}
-                              </div>
-                              <div className='custom-row-design-header'>
-                                {subs.status}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </AccordionDetails>
-                  </Accordion>
-                );
+                            );
+                          })}
+                        </div>
+                      </AccordionDetails>
+                    </Accordion>
+                  );
+                } else return null;
               })}
+        </div>
+        <div className='custom-pagination'>
+          <CustomTablePagination
+            rowsPerPage={rowsPerPage}
+            page={page}
+            userData={data && data.titles ? data.titles.rows : []}
+            setPage={(page) => setPage(page)}
+            setRowsPerPage={(page) => setRowsPerPage(page)}
+          />
         </div>
       </Container>
     </div>

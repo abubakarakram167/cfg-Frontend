@@ -20,10 +20,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Link} from 'react-router-dom';
-import {InputBase} from '@material-ui/core';
-import {getToolData} from 'redux/actions/toolActions';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import InfoIcon from '@material-ui/icons/Info';
+import {useHistory} from 'react-router-dom';
 
 export default function Editor() {
   const params = useParams();
@@ -49,6 +49,8 @@ export default function Editor() {
   const [groupValue, setGroupValue] = useState('');
   const [accumulativeTitlePoints, setAccumulativeTitlePoints] = useState(0);
   const [originalTotalPoints, setOriginalTotalPoints] = useState(0);
+  const [showMessageError, setShowMessageError] = useState(false);
+  const history = useHistory();
 
   const {id} = useParams();
   console.log('here the state', state);
@@ -77,7 +79,8 @@ export default function Editor() {
   }, [id, dispatch]);
 
   useEffect(() => {
-    dispatch(getSessionListData(params.id));
+    console.log('here the params ', params);
+    dispatch(getSessionListData(params.id, params.cfgType));
   }, []);
 
   useEffect(() => {
@@ -98,7 +101,7 @@ export default function Editor() {
 
     if (state.currentContent) {
       setsub_title(state.currentContent.sub_title || '');
-      setContent(state.currentContent.detail || '');
+      setContent('');
       setstart_date(new Date(state.currentContent.start_date));
       setend_date(new Date(state.currentContent.end_date));
       setStatus(state.currentContent.status || 'draft');
@@ -118,75 +121,126 @@ export default function Editor() {
   }, [state]);
 
   const publish = () => {
-    let cfgSessionStatus = state.current.status;
-    if (cfgSessionStatus === 'published') {
-      let parent = null;
-      if (params.contentHeaderId === 'null') {
-        parent = params.id;
-      } else {
-        parent = params.contentHeaderId;
-      }
-
-      const tags = keywords.map((element) => {
-        return {
+    let totalTags = [];
+    if (
+      total_points === 0 ||
+      title === '' ||
+      content === '' ||
+      groups.length === 0 ||
+      categories.length === 0 ||
+      keywords.length === 0
+    )
+      setShowMessageError(true);
+    else {
+      keywords.map((element) => {
+        totalTags.push({
           tag_type: 'keyword',
           text: element,
-        };
+        });
       });
 
-      if (
-        parseInt(total_points) + parseInt(accumulativeTitlePoints) >
-        originalTotalPoints
-      ) {
+      groups.map((element) => {
+        totalTags.push({
+          tag_type: 'group',
+          text: element,
+        });
+      });
+
+      categories.map((element) => {
+        totalTags.push({
+          tag_type: 'category',
+          text: element,
+        });
+      });
+
+      const allTitles = state.titles.rows;
+      if (allTitles.filter((content) => content.title === title).length > 0) {
         dispatch({
           type: Show_Message,
           payload: {
-            message: 'Cannot be added.Please follow the requirements',
+            message: 'This title is already used.Please use another one.',
             success: false,
           },
         });
-        setTimeout(() => {
+      } else {
+        let cfgSessionStatus = state.current.status;
+        if (cfgSessionStatus === 'published') {
+          let parent = null;
+          if (params.contentHeaderId === 'null') {
+            parent = params.id;
+          } else {
+            parent = params.contentHeaderId;
+          }
+          const tags = keywords.map((element) => {
+            return {
+              tag_type: 'keyword',
+              text: element,
+            };
+          });
+
+          if (
+            parseInt(total_points) + parseInt(accumulativeTitlePoints) >
+            originalTotalPoints
+          ) {
+            dispatch({
+              type: Show_Message,
+              payload: {
+                message: 'Cannot be added.Please follow the requirements',
+                success: false,
+              },
+            });
+            setTimeout(() => {
+              dispatch({
+                type: Show_Message,
+                payload: {message: null, success: true},
+              });
+            }, 5000);
+          } else {
+            dispatch(
+              createSessionTitle(
+                {
+                  title,
+                  sub_title,
+                  detail: content,
+                  start_date: formatDate(start_date),
+                  end_date: formatDate(end_date),
+                  tags: totalTags,
+                  type: params.type,
+                  total_points,
+                  content_header_id: parseInt(parent),
+                  previous_page,
+                  next_page,
+                },
+                params.type,
+              ),
+            ).then((response) => {
+              if (response) {
+                setTimeout(() => {
+                  history.push(`/admin/content/display/${response.content.id}`);
+                }, 1000);
+              }
+            });
+          }
+        } else {
           dispatch({
             type: Show_Message,
-            payload: {message: null, success: true},
-          });
-        }, 5000);
-      } else {
-        dispatch(
-          createSessionTitle(
-            {
-              title,
-              sub_title,
-              detail: content,
-              start_date: formatDate(start_date),
-              end_date: formatDate(end_date),
-              tags,
-              type: params.type,
-              total_points,
-              content_header_id: parseInt(parent),
-              previous_page,
-              next_page,
+            payload: {
+              message:
+                'Session must be published in order to publish the content.',
+              success: false,
             },
-            params.type,
-          ),
-        );
+          });
+          setTimeout(() => {
+            dispatch({
+              type: Show_Message,
+              payload: {message: null, success: true},
+            });
+          }, 3000);
+        }
       }
-    } else {
-      dispatch({
-        type: Show_Message,
-        payload: {
-          message: 'Session must be published in order to publish the content.',
-          success: false,
-        },
-      });
-      setTimeout(() => {
-        dispatch({
-          type: Show_Message,
-          payload: {message: null, success: true},
-        });
-      }, 3000);
     }
   };
+
   const [open1, setOpen1] = useState(false);
   const handleClose1 = () => {
     setOpen1(false);
@@ -197,7 +251,7 @@ export default function Editor() {
     'the manipulation',
     parseInt(total_points) + parseInt(accumulativeTitlePoints),
   );
-  console.log('the original', originalTotalPoints);
+  console.log('the state in create content', state);
 
   return (
     <div className='editor-page-full-container'>
@@ -225,14 +279,24 @@ export default function Editor() {
 
       <Container>
         <div className='top-section'>
-          <div>
-            <div>
-              <InputBase
+          <div style={{width: '100%'}}>
+            <div style={{width: '100%'}}>
+              <TextareaAutosize
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
+                style={{
+                  fontSize: 25,
+                  width: '88%',
+                  border: 'none',
+                  backgroundColor: '#f9f9f9',
+                  color: 'gray',
+                }}
+                aria-label='empty textarea'
                 placeholder='Enter a title'
-                style={{fontSize: 20}}
               />
+              {showMessageError && title === '' && (
+                <p className='showErrorMessage'>Title is required</p>
+              )}
             </div>
           </div>
           <div className='flex-buttons-publish'>
@@ -251,8 +315,12 @@ export default function Editor() {
         </div>
         <div className='editor-container'>
           <div className='editor-side'>
+            {showMessageError && content === '' && (
+              <p className='showErrorMessage'>content is required</p>
+            )}
             <SunEditor
               setContents={content}
+              defaultValue=''
               setOptions={{
                 height: 630,
                 buttonList: [
@@ -332,6 +400,9 @@ export default function Editor() {
                 />
               </form>
             </div>
+            {showMessageError && groups.length === 0 && (
+              <p className='showErrorMessage'> group is required</p>
+            )}
 
             <br />
             <div>
@@ -355,6 +426,7 @@ export default function Editor() {
                 <TextField
                   variant='filled'
                   value={value}
+                  required
                   onSubmit={(e) => setKeywords([...keywords, e.target.value])}
                   onChange={(e) => setValue(e.target.value)}
                   fullWidth
@@ -362,7 +434,9 @@ export default function Editor() {
                 />
               </form>
             </div>
-
+            {showMessageError && groups.length === 0 && (
+              <p className='showErrorMessage'>Keywords is required</p>
+            )}
             <br />
             <div className='dates'>
               <KeyboardDatePicker
@@ -432,6 +506,9 @@ export default function Editor() {
                 </p>
               )}
             </div>
+            {showMessageError && total_points === 0 && (
+              <p className='showErrorMessage'>Total Points are required </p>
+            )}
             <br />
             <div>
               <TextField

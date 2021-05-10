@@ -58,9 +58,31 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
+const StyledChip = withStyles((theme) => ({
+  root: {
+    backgroundColor: '#949494',
+    color: 'white',
+    fontWeight: '600',
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+}))(Chip);
+
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
+  },
+  root: {
+    '& .MuiInputBase-root': {
+      height: 45,
+      paddingLeft: 10,
+      color: '#020101',
+    },
+  },
+  secondRoot: {
+    '& .MuiInputBase-root': {
+      height: 30,
+    },
   },
 });
 
@@ -226,7 +248,7 @@ export default function CfgSession(props) {
                 margin='normal'
                 fullWidth={true}
                 label='Start Date'
-                value={start_date}
+                value={moment(start_date).format('MM/DD/yyyy')}
                 onChange={(e) => setstart_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
@@ -242,7 +264,7 @@ export default function CfgSession(props) {
                 margin='normal'
                 fullWidth={true}
                 label='End Date'
-                value={end_date}
+                value={moment(end_date).format('MM/DD/yyyy')}
                 onChange={(e) => setend_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
@@ -315,7 +337,7 @@ export default function CfgSession(props) {
       </div>
       <br />
       <br />
-      <Container>
+      <Container style={{maxWidth: 3000, width: '97%'}}>
         <Snackbar
           open={userList.message}
           autoHideDuration={6000}
@@ -341,10 +363,10 @@ export default function CfgSession(props) {
               setStatus('draft');
             }}
           />
-          <Chip
-            icon={<EditIcon style={{fill: 'white'}} />}
+          <StyledChip
+            icon={<EditIcon style={{fill: 'white', fontSize: 20}} />}
             label={'EDIT'}
-            className='chip-style gray-chip'
+            className='chip-style-id'
             onClick={() => {
               setEdit(true);
               setDialogOpen(true);
@@ -370,7 +392,7 @@ export default function CfgSession(props) {
                       value={nameFilter}
                       onChange={(e) => setNameFilter(e.target.value)}
                     />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                    <FilterList style={{fill: 'black', fontSize: 22}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
@@ -384,7 +406,7 @@ export default function CfgSession(props) {
                       value={authorFilter}
                       onChange={(e) => setAuthorFilter(e.target.value)}
                     />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                    <FilterList style={{fill: 'black', fontSize: 22}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
@@ -393,18 +415,18 @@ export default function CfgSession(props) {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      height: 40,
                     }}>
                     <KeyboardDatePicker
                       disableToolbar
-                      style={{backgroundColor: '#eaeaea', paddingtop: 5}}
+                      style={{backgroundColor: '#eaeaea'}}
                       variant='filled'
                       format='YYYY-MM-DD'
                       autoOk={true}
                       value={startDateFilter === '' ? null : startDateFilter}
                       fullWidth={true}
-                      // keyboardIcon = {null}
-                      label='Start Date'
+                      placeholder='Start date'
+                      className={classes.root}
                       onChange={(e) => {
                         if (e && e !== '')
                           setStartdateFilter(
@@ -416,7 +438,7 @@ export default function CfgSession(props) {
                         'aria-label': 'change date',
                       }}
                     />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                    <FilterList style={{fill: 'black', fontSize: 22}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
@@ -425,18 +447,18 @@ export default function CfgSession(props) {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      height: 40,
                     }}>
                     <KeyboardDatePicker
                       disableToolbar
-                      style={{backgroundColor: '#eaeaea', paddingTop: 5}}
+                      style={{backgroundColor: '#eaeaea'}}
                       variant='filled'
                       format='YYYY-MM-DD'
                       autoOk={true}
                       value={endDateFilter === '' ? null : endDateFilter}
                       fullWidth={true}
-                      // keyboardIcon = {null}
-                      label='End Date'
+                      placeholder='End date'
+                      className={classes.root}
                       onChange={(e) => {
                         if (e && e !== '')
                           setEnddateFilter(
@@ -448,41 +470,60 @@ export default function CfgSession(props) {
                         'aria-label': 'change date',
                       }}
                     />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                    <FilterList style={{fill: 'black', fontSize: 22}} />
                   </div>
                 </StyledTableCell>
-                {/* <StyledTableCell>
-                  <span className='column-heading'> End Date </span>
-                  <div style={{display: 'flex', alignItems: 'center'}}>
-                    <TextField
-                      variant='filled'
-                      size='small'
-                      label='End Date'
-                      placeholder=''
-                      value={endDateFilter}
-                      onChange={(e) => setEnddateFilter(e.target.value)}
-                    />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
-                  </div>
-                </StyledTableCell> */}
                 <StyledTableCell>
                   <span className='column-heading'> Created On </span>
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      height: 40,
                     }}>
                     <KeyboardDatePicker
                       disableToolbar
-                      style={{backgroundColor: '#eaeaea', paddingTop: 5}}
+                      style={{backgroundColor: '#eaeaea'}}
                       variant='filled'
                       format='YYYY-MM-DD'
                       autoOk={true}
                       value={createAtFilter === '' ? null : createAtFilter}
                       fullWidth={true}
-                      // keyboardIcon = {null}
-                      label='Creat On'
+                      placeholder='Create on'
+                      className={classes.root}
+                      onChange={(e) => {
+                        if (e && e !== '')
+                          setCreateAtFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else createAtFilter('');
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 22}} />
+                  </div>
+                </StyledTableCell>
+
+                {/* <StyledTableCell>
+                  <span className='column-heading'> Created On </span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      height: 40
+                    }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      style={{backgroundColor: '#eaeaea'}}
+                      variant='filled'
+                      format='YYYY-MM-DD'
+                      autoOk={true}
+                      className={classes.secondRoot}
+                      value={createAtFilter === '' ? null : createAtFilter}
+                      fullWidth={true}
+                      label='Create On'
                       onChange={(e) => {
                         if (e && e !== '')
                           setCreateAtFilter(
@@ -494,21 +535,7 @@ export default function CfgSession(props) {
                         'aria-label': 'change date',
                       }}
                     />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
-                  </div>
-                </StyledTableCell>
-                {/* <StyledTableCell>
-                  <span className='column-heading'> Created On </span>
-                  <div style={{display: 'flex', alignItems: 'center'}}>
-                    <TextField
-                      variant='filled'
-                      size='small'
-                      label='Created On'
-                      placeholder=''
-                      value={createAtFilter}
-                      onChange={(e) => setCreateAtFilter(e.target.value)}
-                    />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                    <FilterList style={{fill: 'black', fontSize: 22}} />
                   </div>
                 </StyledTableCell> */}
                 <StyledTableCell>
@@ -522,7 +549,7 @@ export default function CfgSession(props) {
                       value={totalPointsFilter}
                       onChange={(e) => settotalPointsFilter(e.target.value)}
                     />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                    <FilterList style={{fill: 'black', fontSize: 22}} />
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
@@ -536,7 +563,7 @@ export default function CfgSession(props) {
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
                     />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                    <FilterList style={{fill: 'black', fontSize: 22}} />
                   </div>
                 </StyledTableCell>
               </TableRow>
@@ -604,8 +631,8 @@ export default function CfgSession(props) {
                             setSingleId(row.id);
                             setCurrentIds(allIds);
                             setTitle(row.title);
-                            setstart_date(new Date());
-                            setend_date(new Date());
+                            setstart_date(row.start_date);
+                            setend_date(row.end_date);
                             settotal_points(row.total_points);
                             setStatus(row.status);
                             toggleCheckbox(row.id);
@@ -619,7 +646,7 @@ export default function CfgSession(props) {
                         </Link>
                       </StyledTableCell>
                       <StyledTableCell>
-                        {row.author ? row.author.first_name : ' '}
+                        {row.author ? row.author.user_name : ' '}
                       </StyledTableCell>
                       <StyledTableCell>{row.start_date}</StyledTableCell>
                       <StyledTableCell>{row.end_date}</StyledTableCell>
