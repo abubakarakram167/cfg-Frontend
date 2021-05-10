@@ -133,9 +133,9 @@
 .left-box::after {
   content: '';
   position: absolute;
-  right: -6%;
+  right: -20%;
   left: 93%;
-  height: 92vh;
+  height: 106vh;
   border-radius: 50%;
   background: #f0f2f5;
 }
