@@ -33,6 +33,7 @@ export default function CreatePostBox() {
     user_name: '',
     photo_url: '',
   });
+  const [mediaType, setMediaType] = useState('');
   const currentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
@@ -47,11 +48,15 @@ export default function CreatePostBox() {
 
   const handleClose = () => {
     setOpen(false);
+    setContent('');
+    setMedia(null);
   };
 
   const handleSave = () => {
     setOpen(false);
     dispatch(createUserPost({content, status: 'published', media}));
+    setContent('');
+    setMedia(null);
   };
   const handleFile = async (e) => {
     const file = e.target.files[0];
@@ -60,6 +65,30 @@ export default function CreatePostBox() {
     const data = await Media.addMedia(formData);
     const photo_url = data.data[0].file_name;
     setMedia(photo_url);
+    if (
+      photo_url.split('.').pop() === 'JPG' ||
+      photo_url.split('.').pop() === 'png' ||
+      photo_url.split('.').pop() === 'jpg' ||
+      photo_url.split('.').pop() === 'PNG'
+    ) {
+      setMediaType('image');
+    } else if (photo_url.split('.').pop() === 'mp4') {
+      setMediaType('video');
+    }
+  };
+
+  const mediaJSX = () => {
+    switch (mediaType) {
+      case 'image':
+        return <img src={baseUrl + 'static/' + media} width='100%' />;
+      case 'video':
+        return (
+          <video width='100%' controls>
+            <source src={baseUrl + 'static/' + media} type='video/mp4' />
+            {/* <source src="mov_bbb.ogg" type="video/ogg" /> */}
+          </video>
+        );
+    }
   };
 
   return (
@@ -95,6 +124,7 @@ export default function CreatePostBox() {
                 {user.first_name} {user.last_name}
               </span>
             </div>
+            {media && mediaJSX()}
             <TextField
               style={{width: '100%'}}
               id='standard-multiline-static'
@@ -137,7 +167,10 @@ export default function CreatePostBox() {
       <AppCard>
         <div className='create-post-app-card-container'>
           <div className='create-post-app-card-top'>
-            <Avatar alt='user-avatar' />
+            <Avatar
+              alt='user-avatar'
+              src={baseUrl + 'static/' + user.photo_url}
+            />
             <input
               onClick={handleClickOpen}
               type='text'
