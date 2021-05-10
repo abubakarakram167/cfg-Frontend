@@ -16,6 +16,7 @@
   flex-direction: column;
   padding-top: 20px;
   padding-bottom: 20px;
+  height: 91.75vh;
 }
 .main {
   width: 80%;
@@ -31,7 +32,7 @@
 }
 .image-container {
   text-align: center;
-  flex: 1;
+  /* flex: 1; */
   display: flex;
   justify-content: center;
 }
@@ -57,12 +58,12 @@
 }
 
 .action-button {
-  width: 100%;
+  width: 40%;
   background-color: #eb1b29;
   border: none;
   box-shadow: 1px 2px 3px gainsboro;
   border-radius: 50px;
-  padding: 15px;
+  padding: 10px;
   color: white;
   text-align: center;
   font-weight: 600;
@@ -123,9 +124,20 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: -265px;
-  border-radius: 5% / 50%;
+  border-radius: -50%;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+.left-box::after {
+  content: '';
+  position: absolute;
+  right: -6%;
+  left: 93%;
+  height: 92vh;
+  border-radius: 50%;
+  background: #f0f2f5;
 }
 
 .whole-auth {
@@ -133,12 +145,10 @@
 }
 
 @media only screen and (max-width: 600px) {
-  /* .left-box {
-    display: none;
-  } */
   .main {
     width: 100%;
     position: unset;
+    margin-top: 20px;
   }
   .right-box {
     position: unset;
@@ -146,6 +156,9 @@
   }
   .logo-image-screen {
     position: unset;
+  }
+  .left-box::after {
+    display: none;
   }
 }
 .orHeader {
@@ -158,11 +171,10 @@
 
 @media only screen and (max-width: 992px) {
   .left-box {
-    background-position: -200px;
+    background-position: -375px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
     width: 100%;
-    background-position: 0;
   }
   .right-box {
     position: absolute;
@@ -173,6 +185,9 @@
     display: flex;
     overflow-y: scroll;
     height: 80%;
+  }
+  .left-box::after {
+    display: none;
   }
 }
 
@@ -294,26 +309,26 @@
 }
 
 @media only screen and (max-width: 992px) and (min-width: 800px) {
-  .logo-image-screen {
+  /* .logo-image-screen {
     width: 22%;
-  }
+  } */
 }
 
 @media only screen and (max-width: 799px) and (min-width: 600px) {
-  .logo-image-screen {
+  /* .logo-image-screen {
     width: 15%;
-  }
+  } */
 }
 @media only screen and (max-width: 599px) and (min-width: 400px) {
-  .logo-image-screen {
+  /* .logo-image-screen {
     width: 15%;
-  }
+  } */
 }
 
 @media only screen and (max-width: 399px) and (min-width: 200px) {
-  .logo-image-screen {
+  /* .logo-image-screen {
     width: 5%;
-  }
+  } */
 }
 
 @media only screen and (max-height: 599px) and (min-height: 400px) {

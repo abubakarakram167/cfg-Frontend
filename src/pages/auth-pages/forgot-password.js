@@ -47,10 +47,11 @@ function ForgotPassword({setView}) {
         style={{
           fontWeight: 600,
           fontSize: '20px',
+          color: '#eb1b29',
         }}>
         Forgot your password?
       </span>
-      <div style={{margin: '10px 0px', fontSize: '10px'}}>
+      <div style={{margin: '10px 0px', fontSize: '10px', color: '#eb1b29'}}>
         {' '}
         Enter your email address to reset password
       </div>
@@ -66,7 +67,7 @@ function ForgotPassword({setView}) {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <button type='submit' className='action-button'>
+        <button type='submit' className='action-button' style={{width: '50%'}}>
           Reset Password
         </button>
 
