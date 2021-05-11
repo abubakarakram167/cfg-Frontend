@@ -13,9 +13,7 @@ export const loginAction = (params) => {
       const response = await Auth.login(params);
       if (response.status === 200) {
         const data_resp = await response.data;
-        console.log('after loginnnn....', data_resp);
         jsCookie.set('login', 'yes');
-
         jsCookie.set('user', data_resp.user);
 
         dispatch({
@@ -27,7 +25,7 @@ export const loginAction = (params) => {
       if (error.response && error.response.status === 401) {
         dispatch({
           type: LOGIN,
-          payload: {error: error.response},
+          payload: {error: error.response.data.message},
         });
       }
     }
@@ -47,7 +45,6 @@ const getUserObject = (user) => {
 export const forgotPasswordAction = (email) => {
   return async function (dispatch) {
     try {
-      console.log('the email', email);
       const response = await Auth.forgot(email);
       console.log(response);
       if (response.status === 200) {
