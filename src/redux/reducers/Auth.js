@@ -56,7 +56,12 @@ const authReducer = (state = INIT_STATE, action) => {
         if (payload.user) {
           localStorage.setItem('current-user', JSON.stringify(payload.user));
         }
-        return {...state, user: payload.user, token: payload.token};
+        return {
+          ...state,
+          user: payload.user,
+          token: payload.token,
+          error: null,
+        };
       }
     case 'RESET_PASSWORD':
       payload = action.payload;
