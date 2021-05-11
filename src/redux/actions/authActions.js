@@ -24,7 +24,6 @@ export const loginAction = (params) => {
         });
       }
     } catch (error) {
-      console.log('the error in login', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: LOGIN,
@@ -50,7 +49,7 @@ export const forgotPasswordAction = (email) => {
     try {
       console.log('the email', email);
       const response = await Auth.forgot(email);
-      console.log('the response', response);
+      console.log(response);
       if (response.status === 200) {
         console.log('the response', response);
         const data = await response.data;
@@ -143,6 +142,8 @@ export const passwordResetAction = (data) => {
   return async function (dispatch) {
     try {
       const response = await Auth.reset(data);
+      console.log('here');
+      console.log(response);
       if (response.status === 200) {
         const data_resp = response.data;
         console.log(data_resp);
@@ -153,11 +154,11 @@ export const passwordResetAction = (data) => {
         });
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error.response.data.message);
       dispatch({
         type: 'RESET_PASSWORD',
         payload: {
-          error: 'An unexpected error occured. Please try again.',
+          error: error.response.data.message,
         },
       });
     }

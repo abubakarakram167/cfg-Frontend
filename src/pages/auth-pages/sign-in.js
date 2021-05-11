@@ -73,6 +73,7 @@ export default function SignIn({setView}) {
 
     if (state.auth.error) {
       setErrorMessage(state.auth.error);
+      setErrorMessage(state.auth.error);
       setOpen2(true);
     }
     if (state.auth.user) {

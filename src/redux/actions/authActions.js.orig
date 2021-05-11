@@ -1,24 +1,21 @@
 import {LOGIN} from './action.types';
 import Auth from '../services/auth';
 import jsCookie from 'js-cookie';
-<<<<<<< HEAD
+import * as actions from './action.types';
 import {
   Show_Message,
   UPDATE_AUTH_USER,
   UPDATE_NEW_USER,
 } from '../../shared/constants/ActionTypes';
-
-=======
-import {Show_Message} from '../../shared/constants/ActionTypes';
-import * as actions from './action.types';
->>>>>>> demography done
 export const loginAction = (params) => {
   return async function (dispatch) {
     try {
       const response = await Auth.login(params);
       if (response.status === 200) {
         const data_resp = await response.data;
+        console.log('after loginnnn....', data_resp);
         jsCookie.set('login', 'yes');
+
         jsCookie.set('user', data_resp.user);
 
         dispatch({
@@ -27,11 +24,14 @@ export const loginAction = (params) => {
         });
       }
     } catch (error) {
-      console.log('the error', error.response);
+<<<<<<< HEAD
+      console.log('the error in login', error.response);
+=======
+>>>>>>> authentication pages fixes
       if (error.response && error.response.status === 401) {
         dispatch({
           type: LOGIN,
-          payload: {error: error.response.data.message},
+          payload: {error: error.response},
         });
       }
     }
@@ -51,7 +51,13 @@ const getUserObject = (user) => {
 export const forgotPasswordAction = (email) => {
   return async function (dispatch) {
     try {
+      console.log('the email', email);
       const response = await Auth.forgot(email);
+<<<<<<< HEAD
+      console.log('the response', response);
+=======
+      console.log(response);
+>>>>>>> authentication pages fixes
       if (response.status === 200) {
         console.log('the response', response);
         const data = await response.data;
@@ -144,6 +150,8 @@ export const passwordResetAction = (data) => {
   return async function (dispatch) {
     try {
       const response = await Auth.reset(data);
+      console.log('here');
+      console.log(response);
       if (response.status === 200) {
         const data_resp = response.data;
         console.log(data_resp);
@@ -154,11 +162,11 @@ export const passwordResetAction = (data) => {
         });
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error.response.data.message);
       dispatch({
         type: 'RESET_PASSWORD',
         payload: {
-          error: 'An unexpected error occured. Please try again.',
+          error: error.response.data.message,
         },
       });
     }
