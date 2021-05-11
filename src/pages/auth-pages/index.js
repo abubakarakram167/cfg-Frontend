@@ -27,7 +27,6 @@ export default function Index() {
 
   return (
     <div style={{height: '100vh'}} className='whole-auth'>
-      <div></div>
       <div className='toolbar-container' style={{width: '100%'}}>
         <Header />
       </div>

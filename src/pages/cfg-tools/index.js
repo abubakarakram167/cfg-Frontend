@@ -37,6 +37,7 @@ import {createTool, getToolData, editContent} from 'redux/actions/toolActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
+import Categories from 'modules/dashboard/CRM/MonthlyEarning/Categories';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -56,6 +57,8 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
+const StyledTextField = withStyles((theme) => ({}))(TextField);
+
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
@@ -65,6 +68,11 @@ const useStyles = makeStyles({
       height: 45,
       paddingLeft: 10,
       color: '#020101',
+    },
+  },
+  secondRoot: {
+    '& .MuiInputBase-root': {
+      width: '100%',
     },
   },
 });
@@ -98,6 +106,8 @@ export default function CfgTool(props) {
   const [totalPointsFilter, settotalPointsFilter] = useState('');
   const [createAtFilter, setCreateAtFilter] = useState('');
   const [category, setCategories] = useState([]);
+  const [group, setGroup] = useState('candidate');
+  const [value, setValue] = useState('');
 
   useEffect(() => {
     setContent(state.content);
@@ -142,6 +152,8 @@ export default function CfgTool(props) {
           total_points,
           end_date,
           status,
+          assigned_group: group,
+          categories: JSON.stringify(category),
           id: singleId,
         }),
       ).then((res) => {
@@ -155,6 +167,7 @@ export default function CfgTool(props) {
                 status,
                 start_date: moment(start_date).format('YYYY-MM-DD'),
                 end_date: moment(end_date).format('YYYY-MM-DD'),
+                assigned_group: group,
               };
             } else return content;
           });
@@ -179,6 +192,8 @@ export default function CfgTool(props) {
             end_date: formatDate(end_date),
             total_points,
             status,
+            assigned_group: group,
+            categories: JSON.stringify(category),
           }),
         );
       }
@@ -196,6 +211,19 @@ export default function CfgTool(props) {
   const handleClose1 = () => {
     setOpen1(false);
     dispatch({type: Show_Message, payload: {message: null, success: false}});
+  };
+
+  const handleKeywordSubmit = (e) => {
+    e.preventDefault();
+    setCategories([...category, value]);
+    setValue('');
+  };
+
+  const keyPress = (e) => {
+    if (e.keyCode == 13) {
+      setCategories([...category, e.target.value]);
+      e.preventDefault();
+    }
   };
 
   return (
@@ -259,28 +287,61 @@ export default function CfgTool(props) {
                 type='number'
               />
             </ListItem>
-            {/* <ListItem>
-              <Select
-                labelId='demo-customized-select-label'
-                id='demo-customized-select'
-                value={0}
-                onChange={(e) => {
-                  setCategories(e.target.value);
-                }}
-                variant='filled'
-                value = {category}
-                fullWidth>
-                <MenuItem value={'CFG Session'}>CFG Session</MenuItem>
-                <MenuItem value={'Events'}>Events</MenuItem>
-                <MenuItem value={'Quiz'}>Quiz</MenuItem>
-                <MenuItem value={'Rewards'}>Rewards</MenuItem>
-                <MenuItem value={'CFG Tools'}>CFG Tools</MenuItem>
-              </Select>
-            </ListItem> */}
             <ListItem>
               <Select
                 labelId='demo-simple-select-filled-label'
                 id='demo-simple-select-filled'
+                onChange={(e) => setGroup(e.target.value)}
+                variant='filled'
+                fullWidth
+                value={group}
+                label='Group'
+                required>
+                <MenuItem value={'candidate'}>Candidate</MenuItem>
+                <MenuItem value={'facilitator'}>Facilitator</MenuItem>
+                <MenuItem value={'content-manager'}>Content Manager</MenuItem>
+                <MenuItem value={'support'}>Support</MenuItem>
+                <MenuItem value={'reviewer'}>Reviewer</MenuItem>
+                <MenuItem value={'system-administrator'}>
+                  System Adminsitrator
+                </MenuItem>
+                <MenuItem value={'auditor'}>Auditor</MenuItem>
+              </Select>
+            </ListItem>
+            <ListItem>
+              <div>
+                {category &&
+                  category.map((element, index) => {
+                    return (
+                      <Chip
+                        label={element}
+                        key={index}
+                        className='chip-style'
+                        onDelete={() => {
+                          setCategories(
+                            category.filter((value) => value !== element),
+                          );
+                        }}
+                      />
+                    );
+                  })}
+              </div>
+            </ListItem>
+            <ListItem>
+              <div style={{width: '100%'}}>
+                <TextField
+                  className={classes.secondRoot}
+                  variant='filled'
+                  value={value}
+                  onKeyDown={keyPress}
+                  onChange={(e) => setValue(e.target.value)}
+                  fullWidth
+                  label='Categories'
+                />
+              </div>
+            </ListItem>
+            <ListItem>
+              <Select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
@@ -561,6 +622,8 @@ export default function CfgTool(props) {
                               setend_date(row.end_date);
                               settotal_points(row.total_points);
                               setStatus(row.status);
+                              setGroup(row.assigned_group);
+                              setCategories(JSON.parse(row.categories));
                               toggleCheckbox(row.id);
                             }}
                           />

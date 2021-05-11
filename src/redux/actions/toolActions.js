@@ -29,6 +29,7 @@ export const createTool = (params) => {
         });
       }
     } catch (error) {
+      console.log('the error', error.response.data);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: CREATE_TOOL,
@@ -116,6 +117,7 @@ export const getToolData = () => {
       console.log('the response', response);
       if (response.status === 200) {
         const data_resp = await response.data;
+        console.log('the data_resp', data_resp);
         jsCookie.set('login', 'yes');
         dispatch({
           type: GET_TOOL_DATA,
