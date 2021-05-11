@@ -10,6 +10,11 @@ import {
   IconButton,
   Typography,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -20,15 +25,17 @@ import {
   Share,
   Favorite,
   ArrowRight,
+  Edit,
 } from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
 import Friend from 'redux/services/friends';
 import {baseUrl} from 'utils/axios';
 import Comments from 'redux/services/comment';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {updateUserPost} from 'redux/actions/UserPost';
 import Posts from 'redux/services/post';
+import {formatDate, formatDatePost} from 'utils/stampToFormat';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,12 +64,20 @@ export default function RecipeReviewCard({post}) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [comment, setComment] = React.useState('');
+  const currentUser = useSelector((state) => state.auth.user);
+  const [editText, setEditText] = useState(post.content);
+  const [editedText, setEditedText] = useState('');
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
   const [user, setUser] = useState({
     first_name: '',
     last_name: '',
     user_name: '',
     photo_url: '',
   });
+
+  // console.log('user', user)
+  // console.log('currentUSer', currentUser)
   const [loveCount, setLoveCount] = useState(post.love_count || 0);
   const dispatch = useDispatch();
 
@@ -104,31 +119,6 @@ export default function RecipeReviewCard({post}) {
       setComment('');
     }
   };
-  function timeConverter(UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds();
-    var time = date + ' ' + month;
-    return time;
-  }
 
   const likeAction = async () => {
     const data = await Posts.updatePost(post.id, {love_count: loveCount + 1});
@@ -138,86 +128,162 @@ export default function RecipeReviewCard({post}) {
     }
   };
 
-  return (
-    <Card className={classes.root}>
-      <CardHeader
-        avatar={
-          <Avatar
-            aria-label='recipe'
-            className={classes.avatar}
-            src={baseUrl + 'static/' + user.photo_url}
-          />
-        }
-        action={
-          <IconButton aria-label='settings'>
-            <MoreVert />
-          </IconButton>
-        }
-        title={`${user.first_name} ${user.last_name}`}
-        subheader={timeConverter(Date.parse(post.createdAt))}
-      />
-      {post.media && (
-        <CardMedia
-          className={classes.media}
-          image={baseUrl + 'static/' + post.media}
-          title='Paella dish'
+  const editPostAction = async () => {
+    const data = await Posts.updatePost(post.id, {content: editText});
+
+    if (data.status !== 200) {
+      setEditText(post.content);
+    }
+    setEditDialogOpen(false);
+  };
+
+  const mediaJSX = () => {
+    let mediaType = null;
+    if (
+      post.media.split('.').pop() === 'JPG' ||
+      post.media.split('.').pop() === 'png' ||
+      post.media.split('.').pop() === 'jpg' ||
+      post.media.split('.').pop() === 'PNG'
+    ) {
+      mediaType = 'image';
+    } else if (post.media.split('.').pop() === 'mp4') {
+      mediaType = 'video';
+    }
+    switch (mediaType) {
+      case 'image':
+        return <img src={baseUrl + 'static/' + post.media} width='100%' />;
+      case 'video':
+        return (
+          <video width='100%' controls>
+            <source src={baseUrl + 'static/' + post.media} type='video/mp4' />
+            {/* <source src="mov_bbb.ogg" type="video/ogg" /> */}
+          </video>
+        );
+    }
+  };
+
+  const editDialogJSX = (
+    <Dialog open={editDialogOpen} fullWidth>
+      <DialogTitle>Edit Post</DialogTitle>
+      <DialogContent>
+        <TextField
+          style={{width: '100%'}}
+          id='standard-multiline-static'
+          multiline
+          variant='filled'
+          rows={4}
+          fullwidth
+          value={editText}
+          onChange={(e) => setEditText(e.target.value)}
+          placeholder='How are you feeling in the moment?'
         />
-      )}
-      <CardContent>
-        <Typography variant='body2' color='textSecondary' component='p'>
-          <span className='caption-text'>{post.content}</span>
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label='add to favorites' onClick={likeAction}>
-          <Favorite style={{color: 'red'}} />
-          <div style={{marginLeft: '10px'}}>{loveCount}</div>
-        </IconButton>
-        {/* <IconButton aria-label='share'>
+        <DialogActions style={{width: '100%'}}>
+          <Button
+            onClick={() => {
+              setEditText(post.content);
+              setEditDialogOpen(false);
+            }}
+            variant='contained'
+            color='primary'>
+            Cancel
+          </Button>
+          <Button
+            variant='contained'
+            color='secondary'
+            onClick={() => editPostAction()}>
+            Save
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+
+  return (
+    <>
+      {editDialogJSX}
+      <Card className={classes.root}>
+        <CardHeader
+          avatar={
+            <Avatar
+              aria-label='recipe'
+              className={classes.avatar}
+              src={baseUrl + 'static/' + user.photo_url}
+            />
+          }
+          action={
+            currentUser &&
+            currentUser.user_name === user.user_name && (
+              <IconButton aria-label='edit'>
+                <Edit onClick={() => setEditDialogOpen(true)} />
+              </IconButton>
+            )
+          }
+          title={`${user.first_name} ${user.last_name}`}
+          subheader={formatDatePost(Date.parse(post.createdAt))}
+        />
+        {post.media &&
+          // <CardMedia
+          //   className={classes.media}
+          //   image={baseUrl + 'static/' + post.media}
+          //   title='Paella dish'
+          // />
+          mediaJSX()}
+        <CardContent>
+          <Typography variant='body2' color='textSecondary' component='p'>
+            <span className='caption-text'>{editText}</span>
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <IconButton aria-label='add to favorites' onClick={likeAction}>
+            <Favorite style={{color: 'red'}} />
+            <div style={{marginLeft: '10px'}}>{loveCount}</div>
+          </IconButton>
+          {/* <IconButton aria-label='share'>
           <Share />
         </IconButton> */}
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label='show more'>
-          <ExpandMore />
-        </IconButton>
-      </CardActions>
-      <Collapse in={expanded} timeout='auto' unmountOnExit>
-        <CardContent>
-          {comments.map((comment, index) => {
-            const addReplyDataAction = async (replyText) => {
-              await Comments.addComment({
-                post_id: post.id,
-                content: replyText,
-                parent_id: comment.id,
-              });
-              getPostComments();
-            };
-            if (comment.parent_id === null) {
-              return (
-                <Comment
-                  key={index}
-                  comment={comment}
-                  addReplyAction={addReplyDataAction}
-                  replies={comment.replies}
-                />
-              );
-            }
-          })}
-          <TextField
-            label='comment'
-            variant='filled'
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            onKeyDown={addComment}
-            fullWidth
-          />
-        </CardContent>
-      </Collapse>
-    </Card>
+          <IconButton
+            className={clsx(classes.expand, {
+              [classes.expandOpen]: expanded,
+            })}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label='show more'>
+            <ExpandMore />
+          </IconButton>
+        </CardActions>
+        <Collapse in={expanded} timeout='auto' unmountOnExit>
+          <CardContent>
+            {comments.map((comment, index) => {
+              const addReplyDataAction = async (replyText) => {
+                await Comments.addComment({
+                  post_id: post.id,
+                  content: replyText,
+                  parent_id: comment.id,
+                });
+                getPostComments();
+              };
+              if (comment.parent_id === null) {
+                return (
+                  <Comment
+                    key={index}
+                    comment={comment}
+                    addReplyAction={addReplyDataAction}
+                    replies={comment.replies}
+                  />
+                );
+              }
+            })}
+            <TextField
+              label='comment'
+              variant='filled'
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              onKeyDown={addComment}
+              fullWidth
+            />
+          </CardContent>
+        </Collapse>
+      </Card>
+    </>
   );
 }

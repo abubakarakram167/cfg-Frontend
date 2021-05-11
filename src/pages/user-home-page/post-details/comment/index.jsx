@@ -1,9 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import {Card, Avatar, TextField} from '@material-ui/core';
+import {
+  Card,
+  Avatar,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from '@material-ui/core';
 import Reply from './reply';
 import './style.css';
 import Friend from 'redux/services/friends';
 import {baseUrl} from 'utils/axios';
+import {Edit} from '@material-ui/icons';
+import {useSelector} from 'react-redux';
 export default function Comment({comment, addReplyAction, replies}) {
   const [reply, setReply] = useState('');
   const [user, setUser] = useState({
@@ -12,6 +23,10 @@ export default function Comment({comment, addReplyAction, replies}) {
     user_name: '',
     photo_url: '',
   });
+  const currentUser = useSelector((state) => state.auth.user);
+  const [editText, setEditText] = useState(comment.content);
+  const [editedText, setEditedText] = useState('');
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   async function getUserData() {
     const data = await Friend.getUserDetails(comment.created_by);
@@ -33,8 +48,49 @@ export default function Comment({comment, addReplyAction, replies}) {
     getUserData();
   }, []);
 
+  const editCommentAction = () => {
+    console.log('hello');
+  };
+
+  const editDialogJSX = (
+    <Dialog open={editDialogOpen} fullWidth>
+      <DialogTitle>Edit Post</DialogTitle>
+      <DialogContent>
+        <TextField
+          style={{width: '100%'}}
+          id='standard-multiline-static'
+          multiline
+          variant='filled'
+          rows={4}
+          fullwidth
+          value={editText}
+          onChange={(e) => setEditText(e.target.value)}
+          placeholder='comment'
+        />
+        <DialogActions style={{width: '100%'}}>
+          <Button
+            onClick={() => {
+              setEditText(comment.content);
+              setEditDialogOpen(false);
+            }}
+            variant='contained'
+            color='primary'>
+            Cancel
+          </Button>
+          <Button
+            variant='contained'
+            color='secondary'
+            onClick={() => editCommentAction()}>
+            Save
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+
   return (
     <div>
+      {editDialogJSX}
       <Card className='comment-card'>
         <div className='comment-card-content'>
           <div className='comment-card-content-left'>
@@ -49,8 +105,13 @@ export default function Comment({comment, addReplyAction, replies}) {
                   fontSize: '12px',
                   fontWeight: 600,
                   textTransform: 'capitalize',
+                  display: 'flex',
+                  alignItems: 'center',
                 }}>
-                {user.first_name + ' ' + user.last_name}
+                <span style={{marginRight: '10px'}}>
+                  {user.first_name + ' ' + user.last_name}
+                </span>
+                {/* {currentUser && currentUser.user_name === user.user_name && <Edit fontSize="small" onClick={() => setEditDialogOpen(true)} style={{ cursor: 'pointer' }} />} */}
               </div>
               <span className='comment-text'>{comment.content}</span>
             </div>

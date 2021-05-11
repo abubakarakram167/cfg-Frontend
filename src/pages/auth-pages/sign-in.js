@@ -72,14 +72,15 @@ export default function SignIn({setView}) {
     console.log('the state.auth', state.auth);
 
     if (state.auth.error) {
-      if (
-        state.auth.error ===
-        'Your account is disabled for multiple invalid attempts. Please try again in 30 minutes'
-      )
-        setErrorMessage(
-          'Your account is disabled for multiple invalid attempts. Please try again in 30 minutes',
-        );
-      else setErrorMessage('Email or password is inCorrect');
+      // if (
+      //   state.auth.error ===
+      //   'Your account is disabled for multiple invalid attempts. Please try again in 30 minutes'
+      // )
+      //   setErrorMessage(
+      //     'Your account is disabled for multiple invalid attempts. Please try again in 30 minutes',
+      //   );
+      // else setErrorMessage(state.auth);
+      setErrorMessage(state.auth.error);
       setOpen2(true);
     }
     if (state.auth.user) {
@@ -115,7 +116,7 @@ export default function SignIn({setView}) {
             ),
           }}
           required
-          className={currentHeight >= 600 ? classes.root : classes.secondRoot}
+          // className={currentHeight >= 600 ? classes.root : classes.secondRoot}
           onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
@@ -124,7 +125,7 @@ export default function SignIn({setView}) {
           label='Password'
           fullWidth
           variant='filled'
-          className={currentHeight >= 600 ? classes.root : classes.secondRoot}
+          // className={currentHeight >= 600 ? classes.root : classes.secondRoot}
           style={{marginTop: '20px', marginBottom: '20px'}}
           InputProps={{
             startAdornment: (
@@ -139,16 +140,16 @@ export default function SignIn({setView}) {
         <div
           style={{
             width: '100%',
-            textAlign: 'left',
+            textAlign: 'center',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
             height: currentHeight >= 600 ? '5vh' : '2vh',
             fontSize: currentHeight <= 600 && 12,
           }}>
-          <div style={{display: 'flex', alignItems: 'center'}}>
+          {/* <div style={{ display: 'flex', alignItems: 'center' }}>
             <Checkbox /> <span>Remember Me</span>
-          </div>
+          </div> */}
           <div
             style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}
             onClick={() => setView(3)}>
@@ -156,8 +157,8 @@ export default function SignIn({setView}) {
           </div>
         </div>
         <button className='action-button'>Sign In</button>
-        <div className='orHeader'>
-          <div style={{position: 'relative', top: '-12px'}}>
+        {/* <div className='orHeader'>
+          <div style={{ position: 'relative', top: '-12px' }}>
             <span
               style={{
                 background: 'white',
@@ -167,16 +168,17 @@ export default function SignIn({setView}) {
               or
             </span>
           </div>
-        </div>
+        </div> */}
 
-        <div className='icons'>
+        {/* <div className='icons'>
           <img src={Google} alt='' />
           <img src={Mail} alt='' />
           <img src={Twitter} alt='' />
           <img src={Facebook} alt='' />
-        </div>
+        </div> */}
         <div className='last-container'>
-          Don't have an account?{' '}
+          <span style={{color: '#eb1b29'}}>Don't have an account? </span>
+          <br />
           <span
             style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}
             onClick={() => setView(2)}>

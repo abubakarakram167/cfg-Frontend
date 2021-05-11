@@ -62,7 +62,7 @@ export default function SignUp({setView}) {
           label='First Name'
           fullWidth
           variant='filled'
-          style={{marginTop: '10px', marginBottom: '10px'}}
+          style={{marginBottom: '10px'}}
           required
           onChange={(e) => setFirstName(e.target.value)}
         />
@@ -92,8 +92,9 @@ export default function SignUp({setView}) {
           Sign Up
         </button>
 
-        <div style={{width: '100%', marginTop: '10px'}}>
-          Already have an account?{' '}
+        <div style={{width: '100%'}}>
+          <span style={{color: '#eb1b29'}}>Already have an account? </span>
+          <br />
           <span
             style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}
             onClick={() => setView(1)}>

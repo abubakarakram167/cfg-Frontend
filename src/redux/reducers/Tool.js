@@ -10,6 +10,7 @@ const INIT_STATE = {
   currentContent: null,
   createdContent: null,
   editedContent: false,
+  tools: [],
 };
 let payload = null;
 const ToolReducer = (state = INIT_STATE, action) => {
@@ -40,6 +41,20 @@ const ToolReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         content: [...payload.data],
+        currentContent: null,
+      };
+    case actions.GET_ALL_TOOLS_DATA:
+      payload = action.payload;
+      if (payload.error) {
+        return {
+          ...state,
+          error: true,
+        };
+      }
+      console.log(payload);
+      return {
+        ...state,
+        tools: Object.values(payload),
         currentContent: null,
       };
     case actions.GET_LIST_DATA:
