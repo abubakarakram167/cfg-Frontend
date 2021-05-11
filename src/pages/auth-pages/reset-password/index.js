@@ -10,18 +10,21 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
+import PasswordStrengthBar from 'react-password-strength-bar';
+import LogoImage from 'assets/Logo.png';
 
 const ResetPassword = () => {
   const state = useSelector((state) => state);
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [token, setToken] = useState();
+  const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(token);
-    console.log(password);
-    setPassword('');
     dispatch(passwordResetAction({token, password}));
+    setPassword('');
+    setConfirmPassword('');
   };
   const handleClose1 = () => {
     setOpen1(false);
@@ -39,6 +42,7 @@ const ResetPassword = () => {
 
   useEffect(() => {
     if (state.auth.error) {
+      setErrorMessage(state.auth.error);
       setOpen2(true);
     }
     if (state.auth.message) {
@@ -54,14 +58,14 @@ const ResetPassword = () => {
       </Snackbar>
       <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
         <Alert onClose={handleClose2} severity='error'>
-          No email addresses found matching the one you entered.
+          {errorMessage}
         </Alert>
       </Snackbar>
 
       <div className='appCard'>
         <AppCard>
           <div className='image-logo'>
-            <img src={Logo} alt='logo' />
+            <img src={LogoImage} alt='logo' width='40%' />
           </div>
           <div>
             <h3>Password Reset</h3>
@@ -79,7 +83,32 @@ const ResetPassword = () => {
               placeholder='password'
             />
             <br />
-            <button className='submit-button' type='submit'>
+            <PasswordStrengthBar password={password} />
+            {password && password.length <= 6 && (
+              <p className='not-password-match'>
+                {' '}
+                Password shouldn't be weak.{' '}
+              </p>
+            )}
+            <TextField
+              style={{marginTop: 10}}
+              fullWidth
+              type='password'
+              value={confirmPassword}
+              required
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+              }}
+              variant='filled'
+              placeholder='Confirm Password'
+            />
+            {password && confirmPassword && password !== confirmPassword && (
+              <p className='not-password-match'> Password Don't match </p>
+            )}
+            <button
+              className='submit-button'
+              type='submit'
+              disabled={password !== confirmPassword || password.length < 6}>
               RESET PASSWORD
             </button>
           </form>

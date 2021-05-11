@@ -47,16 +47,25 @@ const authReducer = (state = INIT_STATE, action) => {
       console.log('here');
       payload = action.payload;
 
-      if (payload.token) {
-        localStorage.setItem('auth-token', payload.token);
+      if (payload.error) {
+        return {...state, error: payload.error};
+      } else {
+        if (payload.token) {
+          localStorage.setItem('auth-token', payload.token);
+        }
+        if (payload.user) {
+          localStorage.setItem('current-user', JSON.stringify(payload.user));
+        }
+        return {...state, user: payload.user, token: payload.token};
       }
-      if (payload.user) {
-        localStorage.setItem('current-user', JSON.stringify(payload.user));
-      }
-      return {...state, user: payload.user, token: payload.token};
     case 'RESET_PASSWORD':
       payload = action.payload;
-      return {...state, ...payload};
+      if (payload.error) {
+        return {...state, ...payload};
+      } else {
+        return {...state, ...payload, error: payload.error};
+      }
+
     case 'REGISTER':
       payload = action.payload;
       console.log(payload);
