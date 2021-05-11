@@ -1,3 +1,4 @@
+import axios from 'axios';
 import axiosInstance from '../../utils/axios';
 
 class Session {
@@ -24,6 +25,11 @@ class Session {
     return axiosInstance.put('/api/content/' + id, {
       ...params,
     });
+  }
+  static getAllTools() {
+    return axiosInstance.get(
+      '/api/content/getAllTitles/tool?_count=100&_pageNo=1',
+    );
   }
 }
 

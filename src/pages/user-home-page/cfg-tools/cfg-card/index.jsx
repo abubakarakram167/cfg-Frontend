@@ -21,21 +21,19 @@ const useStyles = makeStyles({
 
 export default function CfgCard({element}) {
   const classes = useStyles();
-
+  console.log(element, 'from card');
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={element.image}
-          title={element.title}
-        />
+        <CardMedia className={classes.media} title={element.title} />
         <CardContent>
           <Typography gutterBottom variant='h5' component='h2'>
             {element.title}
           </Typography>
           <Typography variant='body2' color='textSecondary' component='p'>
-            <div style={{textAlign: 'center'}}>{element.details}</div>
+            <div style={{textAlign: 'center'}}>
+              {element.detail.substr(0, 50) + '....'}
+            </div>
           </Typography>
         </CardContent>
       </CardActionArea>

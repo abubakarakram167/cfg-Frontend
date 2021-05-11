@@ -5,6 +5,7 @@ import {
   GET_CONTENT_DATA,
   UPDATE_CONTENT_DATA,
   GET_LIST_DATA,
+  GET_ALL_TOOLS_DATA,
 } from './action.types';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Tool from '../services/tool';
@@ -175,6 +176,27 @@ export const getContentData = (id) => {
     } catch (error) {
       dispatch({
         type: GET_CONTENT_DATA,
+        payload: {error: 'There was an error fetching the data.'},
+      });
+    }
+  };
+};
+
+export const getToolsData = (id) => {
+  return async function (dispatch) {
+    try {
+      const response = await Tool.getAllTools();
+      if (response.status === 200) {
+        const data_resp = await response.data;
+        jsCookie.set('login', 'yes');
+        dispatch({
+          type: GET_ALL_TOOLS_DATA,
+          payload: {...data_resp, error: null},
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: GET_ALL_TOOLS_DATA,
         payload: {error: 'There was an error fetching the data.'},
       });
     }
