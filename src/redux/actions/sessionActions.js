@@ -208,7 +208,7 @@ export const getSessionListData = (id, type) => {
         });
       }
     } catch (error) {
-      console.log('the error', error.response);
+      console.log('the error', error);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: GET_LIST_DATA,

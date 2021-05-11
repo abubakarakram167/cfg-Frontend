@@ -87,6 +87,7 @@ export default function CfgTool(props) {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [start_date, setstart_date] = useState(new Date());
+  const [publishDate, setPublishDate] = useState(new Date());
   const [end_date, setend_date] = useState(new Date());
   const [total_points, settotal_points] = useState('');
   const [status, setStatus] = useState('draft');
@@ -100,8 +101,7 @@ export default function CfgTool(props) {
   const classes = useStyles();
   const [nameFilter, setNameFilter] = useState('');
   const [authorFilter, setAuthorFilter] = useState('');
-  const [startDateFilter, setStartdateFilter] = useState('');
-  const [endDateFilter, setEnddateFilter] = useState('');
+  const [publishDateFilter, setPublishdateFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
   const [createAtFilter, setCreateAtFilter] = useState('');
@@ -222,6 +222,7 @@ export default function CfgTool(props) {
   const keyPress = (e) => {
     if (e.keyCode == 13) {
       setCategories([...category, e.target.value]);
+      setValue('');
       e.preventDefault();
     }
   };
@@ -411,6 +412,8 @@ export default function CfgTool(props) {
               setend_date(new Date());
               settotal_points('');
               setStatus('draft');
+              setCategories([]);
+              setValue('');
             }}
           />
           <Chip
@@ -460,7 +463,7 @@ export default function CfgTool(props) {
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
-                  <span className='column-heading'> Start Date </span>
+                  <span className='column-heading'> Publish Date </span>
                   <div
                     style={{
                       display: 'flex',
@@ -473,16 +476,19 @@ export default function CfgTool(props) {
                       variant='filled'
                       format='YYYY-MM-DD'
                       autoOk={true}
-                      value={startDateFilter === '' ? null : startDateFilter}
+                      value={
+                        publishDateFilter === '' ? null : publishDateFilter
+                      }
                       fullWidth={true}
-                      placeholder='Start date'
+                      placeholder='Publish date'
                       className={classes.root}
                       onChange={(e) => {
+                        console.log('the', e);
                         if (e && e !== '')
-                          setStartdateFilter(
+                          setPublishdateFilter(
                             moment(e).format('YYYY-MM-DD').toString(),
                           );
-                        else setStartdateFilter('');
+                        else setPublishdateFilter('');
                       }}
                       KeyboardButtonProps={{
                         'aria-label': 'change date',
@@ -491,7 +497,7 @@ export default function CfgTool(props) {
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
-                <StyledTableCell>
+                {/* <StyledTableCell>
                   <span className='column-heading'> End Date </span>
                   <div
                     style={{
@@ -522,7 +528,7 @@ export default function CfgTool(props) {
                     />
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
-                </StyledTableCell>
+                </StyledTableCell> */}
                 <StyledTableCell>
                   <span className='column-heading'> Total Points </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
@@ -572,16 +578,6 @@ export default function CfgTool(props) {
                       .startsWith(authorFilter),
                   )
                   .filter((element) =>
-                    (element.start_date ? element.start_date : '')
-                      .toLowerCase()
-                      .startsWith(startDateFilter),
-                  )
-                  .filter((element) =>
-                    (element.end_date ? element.end_date : '')
-                      .toLowerCase()
-                      .startsWith(endDateFilter),
-                  )
-                  .filter((element) =>
                     (element.status ? element.status : '')
                       .toLowerCase()
                       .startsWith(statusFilter),
@@ -597,7 +593,7 @@ export default function CfgTool(props) {
                   .filter((element) =>
                     (element.created_at ? element.created_at.toString() : '')
                       .toLowerCase()
-                      .startsWith(createAtFilter),
+                      .startsWith(publishDateFilter),
                   )
                   .map((row, index) => {
                     console.log('the row', row);
@@ -618,8 +614,8 @@ export default function CfgTool(props) {
                               setSingleId(row.id);
                               setCurrentIds(allIds);
                               setTitle(row.title);
-                              setstart_date(row.start_date);
-                              setend_date(row.end_date);
+                              setPublishDate(row.created_at);
+                              // setend_date(row.end_date);
                               settotal_points(row.total_points);
                               setStatus(row.status);
                               setGroup(row.assigned_group);
@@ -639,8 +635,10 @@ export default function CfgTool(props) {
                             ? row.author.user_name
                             : 'Name Not Present'}
                         </StyledTableCell>
-                        <StyledTableCell>{row.start_date}</StyledTableCell>
-                        <StyledTableCell>{row.end_date}</StyledTableCell>
+                        <StyledTableCell>
+                          {moment(row.created_at).format('YYYY-MM-DD')}
+                        </StyledTableCell>
+                        {/* <StyledTableCell>{row.end_date}</StyledTableCell> */}
                         <StyledTableCell>{row.total_points}</StyledTableCell>
                         <StyledTableCell>{row.status}</StyledTableCell>
                       </StyledTableRow>

@@ -24,6 +24,9 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import InfoIcon from '@material-ui/icons/Info';
 import {useHistory} from 'react-router-dom';
+import moment from 'moment';
+import {createTimeline} from 'redux/actions/Timeline';
+import jsCookie from 'js-cookie';
 
 export default function Editor() {
   const params = useParams();
@@ -52,7 +55,9 @@ export default function Editor() {
   const [showMessageError, setShowMessageError] = useState(false);
   const [categoryValue, setCategoryValue] = useState('');
   const [keywordValue, setKeywordValue] = useState('');
+  const [publishDate, setPublishDate] = useState(null);
   const history = useHistory();
+  const [author, setAuthor] = useState('');
 
   const {id} = useParams();
   console.log('here the state', state);
@@ -88,7 +93,7 @@ export default function Editor() {
     if (state.titleCreation) {
       setOpen1(true);
     }
-
+    setAuthor(JSON.parse(jsCookie.get('user')).user_name);
     if (state.titles && state.titles.rows && state.titles.rows.length) {
       let totalPoints = 0;
 
@@ -101,19 +106,26 @@ export default function Editor() {
     }
 
     if (state.currentContent) {
-      // setGroup(state.currentContent.assigned_group || "candidate")
-      // setCategories( JSON.parse(state.currentContent.categories || []) )
+      if (
+        state.currentContent.categories &&
+        state.currentContent.categories.length
+      ) {
+        setCategories(
+          state.currentContent
+            ? JSON.parse(state.currentContent.categories)
+            : [],
+        );
+      } else {
+        setCategories([]);
+      }
       setsub_title(state.currentContent.sub_title || '');
       setContent('');
       setstart_date(new Date(state.currentContent.start_date));
       setend_date(new Date(state.currentContent.end_date));
       setStatus(state.currentContent.status || 'draft');
-      // setKeywords(
-      //   JSON.parse(state.currentContent.tags) ||
-      //     []
-      // );
       setOriginalTotalPoints(state.currentContent.total_points || 0);
       setnext_page(state.currentContent.next_page || '');
+      setPublishDate(moment().format('MM/DD/yyyy'));
       setprevious_page(state.currentContent.previous_page || '');
       setContentType(state.currentContent.type || '');
     }
@@ -131,74 +143,156 @@ export default function Editor() {
         text: element,
       });
     });
-    if (
-      total_points === '0' ||
-      title === '' ||
-      content === '' ||
-      group === '' ||
-      categories.length === 0 ||
-      keywords.length === 0
-    )
-      setShowMessageError(true);
-    else {
-      const allTitles = state.titles.rows;
-      let isSubtitleFound = false;
-      let subtitles = [];
-      subtitles = allTitles.filter(
-        (content) => content.id === parseInt(params.contentHeaderId),
-      )[0];
-      subtitles =
-        subtitles && subtitles.subtitles.rows.length
-          ? subtitles.subtitles.rows
-          : [];
 
+    if (params.cfgType === 'timeline') {
       if (
-        subtitles &&
-        subtitles.length > 0 &&
-        subtitles.filter((content) => content.title === title).length > 0
-      ) {
-        dispatch({
-          type: Show_Message,
-          payload: {
-            message:
-              'This Subtitle is already used For this Title.Please use another one.',
-            success: false,
-          },
-        });
-      } else if (
-        allTitles.filter((content) => content.title === title).length > 0
-      ) {
-        dispatch({
-          type: Show_Message,
-          payload: {
-            message: 'This title is already used.Please use another one.',
-            success: false,
-          },
-        });
-      } else {
-        let cfgSessionStatus = state.current.status;
-        if (cfgSessionStatus === 'published') {
-          let parent = null;
-          if (params.contentHeaderId === 'null') {
-            parent = params.id;
-          } else {
-            parent = params.contentHeaderId;
+        total_points === '0' ||
+        title === '' ||
+        content === '' ||
+        group === '' ||
+        categories.length === 0 ||
+        keywords.length === 0
+      )
+        setShowMessageError(true);
+      else {
+        dispatch(
+          createTimeline({
+            title,
+            author: author,
+            start_date: formatDate(start_date),
+            end_date: formatDate(end_date),
+            total_points,
+            status,
+            tags: totalTags,
+            detail: content,
+            assigned_group: group,
+            categories: JSON.stringify(categories),
+          }),
+        ).then((response) => {
+          if (response) {
+            setTimeout(() => {
+              history.push(`/admin/content/display/${response.content.id}`);
+            }, 1000);
           }
-          const tags = keywords.map((element) => {
-            return {
-              tag_type: 'keyword',
-              text: element,
-            };
-          });
+        });
+      }
+    } else {
+      if (
+        total_points === '0' ||
+        title === '' ||
+        content === '' ||
+        group === '' ||
+        categories.length === 0 ||
+        keywords.length === 0
+      )
+        setShowMessageError(true);
+      else {
+        const allTitles = state.titles.rows;
+        let isSubtitleFound = false;
+        let subtitles = [];
 
-          if (
-            parseInt(total_points) + parseInt(accumulativeTitlePoints) >
-            originalTotalPoints
-          ) {
+        subtitles = allTitles.filter(
+          (content) => content.id === parseInt(params.contentHeaderId),
+        )[0];
+        subtitles =
+          subtitles && subtitles.subtitles.rows.length
+            ? subtitles.subtitles.rows
+            : [];
+
+        if (
+          subtitles &&
+          subtitles.length > 0 &&
+          subtitles.filter((content) => content.title === title).length > 0
+        ) {
+          dispatch({
+            type: Show_Message,
+            payload: {
+              message:
+                'This Subtitle is already used For this Title.Please use another one.',
+              success: false,
+            },
+          });
+        } else if (
+          allTitles &&
+          allTitles.length &&
+          allTitles.filter((content) => content.title === title).length > 0
+        ) {
+          dispatch({
+            type: Show_Message,
+            payload: {
+              message: 'This title is already used.Please use another one.',
+              success: false,
+            },
+          });
+        } else {
+          let cfgSessionStatus = state.current.status;
+          if (cfgSessionStatus === 'published') {
+            let parent = null;
+            if (params.contentHeaderId === 'null') {
+              parent = params.id;
+            } else {
+              parent = params.contentHeaderId;
+            }
+            const tags = keywords.map((element) => {
+              return {
+                tag_type: 'keyword',
+                text: element,
+              };
+            });
+
+            if (
+              parseInt(total_points) + parseInt(accumulativeTitlePoints) >
+              originalTotalPoints
+            ) {
+              dispatch({
+                type: Show_Message,
+                payload: {
+                  message: 'Cannot be added.Please follow the requirements',
+                  success: false,
+                },
+              });
+              setTimeout(() => {
+                dispatch({
+                  type: Show_Message,
+                  payload: {message: null, success: true},
+                });
+              }, 5000);
+            } else {
+              dispatch(
+                createSessionTitle(
+                  {
+                    title,
+                    sub_title,
+                    detail: content,
+                    start_date: formatDate(start_date),
+                    end_date: formatDate(end_date),
+                    tags: totalTags,
+                    type: params.type,
+                    assigned_group: group,
+                    categories: JSON.stringify(categories),
+                    total_points,
+                    content_header_id: parseInt(parent),
+                    previous_page,
+                    next_page,
+                  },
+                  params.type,
+                ),
+              ).then((response) => {
+                if (response) {
+                  setTimeout(() => {
+                    history.push(
+                      `/admin/content/display/${response.content.id}`,
+                    );
+                  }, 1000);
+                }
+              });
+            }
+          } else {
             dispatch({
               type: Show_Message,
               payload: {
-                message: 'Cannot be added.Please follow the requirements',
+                message:
+                  'Session must be published in order to publish the content.',
                 success: false,
               },
             });
@@ -207,50 +301,8 @@ export default function Editor() {
                 type: Show_Message,
                 payload: {message: null, success: true},
               });
-            }, 5000);
-          } else {
-            dispatch(
-              createSessionTitle(
-                {
-                  title,
-                  sub_title,
-                  detail: content,
-                  start_date: formatDate(start_date),
-                  end_date: formatDate(end_date),
-                  tags: totalTags,
-                  type: params.type,
-                  assigned_group: group,
-                  categories: JSON.stringify(categories),
-                  total_points,
-                  content_header_id: parseInt(parent),
-                  previous_page,
-                  next_page,
-                },
-                params.type,
-              ),
-            ).then((response) => {
-              if (response) {
-                setTimeout(() => {
-                  history.push(`/admin/content/display/${response.content.id}`);
-                }, 1000);
-              }
-            });
+            }, 3000);
           }
-        } else {
-          dispatch({
-            type: Show_Message,
-            payload: {
-              message:
-                'Session must be published in order to publish the content.',
-              success: false,
-            },
-          });
-          setTimeout(() => {
-            dispatch({
-              type: Show_Message,
-              payload: {message: null, success: true},
-            });
-          }, 3000);
         }
       }
     }
@@ -452,22 +504,9 @@ export default function Editor() {
                 format='MM/DD/yyyy'
                 margin='normal'
                 fullWidth={true}
-                label='Start Date'
-                value={start_date}
-                onChange={(e) => setstart_date(e)}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-              />
-              <KeyboardDatePicker
-                disableToolbar
-                variant='filled'
-                format='MM/DD/yyyy'
-                margin='normal'
-                fullWidth={true}
-                label='End Date'
-                value={end_date}
-                onChange={(e) => setend_date(e)}
+                label='Publish Date'
+                value={publishDate}
+                onChange={(e) => setPublishDate(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -498,20 +537,21 @@ export default function Editor() {
                 required
               />
               {parseInt(total_points) + parseInt(accumulativeTitlePoints) >
-                originalTotalPoints && (
-                <p className='total-points-text'>
-                  <InfoIcon
-                    style={{
-                      fill: 'red',
-                      fontSize: 18,
-                      position: 'relative',
-                      top: 3,
-                    }}
-                  />{' '}
-                  The total points for this title cannot be exceed than{' '}
-                  {originalTotalPoints - accumulativeTitlePoints}
-                </p>
-              )}
+                originalTotalPoints &&
+                params.cfgType !== 'timeline' && (
+                  <p className='total-points-text'>
+                    <InfoIcon
+                      style={{
+                        fill: 'red',
+                        fontSize: 18,
+                        position: 'relative',
+                        top: 3,
+                      }}
+                    />{' '}
+                    The total points for this title cannot be exceed than{' '}
+                    {originalTotalPoints - accumulativeTitlePoints}
+                  </p>
+                )}
             </div>
             {showMessageError && total_points === 0 && (
               <p className='showErrorMessage'>Total Points are required </p>
