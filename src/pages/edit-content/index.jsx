@@ -34,9 +34,6 @@ export default function Editor() {
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('Enter a title');
   const [sub_title, setsub_title] = useState('Enter a subtitle');
-  const [appliedGroup, setAppliedGroup] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [keywords, setKeywords] = useState([]);
   const [value, setValue] = useState('');
   const [start_date, setstart_date] = useState(new Date());
   const [end_date, setend_date] = useState(new Date());
@@ -45,11 +42,16 @@ export default function Editor() {
   const [imageData, setImageData] = useState([]);
   const [previous_page, setprevious_page] = useState('');
   const [next_page, setnext_page] = useState('');
-  const [contentType, setContentType] = useState('');
-  const [groups, setGroups] = useState([]);
-  const [groupValue, setGroupValue] = useState('');
   const [accumulativeTitlePoints, setAccumulativeTitlePoints] = useState(0);
   const [originalTotalPoints, setOriginalTotalPoints] = useState(0);
+  const [categoryValue, setCategoryValue] = useState('');
+  const [keywordValue, setKeywordValue] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [keywords, setKeywords] = useState([]);
+  const [group, setGroup] = useState('candidate');
+  const [showMessageError, setShowMessageError] = useState(false);
+  const [contentType, setContentType] = useState(false);
+
   const history = useHistory();
 
   const handleEditorChange = (e) => {
@@ -61,14 +63,14 @@ export default function Editor() {
 
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
-    setKeywords([...keywords, value]);
-    setValue('');
+    setKeywords([...keywords, keywordValue]);
+    setKeywordValue('');
   };
 
-  const handleGroupSubmit = (e) => {
+  const handleCategorySubmit = (e) => {
     e.preventDefault();
-    setGroups([...groups, groupValue]);
-    setGroupValue('');
+    setCategories([...categories, categoryValue]);
+    setCategoryValue('');
   };
 
   useEffect(() => {
@@ -122,30 +124,13 @@ export default function Editor() {
       );
       setend_date(moment(state.currentContent.end_date).format('MM/DD/yyyy'));
       setStatus(state.currentContent.status || 'draft');
-      const allTags = JSON.parse(state.currentContent.tags);
-      let specificTags;
-      specificTags = allTags
-        .filter((tag) => {
-          if (tag.tag_type === 'keyword') return true;
-          else return false;
-        })
-        .map((element) => element.text);
-      setKeywords(specificTags.length ? specificTags : []);
-      specificTags = allTags
-        .filter((tag) => {
-          if (tag.tag_type === 'group') return true;
-          else return false;
-        })
-        .map((element) => element.text);
-      setGroups(specificTags);
-
-      specificTags = allTags
-        .filter((tag) => {
-          if (tag.tag_type === 'category') return true;
-          else return false;
-        })
-        .map((element) => element.text);
-      setCategories(specificTags);
+      setKeywords(
+        state.currentContent
+          ? JSON.parse(state.currentContent.tags).map((element) => element.text)
+          : [],
+      );
+      setGroup(state.currentContent.assigned_group);
+      setCategories(JSON.parse(state.currentContent.categories || []));
       setnext_page(state.currentContent.next_page || '');
       setprevious_page(state.currentContent.previous_page || '');
       setContentType(state.currentContent.type || '');
@@ -157,20 +142,6 @@ export default function Editor() {
     keywords.map((element) => {
       totalTags.push({
         tag_type: 'keyword',
-        text: element,
-      });
-    });
-
-    groups.map((element) => {
-      totalTags.push({
-        tag_type: 'group',
-        text: element,
-      });
-    });
-
-    categories.map((element) => {
-      totalTags.push({
-        tag_type: 'category',
         text: element,
       });
     });
@@ -204,6 +175,8 @@ export default function Editor() {
             end_date: end_date,
             tags: JSON.stringify(totalTags),
             type: params.contentType,
+            assigned_group: group,
+            categories: JSON.stringify(categories),
             total_points,
             next_page,
             updated_at: moment(moment()).format('YYYY-MM-DD'),
@@ -320,63 +293,58 @@ export default function Editor() {
           <div className='options-side'>
             <div>
               <Select
-                labelId='demo-customized-select-label'
-                id='demo-customized-select'
-                value={0}
-                onChange={(e) => {
-                  setCategories([...categories, e.target.value]);
-                }}
+                labelId='demo-simple-select-filled-label'
+                id='demo-simple-select-filled'
+                onChange={(e) => setGroup(e.target.value)}
                 variant='filled'
-                fullWidth>
-                <MenuItem value={0}>
-                  {categories.length > 0
-                    ? categories.map((element, index) => {
-                        return (
-                          <Chip
-                            label={element}
-                            key={index}
-                            className='chip-style'
-                            onDelete={() => {
-                              setCategories(
-                                categories.filter((value) => value !== element),
-                              );
-                            }}
-                          />
-                        );
-                      })
-                    : 'Select a category'}
+                fullWidth
+                value={group}
+                label='Group'
+                required>
+                <MenuItem value={'candidate'}>Candidate</MenuItem>
+                <MenuItem value={'facilitator'}>Facilitator</MenuItem>
+                <MenuItem value={'content-manager'}>Content Manager</MenuItem>
+                <MenuItem value={'support'}>Support</MenuItem>
+                <MenuItem value={'reviewer'}>Reviewer</MenuItem>
+                <MenuItem value={'system-administrator'}>
+                  System Adminsitrator
                 </MenuItem>
-                <MenuItem value={'CFG Session'}>CFG Session</MenuItem>
-                <MenuItem value={'Events'}>Events</MenuItem>
-                <MenuItem value={'Quiz'}>Quiz</MenuItem>
-                <MenuItem value={'Rewards'}>Rewards</MenuItem>
-                <MenuItem value={'CFG Tools'}>CFG Tools</MenuItem>
+                <MenuItem value={'auditor'}>Auditor</MenuItem>
               </Select>
             </div>
             <br />
+            {showMessageError && group === '' && (
+              <p className='showErrorMessage'> group is required</p>
+            )}
+
             <div>
-              {groups.map((element, index) => {
+              {categories.map((element, index) => {
                 return (
                   <Chip
                     label={element}
                     key={index}
                     className='chip-style'
                     onDelete={() => {
-                      setGroups(groups.filter((value) => value !== element));
+                      setCategories(
+                        categories.filter((value) => value !== element),
+                      );
                     }}
                   />
                 );
               })}
             </div>
             <div>
-              <form onSubmit={handleGroupSubmit}>
+              <form onSubmit={handleCategorySubmit}>
                 <TextField
                   variant='filled'
-                  value={groupValue}
-                  onSubmit={(e) => setGroups([...groups, e.target.value])}
-                  onChange={(e) => setGroupValue(e.target.value)}
+                  value={categoryValue}
+                  required
+                  onSubmit={(e) =>
+                    setCategories([...categories, e.target.value])
+                  }
+                  onChange={(e) => setCategoryValue(e.target.value)}
                   fullWidth
-                  label='Groups'
+                  label='Categories'
                 />
               </form>
             </div>
@@ -402,9 +370,9 @@ export default function Editor() {
               <form onSubmit={handleKeywordSubmit}>
                 <TextField
                   variant='filled'
-                  value={value}
+                  value={keywordValue}
                   onSubmit={(e) => setKeywords([...keywords, e.target.value])}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={(e) => setKeywordValue(e.target.value)}
                   fullWidth
                   label='Key words'
                 />

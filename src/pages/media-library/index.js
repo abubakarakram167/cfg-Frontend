@@ -221,7 +221,7 @@ export default function MediaLibrary() {
         <div style={{paddingBottom: 50}} className='container'>
           <div className={'gallery'}>
             {filesPreview.map((element, index) => {
-              console.log('the element', element.url.split('.').pop());
+              console.log('the element', element);
               if (
                 ['jpeg', 'png', 'jpg', 'JPG', 'PNG'].includes(
                   element.url.split('.').pop(),
@@ -261,7 +261,9 @@ export default function MediaLibrary() {
                   </div>
                 );
               } else if (
-                ['video', 'mp4', 'mkv'].includes(element.url.split('.').pop())
+                ['video', 'mp4', 'mkv'].includes(
+                  element.url.split('.').pop().toLowerCase(),
+                )
               ) {
                 return (
                   <div

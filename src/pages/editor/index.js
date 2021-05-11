@@ -35,6 +35,7 @@ export default function Editor() {
   const [appliedGroup, setAppliedGroup] = useState('');
   const [categories, setCategories] = useState([]);
   const [keywords, setKeywords] = useState([]);
+  const [group, setGroup] = useState('candidate');
   const [value, setValue] = useState('');
   const [start_date, setstart_date] = useState(new Date());
   const [end_date, setend_date] = useState(new Date());
@@ -45,11 +46,12 @@ export default function Editor() {
   const [previous_page, setprevious_page] = useState('');
   const [next_page, setnext_page] = useState('');
   const [contentType, setContentType] = useState('');
-  const [groups, setGroups] = useState([]);
   const [groupValue, setGroupValue] = useState('');
   const [accumulativeTitlePoints, setAccumulativeTitlePoints] = useState(0);
   const [originalTotalPoints, setOriginalTotalPoints] = useState(0);
   const [showMessageError, setShowMessageError] = useState(false);
+  const [categoryValue, setCategoryValue] = useState('');
+  const [keywordValue, setKeywordValue] = useState('');
   const history = useHistory();
 
   const {id} = useParams();
@@ -62,16 +64,16 @@ export default function Editor() {
     );
   };
 
-  const handleGroupSubmit = (e) => {
-    e.preventDefault();
-    setGroups([...groups, groupValue]);
-    setGroupValue('');
-  };
-
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
-    setKeywords([...keywords, value]);
-    setValue('');
+    setKeywords([...keywords, keywordValue]);
+    setKeywordValue('');
+  };
+
+  const handleCategorySubmit = (e) => {
+    e.preventDefault();
+    setCategories([...categories, categoryValue]);
+    setCategoryValue('');
   };
 
   useEffect(() => {
@@ -79,7 +81,6 @@ export default function Editor() {
   }, [id, dispatch]);
 
   useEffect(() => {
-    console.log('here the params ', params);
     dispatch(getSessionListData(params.id, params.cfgType));
   }, []);
 
@@ -100,15 +101,17 @@ export default function Editor() {
     }
 
     if (state.currentContent) {
+      // setGroup(state.currentContent.assigned_group || "candidate")
+      // setCategories( JSON.parse(state.currentContent.categories || []) )
       setsub_title(state.currentContent.sub_title || '');
       setContent('');
       setstart_date(new Date(state.currentContent.start_date));
       setend_date(new Date(state.currentContent.end_date));
       setStatus(state.currentContent.status || 'draft');
-      setKeywords(
-        JSON.parse(state.currentContent.tags).map((element) => element.text) ||
-          [],
-      );
+      // setKeywords(
+      //   JSON.parse(state.currentContent.tags) ||
+      //     []
+      // );
       setOriginalTotalPoints(state.currentContent.total_points || 0);
       setnext_page(state.currentContent.next_page || '');
       setprevious_page(state.currentContent.previous_page || '');
@@ -122,39 +125,49 @@ export default function Editor() {
 
   const publish = () => {
     let totalTags = [];
+    keywords.map((element) => {
+      totalTags.push({
+        tag_type: 'keyword',
+        text: element,
+      });
+    });
     if (
-      total_points === 0 ||
+      total_points === '0' ||
       title === '' ||
       content === '' ||
-      groups.length === 0 ||
+      group === '' ||
       categories.length === 0 ||
       keywords.length === 0
     )
       setShowMessageError(true);
     else {
-      keywords.map((element) => {
-        totalTags.push({
-          tag_type: 'keyword',
-          text: element,
-        });
-      });
-
-      groups.map((element) => {
-        totalTags.push({
-          tag_type: 'group',
-          text: element,
-        });
-      });
-
-      categories.map((element) => {
-        totalTags.push({
-          tag_type: 'category',
-          text: element,
-        });
-      });
-
       const allTitles = state.titles.rows;
-      if (allTitles.filter((content) => content.title === title).length > 0) {
+      let isSubtitleFound = false;
+      let subtitles = [];
+      subtitles = allTitles.filter(
+        (content) => content.id === parseInt(params.contentHeaderId),
+      )[0];
+      subtitles =
+        subtitles && subtitles.subtitles.rows.length
+          ? subtitles.subtitles.rows
+          : [];
+
+      if (
+        subtitles &&
+        subtitles.length > 0 &&
+        subtitles.filter((content) => content.title === title).length > 0
+      ) {
+        dispatch({
+          type: Show_Message,
+          payload: {
+            message:
+              'This Subtitle is already used For this Title.Please use another one.',
+            success: false,
+          },
+        });
+      } else if (
+        allTitles.filter((content) => content.title === title).length > 0
+      ) {
         dispatch({
           type: Show_Message,
           payload: {
@@ -206,6 +219,8 @@ export default function Editor() {
                   end_date: formatDate(end_date),
                   tags: totalTags,
                   type: params.type,
+                  assigned_group: group,
+                  categories: JSON.stringify(categories),
                   total_points,
                   content_header_id: parseInt(parent),
                   previous_page,
@@ -340,69 +355,61 @@ export default function Editor() {
           <div className='options-side'>
             <div>
               <Select
-                labelId='demo-customized-select-label'
-                id='demo-customized-select'
-                value={0}
-                onChange={(e) => {
-                  setCategories([...categories, e.target.value]);
-                }}
+                labelId='demo-simple-select-filled-label'
+                id='demo-simple-select-filled'
+                onChange={(e) => setGroup(e.target.value)}
                 variant='filled'
-                fullWidth>
-                <MenuItem value={0}>
-                  {categories.length > 0
-                    ? categories.map((element, index) => {
-                        return (
-                          <Chip
-                            label={element}
-                            key={index}
-                            className='chip-style'
-                            onDelete={() => {
-                              setCategories(
-                                categories.filter((value) => value !== element),
-                              );
-                            }}
-                          />
-                        );
-                      })
-                    : 'Select a category'}
+                fullWidth
+                value={group}
+                label='Group'
+                required>
+                <MenuItem value={'candidate'}>Candidate</MenuItem>
+                <MenuItem value={'facilitator'}>Facilitator</MenuItem>
+                <MenuItem value={'content-manager'}>Content Manager</MenuItem>
+                <MenuItem value={'support'}>Support</MenuItem>
+                <MenuItem value={'reviewer'}>Reviewer</MenuItem>
+                <MenuItem value={'system-administrator'}>
+                  System Adminsitrator
                 </MenuItem>
-                <MenuItem value={'CFG Session'}>CFG Session</MenuItem>
-                <MenuItem value={'Events'}>Events</MenuItem>
-                <MenuItem value={'Quiz'}>Quiz</MenuItem>
-                <MenuItem value={'Rewards'}>Rewards</MenuItem>
-                <MenuItem value={'CFG Tools'}>CFG Tools</MenuItem>
+                <MenuItem value={'auditor'}>Auditor</MenuItem>
               </Select>
             </div>
             <br />
+            {showMessageError && group === '' && (
+              <p className='showErrorMessage'> group is required</p>
+            )}
+
             <div>
-              {groups.map((element, index) => {
+              {categories.map((element, index) => {
                 return (
                   <Chip
                     label={element}
                     key={index}
                     className='chip-style'
                     onDelete={() => {
-                      setGroups(groups.filter((value) => value !== element));
+                      setCategories(
+                        categories.filter((value) => value !== element),
+                      );
                     }}
                   />
                 );
               })}
             </div>
             <div>
-              <form onSubmit={handleGroupSubmit}>
+              <form onSubmit={handleCategorySubmit}>
                 <TextField
                   variant='filled'
-                  value={groupValue}
-                  onSubmit={(e) => setGroups([...groups, e.target.value])}
-                  onChange={(e) => setGroupValue(e.target.value)}
+                  value={categoryValue}
+                  required
+                  onSubmit={(e) =>
+                    setCategories([...categories, e.target.value])
+                  }
+                  onChange={(e) => setCategoryValue(e.target.value)}
                   fullWidth
-                  label='Groups'
+                  label='Categories'
                 />
               </form>
             </div>
-            {showMessageError && groups.length === 0 && (
-              <p className='showErrorMessage'> group is required</p>
-            )}
 
             <br />
             <div>
@@ -425,16 +432,16 @@ export default function Editor() {
               <form onSubmit={handleKeywordSubmit}>
                 <TextField
                   variant='filled'
-                  value={value}
+                  value={keywordValue}
                   required
                   onSubmit={(e) => setKeywords([...keywords, e.target.value])}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={(e) => setKeywordValue(e.target.value)}
                   fullWidth
                   label='Key words'
                 />
               </form>
             </div>
-            {showMessageError && groups.length === 0 && (
+            {showMessageError && keywords.length === 0 && (
               <p className='showErrorMessage'>Keywords is required</p>
             )}
             <br />
