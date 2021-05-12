@@ -13,7 +13,7 @@ import React from 'react';
 export const onGetUserList = (pagination) => {
   return (dispatch) => {
     dispatch({type: FETCH_START});
-    Api.get(`/api/users/list?_count=10&_page=${pagination.page}`)
+    Api.get(`/api/users/list?_count=100&_page=${pagination.page}`)
       .then((data) => {
         console.log('the data in new', data);
         if (data.status === 200) {
