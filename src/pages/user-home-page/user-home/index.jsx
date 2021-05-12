@@ -27,6 +27,7 @@ import {
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
+import {getToolsData} from 'redux/actions/toolActions';
 import {baseUrl} from 'utils/axios';
 
 export default function UserHomePage() {
@@ -40,11 +41,8 @@ export default function UserHomePage() {
 
   useEffect(() => {
     dispatch(getUserPost());
+    dispatch(getToolsData());
   }, []);
-
-  useEffect(() => {
-    console.log(posts);
-  }, [posts]);
 
   const createComment = (id, commentText) => {
     return {
