@@ -191,7 +191,7 @@ const AppSidebar = (props) => {
               <ListItemText primary='My profile' />
             </ListItem>
           </Link>
-          <Link to='/home/user-groups'>
+          {/* <Link to='/home/user-groups'>
             <ListItem>
               <ListItemIcon>
                 <People style={{color: 'red'}} />
@@ -254,7 +254,7 @@ const AppSidebar = (props) => {
                 Ratione nihil labore dicta.
               </ListItemText>
             </List>
-          </Collapse>
+          </Collapse> */}
 
           <Link to='/home/user-connections'>
             <ListItem>
@@ -265,14 +265,14 @@ const AppSidebar = (props) => {
             </ListItem>
           </Link>
 
-          <Link to='/home/user-events'>
+          {/* <Link to='/home/user-events'>
             <ListItem>
               <ListItemIcon>
                 <Event style={{color: 'red'}} />
               </ListItemIcon>
               <ListItemText primary='Events' />
             </ListItem>
-          </Link>
+          </Link> */}
           <Link to='/home/cfg-tools'>
             <ListItem>
               <ListItemIcon>
@@ -281,14 +281,14 @@ const AppSidebar = (props) => {
               <ListItemText primary='CFG Tools' />
             </ListItem>
           </Link>
-          <Link to='/home/host-a-conversation'>
+          {/* <Link to='/home/host-a-conversation'>
             <ListItem>
               <ListItemIcon>
                 <ChatBubble style={{color: 'red'}} />
               </ListItemIcon>
               <ListItemText primary='Host A Conversation' />
             </ListItem>
-          </Link>
+          </Link> */}
         </List>
       </div>
     </Drawer>
