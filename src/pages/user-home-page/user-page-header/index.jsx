@@ -235,21 +235,21 @@ export default function AdminHeader() {
                 <Home style={{fontSize: 35}} />
               </Link>
             </div>
-            <div className='user-page-icon-container'>
+            {/* <div className='user-page-icon-container'>
               <Link to='/home/user-groups'>
-                <Group style={{fontSize: 35}} />
+                <Group style={{ fontSize: 35 }} />
               </Link>
             </div>
             <div className='user-page-icon-container'>
               <Link to='/home/user-achievements'>
-                <Bookmark style={{fontSize: 35}} />
+                <Bookmark style={{ fontSize: 35 }} />
               </Link>
             </div>
             <div className='user-page-icon-container'>
               <Link to='/home/user-rewards'>
-                <CardGiftcard style={{fontSize: 35}} />
+                <CardGiftcard style={{ fontSize: 35 }} />
               </Link>
-            </div>
+            </div> */}
           </div>
           <div className='right'>
             <div className='right-user-info'>
@@ -266,14 +266,14 @@ export default function AdminHeader() {
               </div>
             </div>
             <div className='right-icons'>
-              <div className='icon'>
-                <NotificationIcon style={{fill: '#ffffff'}} />
+              {/* <div className='icon'>
+                <NotificationIcon style={{ fill: '#ffffff' }} />
               </div>
               <div className='icon'>
                 <Link to='/home/all-in-box'>
-                  <ShoppingBasket style={{fill: '#ffffff'}} />
+                  <ShoppingBasket style={{ fill: '#ffffff' }} />
                 </Link>
-              </div>
+              </div> */}
               <div className='icon' onClick={handleClick2}>
                 <SettingsIcon style={{fill: '#ffffff'}} />
               </div>
