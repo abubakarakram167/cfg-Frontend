@@ -58,6 +58,7 @@ export default function SignIn({setView}) {
   const state = useSelector((state) => {
     return state;
   });
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -78,8 +79,11 @@ export default function SignIn({setView}) {
       setOpen2(true);
     }
     if (state.auth.user) {
-      // window.location.href = '/admin';
-      history.push('/admin');
+      if (state.auth.user.role === 'candidate') {
+        history.push('/home');
+      } else {
+        history.push('/admin');
+      }
     }
   }, [state]);
 
