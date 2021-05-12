@@ -31,6 +31,9 @@ class Session {
       '/api/content/getAllTitles/tool?_count=100&_pageNo=1',
     );
   }
+  static getDayTools() {
+    return axiosInstance.get('/api/content/dayTools');
+  }
 }
 
 export default Session;

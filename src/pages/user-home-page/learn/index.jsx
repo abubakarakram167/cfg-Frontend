@@ -88,11 +88,11 @@ export default function Learn() {
 
   return (
     <CommonComponent left={''} right={''}>
-      <Banner
+      {/* <Banner
         url={
           'https://opalwealthadvisors.com/wp-content/uploads/2019/05/blog-052919.jpg'
         }
-      />
+      /> */}
       <br />
 
       {content && (

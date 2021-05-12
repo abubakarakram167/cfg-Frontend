@@ -6,7 +6,7 @@ import Google from 'assets/google.jpg';
 import Mail from 'assets/Mail.png';
 import Twitter from 'assets/Twitter.png';
 import {useDispatch, useSelector} from 'react-redux';
-import {loginAction} from '../../redux/actions/authActions';
+import {loginAction, setErrorToNull} from '../../redux/actions/authActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useHistory} from 'react-router';
@@ -50,6 +50,8 @@ export default function SignIn({setView}) {
   };
   const handleClose2 = () => {
     setOpen2(false);
+    dispatch(setErrorToNull());
+    setErrorMessage('');
   };
 
   const dispatch = useDispatch();

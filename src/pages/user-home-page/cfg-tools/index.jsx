@@ -12,9 +12,6 @@ export default function HomeCFGTools() {
   useEffect(() => {
     dispatch(getToolsData());
   }, []);
-  useEffect(() => {
-    console.log(tools);
-  }, [tools]);
 
   return (
     <CommonComponent left={''} right={''}>
@@ -24,7 +21,6 @@ export default function HomeCFGTools() {
             if (element) {
               return (
                 <div className='cfg-details-box' key={index}>
-                  hello
                   <CfgCard element={element} />
                 </div>
               );
