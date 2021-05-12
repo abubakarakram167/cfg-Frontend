@@ -156,14 +156,12 @@ export default function UserHomePage() {
       </ListItem>
       {dayTools.map((tool, index) => {
         return (
-          <Link to={`/home/cfg-tools/${tool.id}`} key={index}>
-            <ListItem>
-              <ListItemIcon>
-                <Build />
-              </ListItemIcon>
-              <ListItemText primary={tool.title} />
-            </ListItem>
-          </Link>
+          <ListItem key={index}>
+            <ListItemIcon>
+              <Build />
+            </ListItemIcon>
+            <ListItemText primary={tool.title} />
+          </ListItem>
         );
       })}
       <hr />
