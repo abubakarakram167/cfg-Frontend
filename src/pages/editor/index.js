@@ -24,6 +24,9 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import InfoIcon from '@material-ui/icons/Info';
 import {useHistory} from 'react-router-dom';
+import moment from 'moment';
+import {createTimeline} from 'redux/actions/Timeline';
+import jsCookie from 'js-cookie';
 
 export default function Editor() {
   const params = useParams();
@@ -35,6 +38,7 @@ export default function Editor() {
   const [appliedGroup, setAppliedGroup] = useState('');
   const [categories, setCategories] = useState([]);
   const [keywords, setKeywords] = useState([]);
+  const [group, setGroup] = useState('candidate');
   const [value, setValue] = useState('');
   const [start_date, setstart_date] = useState(new Date());
   const [end_date, setend_date] = useState(new Date());
@@ -45,12 +49,15 @@ export default function Editor() {
   const [previous_page, setprevious_page] = useState('');
   const [next_page, setnext_page] = useState('');
   const [contentType, setContentType] = useState('');
-  const [groups, setGroups] = useState([]);
   const [groupValue, setGroupValue] = useState('');
   const [accumulativeTitlePoints, setAccumulativeTitlePoints] = useState(0);
   const [originalTotalPoints, setOriginalTotalPoints] = useState(0);
   const [showMessageError, setShowMessageError] = useState(false);
+  const [categoryValue, setCategoryValue] = useState('');
+  const [keywordValue, setKeywordValue] = useState('');
+  const [publishDate, setPublishDate] = useState(null);
   const history = useHistory();
+  const [author, setAuthor] = useState('');
 
   const {id} = useParams();
   console.log('here the state', state);
@@ -62,16 +69,16 @@ export default function Editor() {
     );
   };
 
-  const handleGroupSubmit = (e) => {
-    e.preventDefault();
-    setGroups([...groups, groupValue]);
-    setGroupValue('');
-  };
-
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
-    setKeywords([...keywords, value]);
-    setValue('');
+    setKeywords([...keywords, keywordValue]);
+    setKeywordValue('');
+  };
+
+  const handleCategorySubmit = (e) => {
+    e.preventDefault();
+    setCategories([...categories, categoryValue]);
+    setCategoryValue('');
   };
 
   useEffect(() => {
@@ -79,7 +86,6 @@ export default function Editor() {
   }, [id, dispatch]);
 
   useEffect(() => {
-    console.log('here the params ', params);
     dispatch(getSessionListData(params.id, params.cfgType));
   }, []);
 
@@ -87,7 +93,7 @@ export default function Editor() {
     if (state.titleCreation) {
       setOpen1(true);
     }
-
+    setAuthor(JSON.parse(jsCookie.get('user')).user_name);
     if (state.titles && state.titles.rows && state.titles.rows.length) {
       let totalPoints = 0;
 
@@ -100,17 +106,26 @@ export default function Editor() {
     }
 
     if (state.currentContent) {
+      if (
+        state.currentContent.categories &&
+        state.currentContent.categories.length
+      ) {
+        setCategories(
+          state.currentContent
+            ? JSON.parse(state.currentContent.categories)
+            : [],
+        );
+      } else {
+        setCategories([]);
+      }
       setsub_title(state.currentContent.sub_title || '');
       setContent('');
       setstart_date(new Date(state.currentContent.start_date));
       setend_date(new Date(state.currentContent.end_date));
       setStatus(state.currentContent.status || 'draft');
-      setKeywords(
-        JSON.parse(state.currentContent.tags).map((element) => element.text) ||
-          [],
-      );
       setOriginalTotalPoints(state.currentContent.total_points || 0);
       setnext_page(state.currentContent.next_page || '');
+      setPublishDate(moment().format('MM/DD/yyyy'));
       setprevious_page(state.currentContent.previous_page || '');
       setContentType(state.currentContent.type || '');
     }
@@ -122,70 +137,162 @@ export default function Editor() {
 
   const publish = () => {
     let totalTags = [];
-    if (
-      total_points === 0 ||
-      title === '' ||
-      content === '' ||
-      groups.length === 0 ||
-      categories.length === 0 ||
-      keywords.length === 0
-    )
-      setShowMessageError(true);
-    else {
-      keywords.map((element) => {
-        totalTags.push({
-          tag_type: 'keyword',
-          text: element,
-        });
+    keywords.map((element) => {
+      totalTags.push({
+        tag_type: 'keyword',
+        text: element,
       });
+    });
 
-      groups.map((element) => {
-        totalTags.push({
-          tag_type: 'group',
-          text: element,
-        });
-      });
-
-      categories.map((element) => {
-        totalTags.push({
-          tag_type: 'category',
-          text: element,
-        });
-      });
-
-      const allTitles = state.titles.rows;
-      if (allTitles.filter((content) => content.title === title).length > 0) {
-        dispatch({
-          type: Show_Message,
-          payload: {
-            message: 'This title is already used.Please use another one.',
-            success: false,
-          },
-        });
-      } else {
-        let cfgSessionStatus = state.current.status;
-        if (cfgSessionStatus === 'published') {
-          let parent = null;
-          if (params.contentHeaderId === 'null') {
-            parent = params.id;
-          } else {
-            parent = params.contentHeaderId;
+    if (params.cfgType === 'timeline') {
+      if (
+        total_points === '0' ||
+        title === '' ||
+        content === '' ||
+        group === '' ||
+        categories.length === 0 ||
+        keywords.length === 0
+      )
+        setShowMessageError(true);
+      else {
+        dispatch(
+          createTimeline({
+            title,
+            author: author,
+            start_date: formatDate(start_date),
+            end_date: formatDate(end_date),
+            total_points,
+            status,
+            tags: totalTags,
+            detail: content,
+            assigned_group: group,
+            categories: JSON.stringify(categories),
+          }),
+        ).then((response) => {
+          if (response) {
+            setTimeout(() => {
+              history.push(`/admin/content/display/${response.content.id}`);
+            }, 1000);
           }
-          const tags = keywords.map((element) => {
-            return {
-              tag_type: 'keyword',
-              text: element,
-            };
-          });
+        });
+      }
+    } else {
+      if (
+        total_points === '0' ||
+        title === '' ||
+        content === '' ||
+        group === '' ||
+        categories.length === 0 ||
+        keywords.length === 0
+      )
+        setShowMessageError(true);
+      else {
+        const allTitles = state.titles.rows;
+        let isSubtitleFound = false;
+        let subtitles = [];
 
-          if (
-            parseInt(total_points) + parseInt(accumulativeTitlePoints) >
-            originalTotalPoints
-          ) {
+        subtitles = allTitles.filter(
+          (content) => content.id === parseInt(params.contentHeaderId),
+        )[0];
+        subtitles =
+          subtitles && subtitles.subtitles.rows.length
+            ? subtitles.subtitles.rows
+            : [];
+
+        if (
+          subtitles &&
+          subtitles.length > 0 &&
+          subtitles.filter((content) => content.title === title).length > 0
+        ) {
+          dispatch({
+            type: Show_Message,
+            payload: {
+              message:
+                'This Subtitle is already used For this Title.Please use another one.',
+              success: false,
+            },
+          });
+        } else if (
+          allTitles &&
+          allTitles.length &&
+          allTitles.filter((content) => content.title === title).length > 0
+        ) {
+          dispatch({
+            type: Show_Message,
+            payload: {
+              message: 'This title is already used.Please use another one.',
+              success: false,
+            },
+          });
+        } else {
+          let cfgSessionStatus = state.current.status;
+          if (cfgSessionStatus === 'published') {
+            let parent = null;
+            if (params.contentHeaderId === 'null') {
+              parent = params.id;
+            } else {
+              parent = params.contentHeaderId;
+            }
+            const tags = keywords.map((element) => {
+              return {
+                tag_type: 'keyword',
+                text: element,
+              };
+            });
+
+            if (
+              parseInt(total_points) + parseInt(accumulativeTitlePoints) >
+              originalTotalPoints
+            ) {
+              dispatch({
+                type: Show_Message,
+                payload: {
+                  message: 'Cannot be added.Please follow the requirements',
+                  success: false,
+                },
+              });
+              setTimeout(() => {
+                dispatch({
+                  type: Show_Message,
+                  payload: {message: null, success: true},
+                });
+              }, 5000);
+            } else {
+              dispatch(
+                createSessionTitle(
+                  {
+                    title,
+                    sub_title,
+                    detail: content,
+                    start_date: formatDate(start_date),
+                    end_date: formatDate(end_date),
+                    tags: totalTags,
+                    type: params.type,
+                    assigned_group: group,
+                    categories: JSON.stringify(categories),
+                    total_points,
+                    content_header_id: parseInt(parent),
+                    previous_page,
+                    next_page,
+                  },
+                  params.type,
+                ),
+              ).then((response) => {
+                if (response) {
+                  setTimeout(() => {
+                    history.push(
+                      `/admin/content/display/${response.content.id}`,
+                    );
+                  }, 1000);
+                }
+              });
+            }
+          } else {
             dispatch({
               type: Show_Message,
               payload: {
-                message: 'Cannot be added.Please follow the requirements',
+                message:
+                  'Session must be published in order to publish the content.',
                 success: false,
               },
             });
@@ -194,48 +301,8 @@ export default function Editor() {
                 type: Show_Message,
                 payload: {message: null, success: true},
               });
-            }, 5000);
-          } else {
-            dispatch(
-              createSessionTitle(
-                {
-                  title,
-                  sub_title,
-                  detail: content,
-                  start_date: formatDate(start_date),
-                  end_date: formatDate(end_date),
-                  tags: totalTags,
-                  type: params.type,
-                  total_points,
-                  content_header_id: parseInt(parent),
-                  previous_page,
-                  next_page,
-                },
-                params.type,
-              ),
-            ).then((response) => {
-              if (response) {
-                setTimeout(() => {
-                  history.push(`/admin/content/display/${response.content.id}`);
-                }, 1000);
-              }
-            });
+            }, 3000);
           }
-        } else {
-          dispatch({
-            type: Show_Message,
-            payload: {
-              message:
-                'Session must be published in order to publish the content.',
-              success: false,
-            },
-          });
-          setTimeout(() => {
-            dispatch({
-              type: Show_Message,
-              payload: {message: null, success: true},
-            });
-          }, 3000);
         }
       }
     }
@@ -340,69 +407,61 @@ export default function Editor() {
           <div className='options-side'>
             <div>
               <Select
-                labelId='demo-customized-select-label'
-                id='demo-customized-select'
-                value={0}
-                onChange={(e) => {
-                  setCategories([...categories, e.target.value]);
-                }}
+                labelId='demo-simple-select-filled-label'
+                id='demo-simple-select-filled'
+                onChange={(e) => setGroup(e.target.value)}
                 variant='filled'
-                fullWidth>
-                <MenuItem value={0}>
-                  {categories.length > 0
-                    ? categories.map((element, index) => {
-                        return (
-                          <Chip
-                            label={element}
-                            key={index}
-                            className='chip-style'
-                            onDelete={() => {
-                              setCategories(
-                                categories.filter((value) => value !== element),
-                              );
-                            }}
-                          />
-                        );
-                      })
-                    : 'Select a category'}
+                fullWidth
+                value={group}
+                label='Group'
+                required>
+                <MenuItem value={'candidate'}>Candidate</MenuItem>
+                <MenuItem value={'facilitator'}>Facilitator</MenuItem>
+                <MenuItem value={'content-manager'}>Content Manager</MenuItem>
+                <MenuItem value={'support'}>Support</MenuItem>
+                <MenuItem value={'reviewer'}>Reviewer</MenuItem>
+                <MenuItem value={'system-administrator'}>
+                  System Adminsitrator
                 </MenuItem>
-                <MenuItem value={'CFG Session'}>CFG Session</MenuItem>
-                <MenuItem value={'Events'}>Events</MenuItem>
-                <MenuItem value={'Quiz'}>Quiz</MenuItem>
-                <MenuItem value={'Rewards'}>Rewards</MenuItem>
-                <MenuItem value={'CFG Tools'}>CFG Tools</MenuItem>
+                <MenuItem value={'auditor'}>Auditor</MenuItem>
               </Select>
             </div>
             <br />
+            {showMessageError && group === '' && (
+              <p className='showErrorMessage'> group is required</p>
+            )}
+
             <div>
-              {groups.map((element, index) => {
+              {categories.map((element, index) => {
                 return (
                   <Chip
                     label={element}
                     key={index}
                     className='chip-style'
                     onDelete={() => {
-                      setGroups(groups.filter((value) => value !== element));
+                      setCategories(
+                        categories.filter((value) => value !== element),
+                      );
                     }}
                   />
                 );
               })}
             </div>
             <div>
-              <form onSubmit={handleGroupSubmit}>
+              <form onSubmit={handleCategorySubmit}>
                 <TextField
                   variant='filled'
-                  value={groupValue}
-                  onSubmit={(e) => setGroups([...groups, e.target.value])}
-                  onChange={(e) => setGroupValue(e.target.value)}
+                  value={categoryValue}
+                  required
+                  onSubmit={(e) =>
+                    setCategories([...categories, e.target.value])
+                  }
+                  onChange={(e) => setCategoryValue(e.target.value)}
                   fullWidth
-                  label='Groups'
+                  label='Categories'
                 />
               </form>
             </div>
-            {showMessageError && groups.length === 0 && (
-              <p className='showErrorMessage'> group is required</p>
-            )}
 
             <br />
             <div>
@@ -425,16 +484,16 @@ export default function Editor() {
               <form onSubmit={handleKeywordSubmit}>
                 <TextField
                   variant='filled'
-                  value={value}
+                  value={keywordValue}
                   required
                   onSubmit={(e) => setKeywords([...keywords, e.target.value])}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={(e) => setKeywordValue(e.target.value)}
                   fullWidth
                   label='Key words'
                 />
               </form>
             </div>
-            {showMessageError && groups.length === 0 && (
+            {showMessageError && keywords.length === 0 && (
               <p className='showErrorMessage'>Keywords is required</p>
             )}
             <br />
@@ -445,22 +504,9 @@ export default function Editor() {
                 format='MM/DD/yyyy'
                 margin='normal'
                 fullWidth={true}
-                label='Start Date'
-                value={start_date}
-                onChange={(e) => setstart_date(e)}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-              />
-              <KeyboardDatePicker
-                disableToolbar
-                variant='filled'
-                format='MM/DD/yyyy'
-                margin='normal'
-                fullWidth={true}
-                label='End Date'
-                value={end_date}
-                onChange={(e) => setend_date(e)}
+                label='Publish Date'
+                value={publishDate}
+                onChange={(e) => setPublishDate(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -491,20 +537,21 @@ export default function Editor() {
                 required
               />
               {parseInt(total_points) + parseInt(accumulativeTitlePoints) >
-                originalTotalPoints && (
-                <p className='total-points-text'>
-                  <InfoIcon
-                    style={{
-                      fill: 'red',
-                      fontSize: 18,
-                      position: 'relative',
-                      top: 3,
-                    }}
-                  />{' '}
-                  The total points for this title cannot be exceed than{' '}
-                  {originalTotalPoints - accumulativeTitlePoints}
-                </p>
-              )}
+                originalTotalPoints &&
+                params.cfgType !== 'timeline' && (
+                  <p className='total-points-text'>
+                    <InfoIcon
+                      style={{
+                        fill: 'red',
+                        fontSize: 18,
+                        position: 'relative',
+                        top: 3,
+                      }}
+                    />{' '}
+                    The total points for this title cannot be exceed than{' '}
+                    {originalTotalPoints - accumulativeTitlePoints}
+                  </p>
+                )}
             </div>
             {showMessageError && total_points === 0 && (
               <p className='showErrorMessage'>Total Points are required </p>

@@ -37,6 +37,7 @@ import {createTool, getToolData, editContent} from 'redux/actions/toolActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
+import Categories from 'modules/dashboard/CRM/MonthlyEarning/Categories';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -56,6 +57,8 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
+const StyledTextField = withStyles((theme) => ({}))(TextField);
+
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
@@ -65,6 +68,11 @@ const useStyles = makeStyles({
       height: 45,
       paddingLeft: 10,
       color: '#020101',
+    },
+  },
+  secondRoot: {
+    '& .MuiInputBase-root': {
+      width: '100%',
     },
   },
 });
@@ -79,6 +87,7 @@ export default function CfgTool(props) {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [start_date, setstart_date] = useState(new Date());
+  const [publishDate, setPublishDate] = useState(new Date());
   const [end_date, setend_date] = useState(new Date());
   const [total_points, settotal_points] = useState('');
   const [status, setStatus] = useState('draft');
@@ -92,12 +101,13 @@ export default function CfgTool(props) {
   const classes = useStyles();
   const [nameFilter, setNameFilter] = useState('');
   const [authorFilter, setAuthorFilter] = useState('');
-  const [startDateFilter, setStartdateFilter] = useState('');
-  const [endDateFilter, setEnddateFilter] = useState('');
+  const [publishDateFilter, setPublishdateFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
   const [createAtFilter, setCreateAtFilter] = useState('');
   const [category, setCategories] = useState([]);
+  const [group, setGroup] = useState('candidate');
+  const [value, setValue] = useState('');
 
   useEffect(() => {
     setContent(state.content);
@@ -142,6 +152,8 @@ export default function CfgTool(props) {
           total_points,
           end_date,
           status,
+          assigned_group: group,
+          categories: JSON.stringify(category),
           id: singleId,
         }),
       ).then((res) => {
@@ -155,6 +167,7 @@ export default function CfgTool(props) {
                 status,
                 start_date: moment(start_date).format('YYYY-MM-DD'),
                 end_date: moment(end_date).format('YYYY-MM-DD'),
+                assigned_group: group,
               };
             } else return content;
           });
@@ -179,6 +192,8 @@ export default function CfgTool(props) {
             end_date: formatDate(end_date),
             total_points,
             status,
+            assigned_group: group,
+            categories: JSON.stringify(category),
           }),
         );
       }
@@ -196,6 +211,20 @@ export default function CfgTool(props) {
   const handleClose1 = () => {
     setOpen1(false);
     dispatch({type: Show_Message, payload: {message: null, success: false}});
+  };
+
+  const handleKeywordSubmit = (e) => {
+    e.preventDefault();
+    setCategories([...category, value]);
+    setValue('');
+  };
+
+  const keyPress = (e) => {
+    if (e.keyCode == 13) {
+      setCategories([...category, e.target.value]);
+      setValue('');
+      e.preventDefault();
+    }
   };
 
   return (
@@ -259,28 +288,61 @@ export default function CfgTool(props) {
                 type='number'
               />
             </ListItem>
-            {/* <ListItem>
-              <Select
-                labelId='demo-customized-select-label'
-                id='demo-customized-select'
-                value={0}
-                onChange={(e) => {
-                  setCategories(e.target.value);
-                }}
-                variant='filled'
-                value = {category}
-                fullWidth>
-                <MenuItem value={'CFG Session'}>CFG Session</MenuItem>
-                <MenuItem value={'Events'}>Events</MenuItem>
-                <MenuItem value={'Quiz'}>Quiz</MenuItem>
-                <MenuItem value={'Rewards'}>Rewards</MenuItem>
-                <MenuItem value={'CFG Tools'}>CFG Tools</MenuItem>
-              </Select>
-            </ListItem> */}
             <ListItem>
               <Select
                 labelId='demo-simple-select-filled-label'
                 id='demo-simple-select-filled'
+                onChange={(e) => setGroup(e.target.value)}
+                variant='filled'
+                fullWidth
+                value={group}
+                label='Group'
+                required>
+                <MenuItem value={'candidate'}>Candidate</MenuItem>
+                <MenuItem value={'facilitator'}>Facilitator</MenuItem>
+                <MenuItem value={'content-manager'}>Content Manager</MenuItem>
+                <MenuItem value={'support'}>Support</MenuItem>
+                <MenuItem value={'reviewer'}>Reviewer</MenuItem>
+                <MenuItem value={'system-administrator'}>
+                  System Adminsitrator
+                </MenuItem>
+                <MenuItem value={'auditor'}>Auditor</MenuItem>
+              </Select>
+            </ListItem>
+            <ListItem>
+              <div>
+                {category &&
+                  category.map((element, index) => {
+                    return (
+                      <Chip
+                        label={element}
+                        key={index}
+                        className='chip-style'
+                        onDelete={() => {
+                          setCategories(
+                            category.filter((value) => value !== element),
+                          );
+                        }}
+                      />
+                    );
+                  })}
+              </div>
+            </ListItem>
+            <ListItem>
+              <div style={{width: '100%'}}>
+                <TextField
+                  className={classes.secondRoot}
+                  variant='filled'
+                  value={value}
+                  onKeyDown={keyPress}
+                  onChange={(e) => setValue(e.target.value)}
+                  fullWidth
+                  label='Categories'
+                />
+              </div>
+            </ListItem>
+            <ListItem>
+              <Select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
@@ -350,6 +412,8 @@ export default function CfgTool(props) {
               setend_date(new Date());
               settotal_points('');
               setStatus('draft');
+              setCategories([]);
+              setValue('');
             }}
           />
           <Chip
@@ -399,7 +463,7 @@ export default function CfgTool(props) {
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>
-                  <span className='column-heading'> Start Date </span>
+                  <span className='column-heading'> Publish Date </span>
                   <div
                     style={{
                       display: 'flex',
@@ -412,16 +476,19 @@ export default function CfgTool(props) {
                       variant='filled'
                       format='YYYY-MM-DD'
                       autoOk={true}
-                      value={startDateFilter === '' ? null : startDateFilter}
+                      value={
+                        publishDateFilter === '' ? null : publishDateFilter
+                      }
                       fullWidth={true}
-                      placeholder='Start date'
+                      placeholder='Publish date'
                       className={classes.root}
                       onChange={(e) => {
+                        console.log('the', e);
                         if (e && e !== '')
-                          setStartdateFilter(
+                          setPublishdateFilter(
                             moment(e).format('YYYY-MM-DD').toString(),
                           );
-                        else setStartdateFilter('');
+                        else setPublishdateFilter('');
                       }}
                       KeyboardButtonProps={{
                         'aria-label': 'change date',
@@ -430,7 +497,7 @@ export default function CfgTool(props) {
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
-                <StyledTableCell>
+                {/* <StyledTableCell>
                   <span className='column-heading'> End Date </span>
                   <div
                     style={{
@@ -461,7 +528,7 @@ export default function CfgTool(props) {
                     />
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
-                </StyledTableCell>
+                </StyledTableCell> */}
                 <StyledTableCell>
                   <span className='column-heading'> Total Points </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
@@ -511,16 +578,6 @@ export default function CfgTool(props) {
                       .startsWith(authorFilter),
                   )
                   .filter((element) =>
-                    (element.start_date ? element.start_date : '')
-                      .toLowerCase()
-                      .startsWith(startDateFilter),
-                  )
-                  .filter((element) =>
-                    (element.end_date ? element.end_date : '')
-                      .toLowerCase()
-                      .startsWith(endDateFilter),
-                  )
-                  .filter((element) =>
                     (element.status ? element.status : '')
                       .toLowerCase()
                       .startsWith(statusFilter),
@@ -536,7 +593,7 @@ export default function CfgTool(props) {
                   .filter((element) =>
                     (element.created_at ? element.created_at.toString() : '')
                       .toLowerCase()
-                      .startsWith(createAtFilter),
+                      .startsWith(publishDateFilter),
                   )
                   .map((row, index) => {
                     console.log('the row', row);
@@ -557,10 +614,12 @@ export default function CfgTool(props) {
                               setSingleId(row.id);
                               setCurrentIds(allIds);
                               setTitle(row.title);
-                              setstart_date(row.start_date);
-                              setend_date(row.end_date);
+                              setPublishDate(row.created_at);
+                              // setend_date(row.end_date);
                               settotal_points(row.total_points);
                               setStatus(row.status);
+                              setGroup(row.assigned_group);
+                              setCategories(JSON.parse(row.categories));
                               toggleCheckbox(row.id);
                             }}
                           />
@@ -576,8 +635,10 @@ export default function CfgTool(props) {
                             ? row.author.user_name
                             : 'Name Not Present'}
                         </StyledTableCell>
-                        <StyledTableCell>{row.start_date}</StyledTableCell>
-                        <StyledTableCell>{row.end_date}</StyledTableCell>
+                        <StyledTableCell>
+                          {moment(row.created_at).format('YYYY-MM-DD')}
+                        </StyledTableCell>
+                        {/* <StyledTableCell>{row.end_date}</StyledTableCell> */}
                         <StyledTableCell>{row.total_points}</StyledTableCell>
                         <StyledTableCell>{row.status}</StyledTableCell>
                       </StyledTableRow>

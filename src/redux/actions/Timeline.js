@@ -5,18 +5,16 @@ import {
   GET_CONTENT_DATA,
   UPDATE_CONTENT_DATA,
   GET_LIST_DATA,
-  GET_ALL_TOOLS_DATA,
-  SET_SELECTED_TOOL,
 } from './action.types';
 import {Show_Message} from '../../shared/constants/ActionTypes';
-import Tool from '../services/tool';
+import Timeline from '../services/timeline';
 import jsCookie from 'js-cookie';
 
-export const createTool = (params) => {
+export const createTimeline = (params) => {
   return async function (dispatch) {
     try {
       console.log('the params', params);
-      const response = await Tool.createTool(params);
+      const response = await Timeline.createTimeline(params);
       console.log('the response after creating', response);
       if (response.status === 200) {
         const data_resp = await response.data;
@@ -31,7 +29,7 @@ export const createTool = (params) => {
         });
       }
     } catch (error) {
-      console.log('the error', error.response.data);
+      console.log('the error', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: CREATE_TOOL,
@@ -42,10 +40,10 @@ export const createTool = (params) => {
   };
 };
 
-export const createToolTitle = (params, type) => {
+export const createTimelineTitle = (params, type) => {
   return async function (dispatch) {
     try {
-      const response = await Tool.createTitle(params, type);
+      const response = await Timeline.createTitle(params, type);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
@@ -75,7 +73,7 @@ export const createToolTitle = (params, type) => {
 export const editContent = (params, type) => {
   return (dispatch) => {
     return new Promise((res, rej) => {
-      Tool.editTitle(params, type)
+      Timeline.editTitle(params, type)
         .then((response) => {
           if (response.status === 200) {
             const data_resp = response.data;
@@ -112,14 +110,13 @@ export const editContent = (params, type) => {
   };
 };
 
-export const getToolData = () => {
+export const getTimelineData = () => {
   return async function (dispatch) {
     try {
-      const response = await Tool.toolData();
+      const response = await Timeline.timelineData();
       console.log('the response', response);
       if (response.status === 200) {
         const data_resp = await response.data;
-        console.log('the data_resp', data_resp);
         jsCookie.set('login', 'yes');
         dispatch({
           type: GET_TOOL_DATA,
@@ -138,11 +135,11 @@ export const getToolData = () => {
   };
 };
 
-export const getToolListData = (id) => {
+export const getTimelineListData = (id) => {
   console.log(typeof id);
   return async function (dispatch) {
     try {
-      const response = await Tool.getListData(id);
+      const response = await Timeline.getListData(id);
 
       if (response.status === 200) {
         const data_resp = await response.data;
@@ -167,7 +164,7 @@ export const getToolListData = (id) => {
 export const getContentData = (id) => {
   return async function (dispatch) {
     try {
-      const response = await Tool.getContentData(id);
+      const response = await Timeline.getContentData(id);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
@@ -182,33 +179,5 @@ export const getContentData = (id) => {
         payload: {error: 'There was an error fetching the data.'},
       });
     }
-  };
-};
-
-export const getToolsData = (id) => {
-  return async function (dispatch) {
-    try {
-      const response = await Tool.getAllTools();
-      if (response.status === 200) {
-        const data_resp = await response.data;
-        jsCookie.set('login', 'yes');
-        dispatch({
-          type: GET_ALL_TOOLS_DATA,
-          payload: {...data_resp, error: null},
-        });
-      }
-    } catch (error) {
-      dispatch({
-        type: GET_ALL_TOOLS_DATA,
-        payload: {error: 'There was an error fetching the data.'},
-      });
-    }
-  };
-};
-
-export const setSelectedToolData = (id) => {
-  return {
-    type: SET_SELECTED_TOOL,
-    payload: id,
   };
 };

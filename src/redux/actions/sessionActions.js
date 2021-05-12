@@ -16,6 +16,7 @@ export const createSession = (params) => {
       const response = await Session.createSession(params);
       if (response.status === 200) {
         const data_resp = await response.data;
+        console.log('after session', data_resp);
         data_resp.content.author = {
           first_name: JSON.parse(jsCookie.get('user')).first_name,
           user_name: JSON.parse(jsCookie.get('user')).user_name,
@@ -31,6 +32,7 @@ export const createSession = (params) => {
         });
       }
     } catch (error) {
+      console.log('the error', error);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: CREATE_SESSION,
@@ -176,6 +178,7 @@ export const getSessionData = () => {
       const response = await Session.sessionData();
       if (response.status === 200) {
         const data_resp = await response.data;
+        console.log('here data_resp', data_resp);
         jsCookie.set('login', 'yes');
         dispatch({
           type: GET_SESSION_DATA,
@@ -208,7 +211,7 @@ export const getSessionListData = (id, type) => {
         });
       }
     } catch (error) {
-      console.log('the error', error.response);
+      console.log('the error', error);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: GET_LIST_DATA,
