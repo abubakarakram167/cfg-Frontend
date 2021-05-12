@@ -218,7 +218,9 @@ export default function RecipeReviewCard({post}) {
               </IconButton>
             )
           }
-          title={`${user.first_name} ${user.last_name}`}
+          title={`${user.first_name} ${user.last_name} ${
+            post.assigned_group && '> ' + post.assigned_group
+          }`}
           subheader={formatDatePost(Date.parse(post.createdAt))}
         />
         {post.media &&
@@ -230,7 +232,13 @@ export default function RecipeReviewCard({post}) {
           mediaJSX()}
         <CardContent>
           <Typography variant='body2' color='textSecondary' component='p'>
-            <span className='caption-text'>{editText}</span>
+            {post.assigned_group ? (
+              <div
+                className='caption-text'
+                dangerouslySetInnerHTML={{__html: editText}}></div>
+            ) : (
+              <span className='caption-text'>{editText}</span>
+            )}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>

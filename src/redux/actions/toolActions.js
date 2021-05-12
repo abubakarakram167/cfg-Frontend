@@ -6,6 +6,7 @@ import {
   UPDATE_CONTENT_DATA,
   GET_LIST_DATA,
   GET_ALL_TOOLS_DATA,
+  SET_SELECTED_TOOL,
 } from './action.types';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Tool from '../services/tool';
@@ -200,5 +201,12 @@ export const getToolsData = (id) => {
         payload: {error: 'There was an error fetching the data.'},
       });
     }
+  };
+};
+
+export const setSelectedToolData = (id) => {
+  return {
+    type: SET_SELECTED_TOOL,
+    payload: id,
   };
 };

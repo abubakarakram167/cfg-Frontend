@@ -203,3 +203,9 @@ export const setCurrentUser = (data) => {
     };
   }
 };
+
+export const setErrorToNull = () => {
+  return {
+    type: actions.SET_AUTH_ERROR_TO_NULL,
+  };
+};

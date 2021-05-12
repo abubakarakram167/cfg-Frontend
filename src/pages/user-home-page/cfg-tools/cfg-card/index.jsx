@@ -21,7 +21,6 @@ const useStyles = makeStyles({
 
 export default function CfgCard({element}) {
   const classes = useStyles();
-  console.log(element, 'from card');
   return (
     <Card className={classes.root}>
       <CardActionArea>
@@ -31,22 +30,26 @@ export default function CfgCard({element}) {
             {element.title}
           </Typography>
           <Typography variant='body2' color='textSecondary' component='p'>
-            <div style={{textAlign: 'center'}}>
-              {element.detail.substr(0, 50) + '....'}
-            </div>
+            <div
+              style={{textAlign: 'center'}}
+              dangerouslySetInnerHTML={{
+                __html: element.detail.substr(0, 50) + '....',
+              }}></div>
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <div style={{margin: 'auto'}}>
-          <Link to={`/home/cfg-tools/${element.id}`}>
-            <Button size='small' color='secondary' variant='contained'>
-              <TrendingUp />{' '}
-              <span style={{marginLeft: '10px'}}>Deepen the CFG</span>
-            </Button>
-          </Link>
-        </div>
-      </CardActions>
+      {element.subTitles.count > 0 && (
+        <CardActions>
+          <div style={{margin: 'auto'}}>
+            <Link to={`/home/cfg-tools/${element.id}`}>
+              <Button size='small' color='secondary' variant='contained'>
+                <TrendingUp />{' '}
+                <span style={{marginLeft: '10px'}}>Deepen the CFG</span>
+              </Button>
+            </Link>
+          </div>
+        </CardActions>
+      )}
     </Card>
   );
 }

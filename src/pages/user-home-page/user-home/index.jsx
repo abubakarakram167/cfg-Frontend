@@ -46,64 +46,6 @@ export default function UserHomePage() {
     console.log(posts);
   }, [posts]);
 
-  const [fakeData, setFakeData] = useState([
-    {
-      id: 1,
-
-      group: 'test group',
-      caption: 'hello sir jermaine',
-      media: '',
-      comments: [
-        {
-          id: 1,
-          commentText: 'this is a comment',
-          commentReplies: ['hello', 'world'],
-        },
-      ],
-    },
-    {
-      id: 2,
-      group: 'test group',
-
-      caption: 'hello sir jermaine',
-      media:
-        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
-      comments: [
-        {
-          id: 1,
-          commentText: 'this is a comment',
-          commentReplies: ['hello', 'world'],
-        },
-        {
-          id: 2,
-          commentText: 'this is another',
-          commentReplies: ['hello', 'world'],
-        },
-      ],
-    },
-    {
-      id: 3,
-      caption: 'hello sir jermaine',
-      group: 'test group',
-
-      media: '',
-      comments: [
-        {
-          id: 1,
-          commentText: 'this is a comment',
-          commentReplies: ['hello', 'world'],
-        },
-      ],
-    },
-    {
-      id: 4,
-      caption: 'This is a post without a comment',
-      media:
-        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
-      comments: [],
-    },
-  ]);
-
   const createComment = (id, commentText) => {
     return {
       id,

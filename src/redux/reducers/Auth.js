@@ -43,6 +43,11 @@ const authReducer = (state = INIT_STATE, action) => {
     case 'FORGOT_PASSWORD':
       payload = action.payload;
       return {...state, payload};
+    case actions.SET_AUTH_ERROR_TO_NULL:
+      return {
+        ...state,
+        error: null,
+      };
     case 'LOGIN':
       console.log('here');
       payload = action.payload;

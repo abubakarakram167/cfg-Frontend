@@ -5,66 +5,29 @@ import Banner from './banner';
 import LearnCard from './learn-card';
 import './style.css';
 import {useDispatch, useSelector} from 'react-redux';
-import {getToolListData} from '../../../redux/actions/toolActions';
+import {
+  getToolListData,
+  setSelectedToolData,
+} from '../../../redux/actions/toolActions';
 
 export default function CfgToolsPage() {
   const params = useParams();
 
-  const fakeLearnData = [
-    {
-      id: 1,
-      title: 'something',
-      content:
-        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque magni incidunt inventore? Consequatur distinctio rem provident quas, maiores voluptatem animi ullam tenetur et excepturi, optio odit, sequi similique nisi officiis!',
-      point: '5000',
-    },
-    {
-      id: 2,
-      title: 'something',
-      content:
-        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque magni incidunt inventore? Consequatur distinctio rem provident quas, maiores voluptatem animi ullam tenetur et excepturi, optio odit, sequi similique nisi officiis!',
-      point: '5000',
-    },
-    {
-      id: 3,
-      title: 'something',
-      content:
-        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque magni incidunt inventore? Consequatur distinctio rem provident quas, maiores voluptatem animi ullam tenetur et excepturi, optio odit, sequi similique nisi officiis!',
-      point: '5000',
-    },
-    {
-      id: 4,
-      title: 'something',
-      content:
-        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque magni incidunt inventore? Consequatur distinctio rem provident quas, maiores voluptatem animi ullam tenetur et excepturi, optio odit, sequi similique nisi officiis!',
-      point: '5000',
-    },
-    {
-      id: 5,
-      title: 'something',
-      content:
-        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque magni incidunt inventore? Consequatur distinctio rem provident quas, maiores voluptatem animi ullam tenetur et excepturi, optio odit, sequi similique nisi officiis!',
-      point: '5000',
-    },
-    {
-      id: 6,
-      title: 'something',
-      content:
-        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque magni incidunt inventore? Consequatur distinctio rem provident quas, maiores voluptatem animi ullam tenetur et excepturi, optio odit, sequi similique nisi officiis!',
-      point: '5000',
-    },
-  ];
+  const selectedTool = useSelector((state) => state.tool.selectedTool);
 
   const dispatch = useDispatch();
-  const titles = useSelector((state) => state.tool.titles.rows);
+  const [titles, setTitles] = useState([]);
 
   useEffect(() => {
     dispatch(getToolListData(parseInt(params.id)));
+    dispatch(setSelectedToolData(parseInt(params.id)));
   }, []);
 
   useEffect(() => {
-    console.log(titles);
-  }, [titles]);
+    if (selectedTool) {
+      setTitles(selectedTool.subTitles.rows);
+    }
+  }, [selectedTool]);
 
   return (
     <CommonComponent left={''} right={''}>
