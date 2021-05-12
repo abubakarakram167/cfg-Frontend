@@ -72,14 +72,6 @@ export default function SignIn({setView}) {
     console.log('the state.auth', state.auth);
 
     if (state.auth.error) {
-      // if (
-      //   state.auth.error ===
-      //   'Your account is disabled for multiple invalid attempts. Please try again in 30 minutes'
-      // )
-      //   setErrorMessage(
-      //     'Your account is disabled for multiple invalid attempts. Please try again in 30 minutes',
-      //   );
-      // else setErrorMessage(state.auth);
       setErrorMessage(state.auth.error);
       setOpen2(true);
     }
