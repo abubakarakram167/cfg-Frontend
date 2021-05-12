@@ -219,7 +219,7 @@ export default function RecipeReviewCard({post}) {
             )
           }
           title={`${user.first_name} ${user.last_name} ${
-            post.assigned_group && '> ' + post.assigned_group
+            post.assigned_group ? '> ' + post.assigned_group : ''
           }`}
           subheader={formatDatePost(Date.parse(post.createdAt))}
         />

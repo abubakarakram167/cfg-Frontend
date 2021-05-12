@@ -29,6 +29,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
 import {getToolsData} from 'redux/actions/toolActions';
 import {baseUrl} from 'utils/axios';
+import Tool from 'redux/services/tool';
 
 export default function UserHomePage() {
   const dispatch = useDispatch();
@@ -38,10 +39,16 @@ export default function UserHomePage() {
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
+  const [dayTools, setDayTools] = useState([]);
+  const getDayTools = async () => {
+    const data = await Tool.getDayTools();
+    setDayTools(data.data);
+  };
 
   useEffect(() => {
     dispatch(getUserPost());
     dispatch(getToolsData());
+    getDayTools();
   }, []);
 
   const createComment = (id, commentText) => {
@@ -147,22 +154,18 @@ export default function UserHomePage() {
         </ListItemIcon>
         <ListItemText primary='CFG Tools of the Day' />
       </ListItem>
-      <ListItem>
-        <CfgToolOfTheDay
-          url={
-            'https://static.remove.bg/remove-bg-web/2a274ebbb5879d870a69caae33d94388a88e0e35/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg'
-          }
-          title={'vacation'}
-        />
-      </ListItem>
-      <ListItem>
-        <CfgToolOfTheDay
-          url={
-            'https://static.remove.bg/remove-bg-web/2a274ebbb5879d870a69caae33d94388a88e0e35/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg'
-          }
-          title={'vacation'}
-        />
-      </ListItem>
+      {dayTools.map((tool, index) => {
+        return (
+          <Link to={`/home/cfg-tools/${tool.id}`} key={index}>
+            <ListItem>
+              <ListItemIcon>
+                <Build />
+              </ListItemIcon>
+              <ListItemText primary={tool.title} />
+            </ListItem>
+          </Link>
+        );
+      })}
       <hr />
       <ListItem>
         <ListItemIcon>
@@ -202,13 +205,16 @@ export default function UserHomePage() {
   return (
     <CommonComponent left={left} right={right}>
       <CreatePost />
-      {posts.map((element, index) => {
-        return (
-          <div key={index} style={{margin: '20px 0px'}}>
-            <PostDetails post={element} />
-          </div>
-        );
-      })}
+      {posts
+        .slice(0)
+        .reverse()
+        .map((element, index) => {
+          return (
+            <div key={index} style={{margin: '20px 0px'}}>
+              <PostDetails post={element} />
+            </div>
+          );
+        })}
     </CommonComponent>
   );
 }

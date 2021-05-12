@@ -44,7 +44,7 @@ export default function CfgCard({element}) {
             <Link to={`/home/cfg-tools/${element.id}`}>
               <Button size='small' color='secondary' variant='contained'>
                 <TrendingUp />{' '}
-                <span style={{marginLeft: '10px'}}>Deepen the CFG</span>
+                <span style={{marginLeft: '10px'}}>Deepen the Tool</span>
               </Button>
             </Link>
           </div>

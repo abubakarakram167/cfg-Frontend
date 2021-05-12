@@ -31,11 +31,11 @@ export default function CfgToolsPage() {
 
   return (
     <CommonComponent left={''} right={''}>
-      <Banner
+      {/* <Banner
         url={
           'https://opalwealthadvisors.com/wp-content/uploads/2019/05/blog-052919.jpg'
         }
-      />
+      /> */}
       <br />
       <div className='learn-data-container'>
         {titles &&
