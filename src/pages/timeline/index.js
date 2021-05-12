@@ -608,18 +608,19 @@ export default function CfgTool(props) {
                           />
                         </StyledTableCell>
                         <StyledTableCell>
-                          <div className='custom-row-design-header summary-margin-left-concise'>
+                          <div
+                            style={{
+                              fontSize: 14,
+                              marginLeft: 0,
+                              fontWeight: '500',
+                              paddingLeft: 0,
+                            }}
+                            className='custom-row-design-header summary-margin-left-concise'>
                             <Link
                               to={`/admin/content/edit/${row.id}/null/${row.title}/session/${row.type}`}>
                               {row.title}
                             </Link>
                           </div>
-                        </StyledTableCell>
-                        <StyledTableCell>
-                          {' '}
-                          <Link to={`/admin/cfg-tools/${row.id}`}>
-                            {row.title}
-                          </Link>
                         </StyledTableCell>
                         <StyledTableCell>
                           {row.author
