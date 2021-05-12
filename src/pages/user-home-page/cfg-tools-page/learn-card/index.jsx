@@ -43,7 +43,10 @@ export default function LearnCard({element}) {
         </Typography>
 
         <Typography className={classes.pos} color='textSecondary'>
-          {element.detail.substr(0, 60)}...
+          <div
+            dangerouslySetInnerHTML={{
+              __html: element.detail.substr(0, 60),
+            }}></div>
         </Typography>
 
         <br />

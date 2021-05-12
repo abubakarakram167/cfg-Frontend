@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import TextField from '@material-ui/core/TextField';
-import {registerAction} from '../../redux/actions/authActions';
+import {registerAction, setErrorToNull} from '../../redux/actions/authActions';
 import {useDispatch} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -28,6 +28,7 @@ export default function SignUp({setView}) {
   };
   const handleClose2 = () => {
     setOpen2(false);
+    dispatch(setErrorToNull());
   };
 
   const [open1, setOpen1] = useState(false);

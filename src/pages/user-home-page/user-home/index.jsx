@@ -27,7 +27,9 @@ import {
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
+import {getToolsData} from 'redux/actions/toolActions';
 import {baseUrl} from 'utils/axios';
+import Tool from 'redux/services/tool';
 
 export default function UserHomePage() {
   const dispatch = useDispatch();
@@ -37,72 +39,17 @@ export default function UserHomePage() {
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
+  const [dayTools, setDayTools] = useState([]);
+  const getDayTools = async () => {
+    const data = await Tool.getDayTools();
+    setDayTools(data.data);
+  };
 
   useEffect(() => {
     dispatch(getUserPost());
+    dispatch(getToolsData());
+    getDayTools();
   }, []);
-
-  useEffect(() => {
-    console.log(posts);
-  }, [posts]);
-
-  const [fakeData, setFakeData] = useState([
-    {
-      id: 1,
-
-      group: 'test group',
-      caption: 'hello sir jermaine',
-      media: '',
-      comments: [
-        {
-          id: 1,
-          commentText: 'this is a comment',
-          commentReplies: ['hello', 'world'],
-        },
-      ],
-    },
-    {
-      id: 2,
-      group: 'test group',
-
-      caption: 'hello sir jermaine',
-      media:
-        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
-      comments: [
-        {
-          id: 1,
-          commentText: 'this is a comment',
-          commentReplies: ['hello', 'world'],
-        },
-        {
-          id: 2,
-          commentText: 'this is another',
-          commentReplies: ['hello', 'world'],
-        },
-      ],
-    },
-    {
-      id: 3,
-      caption: 'hello sir jermaine',
-      group: 'test group',
-
-      media: '',
-      comments: [
-        {
-          id: 1,
-          commentText: 'this is a comment',
-          commentReplies: ['hello', 'world'],
-        },
-      ],
-    },
-    {
-      id: 4,
-      caption: 'This is a post without a comment',
-      media:
-        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
-      comments: [],
-    },
-  ]);
 
   const createComment = (id, commentText) => {
     return {
@@ -207,22 +154,16 @@ export default function UserHomePage() {
         </ListItemIcon>
         <ListItemText primary='CFG Tools of the Day' />
       </ListItem>
-      <ListItem>
-        <CfgToolOfTheDay
-          url={
-            'https://static.remove.bg/remove-bg-web/2a274ebbb5879d870a69caae33d94388a88e0e35/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg'
-          }
-          title={'vacation'}
-        />
-      </ListItem>
-      <ListItem>
-        <CfgToolOfTheDay
-          url={
-            'https://static.remove.bg/remove-bg-web/2a274ebbb5879d870a69caae33d94388a88e0e35/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg'
-          }
-          title={'vacation'}
-        />
-      </ListItem>
+      {dayTools.map((tool, index) => {
+        return (
+          <ListItem key={index}>
+            <ListItemIcon>
+              <Build />
+            </ListItemIcon>
+            <ListItemText primary={tool.title} />
+          </ListItem>
+        );
+      })}
       <hr />
       <ListItem>
         <ListItemIcon>
@@ -262,13 +203,16 @@ export default function UserHomePage() {
   return (
     <CommonComponent left={left} right={right}>
       <CreatePost />
-      {posts.map((element, index) => {
-        return (
-          <div key={index} style={{margin: '20px 0px'}}>
-            <PostDetails post={element} />
-          </div>
-        );
-      })}
+      {posts
+        .slice(0)
+        .reverse()
+        .map((element, index) => {
+          return (
+            <div key={index} style={{margin: '20px 0px'}}>
+              <PostDetails post={element} />
+            </div>
+          );
+        })}
     </CommonComponent>
   );
 }
