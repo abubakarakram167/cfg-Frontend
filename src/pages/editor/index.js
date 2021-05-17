@@ -89,6 +89,15 @@ export default function Editor() {
     dispatch(getSessionListData(params.id, params.cfgType));
   }, []);
 
+  const isValidJSONString = (str) => {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  };
+
   useEffect(() => {
     if (state.titleCreation) {
       setOpen1(true);
@@ -108,7 +117,8 @@ export default function Editor() {
     if (state.currentContent) {
       if (
         state.currentContent.categories &&
-        state.currentContent.categories.length
+        state.currentContent.categories.length &&
+        isValidJSONString(state.currentContent.categories)
       ) {
         setCategories(
           state.currentContent
