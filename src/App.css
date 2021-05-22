@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'Gotham';
+  src: local('GothamMedium'),
+    url('./fonts/Gotham-Font/GothamMedium.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Rissa';
+  src: local('rissa'), url('./fonts/rissa/Rissa.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Angelina';
+  src: local('angelina'),
+    url('./fonts/angelina/angelina.ttf') format('truetype');
+  font-weight: normal;
+}

@@ -409,6 +409,7 @@ export default function Editor() {
                   ['font', 'align'],
                   ['video', 'image', 'link', 'audio'],
                 ], // Or Array of button list, eg. [['font', 'align'], ['image']]
+                font: ['Arial', 'Gotham', 'Rissa', 'Angelina'],
               }}
               onChange={handleEditorChange}
             />
