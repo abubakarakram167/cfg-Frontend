@@ -10,6 +10,9 @@ import './shared/styles/index.css';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 import '@crema/services';
+import './fonts/Gotham-Font/GothamMedium.ttf';
+import './fonts/rissa/Rissa.ttf';
+import './fonts/angelina/angelina.ttf';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
