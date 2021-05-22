@@ -67,6 +67,15 @@ export default function Editor() {
     setKeywordValue('');
   };
 
+  const isValidJSONString = (str) => {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  };
+
   const handleCategorySubmit = (e) => {
     e.preventDefault();
     setCategories([...categories, categoryValue]);
@@ -125,7 +134,11 @@ export default function Editor() {
         moment(state.currentContent.created_at).format('MM/DD/yyyy'),
       );
       setStatus(state.currentContent.status || 'draft');
-      if (state.currentContent.tags && state.currentContent.tags.length) {
+      if (
+        state.currentContent.tags &&
+        state.currentContent.tags.length &&
+        isValidJSONString(state.currentContent.tags)
+      ) {
         setKeywords(
           state.currentContent
             ? JSON.parse(state.currentContent.tags).map(
@@ -138,7 +151,8 @@ export default function Editor() {
       }
       if (
         state.currentContent.categories &&
-        state.currentContent.categories.length
+        state.currentContent.categories.length &&
+        isValidJSONString(state.currentContent.categories)
       ) {
         setCategories(
           state.currentContent

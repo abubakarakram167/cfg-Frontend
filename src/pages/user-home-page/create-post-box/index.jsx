@@ -19,7 +19,7 @@ import {
   Close,
 } from '@material-ui/icons';
 import {useDispatch, useSelector} from 'react-redux';
-import {createUserPost} from 'redux/actions/UserPost';
+import {createUserPost, getUserPost} from 'redux/actions/UserPost';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 export default function CreatePostBox() {
@@ -55,6 +55,7 @@ export default function CreatePostBox() {
   const handleSave = () => {
     setOpen(false);
     dispatch(createUserPost({content, status: 'published', media}));
+    dispatch(getUserPost());
     setContent('');
     setMedia(null);
   };
@@ -62,6 +63,7 @@ export default function CreatePostBox() {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append('media', file);
+    formData.append('category', 'cover');
     const data = await Media.addMedia(formData);
     const photo_url = data.data[0].file_name;
     setMedia(photo_url);

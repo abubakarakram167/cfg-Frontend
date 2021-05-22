@@ -6,7 +6,7 @@ import Google from 'assets/google.jpg';
 import Mail from 'assets/Mail.png';
 import Twitter from 'assets/Twitter.png';
 import {useDispatch, useSelector} from 'react-redux';
-import {loginAction} from '../../redux/actions/authActions';
+import {loginAction, setErrorToNull} from '../../redux/actions/authActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useHistory} from 'react-router';
@@ -14,7 +14,7 @@ import {withStyles, makeStyles} from '@material-ui/core/styles';
 import PersonIcon from '@material-ui/icons/Person';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LockIcon from '@material-ui/icons/Lock';
-
+import {socket} from 'socket';
 const StyledFormField = withStyles((theme) => ({}))(TextField);
 
 const useStyles = makeStyles({
@@ -50,12 +50,15 @@ export default function SignIn({setView}) {
   };
   const handleClose2 = () => {
     setOpen2(false);
+    dispatch(setErrorToNull());
+    setErrorMessage('');
   };
 
   const dispatch = useDispatch();
   const state = useSelector((state) => {
     return state;
   });
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -76,8 +79,12 @@ export default function SignIn({setView}) {
       setOpen2(true);
     }
     if (state.auth.user) {
-      // window.location.href = '/admin';
-      history.push('/admin');
+      socket.loginAction();
+      if (state.auth.user.role === 'candidate') {
+        history.push('/home');
+      } else {
+        history.push('/admin');
+      }
     }
   }, [state]);
 

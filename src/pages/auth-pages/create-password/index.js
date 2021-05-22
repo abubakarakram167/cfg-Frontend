@@ -4,7 +4,10 @@ import AppCard from '@crema/core/AppCard';
 import Logo from 'assets/Logo.png';
 import {TextField} from '@material-ui/core';
 import queryString from 'query-string';
-import {passwordResetAction} from '../../../redux/actions/authActions';
+import {
+  passwordResetAction,
+  setErrorToNull,
+} from '../../../redux/actions/authActions';
 import {useDispatch} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -36,6 +39,8 @@ const CreatePassword = () => {
   };
   const handleClose2 = () => {
     setOpen2(false);
+    dispatch(setErrorToNull());
+    setErrorMessage('');
   };
 
   const [open1, setOpen1] = useState(false);

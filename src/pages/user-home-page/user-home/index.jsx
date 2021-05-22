@@ -27,7 +27,9 @@ import {
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
+import {getToolsData} from 'redux/actions/toolActions';
 import {baseUrl} from 'utils/axios';
+import Tool from 'redux/services/tool';
 
 export default function UserHomePage() {
   const dispatch = useDispatch();
@@ -37,72 +39,17 @@ export default function UserHomePage() {
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
+  const [dayTools, setDayTools] = useState([]);
+  const getDayTools = async () => {
+    const data = await Tool.getDayTools();
+    setDayTools(data.data);
+  };
 
   useEffect(() => {
     dispatch(getUserPost());
+    dispatch(getToolsData());
+    getDayTools();
   }, []);
-
-  useEffect(() => {
-    console.log(posts);
-  }, [posts]);
-
-  const [fakeData, setFakeData] = useState([
-    {
-      id: 1,
-
-      group: 'test group',
-      caption: 'hello sir jermaine',
-      media: '',
-      comments: [
-        {
-          id: 1,
-          commentText: 'this is a comment',
-          commentReplies: ['hello', 'world'],
-        },
-      ],
-    },
-    {
-      id: 2,
-      group: 'test group',
-
-      caption: 'hello sir jermaine',
-      media:
-        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
-      comments: [
-        {
-          id: 1,
-          commentText: 'this is a comment',
-          commentReplies: ['hello', 'world'],
-        },
-        {
-          id: 2,
-          commentText: 'this is another',
-          commentReplies: ['hello', 'world'],
-        },
-      ],
-    },
-    {
-      id: 3,
-      caption: 'hello sir jermaine',
-      group: 'test group',
-
-      media: '',
-      comments: [
-        {
-          id: 1,
-          commentText: 'this is a comment',
-          commentReplies: ['hello', 'world'],
-        },
-      ],
-    },
-    {
-      id: 4,
-      caption: 'This is a post without a comment',
-      media:
-        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
-      comments: [],
-    },
-  ]);
 
   const createComment = (id, commentText) => {
     return {
@@ -118,9 +65,9 @@ export default function UserHomePage() {
 
   const left = (
     <List>
-      <ListItem>
+      {/* <ListItem>
         <ListItemIcon>
-          <Forum style={{color: 'red'}} />
+          <Forum style={{ color: 'red' }} />
         </ListItemIcon>
 
         <ListItemText>
@@ -135,27 +82,27 @@ export default function UserHomePage() {
             {conversationExtended ? (
               <ExpandLess
                 onClick={toggleExpansion}
-                style={{cursor: 'pointer'}}
+                style={{ cursor: 'pointer' }}
               />
             ) : (
               <ExpandMore
                 onClick={toggleExpansion}
-                style={{cursor: 'pointer'}}
+                style={{ cursor: 'pointer' }}
               />
             )}
           </div>
         </ListItemText>
-      </ListItem>
-      <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
+      </ListItem> */}
+      {/* <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
         <List>
-          <ListItemText style={{paddingLeft: '60px'}}>
+          <ListItemText style={{ paddingLeft: '60px' }}>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus
             excepturi, ipsa expedita mollitia magnam facere. Qui suscipit rerum
             cum consequatur, quis aliquam adipisci alias omnis totam? Ratione
             nihil labore dicta.
           </ListItemText>
         </List>
-      </Collapse>
+      </Collapse> */}
       <Link to='/home/user-connections'>
         <ListItem>
           <ListItemIcon>
@@ -164,10 +111,10 @@ export default function UserHomePage() {
           <ListItemText primary='My CFG Family' />
         </ListItem>
       </Link>
-      <Link to='/home/user-groups'>
+      {/* <Link to='/home/user-groups'>
         <ListItem>
           <ListItemIcon>
-            <People style={{color: 'green'}} />
+            <People style={{ color: 'green' }} />
           </ListItemIcon>
           <ListItemText primary='Groups' />
         </ListItem>
@@ -175,11 +122,11 @@ export default function UserHomePage() {
       <Link to='/home/user-events'>
         <ListItem>
           <ListItemIcon>
-            <Event style={{color: 'blue'}} />
+            <Event style={{ color: 'blue' }} />
           </ListItemIcon>
           <ListItemText primary='Events' />
         </ListItem>
-      </Link>
+      </Link> */}
       <Link to='/home/cfg-tools'>
         <ListItem>
           <ListItemIcon>
@@ -188,14 +135,14 @@ export default function UserHomePage() {
           <ListItemText primary='CFG Tools' />
         </ListItem>
       </Link>
-      <Link to='/home/host-a-conversation'>
+      {/* <Link to='/home/host-a-conversation'>
         <ListItem>
           <ListItemIcon>
-            <ChatBubble style={{color: 'red'}} />
+            <ChatBubble style={{ color: 'red' }} />
           </ListItemIcon>
           <ListItemText primary='Host A Conversation' />
         </ListItem>
-      </Link>
+      </Link> */}
     </List>
   );
 
@@ -207,30 +154,24 @@ export default function UserHomePage() {
         </ListItemIcon>
         <ListItemText primary='CFG Tools of the Day' />
       </ListItem>
-      <ListItem>
-        <CfgToolOfTheDay
-          url={
-            'https://static.remove.bg/remove-bg-web/2a274ebbb5879d870a69caae33d94388a88e0e35/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg'
-          }
-          title={'vacation'}
-        />
-      </ListItem>
-      <ListItem>
-        <CfgToolOfTheDay
-          url={
-            'https://static.remove.bg/remove-bg-web/2a274ebbb5879d870a69caae33d94388a88e0e35/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg'
-          }
-          title={'vacation'}
-        />
-      </ListItem>
+      {dayTools.map((tool, index) => {
+        return (
+          <ListItem key={index}>
+            <ListItemIcon>
+              <Build />
+            </ListItemIcon>
+            <ListItemText primary={tool.title} />
+          </ListItem>
+        );
+      })}
       <hr />
-      <ListItem>
+      {/* <ListItem>
         <ListItemIcon>
-          <Event style={{color: 'blue'}} />
+          <Event style={{ color: 'blue' }} />
         </ListItemIcon>
         <ListItemText primary='Events' />
-      </ListItem>
-      <ListItem>
+      </ListItem> */}
+      {/* <ListItem>
         <div>
           Lorem ipsum dolor sit, amet consectetur adipisicing elit.
           <div>21st december 2012</div>
@@ -256,19 +197,22 @@ export default function UserHomePage() {
           <OnlineFriend name={'Abubakr'} />
           <OnlineFriend name={'Abrar Farhad'} />
         </div>
-      </ListItem>
+      </ListItem> */}
     </List>
   );
   return (
     <CommonComponent left={left} right={right}>
       <CreatePost />
-      {posts.map((element, index) => {
-        return (
-          <div key={index} style={{margin: '20px 0px'}}>
-            <PostDetails post={element} />
-          </div>
-        );
-      })}
+      {posts
+        .slice(0)
+        .reverse()
+        .map((element, index) => {
+          return (
+            <div key={index} style={{margin: '20px 0px'}}>
+              <PostDetails post={element} />
+            </div>
+          );
+        })}
     </CommonComponent>
   );
 }

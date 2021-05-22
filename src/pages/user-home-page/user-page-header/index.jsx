@@ -30,6 +30,7 @@ import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
+import {socket} from 'socket';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -42,6 +43,13 @@ export default function AdminHeader() {
   const state = useSelector((state) => {
     return state.auth;
   });
+
+  useEffect(() => {
+    const socketObj = socket.getSocket();
+    socketObj.on('notification', (data) => {
+      console.log(data, 'Hello world');
+    });
+  }, []);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
@@ -235,21 +243,21 @@ export default function AdminHeader() {
                 <Home style={{fontSize: 35}} />
               </Link>
             </div>
-            <div className='user-page-icon-container'>
+            {/* <div className='user-page-icon-container'>
               <Link to='/home/user-groups'>
-                <Group style={{fontSize: 35}} />
+                <Group style={{ fontSize: 35 }} />
               </Link>
             </div>
             <div className='user-page-icon-container'>
               <Link to='/home/user-achievements'>
-                <Bookmark style={{fontSize: 35}} />
+                <Bookmark style={{ fontSize: 35 }} />
               </Link>
             </div>
             <div className='user-page-icon-container'>
               <Link to='/home/user-rewards'>
-                <CardGiftcard style={{fontSize: 35}} />
+                <CardGiftcard style={{ fontSize: 35 }} />
               </Link>
-            </div>
+            </div> */}
           </div>
           <div className='right'>
             <div className='right-user-info'>
@@ -266,14 +274,14 @@ export default function AdminHeader() {
               </div>
             </div>
             <div className='right-icons'>
-              <div className='icon'>
-                <NotificationIcon style={{fill: '#ffffff'}} />
+              {/* <div className='icon'>
+                <NotificationIcon style={{ fill: '#ffffff' }} />
               </div>
               <div className='icon'>
                 <Link to='/home/all-in-box'>
-                  <ShoppingBasket style={{fill: '#ffffff'}} />
+                  <ShoppingBasket style={{ fill: '#ffffff' }} />
                 </Link>
-              </div>
+              </div> */}
               <div className='icon' onClick={handleClick2}>
                 <SettingsIcon style={{fill: '#ffffff'}} />
               </div>

@@ -11,6 +11,7 @@ const INIT_STATE = {
   createdContent: null,
   editedContent: false,
   tools: [],
+  selectedTool: null,
 };
 let payload = null;
 const ToolReducer = (state = INIT_STATE, action) => {
@@ -21,13 +22,13 @@ const ToolReducer = (state = INIT_STATE, action) => {
         return {
           ...state,
           error: true,
-          currentContent: null,
+          // currentContent: null,
         };
       }
       return {
         ...state,
         content: [...state.content, payload.content],
-        currentContent: null,
+        // currentContent: null,
       };
     case actions.GET_TOOL_DATA:
       payload = action.payload;
@@ -41,7 +42,7 @@ const ToolReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         content: [...payload.data],
-        currentContent: null,
+        // currentContent: null,
       };
     case actions.GET_ALL_TOOLS_DATA:
       payload = action.payload;
@@ -51,11 +52,11 @@ const ToolReducer = (state = INIT_STATE, action) => {
           error: true,
         };
       }
-      console.log(payload);
+
       return {
         ...state,
         tools: Object.values(payload),
-        currentContent: null,
+        // currentContent: null,
       };
     case actions.GET_LIST_DATA:
       payload = action.payload;
@@ -63,7 +64,7 @@ const ToolReducer = (state = INIT_STATE, action) => {
         return {
           ...state,
           error: true,
-          currentContent: null,
+          // currentContent: null,
         };
       }
       return {
@@ -71,7 +72,7 @@ const ToolReducer = (state = INIT_STATE, action) => {
         contentData: payload,
         current: payload.data.rows[0],
         titles: payload.data.titles,
-        currentContent: null,
+        // currentContent: null,
       };
     case actions.CREATE_TITLE:
       payload = action.payload;
@@ -80,7 +81,7 @@ const ToolReducer = (state = INIT_STATE, action) => {
           ...state,
           error: true,
           titleCreation: false,
-          currentContent: null,
+          // currentContent: null,
         };
       }
       return {
@@ -88,7 +89,7 @@ const ToolReducer = (state = INIT_STATE, action) => {
         error: null,
         titleCreation: true,
         createdContent: payload.content,
-        currentContent: null,
+        // currentContent: null,
       };
     case actions.UPDATE_CONTENT_DATA:
       payload = action.payload;
@@ -97,7 +98,7 @@ const ToolReducer = (state = INIT_STATE, action) => {
           ...state,
           error: true,
           editedContent: false,
-          currentContent: null,
+          // currentContent: null,
         };
       }
 
@@ -113,12 +114,23 @@ const ToolReducer = (state = INIT_STATE, action) => {
         return {
           ...state,
           error: true,
-          currentContent: null,
+          // currentContent: null,
         };
       }
       return {
         ...state,
         currentContent: payload,
+      };
+
+    case actions.SET_SELECTED_TOOL:
+      const selected = state.tools.filter((tool) => {
+        if (tool) {
+          return tool.id === action.payload;
+        }
+      });
+      return {
+        ...state,
+        selectedTool: selected[0],
       };
     default:
       return state;
