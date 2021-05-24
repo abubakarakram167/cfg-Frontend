@@ -28,6 +28,18 @@ import {useHistory} from 'react-router-dom';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MediaUpload from 'components/MediaUpload';
+import {withStyles, makeStyles} from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  datePicker: {
+    '& .MuiFormLabel-root': {
+      paddingLeft: 10,
+    },
+    '& .MuiInputBase-root': {
+      paddingLeft: 8,
+    },
+  },
+});
 
 export default function Editor() {
   const params = useParams();
@@ -57,6 +69,7 @@ export default function Editor() {
   const [isContentChange, setContentChanged] = useState(false);
   const [featuredImage, setFeaturedImage] = useState('');
   const [showDialogue, setShowDialogue] = useState(false);
+  const classes = useStyles();
 
   const history = useHistory();
   const handleEditorChange = (e) => {
@@ -255,7 +268,6 @@ export default function Editor() {
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
-      <br />
       {userList.message && (
         <Snackbar
           open={userList.message}
@@ -391,7 +403,7 @@ export default function Editor() {
                   })
                 : null}
             </div>
-            <div>
+            <div style={{height: 60}}>
               <form onSubmit={handleCategorySubmit}>
                 <TextField
                   variant='filled'
@@ -418,6 +430,7 @@ export default function Editor() {
             {showMessageError && group === '' && (
               <p className='showErrorMessage'> group is required</p>
             )}
+            <br />
             <div>
               {keywords.map((element, index) => {
                 return (
@@ -434,7 +447,7 @@ export default function Editor() {
                 );
               })}
             </div>
-            <div>
+            <div style={{height: 60}}>
               <form onSubmit={handleKeywordSubmit}>
                 <TextField
                   variant='filled'
@@ -445,25 +458,26 @@ export default function Editor() {
                   label='Key words'
                 />
               </form>
+              <button
+                className='flex-button preview form-button-add'
+                onClick={() => {
+                  setKeywords([...keywords, keywordValue]);
+                  setKeywordValue('');
+                }}>
+                <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+                <span className='button-text custom-add-button'>Add</span>
+              </button>
             </div>
-            <button
-              className='flex-button preview form-button-add'
-              onClick={() => {
-                setKeywords([...keywords, keywordValue]);
-                setKeywordValue('');
-              }}>
-              <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
-              <span className='button-text custom-add-button'>Add</span>
-            </button>
             {showMessageError && group.length === 0 && (
               <p className='showErrorMessage'>Keywords is required</p>
             )}
+            <br />
             <div className='dates'>
               <KeyboardDatePicker
                 disableToolbar
                 variant='filled'
                 format='MM/DD/yyyy'
-                margin='normal'
+                className={classes.datePicker}
                 fullWidth={true}
                 label='Publish Date'
                 value={publishDate}
