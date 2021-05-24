@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {Container, Select, MenuItem, TextField} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
-import ContentEditable from 'react-contenteditable';
 import './style.css';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
@@ -15,6 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Link} from 'react-router-dom';
+import PromptModal from 'components/PromptModal';
 import {
   getContentData,
   editContent,
@@ -22,10 +22,12 @@ import {
 } from 'redux/actions/sessionActions';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import moment from 'moment';
-import {InputBase} from '@material-ui/core';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import InfoIcon from '@material-ui/icons/Info';
 import {useHistory} from 'react-router-dom';
+import NavigationPrompt from 'react-router-navigation-prompt';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import MediaUpload from 'components/MediaUpload';
 
 export default function Editor() {
   const params = useParams();
@@ -52,10 +54,14 @@ export default function Editor() {
   const [group, setGroup] = useState('candidate');
   const [showMessageError, setShowMessageError] = useState(false);
   const [contentType, setContentType] = useState(false);
-  const history = useHistory();
+  const [isContentChange, setContentChanged] = useState(false);
+  const [featuredImage, setFeaturedImage] = useState('');
+  const [showDialogue, setShowDialogue] = useState(false);
 
+  const history = useHistory();
   const handleEditorChange = (e) => {
     setContent(e);
+    setContentChanged(true);
     setImageData(
       e.split('"').filter((element) => element.startsWith('data:image')),
     );
@@ -134,6 +140,7 @@ export default function Editor() {
         moment(state.currentContent.created_at).format('MM/DD/yyyy'),
       );
       setStatus(state.currentContent.status || 'draft');
+      setFeaturedImage(state.currentContent.featured_image_url || '');
       if (
         state.currentContent.tags &&
         state.currentContent.tags.length &&
@@ -169,8 +176,10 @@ export default function Editor() {
       setContentType(state.currentContent.type || '');
     }
   }, [state]);
+
   const publish = () => {
     let totalTags = [];
+    setContentChanged(false);
 
     keywords.map((element) => {
       totalTags.push({
@@ -211,17 +220,25 @@ export default function Editor() {
             type: params.contentType,
             assigned_group: group,
             categories: JSON.stringify(categories),
+            status,
             total_points,
             next_page,
             updated_at: moment(moment()).format('YYYY-MM-DD'),
             previous_page,
+            featured_image_url: featuredImage,
           },
           params.id,
         ),
       ).then((response) => {
         if (response) {
           setTimeout(() => {
-            history.push(`/admin/content/display/${params.id}`);
+            if (!isContentChange) {
+              history.push(`/admin/content/display/${params.id}`);
+            } else {
+              setTimeout(() => {
+                history.push(`/admin/content/display/${params.id}`);
+              }, 500);
+            }
           }, 1000);
         }
       });
@@ -232,13 +249,6 @@ export default function Editor() {
     setOpen1(false);
   };
   const userList = useSelector((state) => state.userList);
-
-  console.log(
-    'the manipulation',
-    parseInt(originalTotalPoints) -
-      parseInt(accumulativeTitlePoints) +
-      parseInt(total_points),
-  );
 
   return (
     <div className='editor-page-full-container'>
@@ -263,7 +273,11 @@ export default function Editor() {
           Record updated successfully.
         </Alert>
       </Snackbar>
-
+      <NavigationPrompt when={isContentChange ? true : false}>
+        {({onConfirm, onCancel}) => (
+          <PromptModal when={true} onCancel={onCancel} onConfirm={onConfirm} />
+        )}
+      </NavigationPrompt>
       <Container>
         <div className='top-section'>
           <div style={{width: '100%'}}>
@@ -300,6 +314,14 @@ export default function Editor() {
             </button>
           </div>
         </div>
+        <MediaUpload
+          showDialogue={showDialogue}
+          onClose={() => setShowDialogue(false)}
+          onImageSave={(image) => {
+            setFeaturedImage(image[0].url);
+            console.log('the image', image);
+          }}
+        />
         <div className='editor-container'>
           <div className='editor-side'>
             {showMessageError && content === '' && (
@@ -352,22 +374,22 @@ export default function Editor() {
             )}
 
             <div>
-              {categories &&
-                categories.length &&
-                categories.map((element, index) => {
-                  return (
-                    <Chip
-                      label={element}
-                      key={index}
-                      className='chip-style'
-                      onDelete={() => {
-                        setCategories(
-                          categories.filter((value) => value !== element),
-                        );
-                      }}
-                    />
-                  );
-                })}
+              {categories && categories.length
+                ? categories.map((element, index) => {
+                    return (
+                      <Chip
+                        label={element}
+                        key={index}
+                        className='chip-style'
+                        onDelete={() => {
+                          setCategories(
+                            categories.filter((value) => value !== element),
+                          );
+                        }}
+                      />
+                    );
+                  })
+                : null}
             </div>
             <div>
               <form onSubmit={handleCategorySubmit}>
@@ -382,6 +404,14 @@ export default function Editor() {
                   fullWidth
                   label='Categories'
                 />
+                <div
+                  className='add-icon-category'
+                  onClick={() => {
+                    setCategories([...categories, categoryValue]);
+                    setCategoryValue('');
+                  }}>
+                  <AddCircleIcon style={{color: 'green'}} />
+                </div>
               </form>
             </div>
             {showMessageError && group === '' && (
@@ -416,6 +446,14 @@ export default function Editor() {
                   label='Key words'
                 />
               </form>
+            </div>
+            <div
+              className='add-icon-category'
+              onClick={() => {
+                setKeywords([...keywords, keywordValue]);
+                setKeywordValue('');
+              }}>
+              <AddCircleIcon style={{color: 'green'}} />
             </div>
             {showMessageError && group.length === 0 && (
               <p className='showErrorMessage'>Keywords is required</p>
@@ -506,18 +544,30 @@ export default function Editor() {
             </div>
             <br />
             <div>
-              <div style={{fontSize: '20px', fontWeight: 600}}>
-                Featured Image
+              <div style={{display: 'flex'}}>
+                <div style={{fontSize: '20px', fontWeight: 600}}>
+                  Featured Image
+                </div>
+                <div
+                  className='featured-image-button'
+                  onClick={() => {
+                    setShowDialogue(true);
+                  }}>
+                  <AddCircleIcon style={{color: 'red'}} />
+                </div>
               </div>
               <div style={{display: 'flex'}}>
-                {imageData.map((element, index) => {
-                  return (
-                    <div key={index} className='image-preview'>
-                      <img src={element} alt='data-text' />
-                    </div>
-                  );
-                })}
+                <div className='image-preview'>
+                  {featuredImage !== '' && (
+                    <img
+                      style={{width: 50, height: 50}}
+                      src={featuredImage}
+                      alt='data-text'
+                    />
+                  )}
+                </div>
               </div>
+              <div className='last-feature-image'></div>
             </div>
           </div>
         </div>
