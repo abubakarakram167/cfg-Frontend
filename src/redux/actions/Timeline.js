@@ -11,62 +11,35 @@ import Timeline from '../services/timeline';
 import jsCookie from 'js-cookie';
 
 export const createTimeline = (params) => {
-  return async function (dispatch) {
-    try {
-      console.log('the params', params);
-      const response = await Timeline.createTimeline(params);
-      console.log('the response after creating', response);
-      if (response.status === 200) {
-        const data_resp = await response.data;
-        jsCookie.set('login', 'yes');
-        dispatch({
-          type: CREATE_TOOL,
-          payload: {...data_resp, error: null},
+  return (dispatch) => {
+    return new Promise((res, rej) => {
+      Timeline.createTimeline(params)
+        .then((response) => {
+          if (response.status === 200) {
+            jsCookie.set('login', 'yes');
+            const data_resp = response.data;
+            dispatch({
+              type: CREATE_TOOL,
+              payload: {...data_resp, error: null},
+            });
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'Added SuccessFully', success: true},
+            });
+            res(response);
+          }
+        })
+        .catch((error) => {
+          rej(error);
+          console.log('the error', error.response);
+          if (error.response && error.response.status === 401) {
+            dispatch({
+              type: CREATE_TOOL,
+              payload: {error: 'There was an error creating the Tool'},
+            });
+          }
         });
-        dispatch({
-          type: Show_Message,
-          payload: {message: 'Added SuccessFully', success: true},
-        });
-      }
-    } catch (error) {
-      console.log('the error', error.response);
-      if (error.response && error.response.status === 401) {
-        dispatch({
-          type: CREATE_TOOL,
-          payload: {error: 'There was an error creating the Tool'},
-        });
-      }
-    }
-  };
-};
-
-export const createTimelineTitle = (params, type) => {
-  return async function (dispatch) {
-    try {
-      const response = await Timeline.createTitle(params, type);
-      if (response.status === 200) {
-        const data_resp = await response.data;
-        jsCookie.set('login', 'yes');
-        dispatch({
-          type: CREATE_TITLE,
-          payload: {...data_resp, error: null},
-        });
-        dispatch({
-          type: Show_Message,
-          payload: {message: 'Added SuccessFully', success: true},
-        });
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        dispatch(
-          {
-            type: CREATE_TITLE,
-            payload: {error: 'There was an error creating the title'},
-          },
-          params.type,
-        );
-      }
-    }
+    });
   };
 };
 
@@ -107,6 +80,36 @@ export const editContent = (params, type) => {
           }
         });
     });
+  };
+};
+
+export const createTimelineTitle = (params, type) => {
+  return async function (dispatch) {
+    try {
+      const response = await Timeline.createTitle(params, type);
+      if (response.status === 200) {
+        const data_resp = await response.data;
+        jsCookie.set('login', 'yes');
+        dispatch({
+          type: CREATE_TITLE,
+          payload: {...data_resp, error: null},
+        });
+        dispatch({
+          type: Show_Message,
+          payload: {message: 'Added SuccessFully', success: true},
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        dispatch(
+          {
+            type: CREATE_TITLE,
+            payload: {error: 'There was an error creating the title'},
+          },
+          params.type,
+        );
+      }
+    }
   };
 };
 

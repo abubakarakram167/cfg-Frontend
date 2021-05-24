@@ -12,10 +12,12 @@ class Timeline {
     });
   }
   static timelineData() {
-    return axiosInstance.get('/api/content/list/timeline?_count=100');
+    return axiosInstance.get('/api/content/list/timeline?_count=1000');
   }
-  static getListData(id) {
-    return axiosInstance.get('api/content/list/content/timeline/' + id);
+  static getListData(id, type) {
+    return axiosInstance.get(
+      `/api/content/list/content/${type}/` + id + '?_count=1000&_pageNo=1',
+    );
   }
   static getContentData(id) {
     return axiosInstance.get('api/content/' + id);

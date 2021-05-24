@@ -44,6 +44,13 @@
   padding-right: 10px !important;
 }
 
+.add-icon-category {
+  cursor: pointer;
+  position: relative;
+  bottom: 40px;
+  left: 88%;
+}
+
 .dates {
   display: flex;
 }
