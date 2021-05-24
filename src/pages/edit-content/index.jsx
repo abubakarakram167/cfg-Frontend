@@ -404,21 +404,20 @@ export default function Editor() {
                   fullWidth
                   label='Categories'
                 />
-                <div
-                  className='add-icon-category'
+                <button
+                  className='flex-button preview form-button-add'
                   onClick={() => {
                     setCategories([...categories, categoryValue]);
                     setCategoryValue('');
                   }}>
-                  <AddCircleIcon style={{color: 'green'}} />
-                </div>
+                  <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+                  <span className='button-text custom-add-button'>Add</span>
+                </button>
               </form>
             </div>
             {showMessageError && group === '' && (
               <p className='showErrorMessage'> group is required</p>
             )}
-
-            <br />
             <div>
               {keywords.map((element, index) => {
                 return (
@@ -447,18 +446,18 @@ export default function Editor() {
                 />
               </form>
             </div>
-            <div
-              className='add-icon-category'
+            <button
+              className='flex-button preview form-button-add'
               onClick={() => {
                 setKeywords([...keywords, keywordValue]);
                 setKeywordValue('');
               }}>
-              <AddCircleIcon style={{color: 'green'}} />
-            </div>
+              <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+              <span className='button-text custom-add-button'>Add</span>
+            </button>
             {showMessageError && group.length === 0 && (
               <p className='showErrorMessage'>Keywords is required</p>
             )}
-            <br />
             <div className='dates'>
               <KeyboardDatePicker
                 disableToolbar
