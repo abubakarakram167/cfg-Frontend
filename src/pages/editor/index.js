@@ -25,7 +25,7 @@ import {Show_Message} from '../../shared/constants/ActionTypes';
 import InfoIcon from '@material-ui/icons/Info';
 import {useHistory} from 'react-router-dom';
 import moment from 'moment';
-import {createTimeline} from 'redux/actions/Timeline';
+import {createTimeline, getTimelineData} from 'redux/actions/Timeline';
 import jsCookie from 'js-cookie';
 import PromptModal from 'components/PromptModal';
 import NavigationPrompt from 'react-router-navigation-prompt';
@@ -36,6 +36,7 @@ export default function Editor() {
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
+  const toolState = useSelector((state) => state.tool);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [sub_title, setsub_title] = useState('Enter a subtitle');
@@ -66,6 +67,7 @@ export default function Editor() {
   const {id} = useParams();
   const [featuredImage, setFeaturedImage] = useState('');
   const [showDialogue, setShowDialogue] = useState(false);
+  const [timelineContent, setTimelineContent] = useState([]);
 
   const handleEditorChange = (e) => {
     setContentChanged(true);
@@ -92,6 +94,7 @@ export default function Editor() {
   }, [id, dispatch]);
 
   useEffect(() => {
+    console.log('the params..', params.id, params.cfgType);
     dispatch(getSessionListData(params.id, params.cfgType));
   }, []);
 
@@ -103,6 +106,10 @@ export default function Editor() {
     }
     return true;
   };
+
+  useEffect(() => {
+    dispatch(getTimelineData());
+  }, [dispatch]);
 
   useEffect(() => {
     if (state.titleCreation) {
@@ -146,12 +153,13 @@ export default function Editor() {
       setprevious_page(state.currentContent.previous_page || '');
       setContentType(state.currentContent.type || '');
     }
-
+    setTimelineContent(toolState.content);
     if (state.createdContent) {
       setCreatedContentId(state.createdContent.id);
     }
   }, [state]);
 
+  console.log('the timeline', toolState);
   const publish = (publishStatus) => {
     setContentChanged(false);
     let totalTags = [];
@@ -185,7 +193,6 @@ export default function Editor() {
             },
           });
         } else {
-          console.log('the feature image', featuredImage);
           dispatch(
             createTimeline({
               title,
@@ -201,6 +208,7 @@ export default function Editor() {
               featured_image_url: featuredImage,
             }),
           ).then((response) => {
+            console.log('after creating timeline...', response);
             if (response) {
               setTimeout(() => {
                 if (!isContentChange) {
