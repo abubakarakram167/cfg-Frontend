@@ -45,6 +45,7 @@
 
 .dates {
   display: flex;
+  background-color: #e6e6e6;
 }
 .image-preview {
   width: 50px;
@@ -116,4 +117,15 @@
   border-bottom: 0.5px solid #cecece;
   position: relative;
   top: 10px;
+}
+
+.form-button-add {
+  cursor: pointer;
+  position: relative;
+  bottom: 52px;
+  left: 70%;
+}
+
+.custom-add-button {
+  font-size: 12px;
 }

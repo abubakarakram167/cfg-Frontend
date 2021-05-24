@@ -94,8 +94,8 @@ export default function Editor() {
   }, [id, dispatch]);
 
   useEffect(() => {
-    console.log('the params..', params.id, params.cfgType);
-    dispatch(getSessionListData(params.id, params.cfgType));
+    if (params.cfgType !== 'timeline')
+      dispatch(getSessionListData(params.id, params.cfgType));
   }, []);
 
   const isValidJSONString = (str) => {
@@ -108,7 +108,7 @@ export default function Editor() {
   };
 
   useEffect(() => {
-    dispatch(getTimelineData());
+    if (params.cfgType === 'timeline') dispatch(getTimelineData());
   }, [dispatch]);
 
   useEffect(() => {
@@ -141,7 +141,7 @@ export default function Editor() {
       } else {
         setCategories([]);
       }
-      console.log('state of current', state.currentContent);
+
       setsub_title(state.currentContent.sub_title || '');
       setContent('');
       setstart_date(new Date(state.currentContent.start_date));
@@ -153,13 +153,13 @@ export default function Editor() {
       setprevious_page(state.currentContent.previous_page || '');
       setContentType(state.currentContent.type || '');
     }
+
     setTimelineContent(toolState.content);
     if (state.createdContent) {
       setCreatedContentId(state.createdContent.id);
     }
   }, [state]);
 
-  console.log('the timeline', toolState);
   const publish = (publishStatus) => {
     setContentChanged(false);
     let totalTags = [];
@@ -193,38 +193,55 @@ export default function Editor() {
             },
           });
         } else {
-          dispatch(
-            createTimeline({
-              title,
-              author: author,
-              start_date: formatDate(start_date),
-              end_date: formatDate(end_date),
-              total_points,
-              status: publishStatus === 'publish' ? status : 'draft',
-              tags: totalTags,
-              detail: content,
-              assigned_group: group,
-              categories: JSON.stringify(categories),
-              featured_image_url: featuredImage,
-            }),
-          ).then((response) => {
-            console.log('after creating timeline...', response);
-            if (response) {
-              setTimeout(() => {
-                if (!isContentChange) {
-                  history.push(
-                    `/admin/content/display/${response.data.content.id}`,
-                  );
-                } else {
-                  setTimeout(() => {
+          let subtitles = toolState.content;
+          subtitles = subtitles && subtitles.length ? subtitles : [];
+
+          if (
+            subtitles &&
+            subtitles.length > 0 &&
+            subtitles.filter((content) => content.title === title).length > 0
+          ) {
+            dispatch({
+              type: Show_Message,
+              payload: {
+                message:
+                  'This Subtitle is already used For this Title.Please use another one.',
+                success: false,
+              },
+            });
+          } else {
+            dispatch(
+              createTimeline({
+                title,
+                author: author,
+                start_date: formatDate(start_date),
+                end_date: formatDate(end_date),
+                total_points,
+                status: publishStatus === 'publish' ? status : 'draft',
+                tags: totalTags,
+                detail: content,
+                assigned_group: group,
+                categories: JSON.stringify(categories),
+                featured_image_url: featuredImage,
+              }),
+            ).then((response) => {
+              if (response) {
+                setTimeout(() => {
+                  if (!isContentChange) {
                     history.push(
                       `/admin/content/display/${response.data.content.id}`,
                     );
-                  }, 500);
-                }
-              }, 1000);
-            }
-          });
+                  } else {
+                    setTimeout(() => {
+                      history.push(
+                        `/admin/content/display/${response.data.content.id}`,
+                      );
+                    }, 500);
+                  }
+                }, 1000);
+              }
+            });
+          }
         }
       }
     } else {
@@ -390,12 +407,6 @@ export default function Editor() {
   };
   const userList = useSelector((state) => state.userList);
 
-  console.log(
-    'the manipulation',
-    parseInt(total_points) + parseInt(accumulativeTitlePoints),
-  );
-  console.log('the state in create content', state);
-
   return (
     <div className='editor-page-full-container'>
       <div className='toolbar-container'>
@@ -449,7 +460,7 @@ export default function Editor() {
           </div>
           <div className='flex-buttons-publish'>
             <button
-              className='flex-button publish'
+              className='flex-button preview'
               onClick={() => publish('preview')}>
               <PublishIcon style={{fill: '#ffffff'}} />{' '}
               <span className='button-text'>Preview</span>
@@ -467,7 +478,6 @@ export default function Editor() {
           onClose={() => setShowDialogue(false)}
           onImageSave={(image) => {
             setFeaturedImage(image[0].url);
-            console.log('the image', image);
           }}
         />
         <div className='editor-container'>
@@ -562,15 +572,16 @@ export default function Editor() {
                 />
               </form>
             </div>
-            <div
-              className='add-icon-category'
+            <button
+              className='flex-button preview form-button-add'
               onClick={() => {
                 setCategories([...categories, categoryValue]);
                 setCategoryValue('');
               }}>
-              <AddCircleIcon style={{color: 'green'}} />
-            </div>
-            <br />
+              <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+              <span className='button-text custom-add-button'>Add</span>
+            </button>
+
             <div>
               {keywords.map((element, index) => {
                 return (
@@ -600,18 +611,18 @@ export default function Editor() {
                 />
               </form>
             </div>
-            <div
-              className='add-icon-category'
+            <button
+              className='flex-button preview form-button-add'
               onClick={() => {
-                setKeywords([...keywords, keywordValue]);
-                setKeywordValue('');
+                setCategories([...categories, categoryValue]);
+                setCategoryValue('');
               }}>
-              <AddCircleIcon style={{color: 'green'}} />
-            </div>
+              <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+              <span className='button-text custom-add-button'>Add</span>
+            </button>
             {showMessageError && keywords.length === 0 && (
               <p className='showErrorMessage'>Keywords is required</p>
             )}
-            <br />
             <div className='dates'>
               <KeyboardDatePicker
                 disableToolbar
