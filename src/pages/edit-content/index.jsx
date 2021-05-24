@@ -449,8 +449,8 @@ export default function Editor() {
             <button
               className='flex-button preview form-button-add'
               onClick={() => {
-                setCategories([...categories, categoryValue]);
-                setCategoryValue('');
+                setKeywords([...keywords, keywordValue]);
+                setKeywordValue('');
               }}>
               <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
               <span className='button-text custom-add-button'>Add</span>

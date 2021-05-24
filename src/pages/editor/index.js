@@ -204,8 +204,7 @@ export default function Editor() {
             dispatch({
               type: Show_Message,
               payload: {
-                message:
-                  'This Subtitle is already used For this Title.Please use another one.',
+                message: 'This title is already used.Please use another one.',
                 success: false,
               },
             });
@@ -581,7 +580,6 @@ export default function Editor() {
               <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
               <span className='button-text custom-add-button'>Add</span>
             </button>
-
             <div>
               {keywords.map((element, index) => {
                 return (
@@ -614,8 +612,8 @@ export default function Editor() {
             <button
               className='flex-button preview form-button-add'
               onClick={() => {
-                setCategories([...categories, categoryValue]);
-                setCategoryValue('');
+                setKeywords([...keywords, keywordValue]);
+                setKeywordValue('');
               }}>
               <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
               <span className='button-text custom-add-button'>Add</span>
