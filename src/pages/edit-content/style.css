@@ -53,6 +53,7 @@
 
 .dates {
   display: flex;
+  padding-top: 10px;
 }
 .image-preview {
   width: 50px;
@@ -64,6 +65,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .flex-buttons-publish {

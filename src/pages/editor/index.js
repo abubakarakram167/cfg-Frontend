@@ -31,6 +31,18 @@ import PromptModal from 'components/PromptModal';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MediaUpload from 'components/MediaUpload';
+import {withStyles, makeStyles} from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  datePicker: {
+    '& .MuiFormLabel-root': {
+      paddingLeft: 10,
+    },
+    '& .MuiInputBase-root': {
+      paddingLeft: 8,
+    },
+  },
+});
 
 export default function Editor() {
   const params = useParams();
@@ -68,6 +80,7 @@ export default function Editor() {
   const [featuredImage, setFeaturedImage] = useState('');
   const [showDialogue, setShowDialogue] = useState(false);
   const [timelineContent, setTimelineContent] = useState([]);
+  const classes = useStyles();
 
   const handleEditorChange = (e) => {
     setContentChanged(true);
@@ -411,7 +424,6 @@ export default function Editor() {
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
-      <br />
       <NavigationPrompt when={isContentChange ? true : false}>
         {({onConfirm, onCancel}) => (
           <PromptModal when={true} onCancel={onCancel} onConfirm={onConfirm} />
@@ -461,7 +473,7 @@ export default function Editor() {
             <button
               className='flex-button preview'
               onClick={() => publish('preview')}>
-              <PublishIcon style={{fill: '#ffffff'}} />{' '}
+              <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
               <span className='button-text'>Preview</span>
             </button>
             <button
@@ -556,7 +568,7 @@ export default function Editor() {
                 );
               })}
             </div>
-            <div>
+            <div style={{height: 60}}>
               <form onSubmit={handleCategorySubmit}>
                 <TextField
                   variant='filled'
@@ -569,17 +581,18 @@ export default function Editor() {
                   fullWidth
                   label='Categories'
                 />
+                <button
+                  className='flex-button preview form-button-add'
+                  onClick={() => {
+                    setCategories([...categories, categoryValue]);
+                    setCategoryValue('');
+                  }}>
+                  <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+                  <span className='button-text custom-add-button'>Add</span>
+                </button>
               </form>
             </div>
-            <button
-              className='flex-button preview form-button-add'
-              onClick={() => {
-                setCategories([...categories, categoryValue]);
-                setCategoryValue('');
-              }}>
-              <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
-              <span className='button-text custom-add-button'>Add</span>
-            </button>
+            <br />
             <div>
               {keywords.map((element, index) => {
                 return (
@@ -596,7 +609,7 @@ export default function Editor() {
                 );
               })}
             </div>
-            <div>
+            <div style={{height: 60}}>
               <form onSubmit={handleKeywordSubmit}>
                 <TextField
                   variant='filled'
@@ -608,25 +621,26 @@ export default function Editor() {
                   label='Key words'
                 />
               </form>
+              <button
+                className='flex-button preview form-button-add'
+                onClick={() => {
+                  setKeywords([...keywords, keywordValue]);
+                  setKeywordValue('');
+                }}>
+                <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+                <span className='button-text custom-add-button'>Add</span>
+              </button>
             </div>
-            <button
-              className='flex-button preview form-button-add'
-              onClick={() => {
-                setKeywords([...keywords, keywordValue]);
-                setKeywordValue('');
-              }}>
-              <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
-              <span className='button-text custom-add-button'>Add</span>
-            </button>
             {showMessageError && keywords.length === 0 && (
-              <p className='showErrorMessage'>Keywords is required</p>
+              <p className='showErrorMessage'>Keywords are required</p>
             )}
+            <br />
             <div className='dates'>
               <KeyboardDatePicker
                 disableToolbar
                 variant='filled'
+                className={classes.datePicker}
                 format='MM/DD/yyyy'
-                margin='normal'
                 fullWidth={true}
                 label='Publish Date'
                 value={publishDate}
