@@ -59,7 +59,7 @@ export default function Index() {
           </div>
         </div>
       </div>
-      <CookieConsent debug={true}>
+      <CookieConsent>
         We are using cookies to give you the best experience in this application
       </CookieConsent>
     </div>

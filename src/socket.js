@@ -7,9 +7,9 @@ class Socket {
   constructor(url) {
     this.socket = io.connect(url);
   }
-  loginAction() {
+  loginAction(id) {
     this.socket.emit('login', {
-      put: 'something',
+      userId: id,
     });
   }
   connectAction() {
