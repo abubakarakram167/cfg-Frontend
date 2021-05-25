@@ -79,7 +79,7 @@ export default function SignIn({setView}) {
       setOpen2(true);
     }
     if (state.auth.user) {
-      socket.loginAction();
+      socket.loginAction(state.auth.user.id);
       if (state.auth.user.role === 'candidate') {
         history.push('/home');
       } else {

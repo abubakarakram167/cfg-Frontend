@@ -191,7 +191,9 @@ export default function AdminHeader() {
                       }
                     />
                     <div className='user-name-text'>
-                      <Typography>{username}</Typography>
+                      <Link to='/home/user-profile'>
+                        <Typography>{username}</Typography>
+                      </Link>
                     </div>
                   </div>
                 </MenuItem>
@@ -270,7 +272,9 @@ export default function AdminHeader() {
                 }
               />
               <div className='user-name-text'>
-                <Typography>{username}</Typography>
+                <Link to='/home/user-profile'>
+                  <Typography style={{color: 'white'}}>{username}</Typography>
+                </Link>
               </div>
             </div>
             <div className='right-icons'>
