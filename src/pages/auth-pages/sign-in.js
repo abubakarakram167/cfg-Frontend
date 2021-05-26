@@ -14,7 +14,7 @@ import {withStyles, makeStyles} from '@material-ui/core/styles';
 import PersonIcon from '@material-ui/icons/Person';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LockIcon from '@material-ui/icons/Lock';
-
+import {socket} from 'socket';
 const StyledFormField = withStyles((theme) => ({}))(TextField);
 
 const useStyles = makeStyles({
@@ -79,6 +79,7 @@ export default function SignIn({setView}) {
       setOpen2(true);
     }
     if (state.auth.user) {
+      socket.loginAction(state.auth.user.id);
       if (state.auth.user.role === 'candidate') {
         history.push('/home');
       } else {

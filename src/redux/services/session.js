@@ -12,11 +12,11 @@ class Session {
     });
   }
   static sessionData() {
-    return axiosInstance.get('/api/content/list/session?_count=100');
+    return axiosInstance.get('/api/content/list/session?_count=1000');
   }
   static getListData(id, type) {
     return axiosInstance.get(
-      `/api/content/list/content/${type}/` + id + '?_count=100&_pageNo=1',
+      `/api/content/list/content/${type}/` + id + '?_count=1000&_pageNo=1',
     );
   }
   static getContentData(id) {

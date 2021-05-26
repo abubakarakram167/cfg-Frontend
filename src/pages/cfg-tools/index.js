@@ -228,7 +228,7 @@ export default function CfgTool(props) {
   };
 
   return (
-    <div>
+    <div style={{paddingBottom: 80}}>
       <Dialog open={dialogOpen}>
         <DialogTitle>
           <div style={{minWidth: '400px'}}>Add New CFG Tool</div>
@@ -243,38 +243,6 @@ export default function CfgTool(props) {
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 value={title}
-              />
-            </ListItem>
-            <ListItem>
-              <KeyboardDatePicker
-                disableToolbar
-                variant='inline'
-                format='MM/DD/yyyy'
-                margin='normal'
-                fullWidth={true}
-                label='Start Date'
-                value={moment(start_date).format('MM/DD/yyyy')}
-                onChange={(e) => setstart_date(e)}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-                required
-              />
-            </ListItem>
-            <ListItem>
-              <KeyboardDatePicker
-                disableToolbar
-                variant='inline'
-                format='MM/DD/yyyy'
-                margin='normal'
-                fullWidth={true}
-                label='End Date'
-                value={moment(end_date).format('MM/DD/yyyy')}
-                onChange={(e) => setend_date(e)}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-                required
               />
             </ListItem>
             <ListItem>

@@ -30,6 +30,7 @@ import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
+import {socket} from 'socket';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -42,6 +43,13 @@ export default function AdminHeader() {
   const state = useSelector((state) => {
     return state.auth;
   });
+
+  useEffect(() => {
+    const socketObj = socket.getSocket();
+    socketObj.on('notification', (data) => {
+      console.log(data, 'Hello world');
+    });
+  }, []);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
@@ -183,7 +191,9 @@ export default function AdminHeader() {
                       }
                     />
                     <div className='user-name-text'>
-                      <Typography>{username}</Typography>
+                      <Link to='/home/user-profile'>
+                        <Typography>{username}</Typography>
+                      </Link>
                     </div>
                   </div>
                 </MenuItem>
@@ -262,7 +272,9 @@ export default function AdminHeader() {
                 }
               />
               <div className='user-name-text'>
-                <Typography>{username}</Typography>
+                <Link to='/home/user-profile'>
+                  <Typography style={{color: 'white'}}>{username}</Typography>
+                </Link>
               </div>
             </div>
             <div className='right-icons'>

@@ -231,7 +231,7 @@ export default function CfgTool(props) {
   };
 
   return (
-    <div>
+    <div style={{paddingBottom: 80}}>
       <Dialog open={dialogOpen}>
         <DialogTitle>
           <div style={{minWidth: '400px'}}>Add New CFG Tool</div>

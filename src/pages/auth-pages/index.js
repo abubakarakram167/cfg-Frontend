@@ -9,6 +9,7 @@ import './style.css';
 import Logo from 'assets/Logo.png';
 import {useDispatch} from 'react-redux';
 import LogoImage from 'assets/jmmb-foundation.png';
+import CookieConsent from 'react-cookie-consent';
 // import {
 //   forgotPasswordAction,
 //   loginAction,
@@ -58,6 +59,9 @@ export default function Index() {
           </div>
         </div>
       </div>
+      <CookieConsent>
+        We are using cookies to give you the best experience in this application
+      </CookieConsent>
     </div>
   );
 }

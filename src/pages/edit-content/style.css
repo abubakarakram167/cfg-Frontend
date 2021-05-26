@@ -44,8 +44,16 @@
   padding-right: 10px !important;
 }
 
+.add-icon-category {
+  cursor: pointer;
+  position: relative;
+  bottom: 40px;
+  left: 88%;
+}
+
 .dates {
   display: flex;
+  padding-top: 10px;
 }
 .image-preview {
   width: 50px;
@@ -57,6 +65,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .flex-buttons-publish {

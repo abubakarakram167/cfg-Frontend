@@ -45,6 +45,7 @@
 
 .dates {
   display: flex;
+  background-color: #e6e6e6;
 }
 .image-preview {
   width: 50px;
@@ -98,4 +99,33 @@
 .showErrorMessage {
   color: red;
   font-weight: 300;
+}
+
+.add-icon-category {
+  cursor: pointer;
+  position: relative;
+  bottom: 40px;
+  left: 88%;
+}
+
+.featured-image-button {
+  margin-left: 20px;
+  margin-top: 3px;
+}
+
+.last-feature-image {
+  border-bottom: 0.5px solid #cecece;
+  position: relative;
+  top: 10px;
+}
+
+.form-button-add {
+  cursor: pointer;
+  position: relative;
+  bottom: 52px;
+  left: 70%;
+}
+
+.custom-add-button {
+  font-size: 12px;
 }

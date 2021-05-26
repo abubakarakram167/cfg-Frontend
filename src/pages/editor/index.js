@@ -25,13 +25,30 @@ import {Show_Message} from '../../shared/constants/ActionTypes';
 import InfoIcon from '@material-ui/icons/Info';
 import {useHistory} from 'react-router-dom';
 import moment from 'moment';
-import {createTimeline} from 'redux/actions/Timeline';
+import {createTimeline, getTimelineData} from 'redux/actions/Timeline';
 import jsCookie from 'js-cookie';
+import PromptModal from 'components/PromptModal';
+import NavigationPrompt from 'react-router-navigation-prompt';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import MediaUpload from 'components/MediaUpload';
+import {withStyles, makeStyles} from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  datePicker: {
+    '& .MuiFormLabel-root': {
+      paddingLeft: 10,
+    },
+    '& .MuiInputBase-root': {
+      paddingLeft: 8,
+    },
+  },
+});
 
 export default function Editor() {
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
+  const toolState = useSelector((state) => state.tool);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [sub_title, setsub_title] = useState('Enter a subtitle');
@@ -58,11 +75,15 @@ export default function Editor() {
   const [publishDate, setPublishDate] = useState(null);
   const history = useHistory();
   const [author, setAuthor] = useState('');
-
+  const [isContentChange, setContentChanged] = useState(false);
   const {id} = useParams();
-  console.log('here the state', state);
+  const [featuredImage, setFeaturedImage] = useState('');
+  const [showDialogue, setShowDialogue] = useState(false);
+  const [timelineContent, setTimelineContent] = useState([]);
+  const classes = useStyles();
 
   const handleEditorChange = (e) => {
+    setContentChanged(true);
     setContent(e);
     setImageData(
       e.split('"').filter((element) => element.startsWith('data:image')),
@@ -82,12 +103,26 @@ export default function Editor() {
   };
 
   useEffect(() => {
-    dispatch(getContentData(params.id));
+    if (params.id !== 'null') dispatch(getContentData(params.id));
   }, [id, dispatch]);
 
   useEffect(() => {
-    dispatch(getSessionListData(params.id, params.cfgType));
+    if (params.cfgType !== 'timeline')
+      dispatch(getSessionListData(params.id, params.cfgType));
   }, []);
+
+  const isValidJSONString = (str) => {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  };
+
+  useEffect(() => {
+    if (params.cfgType === 'timeline') dispatch(getTimelineData());
+  }, [dispatch]);
 
   useEffect(() => {
     if (state.titleCreation) {
@@ -108,7 +143,8 @@ export default function Editor() {
     if (state.currentContent) {
       if (
         state.currentContent.categories &&
-        state.currentContent.categories.length
+        state.currentContent.categories.length &&
+        isValidJSONString(state.currentContent.categories)
       ) {
         setCategories(
           state.currentContent
@@ -118,6 +154,7 @@ export default function Editor() {
       } else {
         setCategories([]);
       }
+
       setsub_title(state.currentContent.sub_title || '');
       setContent('');
       setstart_date(new Date(state.currentContent.start_date));
@@ -130,13 +167,16 @@ export default function Editor() {
       setContentType(state.currentContent.type || '');
     }
 
+    setTimelineContent(toolState.content);
     if (state.createdContent) {
       setCreatedContentId(state.createdContent.id);
     }
   }, [state]);
 
-  const publish = () => {
+  const publish = (publishStatus) => {
+    setContentChanged(false);
     let totalTags = [];
+
     keywords.map((element) => {
       totalTags.push({
         tag_type: 'keyword',
@@ -146,44 +186,85 @@ export default function Editor() {
 
     if (params.cfgType === 'timeline') {
       if (
-        total_points === '0' ||
-        title === '' ||
-        content === '' ||
-        group === '' ||
-        categories.length === 0 ||
-        keywords.length === 0
+        (total_points === '0' ||
+          title === '' ||
+          content === '' ||
+          group === '' ||
+          categories.length === 0 ||
+          keywords.length === 0) &&
+        publishStatus === 'publish'
       )
         setShowMessageError(true);
       else {
-        dispatch(
-          createTimeline({
-            title,
-            author: author,
-            start_date: formatDate(start_date),
-            end_date: formatDate(end_date),
-            total_points,
-            status,
-            tags: totalTags,
-            detail: content,
-            assigned_group: group,
-            categories: JSON.stringify(categories),
-          }),
-        ).then((response) => {
-          if (response) {
-            setTimeout(() => {
-              history.push(`/admin/content/display/${response.content.id}`);
-            }, 1000);
+        if (title === '') {
+          dispatch({
+            type: Show_Message,
+            payload: {
+              message:
+                'The title should be present in order to preview the content.',
+              success: false,
+            },
+          });
+        } else {
+          let subtitles = toolState.content;
+          subtitles = subtitles && subtitles.length ? subtitles : [];
+
+          if (
+            subtitles &&
+            subtitles.length > 0 &&
+            subtitles.filter((content) => content.title === title).length > 0
+          ) {
+            dispatch({
+              type: Show_Message,
+              payload: {
+                message: 'This title is already used.Please use another one.',
+                success: false,
+              },
+            });
+          } else {
+            dispatch(
+              createTimeline({
+                title,
+                author: author,
+                start_date: formatDate(start_date),
+                end_date: formatDate(end_date),
+                total_points,
+                status: publishStatus === 'publish' ? status : 'draft',
+                tags: totalTags,
+                detail: content,
+                assigned_group: group,
+                categories: JSON.stringify(categories),
+                featured_image_url: featuredImage,
+              }),
+            ).then((response) => {
+              if (response) {
+                setTimeout(() => {
+                  if (!isContentChange) {
+                    history.push(
+                      `/admin/content/display/${response.data.content.id}`,
+                    );
+                  } else {
+                    setTimeout(() => {
+                      history.push(
+                        `/admin/content/display/${response.data.content.id}`,
+                      );
+                    }, 500);
+                  }
+                }, 1000);
+              }
+            });
           }
-        });
+        }
       }
     } else {
       if (
-        total_points === '0' ||
-        title === '' ||
-        content === '' ||
-        group === '' ||
-        categories.length === 0 ||
-        keywords.length === 0
+        (total_points === '0' ||
+          title === '' ||
+          content === '' ||
+          group === '' ||
+          categories.length === 0 ||
+          keywords.length === 0) &&
+        publishStatus === 'publish'
       )
         setShowMessageError(true);
       else {
@@ -225,29 +306,97 @@ export default function Editor() {
             },
           });
         } else {
-          let cfgSessionStatus = state.current.status;
-          if (cfgSessionStatus === 'published') {
-            let parent = null;
-            if (params.contentHeaderId === 'null') {
-              parent = params.id;
-            } else {
-              parent = params.contentHeaderId;
-            }
-            const tags = keywords.map((element) => {
-              return {
-                tag_type: 'keyword',
-                text: element,
-              };
+          if (title === '') {
+            dispatch({
+              type: Show_Message,
+              payload: {
+                message:
+                  'The title should be present in order to preview the content.',
+                success: false,
+              },
             });
-
+          } else {
+            let cfgSessionStatus = state.current.status;
             if (
-              parseInt(total_points) + parseInt(accumulativeTitlePoints) >
-              originalTotalPoints
+              cfgSessionStatus === 'published' ||
+              publishStatus === 'preview'
             ) {
+              let parent = null;
+              if (params.contentHeaderId === 'null') {
+                parent = params.id;
+              } else {
+                parent = params.contentHeaderId;
+              }
+              const tags = keywords.map((element) => {
+                return {
+                  tag_type: 'keyword',
+                  text: element,
+                };
+              });
+
+              if (
+                parseInt(total_points) + parseInt(accumulativeTitlePoints) >
+                originalTotalPoints
+              ) {
+                dispatch({
+                  type: Show_Message,
+                  payload: {
+                    message: 'Cannot be added.Please follow the requirements',
+                    success: false,
+                  },
+                });
+                setTimeout(() => {
+                  dispatch({
+                    type: Show_Message,
+                    payload: {message: null, success: true},
+                  });
+                }, 5000);
+              } else {
+                dispatch(
+                  createSessionTitle(
+                    {
+                      title,
+                      sub_title,
+                      detail: content,
+                      start_date: formatDate(start_date),
+                      end_date: formatDate(end_date),
+                      tags: totalTags,
+                      type: params.type,
+                      assigned_group: group,
+                      categories: JSON.stringify(categories),
+                      total_points,
+                      content_header_id: parseInt(parent),
+                      status: publishStatus === 'publish' ? status : 'draft',
+                      previous_page,
+                      next_page,
+                      featured_image_url: featuredImage,
+                    },
+                    params.type,
+                  ),
+                ).then((response) => {
+                  if (response) {
+                    setTimeout(() => {
+                      if (!isContentChange) {
+                        history.push(
+                          `/admin/content/display/${response.content.id}`,
+                        );
+                      } else {
+                        setTimeout(() => {
+                          history.push(
+                            `/admin/content/display/${response.content.id}`,
+                          );
+                        }, 1000);
+                      }
+                    }, 1000);
+                  }
+                });
+              }
+            } else {
               dispatch({
                 type: Show_Message,
                 payload: {
-                  message: 'Cannot be added.Please follow the requirements',
+                  message:
+                    'Session must be published in order to publish the content.',
                   success: false,
                 },
               });
@@ -256,52 +405,8 @@ export default function Editor() {
                   type: Show_Message,
                   payload: {message: null, success: true},
                 });
-              }, 5000);
-            } else {
-              dispatch(
-                createSessionTitle(
-                  {
-                    title,
-                    sub_title,
-                    detail: content,
-                    start_date: formatDate(start_date),
-                    end_date: formatDate(end_date),
-                    tags: totalTags,
-                    type: params.type,
-                    assigned_group: group,
-                    categories: JSON.stringify(categories),
-                    total_points,
-                    content_header_id: parseInt(parent),
-                    previous_page,
-                    next_page,
-                  },
-                  params.type,
-                ),
-              ).then((response) => {
-                if (response) {
-                  setTimeout(() => {
-                    history.push(
-                      `/admin/content/display/${response.content.id}`,
-                    );
-                  }, 1000);
-                }
-              });
+              }, 3000);
             }
-          } else {
-            dispatch({
-              type: Show_Message,
-              payload: {
-                message:
-                  'Session must be published in order to publish the content.',
-                success: false,
-              },
-            });
-            setTimeout(() => {
-              dispatch({
-                type: Show_Message,
-                payload: {message: null, success: true},
-              });
-            }, 3000);
           }
         }
       }
@@ -314,18 +419,16 @@ export default function Editor() {
   };
   const userList = useSelector((state) => state.userList);
 
-  console.log(
-    'the manipulation',
-    parseInt(total_points) + parseInt(accumulativeTitlePoints),
-  );
-  console.log('the state in create content', state);
-
   return (
     <div className='editor-page-full-container'>
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
-      <br />
+      <NavigationPrompt when={isContentChange ? true : false}>
+        {({onConfirm, onCancel}) => (
+          <PromptModal when={true} onCancel={onCancel} onConfirm={onConfirm} />
+        )}
+      </NavigationPrompt>
       {userList.message && (
         <Snackbar
           open={userList.message}
@@ -367,19 +470,27 @@ export default function Editor() {
             </div>
           </div>
           <div className='flex-buttons-publish'>
-            <Link to={`/admin/content/display/${params.id}`}>
-              <button className='flex-button preview'>
-                {' '}
-                <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
-                <span className='button-text'>Preview</span>
-              </button>
-            </Link>
-            <button className='flex-button publish' onClick={publish}>
+            <button
+              className='flex-button preview'
+              onClick={() => publish('preview')}>
+              <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
+              <span className='button-text'>Preview</span>
+            </button>
+            <button
+              className='flex-button publish'
+              onClick={() => publish('publish')}>
               <PublishIcon style={{fill: '#ffffff'}} />{' '}
               <span className='button-text'>Publish</span>
             </button>
           </div>
         </div>
+        <MediaUpload
+          showDialogue={showDialogue}
+          onClose={() => setShowDialogue(false)}
+          onImageSave={(image) => {
+            setFeaturedImage(image[0].url);
+          }}
+        />
         <div className='editor-container'>
           <div className='editor-side'>
             {showMessageError && content === '' && (
@@ -399,6 +510,16 @@ export default function Editor() {
                   ['font', 'align'],
                   ['video', 'image', 'link', 'audio'],
                 ], // Or Array of button list, eg. [['font', 'align'], ['image']]
+                font: [
+                  'Arial',
+                  'Gotham',
+                  'Rissa',
+                  'Angelina',
+                  'courier',
+                  'impact',
+                  'verdana',
+                  'georgia',
+                ],
               }}
               onChange={handleEditorChange}
             />
@@ -447,7 +568,7 @@ export default function Editor() {
                 );
               })}
             </div>
-            <div>
+            <div style={{height: 60}}>
               <form onSubmit={handleCategorySubmit}>
                 <TextField
                   variant='filled'
@@ -460,9 +581,17 @@ export default function Editor() {
                   fullWidth
                   label='Categories'
                 />
+                <button
+                  className='flex-button preview form-button-add'
+                  onClick={() => {
+                    setCategories([...categories, categoryValue]);
+                    setCategoryValue('');
+                  }}>
+                  <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+                  <span className='button-text custom-add-button'>Add</span>
+                </button>
               </form>
             </div>
-
             <br />
             <div>
               {keywords.map((element, index) => {
@@ -480,7 +609,7 @@ export default function Editor() {
                 );
               })}
             </div>
-            <div>
+            <div style={{height: 60}}>
               <form onSubmit={handleKeywordSubmit}>
                 <TextField
                   variant='filled'
@@ -492,17 +621,26 @@ export default function Editor() {
                   label='Key words'
                 />
               </form>
+              <button
+                className='flex-button preview form-button-add'
+                onClick={() => {
+                  setKeywords([...keywords, keywordValue]);
+                  setKeywordValue('');
+                }}>
+                <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+                <span className='button-text custom-add-button'>Add</span>
+              </button>
             </div>
             {showMessageError && keywords.length === 0 && (
-              <p className='showErrorMessage'>Keywords is required</p>
+              <p className='showErrorMessage'>Keywords are required</p>
             )}
             <br />
             <div className='dates'>
               <KeyboardDatePicker
                 disableToolbar
                 variant='filled'
+                className={classes.datePicker}
                 format='MM/DD/yyyy'
-                margin='normal'
                 fullWidth={true}
                 label='Publish Date'
                 value={publishDate}
@@ -582,18 +720,30 @@ export default function Editor() {
             </div>
             <br />
             <div>
-              <div style={{fontSize: '20px', fontWeight: 600}}>
-                Featured Image
+              <div style={{display: 'flex'}}>
+                <div style={{fontSize: '20px', fontWeight: 600}}>
+                  Featured Image
+                </div>
+                <div
+                  className='featured-image-button'
+                  onClick={() => {
+                    setShowDialogue(true);
+                  }}>
+                  <AddCircleIcon style={{color: 'red'}} />
+                </div>
               </div>
               <div style={{display: 'flex'}}>
-                {imageData.map((element, index) => {
-                  return (
-                    <div key={index} className='image-preview'>
-                      <img src={element} alt='data-text' />
-                    </div>
-                  );
-                })}
+                <div className='image-preview'>
+                  {featuredImage !== '' && (
+                    <img
+                      style={{width: 50, height: 50}}
+                      src={featuredImage}
+                      alt='data-text'
+                    />
+                  )}
+                </div>
               </div>
+              <div className='last-feature-image'></div>
             </div>
           </div>
         </div>

@@ -63,6 +63,7 @@ export default function CreatePostBox() {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append('media', file);
+    formData.append('category', 'cover');
     const data = await Media.addMedia(formData);
     const photo_url = data.data[0].file_name;
     setMedia(photo_url);

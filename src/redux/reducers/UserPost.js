@@ -13,7 +13,7 @@ const userPostReducer = (state = INIT_STATE, action) => {
       payload = action.payload;
       if (payload.error) {
         console.log('there was an error');
-      } else console.log(payload);
+      }
       return state;
     case actions.GET_USER_POSTS:
       payload = action.payload;

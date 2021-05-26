@@ -168,7 +168,9 @@ export default function AdminHeader() {
                       src={image && baseUrl + 'static/' + image}
                     />
                     <div className='user-name-text'>
-                      <Typography>{username}</Typography>
+                      <Link to='/home/user-profile'>
+                        <Typography>{username}</Typography>
+                      </Link>
                     </div>
                   </div>
                 </MenuItem>
@@ -196,9 +198,11 @@ export default function AdminHeader() {
                     <div className='icon'>
                       <AccountCircle style={{fill: 'black'}} />
                     </div>
-                    <div className='user-name-text'>
-                      <Typography>My Profile</Typography>
-                    </div>
+                    <Link to='/home/user-profile'>
+                      <div className='user-name-text'>
+                        <Typography>My Profile</Typography>
+                      </div>
+                    </Link>
                   </div>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
@@ -228,8 +232,11 @@ export default function AdminHeader() {
                 alt='User Avatar'
                 src={image && baseUrl + 'static/' + image}
               />
+
               <div className='user-name-text'>
-                <Typography>{username}</Typography>
+                <Link to='/home/user-profile'>
+                  <Typography style={{color: 'white'}}>{username}</Typography>
+                </Link>
               </div>
             </div>
             <div className='right-icons'>
@@ -250,9 +257,11 @@ export default function AdminHeader() {
                     <div className='icon'>
                       <AccountCircle style={{fill: 'black'}} />
                     </div>
-                    <div className='user-name-text'>
-                      <Typography>My Profile</Typography>
-                    </div>
+                    <Link to='/home/user-profile'>
+                      <div className='user-name-text'>
+                        <Typography>My Profile</Typography>
+                      </div>
+                    </Link>
                   </div>
                 </MenuItem>
                 <MenuItem onClick={handleClose2}>
