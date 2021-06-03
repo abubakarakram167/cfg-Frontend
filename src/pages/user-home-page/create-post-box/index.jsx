@@ -55,7 +55,7 @@ export default function CreatePostBox() {
   const handleSave = () => {
     setOpen(false);
     dispatch(createUserPost({content, status: 'published', media}));
-    dispatch(getUserPost());
+    // dispatch(getUserPost());
     setContent('');
     setMedia(null);
   };

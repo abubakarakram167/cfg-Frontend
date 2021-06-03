@@ -57,11 +57,15 @@ const ResetPassword = () => {
   return (
     <div className='container'>
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert onClose={handleClose1} severity='success'>
+        <Alert variant='filled' onClose={handleClose1} severity='success'>
           Your password has been successfully reset.
         </Alert>
       </Snackbar>
-      <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
+      <Snackbar
+        variant='filled'
+        open={open2}
+        autoHideDuration={6000}
+        onClose={handleClose2}>
         <Alert onClose={handleClose2} severity='error'>
           {errorMessage}
         </Alert>

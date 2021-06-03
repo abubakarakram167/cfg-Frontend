@@ -431,6 +431,7 @@ export default function Editor() {
       </NavigationPrompt>
       {userList.message && (
         <Snackbar
+          variant='filled'
           open={userList.message}
           autoHideDuration={6000}
           onClose={handleClose1}>
@@ -442,7 +443,7 @@ export default function Editor() {
         </Snackbar>
       )}
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert onClose={handleClose1} severity='success'>
+        <Alert variant='filled' onClose={handleClose1} severity='success'>
           Record updated successfully.
         </Alert>
       </Snackbar>

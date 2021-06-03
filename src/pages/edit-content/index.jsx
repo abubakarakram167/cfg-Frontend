@@ -274,6 +274,7 @@ export default function Editor() {
           autoHideDuration={6000}
           onClose={handleClose1}>
           <Alert
+            variant='filled'
             onClose={handleClose1}
             severity={userList.success ? 'success' : 'error'}>
             {userList.message}
@@ -281,7 +282,7 @@ export default function Editor() {
         </Snackbar>
       )}
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert onClose={handleClose1} severity='success'>
+        <Alert variant='filled' onClose={handleClose1} severity='success'>
           Record updated successfully.
         </Alert>
       </Snackbar>
