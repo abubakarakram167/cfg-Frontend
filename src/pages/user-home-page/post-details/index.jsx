@@ -36,6 +36,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {updateUserPost} from 'redux/actions/UserPost';
 import Posts from 'redux/services/post';
 import {formatDate, formatDatePost} from 'utils/stampToFormat';
+import EditorComponent from 'pages/editor-component';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -166,17 +167,24 @@ export default function RecipeReviewCard({post}) {
     <Dialog open={editDialogOpen} fullWidth>
       <DialogTitle>Edit Post</DialogTitle>
       <DialogContent>
-        <TextField
-          style={{width: '100%'}}
-          id='standard-multiline-static'
-          multiline
-          variant='filled'
-          rows={4}
-          fullwidth
-          value={editText}
-          onChange={(e) => setEditText(e.target.value)}
-          placeholder='How are you feeling in the moment?'
-        />
+        {post && !post.assigned_group && (
+          <TextField
+            style={{width: '100%'}}
+            id='standard-multiline-static'
+            multiline
+            variant='filled'
+            rows={4}
+            fullwidth
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            placeholder='How are you feeling in the moment?'
+          />
+        )}
+
+        {post && post.assigned_group && (
+          <EditorComponent content={editText} setContent={setEditText} />
+        )}
+
         <DialogActions style={{width: '100%'}}>
           <Button
             onClick={() => {

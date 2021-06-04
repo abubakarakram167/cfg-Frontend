@@ -237,6 +237,7 @@ export default function Preferences() {
           autoHideDuration={6000}
           onClose={handleClose1}>
           <Alert
+            variant='filled'
             onClose={handleClose1}
             severity={message.success ? 'success' : 'error'}>
             {message.message}

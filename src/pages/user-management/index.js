@@ -357,6 +357,7 @@ export default function UserManagement() {
           autoHideDuration={6000}
           onClose={handleClose1}>
           <Alert
+            variant='filled'
             onClose={handleClose1}
             severity={userList.success ? 'success' : 'error'}>
             {userList.message}

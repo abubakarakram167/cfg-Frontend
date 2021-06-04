@@ -160,12 +160,12 @@ const CreatePassword = () => {
   return (
     <div className='container'>
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert onClose={handleClose1} severity='success'>
+        <Alert variant='filled' onClose={handleClose1} severity='success'>
           Your password has been set. Please go back to login and sign in.
         </Alert>
       </Snackbar>
       <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
-        <Alert onClose={handleClose2} severity='error'>
+        <Alert variant='filled' onClose={handleClose2} severity='error'>
           {errorMessage}
         </Alert>
       </Snackbar>
