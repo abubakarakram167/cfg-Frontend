@@ -58,6 +58,7 @@ const CreatePassword = () => {
     }
     if (state.auth.message) {
       setOpen1(true);
+      setView(3);
     }
   }, [state]);
 
@@ -68,6 +69,21 @@ const CreatePassword = () => {
   const rejectTerms = () => {
     window.location.href = '/';
   };
+
+  const view3 = (
+    <div>
+      <div>
+        <h3>Password has been created successfully.</h3>
+      </div>
+      <br />
+      <div className='bottom-links'>
+        Go back to{' '}
+        <span>
+          <Link to='/'>Login</Link>
+        </span>
+      </div>
+    </div>
+  );
 
   const view2 = (
     <div>
@@ -184,7 +200,8 @@ const CreatePassword = () => {
           </div>
 
           {view === 1 && view1}
-          {view == 2 && view2}
+          {view === 2 && view2}
+          {view === 3 && view3}
         </AppCard>
       </div>
     </div>

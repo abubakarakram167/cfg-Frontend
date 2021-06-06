@@ -30,7 +30,7 @@ export default function UserDetails(props) {
         className={classes.media}
         image={
           props.element.photo_url
-            ? baseUrl + '/static/' + props.element.photo_url
+            ? baseUrl + 'static/' + props.element.photo_url
             : UserAvatar
         }
         title={props.element.first_name + ' ' + props.element.last_name}
@@ -45,11 +45,8 @@ export default function UserDetails(props) {
           color='textSecondary'
           component='p'
           style={{fontSize: '15px'}}>
-          {/* Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum in
-          debitis eveniet, harum vitae dolor adipisci, veritatis autem quo
-          minima deleniti placeat neque, tenetur laboriosam dolore quibusdam
-          enim exercitationem similique. */}
-          bio not being returned
+          {props.element.bio}
+          {/* bio not being returned */}
         </Typography>
         <br />
         <hr style={{color: 'gainsboro'}} />
