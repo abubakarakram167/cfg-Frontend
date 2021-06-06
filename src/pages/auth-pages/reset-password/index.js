@@ -22,6 +22,7 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [token, setToken] = useState();
   const [errorMessage, setErrorMessage] = useState('');
+  const [view, setView] = useState(1);
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -52,8 +53,79 @@ const ResetPassword = () => {
     }
     if (state.auth.message) {
       setOpen1(true);
+      setView(2);
     }
   }, [state]);
+
+  const view1 = (
+    <div>
+      <div>
+        <h3>Password Reset</h3>
+        <p>Please enter your new password and submit.</p>
+      </div>
+      <br />
+      <form onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          type='password'
+          value={password}
+          required
+          onChange={(e) => setPassword(e.target.value)}
+          variant='filled'
+          placeholder='password'
+        />
+        <br />
+        <PasswordStrengthBar password={password} />
+        {password && password.length <= 6 && (
+          <p className='not-password-match'> Password shouldn't be weak. </p>
+        )}
+        <TextField
+          style={{marginTop: 10}}
+          fullWidth
+          type='password'
+          value={confirmPassword}
+          required
+          onChange={(e) => {
+            setConfirmPassword(e.target.value);
+          }}
+          variant='filled'
+          placeholder='Confirm Password'
+        />
+        {password && confirmPassword && password !== confirmPassword && (
+          <p className='not-password-match'> Password Don't match </p>
+        )}
+        <button
+          className='submit-button'
+          type='submit'
+          disabled={password !== confirmPassword || password.length < 6}>
+          RESET PASSWORD
+        </button>
+      </form>
+
+      <br />
+      <div className='bottom-links'>
+        Go back to{' '}
+        <span>
+          <Link to='/'>Login</Link>
+        </span>
+      </div>
+    </div>
+  );
+  const view2 = (
+    <div>
+      <div>
+        <h3>Password has been reset successfully.</h3>
+      </div>
+      <br />
+      <div className='bottom-links'>
+        Go back to{' '}
+        <span>
+          <Link to='/'>Login</Link>
+        </span>
+      </div>
+    </div>
+  );
+
   return (
     <div className='container'>
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
@@ -76,59 +148,8 @@ const ResetPassword = () => {
           <div className='image-logo'>
             <img src={LogoImage} alt='logo' width='40%' />
           </div>
-          <div>
-            <h3>Password Reset</h3>
-            <p>Please enter your new password and submit.</p>
-          </div>
-          <br />
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              type='password'
-              value={password}
-              required
-              onChange={(e) => setPassword(e.target.value)}
-              variant='filled'
-              placeholder='password'
-            />
-            <br />
-            <PasswordStrengthBar password={password} />
-            {password && password.length <= 6 && (
-              <p className='not-password-match'>
-                {' '}
-                Password shouldn't be weak.{' '}
-              </p>
-            )}
-            <TextField
-              style={{marginTop: 10}}
-              fullWidth
-              type='password'
-              value={confirmPassword}
-              required
-              onChange={(e) => {
-                setConfirmPassword(e.target.value);
-              }}
-              variant='filled'
-              placeholder='Confirm Password'
-            />
-            {password && confirmPassword && password !== confirmPassword && (
-              <p className='not-password-match'> Password Don't match </p>
-            )}
-            <button
-              className='submit-button'
-              type='submit'
-              disabled={password !== confirmPassword || password.length < 6}>
-              RESET PASSWORD
-            </button>
-          </form>
-
-          <br />
-          <div className='bottom-links'>
-            Go back to{' '}
-            <span>
-              <Link to='/'>Login</Link>
-            </span>
-          </div>
+          {view === 1 && view1}
+          {view === 2 && view2}
         </AppCard>
       </div>
     </div>
