@@ -580,7 +580,6 @@ export default function CfgTool(props) {
                       .startsWith(publishDateFilter),
                   )
                   .map((row, index) => {
-                    console.log('the row', row);
                     return (
                       <StyledTableRow key={index}>
                         <StyledTableCell>

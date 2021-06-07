@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Button, makeStyles} from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import AdminHeader from 'pages/admin-header';
 import {
   getQuizAllQuestions,
   getQuestionAllOptions,
@@ -8,7 +9,7 @@ import {
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 import './toolbar.css';
-// i
+import './previewQuiz.css';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -126,75 +127,73 @@ const PreviewQuizScreen = ({data}) => {
     setCurrentQuestion(e);
   };
   return (
-    <>
-      <main>
-        <div className='dash-wrapper' style={{paddingTop: '0 !important'}}>
-          <div
-            className='row preview-questions-grid'
-            style={{margin: 'auto', width: '50%'}}>
-            <div className='view-questions-box'>
-              <div className='view-questions-box-title'>{getQuizName()}</div>
-              <div className='questions-list'>
-                {questions &&
-                  questions.map((q, i) => (
-                    <div
-                      className='view-question'
-                      onMouseEnter={() => handleCurrentQuestion(q.id)}>
-                      <div
-                        style={{marginBottom: 30}}
-                        className='view-questions-title'>
-                        {i + 1}) {q.question}
-                      </div>
-                      <SunEditor
-                        defaultValue={q.detail}
-                        showToolbar={false}
-                        setOptions={{
-                          height: 300,
-                        }}
-                        setDefaultStyle='font-size: 18px; color: #8f8f8f; font-weight: 400'
-                        disable={true}
-                      />
-                      <div
+    <div>
+      <div className='toolbar-container'>
+        <AdminHeader />
+      </div>
+      <br />
+      <div
+        className='row preview-questions-grid'
+        style={{margin: 'auto', width: '50%'}}>
+        <div className='view-questions-box'>
+          <div className='view-questions-box-title'>{getQuizName()}</div>
+          <div className='questions-list'>
+            {questions &&
+              questions.map((q, i) => (
+                <div
+                  className='view-question'
+                  onMouseEnter={() => handleCurrentQuestion(q.id)}>
+                  <div
+                    style={{marginBottom: 30}}
+                    className='view-questions-title'>
+                    {i + 1}. {q.question}
+                  </div>
+                  <SunEditor
+                    defaultValue={q.detail}
+                    showToolbar={false}
+                    setOptions={{
+                      height: 300,
+                    }}
+                    setDefaultStyle='font-size: 18px; color: #8f8f8f; font-weight: 400'
+                    disable={true}
+                  />
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      marginTop: 30,
+                    }}>
+                    {q.answers.map((a) => (
+                      <button
+                        className='view-questions-option'
                         style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          marginTop: 30,
-                        }}>
-                        {q.answers.map((a) => (
-                          <button
-                            className='view-questions-option'
-                            style={{
-                              textAlign: 'left',
-                              backgroundColor:
-                                attempt[q.id] == a
-                                  ? 'lightgrey'
-                                  : 'transparent',
-                            }}
-                            name={q.question}
-                            value={a}
-                            onClick={(e) => handleChoose(e.target)}>
-                            {a.option_description}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
-            <div style={{margin: '20px 0'}}>
-              <Button
-                onClick={handleFinish}
-                variant='contained'
-                color='secondary'
-                className={classes.button}
-                startIcon={<CheckCircleIcon />}>
-                Finish
-              </Button>
-            </div>
+                          textAlign: 'left',
+                          backgroundColor:
+                            attempt[q.id] == a ? 'lightgrey' : 'transparent',
+                        }}
+                        name={q.question}
+                        value={a}
+                        onClick={(e) => handleChoose(e.target)}>
+                        {a.option_description}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
-      </main>{' '}
-    </>
+        <div style={{margin: '20px 0', width: '100%'}}>
+          <Button
+            onClick={handleFinish}
+            variant='contained'
+            color='secondary'
+            className={classes.button}
+            startIcon={<CheckCircleIcon />}>
+            Finish
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 

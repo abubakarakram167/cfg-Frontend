@@ -1,16 +1,27 @@
 import React, {useState, useEffect} from 'react';
-import {Helmet} from 'react-helmet-async';
-import {withStyles} from '@material-ui/styles';
-import {makeStyles, Modal, TextField, Button} from '@material-ui/core';
+import {
+  makeStyles,
+  Modal,
+  TextField,
+  Button,
+  withStyles,
+} from '@material-ui/core';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import PublishIcon from '@material-ui/icons/Publish';
+import AdminHeader from 'pages/admin-header';
 import QuizModal from './AddModal';
 import AddNewQuestion from './AddNewQuestion';
 import AddFromBank from './AddFromBank';
 import _ from 'lodash';
 import draftToHtml from 'draftjs-to-html';
+import {Link} from 'react-router-dom';
+import jsCookie from 'js-cookie';
+import EditIcon from '@material-ui/icons/Edit';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import DeleteIcon from '@material-ui/icons/Delete';
 import history from '../../utils/history';
+import './content.css';
 import {
   addQuestionaire,
   addAnswer,
@@ -29,9 +40,17 @@ import {
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 
+const StyledTableTextfiled = withStyles((theme) => ({
+  root: {
+    width: '80%',
+    padding: 0,
+  },
+}))(TextField);
+
 const useStyles = makeStyles((theme) => ({
   questionTitle: {
     marginBottom: '20px',
+    paddingTop: 0,
   },
   actions: {
     maxWidth: '170px',
@@ -43,9 +62,11 @@ const useStyles = makeStyles((theme) => ({
   },
   question: {
     width: 'fit-content',
+    marginLeft: 20,
+    paddingTop: 5,
+    color: 'gray',
   },
   answer: {
-    maxWidth: 'calc(100% - 230px)',
     backgroundColor: 'white',
   },
   points: {
@@ -58,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1.3rem',
     padding: '15px',
     border: '1px solid grey',
+    width: '100%',
     // marginBottom:'10px'
   },
   editSection: {
@@ -67,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     borderRadius: '25px',
     marginRight: '15px',
-    fontSize: '12px',
+    fontSize: 10,
   },
   answerHeader: {
     display: 'flex',
@@ -75,6 +97,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     width: '330px',
     margin: '25px 0',
+  },
+  customTextField: {
+    '& .MuiInputBase-formControl': {
+      paddingTop: 0,
+    },
   },
 }));
 
@@ -86,6 +113,8 @@ const QuizContentScreen = (props) => {
   const [openImport, setOpenImport] = useState(false);
   const [selected, setSelected] = useState(null);
   const [content, setContent] = useState('');
+  const createdBy = JSON.parse(jsCookie.get('user')).id;
+
   const [editorState, setEditorState] = useState(
     EditorState.createWithText(''),
   );
@@ -129,6 +158,7 @@ const QuizContentScreen = (props) => {
     let temp = [...questions];
     temp.push(newQuestion);
     setQuestions(temp);
+    setRenderQuestions(temp);
     // addQuestionaire({question:e,correct_answer:10,deleted:0})
   };
   const handleImport = (e) => {
@@ -184,6 +214,7 @@ const QuizContentScreen = (props) => {
   };
 
   const handlePublish = () => {
+    console.log('the render questions', renderQuestions);
     renderQuestions.forEach((q) => {
       let points = [];
       q.answers.forEach((a) => {
@@ -202,7 +233,7 @@ const QuizContentScreen = (props) => {
           addQuizQuestions({
             quiz_id: getQuizParams(),
             question_id: res.id,
-            created_by: 1,
+            created_by: createdBy,
             updated_at: moment(),
             created_at: moment(),
             deleted: false,
@@ -247,6 +278,7 @@ const QuizContentScreen = (props) => {
   useEffect(() => {
     const getQuestions = async () => {
       let questions = await getQuizAllQuestions(parseInt(getQuizParams()));
+      console.log('the questions get', questions);
       const questionAllOptions = await getQuestionAllOptions();
       const hardCodeOptionsWithQuestion =
         questions && questions.questions && questions.questions.length
@@ -332,252 +364,290 @@ const QuizContentScreen = (props) => {
   };
 
   return (
-    <>
-      <article>
-        <Helmet>
-          <meta
-            name='description'
-            content='A React.js Boilerplate application homepage'
-          />
-        </Helmet>
-      </article>
-      <main>
-        <div className='dash-wrapper'>
-          <div className='row dash-session-header'>
-            <div className='col-md-8'>
-              <label
-                style={{fontSize: '1rem', fontWeight: 700, color: '#565454'}}>
-                {getQuizName()}
-              </label>
-              <Button
-                variant='contained'
-                onClick={() => handleOpenNew()}
-                style={{backgroundColor: 'red', marginLeft: 10}}
-                color='secondary'
-                className={classes.button}
-                startIcon={<AddCircleOutlinedIcon />}>
-                Add new questions
-              </Button>
+    <div>
+      <div className='toolbar-container'>
+        <AdminHeader />
+      </div>
+      <br />
+      <div className='container-fluid dash-wrapper'>
+        <div className='row dash-session-header'>
+          <div className='col-md-8'>
+            <label
+              style={{fontSize: '1rem', fontWeight: 700, color: '#565454'}}>
+              {getQuizName()}
+            </label>
+            <Button
+              variant='contained'
+              onClick={() => handleOpenNew()}
+              style={{backgroundColor: 'red', marginLeft: 10, fontSize: 10}}
+              color='secondary'
+              className={classes.button}
+              startIcon={<AddCircleOutlinedIcon />}>
+              Add new questions
+            </Button>
 
-              <Button
-                variant='contained'
-                onClick={() => handleOpenImport()}
-                style={{backgroundColor: 'grey', padding: '7px 0'}}
-                color='secondary'
-                className={classes.button}
-                startIcon={<AddCircleOutlinedIcon />}>
-                Add question from questions
-              </Button>
-            </div>
-            <div className='col-md-4' style={{textAlign: 'right'}}>
+            <Button
+              variant='contained'
+              onClick={() => handleOpenImport()}
+              style={{backgroundColor: 'grey', padding: 10, fontSize: 10}}
+              color='secondary'
+              className={classes.button}
+              startIcon={<AddCircleOutlinedIcon />}>
+              Add question from questions
+            </Button>
+          </div>
+          <div className='col-md-4'>
+            <div
+              className='flex-buttons-publish'
+              style={{justifyContent: 'flex-end'}}>
+              <Link
+                to={`/preview/quiz?quiz_id=${getQuizParams()}&quiz_name=${getQuizName()}`}>
+                <button className='flex-button preview'>
+                  {' '}
+                  <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
+                  <span className='button-text'>Preview</span>
+                </button>
+              </Link>
               <button
+                className='flex-button publish'
+                onClick={() => handlePublish()}>
+                <PublishIcon style={{fill: '#ffffff'}} />{' '}
+                <span className='button-text'>Publish</span>
+              </button>
+            </div>
+          </div>
+          {/* <div className='col-md-4' style={{textAlign: 'right'}}>
+            <button
+              style={{
+                padding: '7px 0',
+                paddingLeft: '25px',
+                paddingRight: '25px',
+              }}
+              className='button-title button_inline'
+              onClick={() => {
+                history.push(
+                  `/preview/quiz?quiz_id=${getQuizParams()}&quiz_name=${getQuizName()}`,
+                );
+              }}>
+              <i className='fas fa-eye' /> preview
+            </button>
+            <div className='btn-group'>
+              <button
+                onClick={() => handlePublish()}
+                type='button'
+                className='btn btn-danger'
                 style={{
+                  borderTopLeftRadius: '25px',
+                  borderBottomLeftRadius: '25px',
                   padding: '7px 0',
                   paddingLeft: '25px',
-                  paddingRight: '25px',
-                }}
-                className='button-title button_inline'
-                onClick={() => {
-                  history.push(
-                    `/preview/quiz?quiz_id=${getQuizParams()}&quiz_name=${getQuizName()}`,
-                  );
+                  paddingRight: '5px',
+                  backgroundColor: 'red',
+                  marginLeft: 20,
                 }}>
-                <i className='fas fa-eye' /> preview
+                <i className='fas fa-upload' /> Publish
               </button>
-              <div className='btn-group'>
-                <button
-                  onClick={() => handlePublish()}
-                  type='button'
-                  className='btn btn-danger'
-                  style={{
-                    borderTopLeftRadius: '25px',
-                    borderBottomLeftRadius: '25px',
-                    padding: '7px 0',
-                    paddingLeft: '25px',
-                    paddingRight: '5px',
-                    backgroundColor: 'red',
-                    marginLeft: 20,
-                  }}>
-                  <i className='fas fa-upload' /> Publish
-                </button>
-                <button
-                  type='button'
-                  className='btn btn-danger dropdown-toggle dropdown-toggle-split'
-                  style={{
-                    paddingRight: '25px',
-                    borderBottomRightRadius: '25px',
-                    borderTopRightRadius: '25px',
-                    borderLeft: '1px solid white',
-                    backgroundColor: 'red',
-                  }}
-                  data-toggle='dropdown'
-                  aria-haspopup='true'
-                  aria-expanded='false'>
-                  <span style={{fontSize: 20}} className='sr-only'>
-                    Toggle Dropdown
-                  </span>
-                </button>
-                <div className='dropdown-menu'>
-                  <a className='dropdown-item' href='#'>
-                    Action
-                  </a>
-                  <a className='dropdown-item' href='#'>
-                    Another action
-                  </a>
-                  <a className='dropdown-item' href='#'>
-                    Something else here
-                  </a>
-                  <div className='dropdown-divider' />
-                  <a className='dropdown-item' href='#'>
-                    Separated link
-                  </a>
-                </div>
+              <button
+                type='button'
+                className='btn btn-danger dropdown-toggle dropdown-toggle-split'
+                style={{
+                  paddingRight: '25px',
+                  borderBottomRightRadius: '25px',
+                  borderTopRightRadius: '25px',
+                  borderLeft: '1px solid white',
+                  backgroundColor: 'red',
+                }}
+                data-toggle='dropdown'
+                aria-haspopup='true'
+                aria-expanded='false'>
+                <span style={{fontSize: 20}} className='sr-only'>
+                  Toggle Dropdown
+                </span>
+              </button>
+              <div className='dropdown-menu'>
+                <a className='dropdown-item' href='#'>
+                  Action
+                </a>
+                <a className='dropdown-item' href='#'>
+                  Another action
+                </a>
+                <a className='dropdown-item' href='#'>
+                  Something else here
+                </a>
+                <div className='dropdown-divider' />
+                <a className='dropdown-item' href='#'>
+                  Separated link
+                </a>
               </div>
             </div>
-          </div>
-          <QuizModal
-            open={openNew}
+          </div> */}
+        </div>
+        <QuizModal
+          style={{padding: 20}}
+          open={openNew}
+          onClose={handleClose}
+          title='Add New Question'>
+          <AddNewQuestion
+            onSave={(e) => handleAddNewQuestion(e)}
             onClose={handleClose}
-            title='Add New Question'>
-            <AddNewQuestion
-              onSave={(e) => handleAddNewQuestion(e)}
-              onClose={handleClose}
-            />
-          </QuizModal>
+          />
+        </QuizModal>
 
-          <QuizModal
-            open={openImport}
+        <QuizModal
+          open={openImport}
+          onClose={handleClose}
+          title='Add Question From Question Bank'>
+          <AddFromBank
+            onImport={(e) => handleImport(e)}
             onClose={handleClose}
-            title='Add Question From Question Bank'>
-            <AddFromBank
-              onImport={(e) => handleImport(e)}
-              onClose={handleClose}
-            />
-          </QuizModal>
-          <div style={{marginTop: 30, width: '100%'}} className='row'>
-            {questions &&
-              questions.map((q) => {
-                if (!q.deleted) {
-                  return (
-                    <div style={{marginBottom: '10px'}}>
-                      <div className={classes.questionCard}>
-                        <div className='row'>
-                          <div className={classes.actions}>
-                            <i
-                              className='fas fa-edit'
-                              onClick={() => handleEdit(q)}
+          />
+        </QuizModal>
+        <div style={{marginTop: 30, width: '100%'}} className='row'>
+          {questions &&
+            questions.map((q) => {
+              if (!q.deleted) {
+                return (
+                  <div style={{marginBottom: '10px', width: '100%'}}>
+                    <div className={classes.questionCard}>
+                      <div className='row'>
+                        <div className={classes.actions}>
+                          {/* <i
+                            className='fas fa-edit'
+                            onClick={() => handleEdit(q)}
+                          />
+                          <i className='fas fa-copy' />
+                          <i
+                            className='fas fa-trash'
+                            style={{color: '#EB1B29'}}
+                            onClick={() => handleDelete(q)}
+                          /> */}
+                          <span
+                            className='question-icons'
+                            onClick={() => handleEdit(q)}>
+                            <EditIcon style={{fill: 'blue', fontSize: 23}} />
+                          </span>
+                          <span className='question-icons'>
+                            <FileCopyIcon
+                              style={{fill: 'blue', fontSize: 23}}
                             />
-                            <i className='fas fa-copy' />
-                            <i
-                              className='fas fa-trash'
-                              style={{color: '#EB1B29'}}
+                          </span>
+                          <span
+                            onClick={() => handleDelete(q)}
+                            className='question-icons last-icon'>
+                            <DeleteIcon
                               onClick={() => handleDelete(q)}
+                              style={{fill: 'red', fontSize: 25}}
                             />
-                          </div>
-                          <div className={classes.question}>{q.question}</div>
+                          </span>
                         </div>
+                        <div className={classes.question}>{q.question}</div>
                       </div>
-                      {q == selected && (
-                        <div className={classes.editSection}>
-                          <TextField
-                            className={classes.questionTitle}
-                            id='outlined-basic'
-                            variant='outlined'
-                            inputProps={{style: {fontSize: '1.3rem'}}}
-                            fullWidth
-                            style={{marginBottom: 80}}
-                            defaultValue={q.question}
-                            onChange={(text) => {
-                              onChangeQuestionText(text);
-                            }}
-                          />
-                          <SunEditor
-                            setContents={content}
-                            defaultValue=''
-                            setOptions={{
-                              height: 630,
-                              buttonList: [
-                                ['bold', 'italic', 'underline'],
-                                ['indent', 'outdent'],
-                                ['list'],
-                                ['fontColor'],
-                                ['fontSize'],
-                                ['font', 'align'],
-                                ['video', 'image', 'link', 'audio'],
-                              ], // Or Array of button list, eg. [['font', 'align'], ['image']]
-                              font: [
-                                'Arial',
-                                'Gotham',
-                                'Rissa',
-                                'Angelina',
-                                'courier',
-                                'impact',
-                                'verdana',
-                                'georgia',
-                              ],
-                            }}
-                            onChange={handleEditorChange}
-                          />
-                          <div className={classes.answerHeader}>
-                            <h3>Answers</h3>{' '}
-                            <Button
-                              variant='contained'
-                              style={{backgroundColor: 'red'}}
-                              color='secondary'
-                              className={classes.button}
-                              startIcon={<AddCircleOutlinedIcon />}
-                              onClick={() => addNewAnswer()}>
-                              ADD NEW ANSWER
-                            </Button>
-                          </div>
+                    </div>
+                    {q == selected && (
+                      <div className={classes.editSection}>
+                        <TextField
+                          className={[
+                            classes.questionTitle,
+                            classes.customTextField,
+                          ]}
+                          id='outlined-basic'
+                          variant='outlined'
+                          inputProps={{style: {fontSize: '1.3rem'}}}
+                          fullWidth
+                          defaultValue={q.question}
+                          onChange={(text) => {
+                            onChangeQuestionText(text);
+                          }}
+                        />
+                        <SunEditor
+                          setContents={content}
+                          defaultValue=''
+                          setOptions={{
+                            height: 430,
+                            buttonList: [
+                              ['bold', 'italic', 'underline'],
+                              ['indent', 'outdent'],
+                              ['list'],
+                              ['fontColor'],
+                              ['fontSize'],
+                              ['font', 'align'],
+                              ['video', 'image'],
+                              ['imageGallery'],
+                            ], // Or Array of button list, eg. [['font', 'align'], ['image']]
+                            font: [
+                              'Arial',
+                              'Gotham',
+                              'Rissa',
+                              'Angelina',
+                              'courier',
+                              'impact',
+                              'verdana',
+                              'georgia',
+                            ],
+                            plugins: ['image'],
+                            imageUploadSizeLimit: 500000,
+                          }}
+                          onChange={handleEditorChange}
+                        />
+                        <div className={classes.answerHeader}>
+                          <h3>Answers</h3>{' '}
+                          <Button
+                            variant='contained'
+                            style={{backgroundColor: 'red'}}
+                            color='secondary'
+                            className={classes.button}
+                            startIcon={<AddCircleOutlinedIcon />}
+                            onClick={() => addNewAnswer()}>
+                            ADD NEW ANSWER
+                          </Button>
+                        </div>
 
-                          {q.answers.map((a, i) => (
-                            <div style={{padding: '10px'}}>
-                              <div
-                                className={classes.questionCard}
-                                style={{border: 'none'}}>
-                                <div className='row'>
-                                  <div
-                                    className={classes.actions}
-                                    style={{maxWidth: '50px'}}
-                                    onClick={() => handleAnswerDelete(a, i)}>
-                                    <i
-                                      className='fas fa-trash'
-                                      style={{color: '#EB1B29'}}
-                                    />
-                                  </div>
-                                  <TextField
-                                    className={classes.answer}
-                                    value={a.option}
-                                    onChange={(e) =>
-                                      handleAnswerChange(e.target.value, i)
-                                    }
-                                    variant='outlined'
-                                  />
-                                  <TextField
-                                    className={classes.points}
-                                    value={a.points}
-                                    onChange={(e) =>
-                                      handlePointsChange(e.target.value, i)
-                                    }
-                                    type='number'
-                                    variant='outlined'
+                        {q.answers.map((a, i) => (
+                          <div style={{padding: '10px'}}>
+                            <div
+                              className={classes.questionCard}
+                              style={{border: 'none'}}>
+                              <div className='row'>
+                                <div
+                                  className={classes.actions}
+                                  style={{maxWidth: '50px'}}
+                                  onClick={() => handleAnswerDelete(a, i)}>
+                                  <DeleteIcon
+                                    onClick={() => handleDelete(q)}
+                                    style={{fill: 'red', fontSize: 25}}
                                   />
                                 </div>
+                                <StyledTableTextfiled
+                                  value={a.option}
+                                  fullWidth
+                                  onChange={(e) =>
+                                    handleAnswerChange(e.target.value, i)
+                                  }
+                                  variant='outlined'
+                                />
+                                <TextField
+                                  className={classes.points}
+                                  value={a.points}
+                                  onChange={(e) =>
+                                    handlePointsChange(e.target.value, i)
+                                  }
+                                  type='number'
+                                  variant='outlined'
+                                />
                               </div>
                             </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                }
-                return null;
-              })}
-          </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              return null;
+            })}
         </div>
-      </main>
-    </>
+      </div>
+    </div>
   );
 };
 

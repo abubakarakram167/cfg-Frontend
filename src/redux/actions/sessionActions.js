@@ -131,6 +131,7 @@ export const editContent = (params, type) => {
           }
         })
         .catch((error) => {
+          console.log('the payload is too', error.response);
           rej(false);
           if (error.response && error.response.status === 401) {
             dispatch(

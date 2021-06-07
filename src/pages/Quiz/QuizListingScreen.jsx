@@ -16,6 +16,7 @@ import ControlPoint from '@material-ui/icons/ControlPoint';
 import EditIcon from '@material-ui/icons/Edit';
 import {Link} from 'react-router-dom';
 import CustomTablePagination from '../user-management/pagination';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import moment from 'moment';
 import jsCookie from 'js-cookie';
 import FilterList from '@material-ui/icons/FilterList';
@@ -33,7 +34,7 @@ import {KeyboardDatePicker} from '@material-ui/pickers';
 import formatDate from 'utils/formatDate';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {createQuiz, getQuizData, quizList, addQuiz} from 'redux/actions/quiz';
+import {quizList, addQuiz, getAllCompleteQuestions} from 'redux/actions/quiz';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
@@ -104,13 +105,16 @@ export default function CfgTool(props) {
   const [publishDateFilter, setPublishdateFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
-  const [createAtFilter, setCreateAtFilter] = useState('');
-  const [category, setCategories] = useState([]);
   const [group, setGroup] = useState('candidate');
   const [value, setValue] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [categoryValue, setCategoryValue] = useState('');
+  const [successNavigatePage, setSuccessNavigatePage] = useState('');
+  const [failNavigatePage, setFailNavigatePage] = useState('');
 
   useEffect(() => {
     setContent(state.content);
+    dispatch(getAllCompleteQuestions());
   }, [state]);
 
   useEffect(() => {
@@ -185,21 +189,25 @@ export default function CfgTool(props) {
       ) {
         dispatch({
           type: Show_Message,
-          payload: {message: 'Title already Exist', success: false},
+          payload: {message: 'Quiz already Exist', success: false},
         });
       } else {
-        addQuiz({
-          quiz_name: title,
-          created_at: formatDate(created_date),
-          updated_at: formatDate(updated_date),
-          total_points,
-          created_by: JSON.parse(jsCookie.get('user')).id,
-          status,
-          assigned_group: group,
-          categories: JSON.stringify(category),
-        }).then((response) => {
-          console.log('after adding response in quiz', response);
-        });
+        dispatch(
+          addQuiz({
+            quiz_name: title,
+            created_at: formatDate(created_date),
+            updated_at: formatDate(updated_date),
+            total_points,
+            created_by: JSON.parse(jsCookie.get('user')).id,
+            status,
+            assigned_group: group,
+            category: JSON.stringify(categories),
+            success_navigate_page: successNavigatePage,
+            fail_navigate_page: failNavigatePage,
+            publish_date: formatDate(created_date),
+            author,
+          }),
+        );
       }
     }
 
@@ -217,25 +225,19 @@ export default function CfgTool(props) {
     dispatch({type: Show_Message, payload: {message: null, success: false}});
   };
 
-  const handleKeywordSubmit = (e) => {
+  const handleCategorySubmit = (e) => {
     e.preventDefault();
-    setCategories([...category, value]);
-    setValue('');
+    setCategories([...categories, categoryValue]);
+    setCategoryValue('');
   };
 
-  const keyPress = (e) => {
-    if (e.keyCode == 13) {
-      setCategories([...category, e.target.value]);
-      setValue('');
-      e.preventDefault();
-    }
-  };
+  console.log('the quiz all questions', state);
 
   return (
     <div style={{paddingBottom: 80}}>
       <Dialog open={dialogOpen}>
         <DialogTitle>
-          <div style={{minWidth: '400px'}}>Add New CFG Tool</div>
+          <div style={{minWidth: '400px'}}>Add New Quiz</div>
         </DialogTitle>
         <form onSubmit={handleSubmit}>
           <List>
@@ -260,6 +262,51 @@ export default function CfgTool(props) {
                 type='number'
               />
             </ListItem>
+            <div>
+              {categories && categories.length
+                ? categories.map((element, index) => {
+                    return (
+                      <Chip
+                        label={element}
+                        key={index}
+                        className='chip-style'
+                        onDelete={() => {
+                          setCategories(
+                            categories.filter((value) => value !== element),
+                          );
+                        }}
+                      />
+                    );
+                  })
+                : null}
+            </div>
+            <ListItem>
+              <div style={{height: 60, width: '100%'}}>
+                <form onSubmit={handleCategorySubmit}>
+                  <TextField
+                    variant='filled'
+                    value={categoryValue}
+                    required
+                    onSubmit={(e) =>
+                      setCategories([...categories, e.target.value])
+                    }
+                    onChange={(e) => setCategoryValue(e.target.value)}
+                    fullWidth
+                    label='Categories'
+                  />
+                  <button
+                    style={{position: 'relative', left: '75%'}}
+                    className='flex-button preview form-button-add'
+                    onClick={() => {
+                      setCategories([...categories, categoryValue]);
+                      setCategoryValue('');
+                    }}>
+                    <AddCircleIcon style={{fill: '#ffffff', fontSize: 15}} />{' '}
+                    <span className='button-text custom-add-button'>Add</span>
+                  </button>
+                </form>
+              </div>
+            </ListItem>
             <ListItem>
               <Select
                 labelId='demo-simple-select-filled-label'
@@ -282,36 +329,27 @@ export default function CfgTool(props) {
               </Select>
             </ListItem>
             <ListItem>
-              <div>
-                {category &&
-                  category.map((element, index) => {
-                    return (
-                      <Chip
-                        label={element}
-                        key={index}
-                        className='chip-style'
-                        onDelete={() => {
-                          setCategories(
-                            category.filter((value) => value !== element),
-                          );
-                        }}
-                      />
-                    );
-                  })}
-              </div>
+              <TextField
+                variant='filled'
+                label='Page to navigate to after assessment succeeds'
+                name='success_navigate_page'
+                required
+                fullWidth
+                value={successNavigatePage}
+                onChange={(e) => setSuccessNavigatePage(e.target.value)}
+              />
             </ListItem>
             <ListItem>
-              <div style={{width: '100%'}}>
-                <TextField
-                  className={classes.secondRoot}
-                  variant='filled'
-                  value={value}
-                  onKeyDown={keyPress}
-                  onChange={(e) => setValue(e.target.value)}
-                  fullWidth
-                  label='Categories'
-                />
-              </div>
+              <TextField
+                label='Failure Page'
+                variant='filled'
+                label='Page to navigate to after assessment fails'
+                name='fail_navigate_page'
+                value={failNavigatePage}
+                required
+                onChange={(e) => setFailNavigatePage(e.target.value)}
+                fullWidth
+              />
             </ListItem>
             <ListItem>
               <Select
@@ -508,7 +546,7 @@ export default function CfgTool(props) {
                   })
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .filter((element) =>
-                    (element.title ? element.title : '')
+                    (element.quiz_name ? element.quiz_name : '')
                       .toLowerCase()
                       .startsWith(nameFilter),
                   )
@@ -544,6 +582,7 @@ export default function CfgTool(props) {
                             checked={checked.includes(row.id)}
                             onChange={() => {
                               const {author} = row;
+                              console.log('the row .....', row);
                               let allIds = currentIds.length ? currentIds : [];
                               if (!allIds.includes(row.id)) allIds.push(row.id);
                               else {
@@ -551,23 +590,32 @@ export default function CfgTool(props) {
                                   (userId) => userId !== row.id,
                                 );
                               }
+                              console.log('all ids', allIds);
                               setSingleId(row.id);
                               setCurrentIds(allIds);
-                              setTitle(row.title);
+                              setTitle(row.quiz_name);
                               setPublishDate(row.created_at);
-                              // setend_date(row.end_date);
                               settotal_points(row.total_points);
                               setStatus(row.status);
-                              setGroup(row.assigned_group);
-                              setCategories(JSON.parse(row.categories));
+                              setGroup(
+                                row.apply_to_group
+                                  ? row.apply_to_group
+                                  : 'candidate',
+                              );
+                              setSuccessNavigatePage(row.success_navigate_page);
+                              setFailNavigatePage(row.fail_navigate_page);
+                              if (row.category)
+                                setCategories(JSON.parse(row.category));
+                              else setCategories([]);
                               toggleCheckbox(row.id);
                             }}
                           />
                         </StyledTableCell>
                         <StyledTableCell>
                           {' '}
-                          <Link to={`/admin/cfg-tools/${row.id}`}>
-                            {row.title}
+                          <Link
+                            to={`/content/quiz/?quiz_id=${row.id}&quiz_name=${row.quiz_name}`}>
+                            {row.quiz_name}
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>

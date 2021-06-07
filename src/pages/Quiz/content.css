@@ -1,0 +1,9 @@
+.dash-wrapper {
+  width: 91%;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+.question-icons {
+  padding-left: 15px;
+  cursor: pointer;
+}

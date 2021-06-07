@@ -23,6 +23,9 @@ class Quiz {
   static getAll() {
     return axiosInstance.get('/api/quiz/list');
   }
+  static getAllCompleteQuestions() {
+    return axiosInstance.get('/api/question/list');
+  }
   static getAllQuizQuestions(quizId) {
     return axiosInstance.get(`/api/quiz_questions/${quizId}`);
   }

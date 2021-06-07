@@ -9,6 +9,7 @@ const INIT_STATE = {
   titleCreation: false,
   currentContent: null,
   createdContent: null,
+  allCompleteQuestions: [],
   editedContent: false,
   quiz: [],
   selectedQuiz: null,
@@ -28,8 +29,21 @@ const QuizReducer = (state = INIT_STATE, action) => {
       }
       return {
         ...state,
-        content: [...state.content, payload.content],
+        content: [...state.content, payload],
         // currentContent: null,
+      };
+    case actions.GET_ALL_COMPLETE_QUESTIONS:
+      payload = action.payload;
+      if (payload.error) {
+        return {
+          ...state,
+          error: true,
+        };
+      }
+
+      return {
+        ...state,
+        allCompleteQuestions: [...payload.data],
       };
     case actions.GET_QUIZ_DATA:
       payload = action.payload;
@@ -56,7 +70,7 @@ const QuizReducer = (state = INIT_STATE, action) => {
 
       return {
         ...state,
-        quiz: payload,
+        content: payload,
       };
     case actions.GET_LIST_DATA:
       payload = action.payload;

@@ -45,6 +45,7 @@
     "formik": "^2.2.1",
     "fs": "0.0.1-security",
     "image-data-uri": "^2.0.1",
+    "jquery": "^3.6.0",
     "jss": "^10.4.0",
     "jss-extend": "^6.2.0",
     "jss-rtl": "^0.3.0",

@@ -16,15 +16,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   card: {
-    // maxHeight:'500px',
-    // maxWidth:'500px',
-    // height:'500px',
     minWidth: '500px',
     backgroundColor: 'white',
     color: 'grey',
     padding: '20px',
     minHeight: '300px',
-    maxHeight: '70vh',
     // overflowY:'scroll'
   },
 }));

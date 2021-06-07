@@ -4,8 +4,7 @@ import {Container, Select, MenuItem, TextField} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import ContentEditable from 'react-contenteditable';
 import './style.css';
-import SunEditor from 'suneditor-react';
-import 'suneditor/dist/css/suneditor.min.css';
+import SunEditor from '../../components/sunEditor';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import PublishIcon from '@material-ui/icons/Publish';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -16,6 +15,7 @@ import {
   getContentData,
   getSessionListData,
 } from 'redux/actions/sessionActions';
+import {getUserMediaList} from '../../redux/actions/media';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -105,6 +105,10 @@ export default function Editor() {
   useEffect(() => {
     if (params.id !== 'null') dispatch(getContentData(params.id));
   }, [id, dispatch]);
+
+  useEffect(() => {
+    dispatch(getUserMediaList());
+  }, []);
 
   useEffect(() => {
     if (params.cfgType !== 'timeline')
@@ -494,35 +498,10 @@ export default function Editor() {
         />
         <div className='editor-container'>
           <div className='editor-side'>
-            {showMessageError && content === '' && (
-              <p className='showErrorMessage'>content is required</p>
-            )}
             <SunEditor
-              setContents={content}
-              defaultValue=''
-              setOptions={{
-                height: 630,
-                buttonList: [
-                  ['bold', 'italic', 'underline'],
-                  ['indent', 'outdent'],
-                  ['list'],
-                  ['fontColor'],
-                  ['fontSize'],
-                  ['font', 'align'],
-                  ['video', 'image', 'link', 'audio'],
-                ], // Or Array of button list, eg. [['font', 'align'], ['image']]
-                font: [
-                  'Arial',
-                  'Gotham',
-                  'Rissa',
-                  'Angelina',
-                  'courier',
-                  'impact',
-                  'verdana',
-                  'georgia',
-                ],
-              }}
-              onChange={handleEditorChange}
+              onContentSave={(content) => setContent(content)}
+              content={content}
+              onContentChanged={() => setContentChanged(true)}
             />
           </div>
 
