@@ -1,0 +1,25 @@
+.preview-questions-grid {
+  width: 100%;
+  box-shadow: 0px 0px 4px 0px;
+  padding-left: 15px;
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+
+.view-questions-box-title {
+  font-size: 20px;
+  color: #d0a817;
+}
+
+.view-questions-box {
+  width: 100%;
+}
+
+.view-question {
+  margin-top: 20px;
+}
+
+.view-questions-title {
+  font-size: 18px;
+  color: gray;
+}

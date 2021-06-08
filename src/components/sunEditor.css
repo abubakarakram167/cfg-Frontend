@@ -1,0 +1,9 @@
+.upload-link-button {
+  display: block;
+  width: 30%;
+  margin: auto;
+  padding: 10px;
+  background-color: bisque;
+  margin-bottom: 20px;
+  border-radius: 20px;
+}

@@ -104,19 +104,40 @@ export const editMediaData = (formData) => {
   };
 };
 
+export const getUserMediaListEditor = () => {
+  return (dispatch) => {
+    return new Promise((res, rej) => {
+      Api.get('/api/media/list')
+        .then(async (data) => {
+          const allMedia = data.data;
+          if (data.status === 200) {
+            const allMediaData = allMedia.map((file) => {
+              return {
+                url: baseUrl + 'static/' + file.file_name,
+                fileName: file.title,
+                description: file.description,
+                uploadedOn: file.created_at,
+                thumbnailPreview:
+                  baseUrl + 'static/thumbnails/' + file.file_name,
+                id: file.id,
+              };
+            });
+            res(allMediaData);
+          }
+        })
+        .catch((error) => {
+          rej(error);
+        });
+    });
+  };
+};
+
 export const getUserMediaList = (formData) => {
   return (dispatch) => {
     dispatch({type: FETCH_START});
     Api.get('/api/media/list')
       .then(async (data) => {
-        console.log('On getting data', data);
         const allMedia = data.data;
-        // const allFiles = [];
-        // for (let media of allMedia) {
-        //   allFiles.push(Api.get(`/api/media/${media.id}`));
-        // }
-        // const getAllFiles = await Promise.all(allFiles);
-        console.log('the get All Files', allMedia);
         if (data.status === 200) {
           dispatch({
             type: Get_Media,

@@ -20,6 +20,7 @@ import Tool from './Tool';
 import mediaReducer from './media';
 import UserPost from './UserPost';
 import Comment from './Comments';
+import Quiz from './Quiz';
 
 const reducers = (history) =>
   combineReducers({
@@ -44,5 +45,6 @@ const reducers = (history) =>
     wall: Wall,
     preference: Preference,
     mediaList: mediaReducer,
+    quiz: Quiz,
   });
 export default reducers;
