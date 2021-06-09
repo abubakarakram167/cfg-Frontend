@@ -54,6 +54,8 @@ export default function AdminHeader() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
     dispatch(setCurrentUser(user));
+    console.log('hello hakuna', user.id);
+    socket.windowAction(user.id);
   }, []);
 
   useEffect(() => {
@@ -72,12 +74,16 @@ export default function AdminHeader() {
   };
 
   const handleLogout = () => {
+    console.log(state.user.id);
+    socket.logoutAction(state.user.id);
     setAnchorEl(null);
     localStorage.removeItem('auth-token');
     window.location.href = '/';
   };
 
   const handleLogout2 = () => {
+    console.log(state.user.id);
+    socket.logoutAction(state.user.id);
     setAnchorE2(null);
     localStorage.removeItem('auth-token');
     jsCookie.remove('login');
