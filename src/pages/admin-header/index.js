@@ -22,6 +22,7 @@ import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
 import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import {socket} from 'socket';
 export default function AdminHeader() {
   const [username, setUsername] = useState('');
   const [image, setImage] = useState('');
@@ -57,6 +58,8 @@ export default function AdminHeader() {
     setAnchorEl(null);
     localStorage.removeItem('auth-token');
     window.location.href = '/';
+    socket.logoutAction(state.auth.user.id);
+    localStorage.removeItem('current-user');
   };
 
   const handleLogout2 = () => {
@@ -65,6 +68,8 @@ export default function AdminHeader() {
     jsCookie.remove('login');
     jsCookie.remove('access');
     window.location.href = '/';
+    socket.logoutAction(state.auth.user.id);
+    localStorage.removeItem('current-user');
   };
 
   const [anchorE2, setAnchorE2] = useState(null);

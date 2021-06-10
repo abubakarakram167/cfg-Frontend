@@ -15,6 +15,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
+import {socket} from 'socket';
 import {
   Group,
   CardGiftcard,
@@ -30,7 +31,6 @@ import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
-import {socket} from 'socket';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -53,6 +53,9 @@ export default function AdminHeader() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
+    if (user) {
+      socket.windowAction(user.id);
+    }
     dispatch(setCurrentUser(user));
   }, []);
 
@@ -75,6 +78,7 @@ export default function AdminHeader() {
     setAnchorEl(null);
     localStorage.removeItem('auth-token');
     window.location.href = '/';
+    socket.logoutAction(state.auth.user.id);
   };
 
   const handleLogout2 = () => {
@@ -82,6 +86,7 @@ export default function AdminHeader() {
     localStorage.removeItem('auth-token');
     jsCookie.remove('login');
     jsCookie.remove('access');
+    socket.logoutAction(state.auth.user.id);
     window.location.href = '/';
   };
 
