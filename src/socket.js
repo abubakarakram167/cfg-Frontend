@@ -12,6 +12,16 @@ class Socket {
       userId: id,
     });
   }
+  logoutAction(id) {
+    this.socket.emit('logout', {
+      userId: id,
+    });
+  }
+  windowAction(id) {
+    this.socket.emit('window', {
+      userId: id,
+    });
+  }
   connectAction() {
     this.socket.on('connect', () => {
       console.log(
