@@ -37,6 +37,7 @@ import {updateUserPost} from 'redux/actions/UserPost';
 import Posts from 'redux/services/post';
 import {formatDate, formatDatePost} from 'utils/stampToFormat';
 import EditorComponent from 'pages/editor-component';
+import SunEditor from 'suneditor-react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -241,9 +242,17 @@ export default function RecipeReviewCard({post}) {
         <CardContent>
           <Typography variant='body2' color='textSecondary' component='p'>
             {post.assigned_group ? (
-              <div
-                className='caption-text'
-                dangerouslySetInnerHTML={{__html: editText}}></div>
+              // <div
+              //   className='caption-text'
+              //   dangerouslySetInnerHTML={{ __html: editText }}></div>
+              <div>
+                <SunEditor
+                  disable={true}
+                  height='100%'
+                  setContents={editText}
+                  showToolbar={false}
+                />
+              </div>
             ) : (
               <span className='caption-text'>{editText}</span>
             )}

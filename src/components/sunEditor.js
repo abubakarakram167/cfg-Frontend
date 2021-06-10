@@ -12,6 +12,7 @@ import baseUrl from '../utils/url';
 import {useDispatch, useSelector} from 'react-redux';
 import './sunEditor.css';
 import axiosInstance from '../utils/axios';
+import Media from 'redux/services/media';
 
 let allData = [];
 let allImages = [];
@@ -124,14 +125,14 @@ export default (props) => {
     });
   }, []);
 
-  const handleImageUploadBefore = async (files, info, uploadHandler) => {
-    try {
-      await handleSave(files, info);
-      return true;
-    } catch (err) {
-      return false;
-    }
-  };
+  // const handleImageUploadBefore = async (files, info, uploadHandler) => {
+  //   try {
+  //     await handleSave(files, info);
+  //     return true;
+  //   } catch (err) {
+  //     return false;
+  //   }
+  // };
 
   const handleSave = async (files, info) => {
     return new Promise((resolve, reject) => {
@@ -173,6 +174,23 @@ export default (props) => {
       }
     });
   };
+  const handleImageUploadBefore = async (files, info, uploadHandler) => {
+    const formData = new FormData();
+    formData.append('media', files[0]);
+    formData.append('category', 'cover');
+    const data = await Media.addMedia(formData);
+    const photo_url = baseUrl + 'static/' + data.data[0].file_name;
+    console.log(photo_url);
+    uploadHandler({
+      result: [
+        {
+          url: photo_url,
+          name: data.data[0].file_name,
+          size: files[0].size,
+        },
+      ],
+    });
+  };
 
   return (
     <div>
@@ -180,6 +198,7 @@ export default (props) => {
         <p className='showErrorMessage'>content is required</p>
       )}
       <SunEditor
+        onImageUploadBefore={handleImageUploadBefore}
         setContents={props.content}
         defaultValue=''
         setOptions={{
@@ -210,7 +229,7 @@ export default (props) => {
           imageUrlInput: false,
         }}
         onChange={handleEditorChange}
-        onImageUploadBefore={handleImageUploadBefore}
+        // onImageUploadBefore={handleImageUploadBefore}
       />
     </div>
   );

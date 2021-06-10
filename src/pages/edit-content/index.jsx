@@ -30,7 +30,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import $ from 'jquery';
 
 import {createOneMedia} from '../../redux/actions/media';
-import baseUrl from '../../utils/url';
+import Media from 'redux/services/media';
+import {baseUrl} from 'utils/axios';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -258,6 +259,23 @@ export default function Editor() {
     setOpen1(false);
   };
   const userList = useSelector((state) => state.userList);
+  const handleImageUploadBefore = async (files, info, uploadHandler) => {
+    const formData = new FormData();
+    formData.append('media', files[0]);
+    formData.append('category', 'cover');
+    const data = await Media.addMedia(formData);
+    const photo_url = baseUrl + 'static/' + data.data[0].file_name;
+    console.log(photo_url);
+    uploadHandler({
+      result: [
+        {
+          url: photo_url,
+          name: data.data[0].file_name,
+          size: files[0].size,
+        },
+      ],
+    });
+  };
 
   return (
     <div className='editor-page-full-container'>
@@ -334,6 +352,7 @@ export default function Editor() {
         <div className='editor-container'>
           <div className='editor-side'>
             <SunEditor
+              onImageUploadBefore={handleImageUploadBefore}
               onContentSave={(content) => setContent(content)}
               content={content}
               onContentChanged={() => setContentChanged(true)}
