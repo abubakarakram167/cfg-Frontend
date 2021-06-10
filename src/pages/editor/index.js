@@ -32,7 +32,8 @@ import NavigationPrompt from 'react-router-navigation-prompt';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MediaUpload from 'components/MediaUpload';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
-
+import Media from 'redux/services/media';
+import {baseUrl} from 'utils/axios';
 const useStyles = makeStyles({
   datePicker: {
     '& .MuiFormLabel-root': {
@@ -81,6 +82,24 @@ export default function Editor() {
   const [showDialogue, setShowDialogue] = useState(false);
   const [timelineContent, setTimelineContent] = useState([]);
   const classes = useStyles();
+
+  const handleImageUploadBefore = async (files, info, uploadHandler) => {
+    const formData = new FormData();
+    formData.append('media', files[0]);
+    formData.append('category', 'cover');
+    const data = await Media.addMedia(formData);
+    const photo_url = baseUrl + 'static/' + data.data[0].file_name;
+    console.log(photo_url);
+    uploadHandler({
+      result: [
+        {
+          url: photo_url,
+          name: data.data[0].file_name,
+          size: files[0].size,
+        },
+      ],
+    });
+  };
 
   const handleEditorChange = (e) => {
     setContentChanged(true);
@@ -502,6 +521,7 @@ export default function Editor() {
               onContentSave={(content) => setContent(content)}
               content={content}
               onContentChanged={() => setContentChanged(true)}
+              onImageUploadBefore={handleImageUploadBefore}
             />
           </div>
 
