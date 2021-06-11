@@ -34,7 +34,12 @@ import {KeyboardDatePicker} from '@material-ui/pickers';
 import formatDate from 'utils/formatDate';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {quizList, addQuiz, getAllCompleteQuestions} from 'redux/actions/quiz';
+import {
+  quizList,
+  addQuiz,
+  getAllCompleteQuestions,
+  editQuiz,
+} from 'redux/actions/quiz';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
@@ -119,7 +124,6 @@ export default function CfgTool(props) {
 
   useEffect(() => {
     dispatch(quizList());
-    console.log('the creator', JSON.parse(jsCookie.get('user')));
     setAuthor(JSON.parse(jsCookie.get('user')).user_name);
   }, [dispatch]);
 
@@ -147,40 +151,29 @@ export default function CfgTool(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (edit) {
-      // dispatch(
-      //   editContent({
-      //     title,
-      //     type: 'tool',
-      //     start_date,
-      //     total_points,
-      //     end_date,
-      //     status,
-      //     assigned_group: group,
-      //     categories: JSON.stringify(category),
-      //     id: singleId,
-      //   }),
-      // ).then((res) => {
-      //   if (res) {
-      //     const allContent = content.map((content) => {
-      //       if (content.id === singleId) {
-      //         return {
-      //           ...content,
-      //           title,
-      //           total_points,
-      //           status,
-      //           start_date: moment(start_date).format('YYYY-MM-DD'),
-      //           end_date: moment(end_date).format('YYYY-MM-DD'),
-      //           assigned_group: group,
-      //         };
-      //       } else return content;
-      //     });
-      //     toggleCheckbox(singleId);
-      //     setSingleId(null);
-      //     setContent(allContent);
-      //   }
-      // });
+      dispatch(
+        editQuiz({
+          quiz_name: title,
+          total_points,
+          created_by: JSON.parse(jsCookie.get('user')).id,
+          status,
+          apply_to_group: group,
+          category: JSON.stringify(categories),
+          success_navigate_page: successNavigatePage,
+          fail_navigate_page: failNavigatePage,
+          publish_date: formatDate(created_date),
+          id: singleId,
+        }),
+      );
+      setSingleId(null);
+      setTitle('');
+      setAuthor('');
+      setstart_date(new Date());
+      setend_date(new Date());
+      settotal_points('');
+      setStatus('');
+      setDialogOpen(false);
     } else {
       let allContents = state.quiz;
       if (
@@ -200,7 +193,7 @@ export default function CfgTool(props) {
             total_points,
             created_by: JSON.parse(jsCookie.get('user')).id,
             status,
-            assigned_group: group,
+            apply_to_group: group,
             category: JSON.stringify(categories),
             success_navigate_page: successNavigatePage,
             fail_navigate_page: failNavigatePage,
@@ -230,8 +223,7 @@ export default function CfgTool(props) {
     setCategories([...categories, categoryValue]);
     setCategoryValue('');
   };
-
-  console.log('the quiz all questions', state);
+  console.log('the user', JSON.parse(jsCookie.get('user')));
 
   return (
     <div style={{paddingBottom: 80}}>
@@ -493,7 +485,6 @@ export default function CfgTool(props) {
                       placeholder='Publish date'
                       className={classes.root}
                       onChange={(e) => {
-                        console.log('the', e);
                         if (e && e !== '')
                           setPublishdateFilter(
                             moment(e).format('YYYY-MM-DD').toString(),
@@ -574,7 +565,6 @@ export default function CfgTool(props) {
                       .startsWith(publishDateFilter),
                   )
                   .map((row, index) => {
-                    console.log('the row', row);
                     return (
                       <StyledTableRow key={index}>
                         <StyledTableCell>
@@ -582,7 +572,6 @@ export default function CfgTool(props) {
                             checked={checked.includes(row.id)}
                             onChange={() => {
                               const {author} = row;
-                              console.log('the row .....', row);
                               let allIds = currentIds.length ? currentIds : [];
                               if (!allIds.includes(row.id)) allIds.push(row.id);
                               else {
@@ -590,7 +579,7 @@ export default function CfgTool(props) {
                                   (userId) => userId !== row.id,
                                 );
                               }
-                              console.log('all ids', allIds);
+
                               setSingleId(row.id);
                               setCurrentIds(allIds);
                               setTitle(row.quiz_name);
@@ -619,9 +608,7 @@ export default function CfgTool(props) {
                           </Link>
                         </StyledTableCell>
                         <StyledTableCell>
-                          {row.author
-                            ? row.author.user_name
-                            : 'Name Not Present'}
+                          {JSON.parse(jsCookie.get('user')).user_name}
                         </StyledTableCell>
                         <StyledTableCell>
                           {moment(row.created_at).format('YYYY-MM-DD')}

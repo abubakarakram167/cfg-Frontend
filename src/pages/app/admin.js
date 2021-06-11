@@ -39,7 +39,7 @@ import {
   PreviewQuizScreen,
   QuizAddScreen,
   QuizListingScreen,
-} from '../Quiz/Loadable';
+} from 'pages/Quiz/Loadable';
 
 export default [
   <ProtectedRoute exact path='/admin' component={AdminHome} />,

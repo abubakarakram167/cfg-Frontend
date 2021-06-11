@@ -12,6 +12,7 @@ const INIT_STATE = {
   allCompleteQuestions: [],
   editedContent: false,
   quiz: [],
+  allBankQuestions: [],
   selectedQuiz: null,
 };
 let payload = null;
@@ -32,6 +33,22 @@ const QuizReducer = (state = INIT_STATE, action) => {
         content: [...state.content, payload],
         // currentContent: null,
       };
+    case actions.Edit_QUIZ:
+      payload = action.payload;
+      if (payload.error) {
+        return {
+          ...state,
+          error: true,
+        };
+      }
+      const allQuizes = state.content.map((quiz) => {
+        if (quiz.id === payload.id) return payload;
+        else return quiz;
+      });
+      return {
+        ...state,
+        content: allQuizes,
+      };
     case actions.GET_ALL_COMPLETE_QUESTIONS:
       payload = action.payload;
       if (payload.error) {
@@ -44,6 +61,19 @@ const QuizReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         allCompleteQuestions: [...payload.data],
+      };
+    case actions.GET_ALL_BANK_QUESTIONS:
+      payload = action.payload;
+      if (payload.error) {
+        return {
+          ...state,
+          error: true,
+        };
+      }
+
+      return {
+        ...state,
+        allBankQuestions: [...payload.data],
       };
     case actions.GET_QUIZ_DATA:
       payload = action.payload;
