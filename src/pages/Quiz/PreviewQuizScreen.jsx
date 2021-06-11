@@ -27,63 +27,11 @@ const useStyles = makeStyles((theme) => ({
 
 const PreviewQuizScreen = ({data}) => {
   const classes = useStyles();
-
-  const dummyData = [
-    {
-      id: 0,
-      question: 'What is MIndfullness?',
-      answers: [
-        'This is Option One',
-        'This is B Option',
-        'This is C option',
-        'This is D Option',
-      ],
-    },
-    {
-      id: 1,
-      question: 'What is It?',
-      answers: [
-        'This is Option One',
-        'This is B Option',
-        'This is C option',
-        'This is D Option',
-      ],
-    },
-    {
-      id: 2,
-      question: 'What is ss?',
-      answers: [
-        'This is Option One',
-        'This is B Option',
-        'This is C option',
-        'This is D Option',
-      ],
-    },
-    {
-      id: 3,
-      question: 'What is REact?',
-      answers: [
-        'This is Option One',
-        'This is B Option',
-        'This is C option',
-        'This is D Option',
-      ],
-    },
-    {
-      id: 4,
-      question: 'What is MongoDb?',
-      answers: [
-        'This is Option One',
-        'This is B Option',
-        'This is C option',
-        'This is D Option',
-      ],
-    },
-  ];
-
   const [questions, setQuestions] = useState(null);
   const [attempt, setAttempt] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [allQuestionoptions, setAllQuestionsOptions] = useState([]);
+  const [renderQuestions, setRenderQuestions] = useState([]);
 
   const handleChoose = (e) => {
     setAttempt({...attempt, [currentQuestion]: e.value});
@@ -103,29 +51,67 @@ const PreviewQuizScreen = ({data}) => {
 
   useEffect(() => {
     const getQuestions = async () => {
-      const questions = await getQuizAllQuestions(getQuizParams());
-      const questionAllOptions = await getQuestionAllOptions();
-      const hardCodeOptionsWithQuestion =
-        questions && questions.questions && questions.questions.length
-          ? questions.questions.map((question) => {
-              const options = questionAllOptions.filter((option) => {
-                return option.question_id === question.id;
-              });
-              return {
-                ...question,
-                answers: options,
-              };
-            })
-          : [];
+      let questions = await getQuizAllQuestions(parseInt(getQuizParams()));
+      console.log('the all Questions', questions);
+      let allOptions = [];
+      if (questions !== '') {
+        for (let question of questions.questions)
+          allOptions.push(getQuestionAllOptions(question.id));
+        const allOptionsResolved = await Promise.all(allOptions);
+        let allOptionsMerge = [];
 
-      setQuestions(hardCodeOptionsWithQuestion);
+        allOptionsResolved.map((optionsPerQuestions) => {
+          optionsPerQuestions.map((option) => {
+            allOptionsMerge.push(option);
+          });
+        });
+
+        setAllQuestionsOptions(allOptionsMerge);
+
+        const hardCodeOptionsWithQuestion =
+          questions && questions.questions && questions.questions.length
+            ? questions.questions.map((question) => {
+                const options = allOptionsMerge
+                  .filter((option) => {
+                    return option.question_id === question.id;
+                  })
+                  .map((optionValue) => {
+                    return {
+                      option: optionValue.option_description,
+                      points: optionValue.score,
+                      id: optionValue.id,
+                    };
+                  });
+                return {
+                  ...question,
+                  answers: options,
+                  new: false,
+                  edit: false,
+                };
+              })
+            : [];
+        console.log('the all hardcoded', hardCodeOptionsWithQuestion);
+        setRenderQuestions(hardCodeOptionsWithQuestion);
+        setQuestions(hardCodeOptionsWithQuestion);
+      }
     };
+
     getQuestions();
   }, []);
 
   const handleCurrentQuestion = (e) => {
     setCurrentQuestion(e);
   };
+
+  const getAlphabets = (i) => {
+    let alphabet;
+    if (i === 0) alphabet = 'A';
+    else if (i === 1) alphabet = 'B';
+    else if (i === 2) alphabet = 'C';
+    else alphabet = 'D';
+    return alphabet;
+  };
+
   return (
     <div>
       <div className='toolbar-container'>
@@ -148,22 +134,13 @@ const PreviewQuizScreen = ({data}) => {
                     className='view-questions-title'>
                     {i + 1}. {q.question}
                   </div>
-                  <SunEditor
-                    defaultValue={q.detail}
-                    showToolbar={false}
-                    setOptions={{
-                      height: 300,
-                    }}
-                    setDefaultStyle='font-size: 18px; color: #8f8f8f; font-weight: 400'
-                    disable={true}
-                  />
                   <div
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
                       marginTop: 30,
                     }}>
-                    {q.answers.map((a) => (
+                    {q.answers.map((a, i) => (
                       <button
                         className='view-questions-option'
                         style={{
@@ -174,7 +151,7 @@ const PreviewQuizScreen = ({data}) => {
                         name={q.question}
                         value={a}
                         onClick={(e) => handleChoose(e.target)}>
-                        {a.option_description}
+                        {getAlphabets(i)}. {a.option}
                       </button>
                     ))}
                   </div>
