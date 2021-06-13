@@ -18,7 +18,7 @@ class Socket {
     });
   }
   windowAction(id) {
-    this.socket.emit('login', {
+    this.socket.emit('window', {
       userId: id,
     });
   }
