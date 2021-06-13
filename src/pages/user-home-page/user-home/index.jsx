@@ -47,8 +47,8 @@ export default function UserHomePage() {
 
   useEffect(() => {
     dispatch(getUserPost());
-    // dispatch(getToolsData());
-    // getDayTools();
+    dispatch(getToolsData());
+    getDayTools();
   }, []);
 
   const createComment = (id, commentText) => {

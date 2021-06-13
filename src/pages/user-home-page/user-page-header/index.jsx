@@ -54,6 +54,7 @@ export default function AdminHeader() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
     if (user) {
+      console.log('hello hakuna', user.id);
       socket.windowAction(user.id);
     }
     dispatch(setCurrentUser(user));
@@ -76,17 +77,23 @@ export default function AdminHeader() {
 
   const handleLogout = () => {
     setAnchorEl(null);
+    const user = JSON.parse(localStorage.getItem('current-user'));
+
+    socket.logoutAction(user.id);
+    localStorage.removeItem('user');
     localStorage.removeItem('auth-token');
     window.location.href = '/';
-    socket.logoutAction(state.auth.user.id);
+    jsCookie.remove('login');
+    jsCookie.remove('access');
   };
 
   const handleLogout2 = () => {
     setAnchorE2(null);
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    socket.logoutAction(user.id);
     localStorage.removeItem('auth-token');
     jsCookie.remove('login');
     jsCookie.remove('access');
-    socket.logoutAction(state.auth.user.id);
     window.location.href = '/';
   };
 
