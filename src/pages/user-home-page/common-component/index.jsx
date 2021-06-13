@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import UserHomeHeader from '../user-page-header';
-import {socket} from '../../../socket';
+import { socket } from '../../../socket';
 import './style.css';
-import {socketEnums} from 'utils/socketEnums';
+import { socketEnums } from 'utils/socketEnums';
 
 export default function CommonComponent(props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -13,7 +13,6 @@ export default function CommonComponent(props) {
   useEffect(() => {
     socket.connectAction();
     console.log(socket.onAction(socketEnums.post));
-    socket.emitAction(socketEnums.login, 'hello from the new client');
   }, []);
 
   return (

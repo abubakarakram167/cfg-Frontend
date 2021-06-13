@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import AppHeader from '@crema/core/AppsContainer/AppsHeader';
 import SearchBar from '@crema/core/SearchBar';
 import './style.css';
@@ -6,28 +6,28 @@ import NotificationIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Home from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
-import {Avatar, Typography} from '@material-ui/core';
+import { Avatar, Typography } from '@material-ui/core';
 import UserAvatar from 'assets/user-avatar.png';
-import {Menu, MenuItem, Button} from '@material-ui/core';
-import {Link} from 'react-router-dom';
+import { Menu, MenuItem, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import Logo from 'assets/Logo.png';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
-import {socket} from 'socket';
+import { socket } from 'socket';
 import {
   Group,
   CardGiftcard,
   Bookmark,
   ShoppingBasket,
 } from '@material-ui/icons';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import AppSideBar from '../AppSidebar';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
-import {setCurrentUser} from 'redux/actions/authActions';
-import {baseUrl} from 'utils/axios';
-import {Card, List, ListItem} from '@material-ui/core';
+import { setCurrentUser } from 'redux/actions/authActions';
+import { baseUrl } from 'utils/axios';
+import { Card, List, ListItem } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
@@ -54,8 +54,8 @@ export default function AdminHeader() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
     if (user) {
-      console.log('hello hakuna', user.id);
-      socket.windowAction(user.id);
+      // console.log('hello hakuna', user.id);
+      // socket.windowAction(user.id);
     }
     dispatch(setCurrentUser(user));
   }, []);
@@ -119,7 +119,7 @@ export default function AdminHeader() {
   };
 
   const sendFriendRequest = async (id) => {
-    const data = await Friend.sendFriendRequest({userId: id});
+    const data = await Friend.sendFriendRequest({ userId: id });
   };
 
   return (
@@ -142,18 +142,18 @@ export default function AdminHeader() {
                 <div className='user-search-results'>
                   <Card>
                     <List>
-                      <ListItem style={{justifyContent: 'space-between'}}>
+                      <ListItem style={{ justifyContent: 'space-between' }}>
                         <h5>Search Results</h5>
                         <CloseIcon
                           onClick={() => setResultVisibility(false)}
-                          style={{cursor: 'pointer'}}
+                          style={{ cursor: 'pointer' }}
                         />
                       </ListItem>
                       {searchResults.map((element, index) => {
                         return (
                           <ListItem
                             key={index}
-                            style={{justifyContent: 'space-between'}}>
+                            style={{ justifyContent: 'space-between' }}>
                             <div>
                               {element.first_name} {element.last_name}
                             </div>
@@ -212,7 +212,7 @@ export default function AdminHeader() {
                 <MenuItem onClick={handleClose}>
                   <div className='mobile-menu-item'>
                     <div className='icon'>
-                      <NotificationIcon style={{fill: 'black'}} />
+                      <NotificationIcon style={{ fill: 'black' }} />
                     </div>
                     <div className='user-name-text'>Notifications</div>
                   </div>
@@ -223,7 +223,7 @@ export default function AdminHeader() {
                   }}>
                   <div className='mobile-menu-item'>
                     <div className='icon'>
-                      <SettingsIcon style={{fill: 'black'}} />
+                      <SettingsIcon style={{ fill: 'black' }} />
                     </div>
                     <div className='user-name-text'>Settings</div>
                   </div>
@@ -232,7 +232,7 @@ export default function AdminHeader() {
                   <Link to='/home/userProfile'>
                     <div className='mobile-menu-item'>
                       <div className='icon'>
-                        <AccountCircle style={{fill: 'black'}} />
+                        <AccountCircle style={{ fill: 'black' }} />
                       </div>
                       <div className='user-name-text'>
                         <Typography>My Profile</Typography>
@@ -243,7 +243,7 @@ export default function AdminHeader() {
                 <MenuItem onClick={handleLogout}>
                   <div className='mobile-menu-item'>
                     <div className='icon'>
-                      <Logout style={{fill: 'black'}} />
+                      <Logout style={{ fill: 'black' }} />
                     </div>
                     <div className='user-name-text'>Logout</div>
                   </div>
@@ -254,7 +254,7 @@ export default function AdminHeader() {
           <div className='center-user-page'>
             <div className='user-page-icon-container'>
               <Link to='/home'>
-                <Home style={{fontSize: 35}} />
+                <Home style={{ fontSize: 35 }} />
               </Link>
             </div>
             {/* <div className='user-page-icon-container'>
@@ -285,7 +285,7 @@ export default function AdminHeader() {
               />
               <div className='user-name-text'>
                 <Link to='/home/user-profile'>
-                  <Typography style={{color: 'white'}}>{username}</Typography>
+                  <Typography style={{ color: 'white' }}>{username}</Typography>
                 </Link>
               </div>
             </div>
@@ -299,7 +299,7 @@ export default function AdminHeader() {
                 </Link>
               </div> */}
               <div className='icon' onClick={handleClick2}>
-                <SettingsIcon style={{fill: '#ffffff'}} />
+                <SettingsIcon style={{ fill: '#ffffff' }} />
               </div>
 
               <Menu
@@ -311,7 +311,7 @@ export default function AdminHeader() {
                   <Link to='/home/user-profile'>
                     <div className='mobile-menu-item'>
                       <div className='icon'>
-                        <AccountCircle style={{fill: 'black'}} />
+                        <AccountCircle style={{ fill: 'black' }} />
                       </div>
                       <div className='user-name-text'>
                         <Typography>My Profile</Typography>
@@ -323,7 +323,7 @@ export default function AdminHeader() {
                 <MenuItem onClick={handleLogout2}>
                   <div className='mobile-menu-item'>
                     <div className='icon'>
-                      <Logout style={{fill: 'black'}} />
+                      <Logout style={{ fill: 'black' }} />
                     </div>
                     <div className='user-name-text'>Logout</div>
                   </div>
@@ -336,7 +336,7 @@ export default function AdminHeader() {
           <div className='mobile-header-content'>
             <MenuIcon
               onClick={toggleDrawerOpen}
-              style={{color: 'white', fontSize: 40}}
+              style={{ color: 'white', fontSize: 40 }}
             />{' '}
             <span className='mobile-company-header-tite'>JMMB Foundation</span>
           </div>
