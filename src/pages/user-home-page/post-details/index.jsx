@@ -245,7 +245,7 @@ export default function RecipeReviewCard({post}) {
               // <div
               //   className='caption-text'
               //   dangerouslySetInnerHTML={{ __html: editText }}></div>
-              <div>
+              <div className='rich-content-user-container'>
                 <SunEditor
                   disable={true}
                   height='100%'
