@@ -11,6 +11,8 @@ import {useDispatch} from 'react-redux';
 import LogoImage from 'assets/jmmb-foundation.png';
 import CookieConsent from 'react-cookie-consent';
 import {useHistory} from 'react-router';
+import jsCookie from 'js-cookie';
+
 // import {
 //   forgotPasswordAction,
 //   loginAction,
@@ -26,9 +28,8 @@ export default function Index() {
   useEffect(() => {
     // dispatch(registerAction({ first_name: "Test", last_name: "test", email: "f@gmail.com", password: "Hakuna123-" }))
     // dispatch(passwordResetAction({ token: "sadsdsa", password: "asdasd" }))
-    const user = JSON.parse(localStorage.getItem('current-user'));
-    const authToken = localStorage.getItem('auth-token');
-    if (user && authToken) {
+    const loginCookie = jsCookie.get('login');
+    if (loginCookie) {
       history.push('/home');
     }
   }, []);
