@@ -6,6 +6,8 @@ import PostDetails from '../post-details';
 import CommonComponent from '../common-component';
 import CfgToolOfTheDay from '../user-home/cfg-tools';
 import OnlineFriend from './online-friend';
+import LazyLoad from 'react-lazyload';
+
 import {
   List,
   ListItemIcon,
@@ -36,6 +38,7 @@ export default function UserHomePage() {
   const posts = useSelector((state) => state.userPost.posts);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [conversationExtended, setConversationExtended] = useState(false);
+  const [count, setCount] = useState(3);
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
@@ -46,7 +49,10 @@ export default function UserHomePage() {
   };
 
   useEffect(() => {
-    dispatch(getUserPost());
+    dispatch(getUserPost(count));
+  }, [count]);
+
+  useEffect(() => {
     dispatch(getToolsData());
     getDayTools();
   }, []);
@@ -201,18 +207,20 @@ export default function UserHomePage() {
     </List>
   );
   return (
-    <CommonComponent left={left} right={right}>
+    <CommonComponent
+      left={left}
+      right={right}
+      scroll={true}
+      scrollAction={() => setCount(count + 3)}>
       <CreatePost />
-      {posts
-        .slice(0)
-        .reverse()
-        .map((element, index) => {
-          return (
-            <div key={index} style={{margin: '20px 0px'}}>
-              <PostDetails post={element} />
-            </div>
-          );
-        })}
+
+      {posts.map((element, index) => {
+        return (
+          <div key={index} style={{margin: '20px 0px'}}>
+            <PostDetails post={element} />
+          </div>
+        );
+      })}
     </CommonComponent>
   );
 }
