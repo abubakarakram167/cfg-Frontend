@@ -555,7 +555,9 @@ const QuizContentScreen = (props) => {
           style={{padding: 20}}
           open={openNew}
           onClose={handleClose}
-          title='Add New Question'>
+          className='customQuiz'
+          title='Add New Question'
+          previewModal={false}>
           <AddNewQuestion
             onSave={(question) => handleAddNewQuestion(question)}
             onClose={handleClose}
