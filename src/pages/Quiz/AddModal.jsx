@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {makeStyles, Modal} from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
+import $ from 'jquery';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -14,23 +15,32 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    height: '100%',
   },
   card: {
     minWidth: '500px',
     backgroundColor: 'white',
     color: 'grey',
     padding: '20px',
-    minHeight: '300px',
-    // overflowY:'scroll'
+    height: '600px',
+    overflowY: 'scroll',
+  },
+  previewCard: {
+    minWidth: '500px',
+    backgroundColor: 'white',
+    color: 'grey',
+    padding: '20px',
+    height: '400px',
   },
 }));
 
 const AddModal = (props) => {
   const classes = useStyles();
   const {title, open, onClose, children} = props;
+
   return (
     <Modal className={classes.cont} open={open} onClose={() => onClose()}>
-      <div className={classes.card}>
+      <div className={props.previewModal ? classes.previewCard : classes.card}>
         <div className={classes.header}>
           <h1 className={classes.title}>{title}</h1>{' '}
           <CancelIcon

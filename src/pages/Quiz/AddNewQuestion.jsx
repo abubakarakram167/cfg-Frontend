@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {makeStyles, TextField, Checkbox} from '@material-ui/core';
 import SunEditor from '../../components/sunEditor';
+import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles((theme) => ({
   cont: {
     display: 'flex',
     flexDirection: 'column',
-    height: '300px',
+    height: '520px',
     justifyContent: 'space-between',
     overflowY: 'auto',
   },
@@ -57,15 +58,15 @@ const AddNewQuestion = ({onSave, onClose}) => {
         onContentSave={(content) => setQuestionDetail(content)}
         content={questionDetail}
         onContentChanged={() => console.log('heree')}
+        changeHeight={true}
       />
       <div className='d-block' style={{textAlign: 'center'}}>
         <button
           className='button primary_button_custom'
-          style={{marginRight: 10}}
+          style={{marginRight: 10, backgroundColor: 'red', borderColor: 'red'}}
           onClick={() => handleSave()}>
-          <div className='d-flex align-items-center justify-content-center'>
-            Save
-          </div>
+          <SaveIcon style={{fill: 'white', fontSize: 25}} />
+          Save
         </button>
       </div>
     </div>

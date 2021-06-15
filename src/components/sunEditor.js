@@ -204,7 +204,7 @@ export default (props) => {
         setContents={props.content}
         defaultValue=''
         setOptions={{
-          height: 630,
+          height: !props.changeHeight ? 630 : 200,
           buttonList: [
             ['bold', 'italic', 'underline'],
             ['indent', 'outdent'],
