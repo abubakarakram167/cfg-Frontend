@@ -57,17 +57,22 @@ export default function AdminHeader() {
 
   const handleLogout = () => {
     setAnchorEl(null);
-    console.log(state.user.id);
-    socket.logoutAction(state.user.id);
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    socket.logoutAction(user.id);
     localStorage.removeItem('auth-token');
+    localStorage.removeItem('user');
+    jsCookie.removeItem('login');
+    jsCookie.remove('access');
     window.location.href = '/';
   };
 
   const handleLogout2 = () => {
     setAnchorE2(null);
-    console.log(state.user.id);
-    socket.logoutAction(state.user.id);
+    const user = JSON.parse(localStorage.getItem('current-user'));
+
+    socket.logoutAction(user.id);
     localStorage.removeItem('auth-token');
+    localStorage.removeItem('user');
     jsCookie.remove('login');
     jsCookie.remove('access');
     window.location.href = '/';
@@ -277,6 +282,27 @@ export default function AdminHeader() {
                     </div>
                     <div className='user-name-text'>
                       <Link to='/home'>Preview as User</Link>
+                    </div>
+                  </div>
+                </MenuItem>
+                <MenuItem onClick={handleLogout2}>
+                  <div className='mobile-menu-item'>
+                    <div className='icon'>
+                      <Logout style={{fill: 'black'}} />
+                    </div>
+                  </div>
+                </MenuItem>
+                <MenuItem onClick={handleLogout2}>
+                  <div className='mobile-menu-item'>
+                    <div className='icon'>
+                      <Logout style={{fill: 'black'}} />
+                    </div>
+                  </div>
+                </MenuItem>
+                <MenuItem onClick={handleLogout2}>
+                  <div className='mobile-menu-item'>
+                    <div className='icon'>
+                      <Logout style={{fill: 'black'}} />
                     </div>
                   </div>
                 </MenuItem>

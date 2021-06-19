@@ -21,7 +21,14 @@ const userPostReducer = (state = INIT_STATE, action) => {
       if (payload.error) {
         return {...state, error: 'There was an error fetching the posts.'};
       }
-      return {...state, posts: Object.values(action.payload), error: null};
+      let posts_array = Object.values(action.payload);
+      posts_array = posts_array.filter((element) => {
+        if (!state.posts.find((post) => element.id == post.id)) {
+          return element;
+        }
+      });
+
+      return {...state, posts: [...state.posts, ...posts_array], error: null};
     case actions.DELETE_USER_POST:
       payload = action.payload;
       if (payload.error) {

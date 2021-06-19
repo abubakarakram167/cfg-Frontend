@@ -25,10 +25,10 @@ export const createUserPost = (params) => {
   };
 };
 
-export const getUserPost = () => {
+export const getUserPost = (count) => {
   return async function (dispatch) {
     try {
-      const response = await Post.getUserPosts();
+      const response = await Post.getUserPosts(count);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');

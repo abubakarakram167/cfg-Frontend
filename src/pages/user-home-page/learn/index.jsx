@@ -6,6 +6,8 @@ import {Button} from '@material-ui/core';
 import './style.css';
 import {getContentData} from '../../../redux/actions/toolActions';
 import {useDispatch, useSelector} from 'react-redux';
+import SunEditor from 'suneditor-react';
+
 export default function Learn() {
   const params = useParams();
   const history = useHistory();
@@ -99,9 +101,16 @@ export default function Learn() {
         <div>
           <span className='learn-title'>{content.title}</span>
           <br />
-          <div
-            className='learn-content'
-            dangerouslySetInnerHTML={{__html: content.detail}}></div>
+          <div className='learn-content'>
+            <div className='rich-content-user-container'>
+              <SunEditor
+                disable={true}
+                height='100%'
+                setContents={content ? content.detail : ''}
+                showToolbar={false}
+              />
+            </div>
+          </div>
           <br />
           <div className='learn-content-buttons'>
             {content && content.previous_page && (

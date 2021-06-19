@@ -9,12 +9,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {Avatar, Typography} from '@material-ui/core';
 import UserAvatar from 'assets/user-avatar.png';
 import {Menu, MenuItem, Button} from '@material-ui/core';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import Logo from 'assets/Logo.png';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
+import {socket} from 'socket';
 import {
   Group,
   CardGiftcard,
@@ -30,7 +31,7 @@ import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
-import {socket} from 'socket';
+import LogoImage from 'assets/cfgWhiteLogo.png';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -39,7 +40,7 @@ export default function AdminHeader() {
   const dispatch = useDispatch('');
   const [searchResults, setSearchResults] = useState([]);
   const [resultVisibility, setResultVisibility] = useState(false);
-
+  const history = useHistory();
   const state = useSelector((state) => {
     return state.auth;
   });
@@ -53,6 +54,10 @@ export default function AdminHeader() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
+    if (user) {
+      // console.log('hello hakuna', user.id);
+      // socket.windowAction(user.id);
+    }
     dispatch(setCurrentUser(user));
     console.log('hello hakuna', user.id);
     socket.windowAction(user.id);
@@ -77,7 +82,13 @@ export default function AdminHeader() {
     console.log(state.user.id);
     socket.logoutAction(state.user.id);
     setAnchorEl(null);
+    const user = JSON.parse(localStorage.getItem('current-user'));
+
+    socket.logoutAction(user.id);
+    localStorage.removeItem('user');
     localStorage.removeItem('auth-token');
+    jsCookie.remove('login');
+    jsCookie.remove('access');
     window.location.href = '/';
   };
 
@@ -85,6 +96,9 @@ export default function AdminHeader() {
     console.log(state.user.id);
     socket.logoutAction(state.user.id);
     setAnchorE2(null);
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    localStorage.removeItem('user');
+    socket.logoutAction(user.id);
     localStorage.removeItem('auth-token');
     jsCookie.remove('login');
     jsCookie.remove('access');
@@ -332,7 +346,9 @@ export default function AdminHeader() {
               onClick={toggleDrawerOpen}
               style={{color: 'white', fontSize: 40}}
             />{' '}
-            <span className='mobile-company-header-tite'>JMMB Foundation</span>
+            <span className='mobile-company-header-tite'>
+              <img src={LogoImage} alt={'logo'} />
+            </span>
           </div>
         </div>
       </AppHeader>

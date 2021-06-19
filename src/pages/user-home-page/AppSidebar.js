@@ -31,7 +31,8 @@ import {
 } from '@material-ui/icons';
 import SearchBar from '@crema/core/SearchBar';
 import SearchIcon from '@material-ui/icons/Search';
-
+import Logout from '@material-ui/icons/ExitToApp';
+import LogoImage from 'assets/jmmb-foundation.png';
 import {Link} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {baseUrl} from 'utils/axios';
@@ -39,6 +40,9 @@ import {Card} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
+import {socket} from 'socket';
+import jsCookie from 'js-cookie';
+
 import './sidestyle.css';
 const AppSidebar = (props) => {
   const [searchResults, setSearchResults] = useState([]);
@@ -54,6 +58,16 @@ const AppSidebar = (props) => {
 
   const sendFriendRequest = async (id) => {
     const data = await Friend.sendFriendRequest({userId: id});
+  };
+
+  const handleLogout = () => {
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    socket.logoutAction(user.id);
+    localStorage.removeItem('user');
+    localStorage.removeItem('auth-token');
+    jsCookie.remove('login');
+    jsCookie.remove('access');
+    window.location.href = '/';
   };
 
   const handleToggleDrawer = () => {
@@ -289,6 +303,12 @@ const AppSidebar = (props) => {
               <ListItemText primary='Host A Conversation' />
             </ListItem>
           </Link> */}
+          <ListItem onClick={handleLogout}>
+            <ListItemIcon>
+              <Logout style={{color: 'red'}} />
+            </ListItemIcon>
+            <ListItemText primary='Logout' />
+          </ListItem>
         </List>
       </div>
     </Drawer>

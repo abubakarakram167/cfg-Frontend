@@ -5,6 +5,7 @@ import {
   UPDATE_NEW_USER,
 } from '../../shared/constants/ActionTypes';
 import * as actions from '../actions/action.types';
+import {socket} from 'socket';
 
 const INIT_STATE = {
   user: null,
@@ -56,6 +57,7 @@ const authReducer = (state = INIT_STATE, action) => {
         localStorage.setItem('auth-token', payload.token);
       }
       if (payload.user) {
+        socket.loginAction(payload.user.id);
         localStorage.setItem('current-user', JSON.stringify(payload.user));
       }
       if (payload.error) error = payload.error.data.message;

@@ -1,20 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Facebook from 'assets/facebook.png';
 import Google from 'assets/google.jpg';
 import Mail from 'assets/Mail.png';
 import Twitter from 'assets/Twitter.png';
-import {useDispatch, useSelector} from 'react-redux';
-import {loginAction, setErrorToNull} from '../../redux/actions/authActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAction, setErrorToNull } from '../../redux/actions/authActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-import {useHistory} from 'react-router';
-import {withStyles, makeStyles} from '@material-ui/core/styles';
+import { useHistory } from 'react-router';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import PersonIcon from '@material-ui/icons/Person';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LockIcon from '@material-ui/icons/Lock';
-import {socket} from 'socket';
+import { socket } from 'socket';
 const StyledFormField = withStyles((theme) => ({}))(TextField);
 
 const useStyles = makeStyles({
@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function SignIn({setView}) {
+export default function SignIn({ setView }) {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [currentHeight, setCurrentheight] = useState(0);
@@ -65,7 +65,7 @@ export default function SignIn({setView}) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(loginAction({email, password}));
+    dispatch(loginAction({ email, password }));
   };
   window.addEventListener('resize', () => {
     setCurrentheight(window.innerHeight);
@@ -79,7 +79,6 @@ export default function SignIn({setView}) {
       setOpen2(true);
     }
     if (state.auth.user) {
-      socket.loginAction(state.auth.user.id);
       if (state.auth.user.role === 'candidate') {
         history.push('/home');
       } else {
@@ -110,7 +109,7 @@ export default function SignIn({setView}) {
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
-                <PersonIcon style={{fontSize: 15}} />
+                <PersonIcon style={{ fontSize: 15 }} />
               </InputAdornment>
             ),
           }}
@@ -125,11 +124,11 @@ export default function SignIn({setView}) {
           fullWidth
           variant='filled'
           // className={currentHeight >= 600 ? classes.root : classes.secondRoot}
-          style={{marginTop: '20px', marginBottom: '20px'}}
+          style={{ marginTop: '20px', marginBottom: '20px' }}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
-                <LockIcon style={{fontSize: 15}} />
+                <LockIcon style={{ fontSize: 15 }} />
               </InputAdornment>
             ),
           }}
@@ -150,7 +149,7 @@ export default function SignIn({setView}) {
             <Checkbox /> <span>Remember Me</span>
           </div> */}
           <div
-            style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}
+            style={{ color: '#EB1B29', fontWeight: '600', cursor: 'pointer' }}
             onClick={() => setView(3)}>
             Forgot Password?
           </div>
@@ -176,10 +175,10 @@ export default function SignIn({setView}) {
           <img src={Facebook} alt='' />
         </div> */}
         <div className='last-container'>
-          <span style={{color: '#eb1b29'}}>Don't have an account? </span>
+          <span style={{ color: '#eb1b29' }}>Don't have an account? </span>
           <br />
           <span
-            style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}
+            style={{ color: '#EB1B29', fontWeight: '600', cursor: 'pointer' }}
             onClick={() => setView(2)}>
             Sign Up
           </span>
