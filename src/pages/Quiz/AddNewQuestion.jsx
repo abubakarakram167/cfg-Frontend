@@ -1,29 +1,47 @@
 import React, {useState} from 'react';
-import {makeStyles, TextField} from '@material-ui/core';
-// import save from "../../../components/common/assets/icons/save.svg";
+import {makeStyles, TextField, Checkbox} from '@material-ui/core';
+import SunEditor from '../../components/sunEditor';
+import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles((theme) => ({
   cont: {
     display: 'flex',
     flexDirection: 'column',
-    height: '200px',
+    height: '520px',
     justifyContent: 'space-between',
+    overflowY: 'auto',
   },
 }));
 
 const AddNewQuestion = ({onSave, onClose}) => {
   const classes = useStyles();
   const [question, setQuestion] = useState('');
+  const [questionDetail, setQuestionDetail] = useState('');
+  const [isAddToBank, setIsAddToBank] = useState(false);
 
   const handleSave = async () => {
     if (question !== '') {
-      await onSave(question);
+      await onSave({
+        question,
+        questionDetail,
+        isAddToBank,
+      });
     }
     onClose();
   };
 
   return (
     <div className={classes.cont}>
+      <span>
+        Add To Bank{' '}
+        <Checkbox
+          checked={isAddToBank}
+          onChange={() => {
+            setIsAddToBank(!isAddToBank);
+          }}
+        />{' '}
+      </span>
+
       <TextField
         id='standard-full-width'
         label='Question'
@@ -36,16 +54,19 @@ const AddNewQuestion = ({onSave, onClose}) => {
           shrink: true,
         }}
       />
-
+      <SunEditor
+        onContentSave={(content) => setQuestionDetail(content)}
+        content={questionDetail}
+        onContentChanged={() => console.log('heree')}
+        changeHeight={true}
+      />
       <div className='d-block' style={{textAlign: 'center'}}>
         <button
-          className='button primary_button'
-          style={{marginRight: 10}}
+          className='button primary_button_custom'
+          style={{marginRight: 10, backgroundColor: 'red', borderColor: 'red'}}
           onClick={() => handleSave()}>
-          <div className='d-flex align-items-center justify-content-center'>
-            {/* <img src={save} /> */}
-            <span style={{marginLeft: 5}}>Save</span>
-          </div>
+          <SaveIcon style={{fill: 'white', fontSize: 25}} />
+          Save
         </button>
       </div>
     </div>

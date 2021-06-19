@@ -34,12 +34,13 @@ import HomeCFGTools from 'pages/user-home-page/cfg-tools';
 import CfgToolsPage from 'pages/user-home-page/cfg-tools-page';
 import Learn from 'pages/user-home-page/learn';
 import AllInboxPage from 'pages/user-home-page/all-in-box';
+
 import {
   QuizContentScreen,
   PreviewQuizScreen,
   QuizAddScreen,
   QuizListingScreen,
-} from '../Quiz/Loadable';
+} from 'pages/Quiz/Loadable';
 
 export default [
   <ProtectedRoute exact path='/admin' component={AdminHome} />,

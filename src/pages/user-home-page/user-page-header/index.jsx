@@ -59,6 +59,8 @@ export default function AdminHeader() {
       // socket.windowAction(user.id);
     }
     dispatch(setCurrentUser(user));
+    console.log('hello hakuna', user.id);
+    socket.windowAction(user.id);
   }, []);
 
   useEffect(() => {
@@ -77,6 +79,8 @@ export default function AdminHeader() {
   };
 
   const handleLogout = () => {
+    console.log(state.user.id);
+    socket.logoutAction(state.user.id);
     setAnchorEl(null);
     const user = JSON.parse(localStorage.getItem('current-user'));
 
@@ -89,6 +93,8 @@ export default function AdminHeader() {
   };
 
   const handleLogout2 = () => {
+    console.log(state.user.id);
+    socket.logoutAction(state.user.id);
     setAnchorE2(null);
     const user = JSON.parse(localStorage.getItem('current-user'));
     localStorage.removeItem('user');

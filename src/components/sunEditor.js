@@ -57,9 +57,11 @@ export default (props) => {
         });
         $('.se-tooltip').on('click', function (e) {
           setTimeout(() => {
-            $(`<div class = "_se_tab_content_library" style = "width: 90%; margin: auto; display : block; overflow-y: auto; " > 
-            ${allImages.toString().replace(/,/g, '')}
-          </div>`).insertAfter('.se-file-browser-list');
+            if ($('._se_tab_image-library').length === 0) {
+              $(`<div class = "_se_tab_image-library" style = "width: 90%; margin: auto; display : block; overflow-y: auto; " > 
+                ${allImages.toString().replace(/,/g, '')}
+              </div>`).insertAfter('.se-file-browser-list');
+            }
           }, 1000);
           $('.upload-link-button').css('display', 'none');
         });
@@ -202,7 +204,7 @@ export default (props) => {
         setContents={props.content}
         defaultValue=''
         setOptions={{
-          height: 630,
+          height: !props.changeHeight ? 630 : 200,
           buttonList: [
             ['bold', 'italic', 'underline'],
             ['indent', 'outdent'],
