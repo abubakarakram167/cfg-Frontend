@@ -31,6 +31,7 @@ import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
+import LogoImage from 'assets/cfgWhiteLogo.png';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -339,7 +340,9 @@ export default function AdminHeader() {
               onClick={toggleDrawerOpen}
               style={{color: 'white', fontSize: 40}}
             />{' '}
-            <span className='mobile-company-header-tite'>JMMB Foundation</span>
+            <span className='mobile-company-header-tite'>
+              <img src={LogoImage} alt={'logo'} />
+            </span>
           </div>
         </div>
       </AppHeader>
