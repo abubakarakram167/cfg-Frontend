@@ -56,26 +56,8 @@ export default (props) => {
           appendImage();
         });
         $('.se-tooltip').on('click', function (e) {
-          let galleryImages = [];
-          for (let image of mediaData) {
-            if (
-              ['jpeg', 'png', 'jpg', 'JPG', 'PNG'].includes(
-                image.url.split('.').pop(),
-              )
-            )
-              galleryImages.push(
-                `<span style = "float: left;" ><img class="select-images-gallery" style = "height: 80px; width: 120px; cursor: pointer; margin: 20px;" src = "${image.url}"/><p style = "text-align: center; max-width: 100px; font-size: 10px; margin: auto; font-weight: 700;" >${image.fileName}</p></span>`,
-              );
-          }
-          setTimeout(() => {
-            if ($('._se_tab_image-library').length === 0) {
-              $(`<div class = "_se_tab_image-library" style = "width: 90%; margin: auto; display : block; overflow-y: auto; " > 
-                ${galleryImages.toString().replace(/,/g, '')}
-              </div>`).insertAfter('.se-file-browser-list');
-            }
-          }, 1000);
-
           $('.upload-link-button').css('display', 'none');
+          $('._se_tab_content_library').css('display', 'none');
         });
         $('.upload-link-button').on('click', function (e) {
           add = false;
@@ -227,7 +209,6 @@ export default (props) => {
             ['fontSize'],
             ['font', 'align'],
             ['video', 'image'],
-            ['imageGallery'],
           ], // Or Array of button list, eg. [['font', 'align'], ['image']]
           font: [
             'Arial',
