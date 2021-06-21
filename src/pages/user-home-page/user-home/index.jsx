@@ -6,7 +6,6 @@ import PostDetails from '../post-details';
 import CommonComponent from '../common-component';
 import CfgToolOfTheDay from '../user-home/cfg-tools';
 import OnlineFriend from './online-friend';
-import LazyLoad from 'react-lazyload';
 
 import {
   List,

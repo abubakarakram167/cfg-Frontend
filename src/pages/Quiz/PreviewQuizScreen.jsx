@@ -3,6 +3,7 @@ import {Button, makeStyles} from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import AdminHeader from 'pages/admin-header';
 import QuizAssessmentModal from './QuizAssessmentModal';
+import {useDispatch, useSelector} from 'react-redux';
 import QuizModal from './AddModal';
 import {
   getQuizAllQuestions,
@@ -39,6 +40,9 @@ const PreviewQuizScreen = ({data}) => {
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [openNew, setOpenNew] = useState(false);
   const [isPassed, setIsPassed] = useState(false);
+  const allQuizes = useSelector((state) =>
+    state.quiz.content ? state.quiz.content : [],
+  );
 
   const handleChoose = (question, e) => {
     let selectedOptions = selectedAnswers;
@@ -175,9 +179,15 @@ const PreviewQuizScreen = ({data}) => {
     else alphabet = 'D';
     return alphabet;
   };
+  // console.log("the all quizes", allQuizes)
+
+  const specificQuiz = allQuizes.filter(
+    (quiz) => quiz.id === parseInt(getQuizParams()),
+  )[0];
+  console.log('the speicifc Quiz', specificQuiz, getQuizParams());
 
   return (
-    <div style={{backgroundColor: '#efefef'}}>
+    <div style={{backgroundColor: '#efefef', height: '1000px'}}>
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
@@ -239,6 +249,7 @@ const PreviewQuizScreen = ({data}) => {
             correctAnswers={correctAnswers.length}
             selectedOptions={selectedAnswers.length}
             onClose={handleClose}
+            quiz={specificQuiz}
           />
         </QuizModal>
         <div style={{margin: '20px 0', width: '100%'}}>
