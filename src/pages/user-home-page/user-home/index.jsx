@@ -160,11 +160,22 @@ export default function UserHomePage() {
         <ListItemText primary='CFG Tools of the Day' />
       </ListItem>
       {dayTools.map((tool, index) => {
+        console.log('tool', tool);
         return (
           <ListItem key={index}>
-            <ListItemIcon>
-              <Build />
-            </ListItemIcon>
+            {tool.featured_image_url && (
+              <img
+                src={tool.featured_image_url}
+                width='50px'
+                height='50px'
+                alt=''
+              />
+            )}
+            {!tool.featured_image_url && (
+              <ListItemIcon>
+                <Build />
+              </ListItemIcon>
+            )}
             <ListItemText primary={tool.title} />
           </ListItem>
         );

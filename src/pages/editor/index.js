@@ -697,24 +697,24 @@ export default function Editor() {
             <br />
             <div>
               <TextField
-                type='number'
+                type='url'
                 variant='filled'
                 value={previous_page}
                 onChange={(e) => setprevious_page(e.target.value)}
                 fullWidth
-                label='previous page id'
+                label='previous page url'
                 required
               />
             </div>
             <br />
             <div>
               <TextField
-                type='number'
+                type='url'
                 variant='filled'
                 value={next_page}
                 onChange={(e) => setnext_page(e.target.value)}
                 fullWidth
-                label='next page id'
+                label='next page url'
                 required
               />
             </div>

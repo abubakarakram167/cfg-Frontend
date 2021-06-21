@@ -290,27 +290,6 @@ export default function AdminHeader() {
                     <div className='icon'>
                       <Logout style={{fill: 'black'}} />
                     </div>
-                  </div>
-                </MenuItem>
-                <MenuItem onClick={handleLogout2}>
-                  <div className='mobile-menu-item'>
-                    <div className='icon'>
-                      <Logout style={{fill: 'black'}} />
-                    </div>
-                  </div>
-                </MenuItem>
-                <MenuItem onClick={handleLogout2}>
-                  <div className='mobile-menu-item'>
-                    <div className='icon'>
-                      <Logout style={{fill: 'black'}} />
-                    </div>
-                  </div>
-                </MenuItem>
-                <MenuItem onClick={handleLogout2}>
-                  <div className='mobile-menu-item'>
-                    <div className='icon'>
-                      <Logout style={{fill: 'black'}} />
-                    </div>
                     <div className='user-name-text'>Logout</div>
                   </div>
                 </MenuItem>

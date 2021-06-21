@@ -56,12 +56,12 @@ export default function ContentDisplay() {
       <div className='content-display-buttons-container'>
         <div className='content-display-buttons'>
           {data && data.previous_page && (
-            <Link to={`/admin/content/display/${data.previous_page}`}>
+            <Link to={`${data.previous_page}`}>
               <button className='next-prev-button'>Previous</button>
             </Link>
           )}
           {data && data.next_page && (
-            <Link to={`/admin/content/display/${data.next_page}`}>
+            <Link to={`${data.next_page}`}>
               <button className='next-prev-button'>Next</button>
             </Link>
           )}
