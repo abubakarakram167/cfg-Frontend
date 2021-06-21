@@ -43,11 +43,17 @@ const QuizAssessmentModal = ({
   isPassed,
   correctAnswers,
   selectedOptions,
+  quiz,
 }) => {
   const classes = useStyles();
   const [question, setQuestion] = useState('');
   const [questionDetail, setQuestionDetail] = useState('');
   const [isAddToBank, setIsAddToBank] = useState(false);
+
+  let quizPassedOrFailUrl = isPassed
+    ? quiz.success_navigate_page
+    : quiz.fail_navigate_page;
+  quizPassedOrFailUrl = new URL(quizPassedOrFailUrl).pathname;
 
   const handleSave = async () => {
     if (question !== '') {
@@ -127,7 +133,7 @@ const QuizAssessmentModal = ({
           <VisibilityIcon style={{fill: 'white', fontSize: 25}} />
           Review Answers
         </button>
-        <Link to='/admin'>
+        <Link to={quizPassedOrFailUrl}>
           <button
             className={classes.bottomButtonsChild}
             style={{backgroundColor: 'red', borderColor: 'red'}}>
