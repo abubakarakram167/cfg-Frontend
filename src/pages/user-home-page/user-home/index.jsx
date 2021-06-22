@@ -39,6 +39,7 @@ export default function UserHomePage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [conversationExtended, setConversationExtended] = useState(false);
   const [count, setCount] = useState(3);
+
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
@@ -222,12 +223,15 @@ export default function UserHomePage() {
       left={left}
       right={right}
       scroll={true}
-      scrollAction={() => setCount(count + 3)}>
+      scrollAction={() => {
+        setCount(count + 3);
+      }}>
       <CreatePost />
 
       {posts.map((element, index) => {
+        console.log(element, 'from map');
         return (
-          <div key={index} style={{margin: '20px 0px'}}>
+          <div key={element.id} style={{margin: '20px 0px'}}>
             <PostDetails post={element} />
           </div>
         );

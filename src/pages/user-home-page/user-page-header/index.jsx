@@ -32,6 +32,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
 import LogoImage from 'assets/cfgWhiteLogo.png';
+import {getPostById} from 'redux/actions/UserPost';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -49,6 +50,9 @@ export default function AdminHeader() {
     const socketObj = socket.getSocket();
     socketObj.on('notification', (data) => {
       console.log(data, 'Hello world');
+    });
+    socketObj.on('post', (id) => {
+      dispatch(getPostById(id));
     });
   }, []);
 
