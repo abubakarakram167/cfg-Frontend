@@ -53,17 +53,11 @@ export default (props) => {
         $('.select-images').on('click', function (e) {
           add = false;
           fileData = this.src;
-          handleEditorChange(contentData);
+          appendImage();
         });
         $('.se-tooltip').on('click', function (e) {
-          setTimeout(() => {
-            if ($('._se_tab_image-library').length === 0) {
-              $(`<div class = "_se_tab_image-library" style = "width: 90%; margin: auto; display : block; overflow-y: auto; " > 
-                ${allImages.toString().replace(/,/g, '')}
-              </div>`).insertAfter('.se-file-browser-list');
-            }
-          }, 1000);
           $('.upload-link-button').css('display', 'none');
+          $('._se_tab_content_library').css('display', 'none');
         });
         $('.upload-link-button').on('click', function (e) {
           add = false;
@@ -82,7 +76,7 @@ export default (props) => {
     props.onContentSave(htmlToBeSave);
   };
 
-  const handleEditorChange = (e) => {
+  const appendImage = () => {
     setTimeout(() => {
       if (fileData) {
         if (add) {
@@ -90,11 +84,13 @@ export default (props) => {
           list.removeChild(list.childNodes[0]);
           addMediaUrl(fileData);
         } else addMediaUrl(fileData);
-      } else {
-        props.onContentSave(e);
-        props.onContentChanged(true);
       }
-    }, 1000);
+    }, 2000);
+  };
+
+  const handleEditorChange = (e) => {
+    props.onContentSave(e);
+    props.onContentChanged(true);
   };
 
   useEffect(() => {
@@ -213,7 +209,6 @@ export default (props) => {
             ['fontSize'],
             ['font', 'align'],
             ['video', 'image'],
-            ['imageGallery'],
           ], // Or Array of button list, eg. [['font', 'align'], ['image']]
           font: [
             'Arial',

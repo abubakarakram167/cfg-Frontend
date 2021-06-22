@@ -14,6 +14,7 @@ import 'suneditor/dist/css/suneditor.min.css';
 import './toolbar.css';
 import './previewQuiz.css';
 import {Assessment} from '@material-ui/icons';
+import {quizList} from 'redux/actions/quiz';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const PreviewQuizScreen = ({data}) => {
   const classes = useStyles();
   const [questions, setQuestions] = useState(null);
+  const dispatch = useDispatch();
   const [attempt, setAttempt] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [allQuestionoptions, setAllQuestionsOptions] = useState([]);
@@ -43,6 +45,10 @@ const PreviewQuizScreen = ({data}) => {
   const allQuizes = useSelector((state) =>
     state.quiz.content ? state.quiz.content : [],
   );
+
+  useEffect(() => {
+    dispatch(quizList());
+  }, []);
 
   const handleChoose = (question, e) => {
     let selectedOptions = selectedAnswers;
@@ -179,12 +185,10 @@ const PreviewQuizScreen = ({data}) => {
     else alphabet = 'D';
     return alphabet;
   };
-  // console.log("the all quizes", allQuizes)
 
   const specificQuiz = allQuizes.filter(
     (quiz) => quiz.id === parseInt(getQuizParams()),
   )[0];
-  console.log('the speicifc Quiz', specificQuiz, getQuizParams());
 
   return (
     <div style={{backgroundColor: '#efefef', height: '1000px'}}>

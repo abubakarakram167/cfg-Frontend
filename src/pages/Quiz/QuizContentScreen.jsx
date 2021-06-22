@@ -268,7 +268,7 @@ const QuizContentScreen = (props) => {
       let specificOption = q.answers.filter(
         (specific) => specific.id === option.id,
       )[0];
-      if (option.id === specificOption && specificOption.id) {
+      if (option && specificOption && option.id === specificOption.id) {
         return {
           ...option,
           points: e,

@@ -50,10 +50,13 @@ const QuizAssessmentModal = ({
   const [questionDetail, setQuestionDetail] = useState('');
   const [isAddToBank, setIsAddToBank] = useState(false);
 
-  let quizPassedOrFailUrl = isPassed
-    ? quiz.success_navigate_page
-    : quiz.fail_navigate_page;
-  quizPassedOrFailUrl = new URL(quizPassedOrFailUrl).pathname;
+  let quizPassedOrFailUrl = '/admin';
+  if (quiz) {
+    quizPassedOrFailUrl = isPassed
+      ? quiz.success_navigate_page
+      : quiz.fail_navigate_page;
+    quizPassedOrFailUrl = new URL(quizPassedOrFailUrl).pathname;
+  }
 
   const handleSave = async () => {
     if (question !== '') {
