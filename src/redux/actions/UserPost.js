@@ -70,7 +70,28 @@ export const deleteUserPost = (id) => {
     }
   };
 };
-
+export const getPostById = (id) => {
+  return async function (dispatch) {
+    try {
+      const response = await Post.getPostById(id);
+      if (response.status === 200) {
+        const data_resp = await response.data;
+        jsCookie.set('login', 'yes');
+        dispatch({
+          type: actions.GET_POST_BY_ID,
+          payload: {...data_resp, error: null},
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        dispatch({
+          type: actions.GET_POST_BY_ID,
+          payload: {error: 'A problem occured while fetching the posts'},
+        });
+      }
+    }
+  };
+};
 export const updateUserPost = (id, params) => {
   return async function (dispatch) {
     try {

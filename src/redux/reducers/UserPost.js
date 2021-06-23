@@ -9,6 +9,10 @@ const INIT_STATE = {
 const userPostReducer = (state = INIT_STATE, action) => {
   let payload = null;
   switch (action.type) {
+    case actions.GET_POST_BY_ID:
+      payload = action.payload;
+      return {...state, posts: [payload, ...state.posts]};
+
     case actions.CREATE_USER_POST:
       payload = action.payload;
       if (payload.error) {

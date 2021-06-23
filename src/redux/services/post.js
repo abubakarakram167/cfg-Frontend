@@ -15,5 +15,8 @@ class UserPost {
   static updatePost(id, params) {
     return axiosInstance.put('/api/userPosts/' + id, {...params});
   }
+  static getPostById(id) {
+    return axiosInstance.get('/api/userPosts/' + id);
+  }
 }
 export default UserPost;
