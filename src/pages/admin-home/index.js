@@ -71,7 +71,7 @@ export default function index() {
               <div className='card-text'>Events</div>
             </AppCard>
           </Link>
-          <Link to='/admin/quiz' className='card-container'>
+          <Link to='/listing/quiz' className='card-container'>
             <AppCard backgroundColor={'#4EC4F0'}>
               <ContactSupport style={{fill: '#ffffff', fontSize: 70}} />
               <div className='card-text'>Quiz</div>

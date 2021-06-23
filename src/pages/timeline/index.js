@@ -394,6 +394,7 @@ export default function CfgTool(props) {
           autoHideDuration={6000}
           onClose={handleClose1}>
           <Alert
+            variant='filled'
             onClose={handleClose1}
             severity={userList.success ? 'success' : 'error'}>
             {userList.message}
@@ -579,7 +580,6 @@ export default function CfgTool(props) {
                       .startsWith(publishDateFilter),
                   )
                   .map((row, index) => {
-                    console.log('the row', row);
                     return (
                       <StyledTableRow key={index}>
                         <StyledTableCell>

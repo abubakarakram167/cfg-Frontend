@@ -1,15 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {Container, Select, MenuItem, TextField} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import './style.css';
-import SunEditor from 'suneditor-react';
-import 'suneditor/dist/css/suneditor.min.css';
+import SunEditor from '../../components/sunEditor';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import PublishIcon from '@material-ui/icons/Publish';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import {useParams} from 'react-router-dom';
-import formatDate from 'utils/formatDate';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -28,7 +26,12 @@ import {useHistory} from 'react-router-dom';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MediaUpload from 'components/MediaUpload';
-import {withStyles, makeStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
+import $ from 'jquery';
+
+import {createOneMedia} from '../../redux/actions/media';
+import Media from 'redux/services/media';
+import {baseUrl} from 'utils/axios';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -42,6 +45,7 @@ const useStyles = makeStyles({
 });
 
 export default function Editor() {
+  const myRef = useRef(null);
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
@@ -69,16 +73,10 @@ export default function Editor() {
   const [isContentChange, setContentChanged] = useState(false);
   const [featuredImage, setFeaturedImage] = useState('');
   const [showDialogue, setShowDialogue] = useState(false);
-  const classes = useStyles();
 
+  let filesUrl = [];
+  const classes = useStyles();
   const history = useHistory();
-  const handleEditorChange = (e) => {
-    setContent(e);
-    setContentChanged(true);
-    setImageData(
-      e.split('"').filter((element) => element.startsWith('data:image')),
-    );
-  };
 
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
@@ -103,7 +101,6 @@ export default function Editor() {
 
   useEffect(() => {
     dispatch(getContentData(params.id));
-    // dispatch(getContentData(params.content_id));
   }, [params.id, params.content_id, dispatch]);
 
   useEffect(() => {
@@ -262,6 +259,23 @@ export default function Editor() {
     setOpen1(false);
   };
   const userList = useSelector((state) => state.userList);
+  const handleImageUploadBefore = async (files, info, uploadHandler) => {
+    const formData = new FormData();
+    formData.append('media', files[0]);
+    formData.append('category', 'cover');
+    const data = await Media.addMedia(formData);
+    const photo_url = baseUrl + 'static/' + data.data[0].file_name;
+    console.log(photo_url);
+    uploadHandler({
+      result: [
+        {
+          url: photo_url,
+          name: data.data[0].file_name,
+          size: files[0].size,
+        },
+      ],
+    });
+  };
 
   return (
     <div className='editor-page-full-container'>
@@ -274,6 +288,7 @@ export default function Editor() {
           autoHideDuration={6000}
           onClose={handleClose1}>
           <Alert
+            variant='filled'
             onClose={handleClose1}
             severity={userList.success ? 'success' : 'error'}>
             {userList.message}
@@ -281,7 +296,7 @@ export default function Editor() {
         </Snackbar>
       )}
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert onClose={handleClose1} severity='success'>
+        <Alert variant='filled' onClose={handleClose1} severity='success'>
           Record updated successfully.
         </Alert>
       </Snackbar>
@@ -336,35 +351,11 @@ export default function Editor() {
         />
         <div className='editor-container'>
           <div className='editor-side'>
-            {showMessageError && content === '' && (
-              <p className='showErrorMessage'>content is required</p>
-            )}
             <SunEditor
-              setContents={content}
-              defaultValue=''
-              setOptions={{
-                height: 630,
-                buttonList: [
-                  ['bold', 'italic', 'underline'],
-                  ['indent', 'outdent'],
-                  ['list'],
-                  ['fontColor'],
-                  ['fontSize'],
-                  ['font', 'align'],
-                  ['video', 'image', 'link', 'audio'],
-                ], // Or Array of button list, eg. [['font', 'align'], ['image']]
-                font: [
-                  'Arial',
-                  'Gotham',
-                  'Rissa',
-                  'Angelina',
-                  'courier',
-                  'impact',
-                  'verdana',
-                  'georgia',
-                ],
-              }}
-              onChange={handleEditorChange}
+              onImageUploadBefore={handleImageUploadBefore}
+              onContentSave={(content) => setContent(content)}
+              content={content}
+              onContentChanged={() => setContentChanged(true)}
             />
           </div>
 
@@ -544,24 +535,24 @@ export default function Editor() {
             <br />
             <div>
               <TextField
-                type='number'
+                type='url'
                 variant='filled'
                 value={previous_page}
                 onChange={(e) => setprevious_page(e.target.value)}
                 fullWidth
-                label='previous page id'
+                label='previous page url'
                 required
               />
             </div>
             <br />
             <div>
               <TextField
-                type='number'
+                type='url'
                 variant='filled'
                 value={next_page}
                 onChange={(e) => setnext_page(e.target.value)}
                 fullWidth
-                label='next page id'
+                label='next page url'
                 required
               />
             </div>

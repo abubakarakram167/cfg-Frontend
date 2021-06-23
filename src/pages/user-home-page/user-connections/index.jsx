@@ -152,7 +152,6 @@ export default function UserConnections() {
       <div className='requests-section-list'>
         {connectionsView &&
           friends.map((element, index) => {
-            console.log('connection', element);
             return (
               <UserInfoBox
                 userId={element}

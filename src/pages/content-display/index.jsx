@@ -5,6 +5,7 @@ import {getContentData} from 'redux/actions/sessionActions';
 import AdminHeader from 'pages/admin-header';
 import './style.css';
 import {Link} from 'react-router-dom';
+import SunEditor from 'suneditor-react';
 
 export default function ContentDisplay() {
   const params = useParams();
@@ -37,20 +38,30 @@ export default function ContentDisplay() {
         <br />
         <br />
 
-        <div
+        {/* <div
           className='display-content'
-          dangerouslySetInnerHTML={{__html: data ? data.detail : ''}}></div>
+          dangerouslySetInnerHTML={{ __html: data ? data.detail : '' }}></div> */}
+        <div className='display-content'>
+          <div className='rich-content-user-container'>
+            <SunEditor
+              disable={true}
+              height='100%'
+              setContents={data ? data.detail : ''}
+              showToolbar={false}
+            />
+          </div>
+        </div>
       </div>
 
       <div className='content-display-buttons-container'>
         <div className='content-display-buttons'>
           {data && data.previous_page && (
-            <Link to={`/admin/content/display/${data.previous_page}`}>
+            <Link to={`${data.previous_page}`}>
               <button className='next-prev-button'>Previous</button>
             </Link>
           )}
           {data && data.next_page && (
-            <Link to={`/admin/content/display/${data.next_page}`}>
+            <Link to={`${data.next_page}`}>
               <button className='next-prev-button'>Next</button>
             </Link>
           )}

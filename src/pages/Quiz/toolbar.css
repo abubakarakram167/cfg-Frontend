@@ -1,0 +1,6 @@
+.sun-editor {
+  border: 0;
+}
+.sun-editor .se-resizing-bar {
+  display: none;
+}

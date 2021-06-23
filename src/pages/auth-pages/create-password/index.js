@@ -58,6 +58,7 @@ const CreatePassword = () => {
     }
     if (state.auth.message) {
       setOpen1(true);
+      setView(3);
     }
   }, [state]);
 
@@ -68,6 +69,21 @@ const CreatePassword = () => {
   const rejectTerms = () => {
     window.location.href = '/';
   };
+
+  const view3 = (
+    <div>
+      <div>
+        <h3>Password has been created successfully.</h3>
+      </div>
+      <br />
+      <div className='bottom-links'>
+        Go back to{' '}
+        <span>
+          <Link to='/'>Login</Link>
+        </span>
+      </div>
+    </div>
+  );
 
   const view2 = (
     <div>
@@ -160,12 +176,12 @@ const CreatePassword = () => {
   return (
     <div className='container'>
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert onClose={handleClose1} severity='success'>
+        <Alert variant='filled' onClose={handleClose1} severity='success'>
           Your password has been set. Please go back to login and sign in.
         </Alert>
       </Snackbar>
       <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
-        <Alert onClose={handleClose2} severity='error'>
+        <Alert variant='filled' onClose={handleClose2} severity='error'>
           {errorMessage}
         </Alert>
       </Snackbar>
@@ -184,7 +200,8 @@ const CreatePassword = () => {
           </div>
 
           {view === 1 && view1}
-          {view == 2 && view2}
+          {view === 2 && view2}
+          {view === 3 && view3}
         </AppCard>
       </div>
     </div>

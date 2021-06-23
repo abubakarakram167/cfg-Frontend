@@ -17,3 +17,10 @@
     url('./fonts/angelina/angelina.ttf') format('truetype');
   font-weight: normal;
 }
+
+.rich-content-user-container .sun-editor {
+  border: none;
+}
+.rich-content-user-container .se-resizing-bar {
+  display: none;
+}

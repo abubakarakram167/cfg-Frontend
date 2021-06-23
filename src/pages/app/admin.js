@@ -12,7 +12,6 @@ import UserManagement from 'pages/user-management';
 import CfgSession from 'pages/cfg-session';
 import CfgTool from 'pages/cfg-tools';
 import Timeline from 'pages/timeline';
-import Quiz from 'pages/quiz';
 import Preferences from 'pages/preferences';
 import MediaLibrary from 'pages/media-library';
 import MiniCfg from 'pages/mini-cfg';
@@ -35,6 +34,13 @@ import HomeCFGTools from 'pages/user-home-page/cfg-tools';
 import CfgToolsPage from 'pages/user-home-page/cfg-tools-page';
 import Learn from 'pages/user-home-page/learn';
 import AllInboxPage from 'pages/user-home-page/all-in-box';
+
+import {
+  QuizContentScreen,
+  PreviewQuizScreen,
+  QuizAddScreen,
+  QuizListingScreen,
+} from 'pages/Quiz/Loadable';
 
 export default [
   <ProtectedRoute exact path='/admin' component={AdminHome} />,
@@ -99,7 +105,19 @@ export default [
     component={withRouter(Timeline)}
   />,
   <ProtectedRoute exact path='/admin/events' component={withRouter(Events)} />,
-  <ProtectedRoute exact path='/admin/quiz' component={withRouter(Quiz)} />,
+  <ProtectedRoute path='/add/quiz' component={withRouter(QuizAddScreen)} />,
+  <ProtectedRoute
+    path='/content/quiz'
+    component={withRouter(QuizContentScreen)}
+  />,
+  <ProtectedRoute
+    path='/preview/quiz'
+    component={withRouter(PreviewQuizScreen)}
+  />,
+  <ProtectedRoute
+    path='/listing/quiz'
+    component={withRouter(QuizListingScreen)}
+  />,
   <ProtectedRoute
     exact
     path='/admin/preferences'

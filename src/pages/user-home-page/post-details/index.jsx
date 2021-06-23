@@ -36,6 +36,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {updateUserPost} from 'redux/actions/UserPost';
 import Posts from 'redux/services/post';
 import {formatDate, formatDatePost} from 'utils/stampToFormat';
+import EditorComponent from 'pages/editor-component';
+import SunEditor from 'suneditor-react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -166,17 +168,24 @@ export default function RecipeReviewCard({post}) {
     <Dialog open={editDialogOpen} fullWidth>
       <DialogTitle>Edit Post</DialogTitle>
       <DialogContent>
-        <TextField
-          style={{width: '100%'}}
-          id='standard-multiline-static'
-          multiline
-          variant='filled'
-          rows={4}
-          fullwidth
-          value={editText}
-          onChange={(e) => setEditText(e.target.value)}
-          placeholder='How are you feeling in the moment?'
-        />
+        {post && !post.assigned_group && (
+          <TextField
+            style={{width: '100%'}}
+            id='standard-multiline-static'
+            multiline
+            variant='filled'
+            rows={4}
+            fullwidth
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            placeholder='How are you feeling in the moment?'
+          />
+        )}
+
+        {post && post.assigned_group && (
+          <EditorComponent content={editText} setContent={setEditText} />
+        )}
+
         <DialogActions style={{width: '100%'}}>
           <Button
             onClick={() => {
@@ -233,9 +242,17 @@ export default function RecipeReviewCard({post}) {
         <CardContent>
           <Typography variant='body2' color='textSecondary' component='p'>
             {post.assigned_group ? (
-              <div
-                className='caption-text'
-                dangerouslySetInnerHTML={{__html: editText}}></div>
+              // <div
+              //   className='caption-text'
+              //   dangerouslySetInnerHTML={{ __html: editText }}></div>
+              <div className='rich-content-user-container'>
+                <SunEditor
+                  disable={true}
+                  height='100%'
+                  setContents={editText}
+                  showToolbar={false}
+                />
+              </div>
             ) : (
               <span className='caption-text'>{editText}</span>
             )}

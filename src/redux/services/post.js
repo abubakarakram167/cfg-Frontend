@@ -6,14 +6,17 @@ class UserPost {
       ...params,
     });
   }
-  static getUserPosts() {
-    return axiosInstance.get('/api/userPosts');
+  static getUserPosts(count) {
+    return axiosInstance.get('/api/userPosts?_count=' + count);
   }
   static deleteUserPost(id) {
     return axiosInstance.delete('/api/userPosts/' + id);
   }
   static updatePost(id, params) {
     return axiosInstance.put('/api/userPosts/' + id, {...params});
+  }
+  static getPostById(id) {
+    return axiosInstance.get('/api/userPosts/' + id);
   }
 }
 export default UserPost;

@@ -4,8 +4,7 @@ import {Container, Select, MenuItem, TextField} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import ContentEditable from 'react-contenteditable';
 import './style.css';
-import SunEditor from 'suneditor-react';
-import 'suneditor/dist/css/suneditor.min.css';
+import SunEditor from '../../components/sunEditor';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import PublishIcon from '@material-ui/icons/Publish';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -16,6 +15,7 @@ import {
   getContentData,
   getSessionListData,
 } from 'redux/actions/sessionActions';
+import {getUserMediaList} from '../../redux/actions/media';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -32,7 +32,8 @@ import NavigationPrompt from 'react-router-navigation-prompt';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MediaUpload from 'components/MediaUpload';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
-
+import Media from 'redux/services/media';
+import {baseUrl} from 'utils/axios';
 const useStyles = makeStyles({
   datePicker: {
     '& .MuiFormLabel-root': {
@@ -82,6 +83,24 @@ export default function Editor() {
   const [timelineContent, setTimelineContent] = useState([]);
   const classes = useStyles();
 
+  const handleImageUploadBefore = async (files, info, uploadHandler) => {
+    const formData = new FormData();
+    formData.append('media', files[0]);
+    formData.append('category', 'cover');
+    const data = await Media.addMedia(formData);
+    const photo_url = baseUrl + 'static/' + data.data[0].file_name;
+    console.log(photo_url);
+    uploadHandler({
+      result: [
+        {
+          url: photo_url,
+          name: data.data[0].file_name,
+          size: files[0].size,
+        },
+      ],
+    });
+  };
+
   const handleEditorChange = (e) => {
     setContentChanged(true);
     setContent(e);
@@ -105,6 +124,10 @@ export default function Editor() {
   useEffect(() => {
     if (params.id !== 'null') dispatch(getContentData(params.id));
   }, [id, dispatch]);
+
+  useEffect(() => {
+    dispatch(getUserMediaList());
+  }, []);
 
   useEffect(() => {
     if (params.cfgType !== 'timeline')
@@ -431,6 +454,7 @@ export default function Editor() {
       </NavigationPrompt>
       {userList.message && (
         <Snackbar
+          variant='filled'
           open={userList.message}
           autoHideDuration={6000}
           onClose={handleClose1}>
@@ -442,7 +466,7 @@ export default function Editor() {
         </Snackbar>
       )}
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert onClose={handleClose1} severity='success'>
+        <Alert variant='filled' onClose={handleClose1} severity='success'>
           Record updated successfully.
         </Alert>
       </Snackbar>
@@ -493,35 +517,11 @@ export default function Editor() {
         />
         <div className='editor-container'>
           <div className='editor-side'>
-            {showMessageError && content === '' && (
-              <p className='showErrorMessage'>content is required</p>
-            )}
             <SunEditor
-              setContents={content}
-              defaultValue=''
-              setOptions={{
-                height: 630,
-                buttonList: [
-                  ['bold', 'italic', 'underline'],
-                  ['indent', 'outdent'],
-                  ['list'],
-                  ['fontColor'],
-                  ['fontSize'],
-                  ['font', 'align'],
-                  ['video', 'image', 'link', 'audio'],
-                ], // Or Array of button list, eg. [['font', 'align'], ['image']]
-                font: [
-                  'Arial',
-                  'Gotham',
-                  'Rissa',
-                  'Angelina',
-                  'courier',
-                  'impact',
-                  'verdana',
-                  'georgia',
-                ],
-              }}
-              onChange={handleEditorChange}
+              onContentSave={(content) => setContent(content)}
+              content={content}
+              onContentChanged={() => setContentChanged(true)}
+              onImageUploadBefore={handleImageUploadBefore}
             />
           </div>
 
@@ -697,24 +697,24 @@ export default function Editor() {
             <br />
             <div>
               <TextField
-                type='number'
+                type='url'
                 variant='filled'
                 value={previous_page}
                 onChange={(e) => setprevious_page(e.target.value)}
                 fullWidth
-                label='previous page id'
+                label='previous page url'
                 required
               />
             </div>
             <br />
             <div>
               <TextField
-                type='number'
+                type='url'
                 variant='filled'
                 value={next_page}
                 onChange={(e) => setnext_page(e.target.value)}
                 fullWidth
-                label='next page id'
+                label='next page url'
                 required
               />
             </div>

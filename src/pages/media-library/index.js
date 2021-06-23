@@ -52,6 +52,7 @@ export default function MediaLibrary() {
   if (mediaFilesData.length && !filesPreview.length)
     setFilesPreview(mediaFilesData);
   const handleSave = (files) => {
+    console.log('the files', files);
     const data = new FormData();
     for (const file of files) {
       data.append('media', file);
@@ -126,6 +127,7 @@ export default function MediaLibrary() {
         autoHideDuration={6000}
         onClose={handleClose1}>
         <Alert
+          variant='filled'
           onClose={handleClose1}
           severity={message.success ? 'success' : 'error'}>
           {message.message}

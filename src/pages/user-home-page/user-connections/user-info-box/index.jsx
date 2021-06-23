@@ -52,7 +52,6 @@ export default function UserInfo({
   useEffect(() => {
     async function getUserDetails() {
       const data = await Friend.getUserDetails(userId);
-      console.log(data);
       if (data) {
         if (data.data) {
           setUserData(data.data);
@@ -74,8 +73,7 @@ export default function UserInfo({
             <div className='user-info-card-content'>
               <Avatar
                 src={
-                  userData.photo_url &&
-                  baseUrl + '/static/' + userData.photo_url
+                  userData.photo_url && baseUrl + 'static/' + userData.photo_url
                 }
                 alt={userData.first_name}
                 className={classes.large}

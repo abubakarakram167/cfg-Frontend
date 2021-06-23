@@ -1,0 +1,19 @@
+.dash-wrapper {
+  width: 91%;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+.question-icons {
+  padding-left: 15px;
+  cursor: pointer;
+}
+.primary_button_custom {
+  padding: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: white;
+  margin-right: 10px;
+  margin-top: 10px;
+  border-radius: 20px;
+  background-color: #6297ab;
+}

@@ -34,12 +34,12 @@ function ForgotPassword({setView}) {
   return (
     <div>
       <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert onClose={handleClose1} severity='success'>
+        <Alert variant='filled' onClose={handleClose1} severity='success'>
           Email has been sent to the associated email address.
         </Alert>
       </Snackbar>
       <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
-        <Alert onClose={handleClose2} severity='error'>
+        <Alert variant='filled' onClose={handleClose2} severity='error'>
           No email addresses found matching the one you entered.
         </Alert>
       </Snackbar>
