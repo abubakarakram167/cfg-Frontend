@@ -244,7 +244,11 @@ export default function CfgElement() {
                           </div>
                           <div className='custom-row-design-header summary-margin-left-concise'>
                             <Link
-                              to={`/admin/content/edit/${element.id}/${params.id}/${element.title}/session/${element.type}`}>
+                              to={`/admin/content/edit/${element.id}/${
+                                params.id
+                              }/${element.title.replaceAll('?', '^')}/session/${
+                                element.type
+                              }`}>
                               {element.title}
                             </Link>
                           </div>
@@ -276,7 +280,13 @@ export default function CfgElement() {
                                 className='custom-row-design-cfg-details subtitle-card-custom'>
                                 <div className='custom-row-design-header'></div>
                                 <div className='custom-row-design-header accordian-dropdown'>
-                                  <Link to={`/admin/content/edit/${subs.id}`}>
+                                  <Link
+                                    to={`/admin/content/edit/${subs.id}/${
+                                      params.id
+                                    }/${subs.title.replaceAll(
+                                      '?',
+                                      '^',
+                                    )}/session/${subs.type}`}>
                                     {subs.title}
                                   </Link>
                                 </div>
