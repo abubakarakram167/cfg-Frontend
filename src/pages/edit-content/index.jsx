@@ -139,7 +139,7 @@ export default function Editor() {
     }
     if (state.current) setOriginalTotalPoints(state.current.total_points || 0);
     if (state.currentContent) {
-      setTitle(params.title || '');
+      setTitle((params.title && params.title.replaceAll('^', '?')) || '');
       setsub_title(state.currentContent.sub_title || '');
       setContent(state.currentContent.detail || '');
       setstart_date(
