@@ -34,7 +34,7 @@ import HomeCFGTools from 'pages/user-home-page/cfg-tools';
 import CfgToolsPage from 'pages/user-home-page/cfg-tools-page';
 import Learn from 'pages/user-home-page/learn';
 import AllInboxPage from 'pages/user-home-page/all-in-box';
-
+import ConversationContentDisplay from 'pages/user-home-page/conversation-content-display';
 import {
   QuizContentScreen,
   PreviewQuizScreen,
@@ -193,5 +193,10 @@ export default [
     exact
     path='/home/all-in-box'
     component={withRouter(AllInboxPage)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/conversation/:id'
+    component={withRouter(ConversationContentDisplay)}
   />,
 ];

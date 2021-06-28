@@ -6,6 +6,7 @@ import PostDetails from '../post-details';
 import CommonComponent from '../common-component';
 import CfgToolOfTheDay from '../user-home/cfg-tools';
 import OnlineFriend from './online-friend';
+import Session from 'redux/services/session';
 
 import {
   List,
@@ -31,6 +32,7 @@ import {getUserPost} from 'redux/actions/UserPost';
 import {getToolsData} from 'redux/actions/toolActions';
 import {baseUrl} from 'utils/axios';
 import Tool from 'redux/services/tool';
+import MediaGroup from 'redux/services/mediagroup';
 
 export default function UserHomePage() {
   const dispatch = useDispatch();
@@ -38,6 +40,7 @@ export default function UserHomePage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [conversationExtended, setConversationExtended] = useState(false);
   const [count, setCount] = useState(3);
+  const [conversation, setConversation] = useState(null);
 
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
@@ -48,6 +51,21 @@ export default function UserHomePage() {
     setDayTools(data.data);
   };
 
+  const getSessionById = async (id) => {
+    const data = await Session.getSessionById(id);
+    setConversation(data.data.data);
+  };
+
+  const getSessionByGroupId = async (id) => {
+    const data = await MediaGroup.getSessionsByGroupId(id);
+    getSessionById(data.data[0].id);
+  };
+  const getUserGroup = async () => {
+    const data = await MediaGroup.getUserGroup();
+
+    getSessionByGroupId(data.data.group_id);
+  };
+
   useEffect(() => {
     dispatch(getUserPost(count));
   }, [count]);
@@ -55,6 +73,9 @@ export default function UserHomePage() {
   useEffect(() => {
     dispatch(getToolsData());
     getDayTools();
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    // getSessionById(user.cfg_session_id)
+    getUserGroup();
   }, []);
 
   const createComment = (id, commentText) => {
@@ -71,9 +92,9 @@ export default function UserHomePage() {
 
   const left = (
     <List>
-      {/* <ListItem>
+      <ListItem>
         <ListItemIcon>
-          <Forum style={{ color: 'red' }} />
+          <Forum style={{color: 'red'}} />
         </ListItemIcon>
 
         <ListItemText>
@@ -88,27 +109,45 @@ export default function UserHomePage() {
             {conversationExtended ? (
               <ExpandLess
                 onClick={toggleExpansion}
-                style={{ cursor: 'pointer' }}
+                style={{cursor: 'pointer'}}
               />
             ) : (
               <ExpandMore
                 onClick={toggleExpansion}
-                style={{ cursor: 'pointer' }}
+                style={{cursor: 'pointer'}}
               />
             )}
           </div>
         </ListItemText>
-      </ListItem> */}
-      {/* <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
+      </ListItem>
+      <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
         <List>
-          <ListItemText style={{ paddingLeft: '60px' }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus
-            excepturi, ipsa expedita mollitia magnam facere. Qui suscipit rerum
-            cum consequatur, quis aliquam adipisci alias omnis totam? Ratione
-            nihil labore dicta.
+          <ListItemText style={{paddingLeft: '60px'}}>
+            <List>
+              <div className='conversation-container'>
+                <div className='conversation-lists'>
+                  <div className='conversationHeader'>
+                    <Link to={`/home/conversation/${conversation?.rows[0].id}`}>
+                      {conversation?.rows[0].title}
+                    </Link>
+                  </div>
+                  <ul className='conversation-child-list'>
+                    {conversation?.titles.rows.map((element, index) => {
+                      return (
+                        <li className='conversation-child-element'>
+                          <Link to={`/home/conversation/${element.id}`}>
+                            {index + 1}. {element.title}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+            </List>
           </ListItemText>
         </List>
-      </Collapse> */}
+      </Collapse>
       <Link to='/home/user-connections'>
         <ListItem>
           <ListItemIcon>
@@ -161,7 +200,6 @@ export default function UserHomePage() {
         <ListItemText primary='CFG Tools of the Day' />
       </ListItem>
       {dayTools.map((tool, index) => {
-        console.log('tool', tool);
         return (
           <ListItem key={index}>
             {tool.featured_image_url && (
@@ -228,7 +266,6 @@ export default function UserHomePage() {
       <CreatePost />
 
       {posts.map((element, index) => {
-        console.log(element, 'from map');
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>
             <PostDetails post={element} />

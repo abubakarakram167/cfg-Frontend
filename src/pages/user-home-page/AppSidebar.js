@@ -1,7 +1,7 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import clsx from 'clsx';
-
+import './style.css';
 import PropTypes from 'prop-types';
 import useStyles from './AppSidebar.style';
 
@@ -42,12 +42,16 @@ import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
 import {socket} from 'socket';
 import jsCookie from 'js-cookie';
+import MediaGroup from 'redux/services/mediagroup';
+import Session from 'redux/services/session';
 
 import './sidestyle.css';
 const AppSidebar = (props) => {
   const [searchResults, setSearchResults] = useState([]);
   const [resultVisibility, setResultVisibility] = useState(false);
   const [navCollapsed, setnavCollapsed] = useState(true);
+  const [conversation, setConversation] = useState(null);
+
   const searchUser = async (e) => {
     e.persist();
     const searchTerm = e.target.value;
@@ -59,11 +63,28 @@ const AppSidebar = (props) => {
   const sendFriendRequest = async (id) => {
     const data = await Friend.sendFriendRequest({userId: id});
   };
+  const getSessionById = async (id) => {
+    const data = await Session.getSessionById(id);
+    setConversation(data.data.data);
+  };
+
+  const getSessionByGroupId = async (id) => {
+    const data = await MediaGroup.getSessionsByGroupId(id);
+    getSessionById(data.data[0].id);
+  };
+  const getUserGroup = async () => {
+    const data = await MediaGroup.getUserGroup();
+
+    getSessionByGroupId(data.data.group_id);
+  };
+  useEffect(() => {
+    getUserGroup();
+  }, []);
 
   const handleLogout = () => {
     const user = JSON.parse(localStorage.getItem('current-user'));
     socket.logoutAction(user.id);
-    localStorage.removeItem('user');
+    localStorage.removeItem('current-user');
     localStorage.removeItem('auth-token');
     jsCookie.remove('login');
     jsCookie.remove('access');
@@ -222,7 +243,7 @@ const AppSidebar = (props) => {
               <ListItemText primary='Rewards' />
             </ListItem>
           </Link>
-
+                    */}
           <ListItem>
             <ListItemIcon>
               <Forum style={{color: 'red'}} />
@@ -251,6 +272,30 @@ const AppSidebar = (props) => {
               </div>
             </ListItemText>
           </ListItem>
+          <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
+            <List>
+              <div className='conversation-container'>
+                <div className='conversation-lists'>
+                  <div className='conversationHeader'>
+                    <Link to={`/home/conversation/${conversation?.rows[0].id}`}>
+                      {conversation?.rows[0].title}
+                    </Link>
+                  </div>
+                  <ul className='conversation-child-list'>
+                    {conversation?.titles.rows.map((element, index) => {
+                      return (
+                        <li className='conversation-child-element'>
+                          <Link to={`/home/conversation/${element.id}`}>
+                            {index + 1}. {element.title}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+            </List>
+          </Collapse>
           <Link to='/home/user-achievements'>
             <ListItem>
               <ListItemIcon>
@@ -259,16 +304,6 @@ const AppSidebar = (props) => {
               <ListItemText primary='My Achievements' />
             </ListItem>
           </Link>
-          <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
-            <List>
-              <ListItemText style={{paddingLeft: '60px'}}>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus
-                excepturi, ipsa expedita mollitia magnam facere. Qui suscipit
-                rerum cum consequatur, quis aliquam adipisci alias omnis totam?
-                Ratione nihil labore dicta.
-              </ListItemText>
-            </List>
-          </Collapse> */}
 
           <Link to='/home/user-connections'>
             <ListItem>

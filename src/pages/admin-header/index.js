@@ -60,7 +60,7 @@ export default function AdminHeader() {
     const user = JSON.parse(localStorage.getItem('current-user'));
     socket.logoutAction(user.id);
     localStorage.removeItem('auth-token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('current-user');
     jsCookie.removeItem('login');
     jsCookie.remove('access');
     window.location.href = '/';
@@ -72,7 +72,7 @@ export default function AdminHeader() {
 
     socket.logoutAction(user.id);
     localStorage.removeItem('auth-token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('current-user');
     jsCookie.remove('login');
     jsCookie.remove('access');
     window.location.href = '/';
