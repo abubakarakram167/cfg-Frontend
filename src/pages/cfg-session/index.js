@@ -31,7 +31,10 @@ import {
 } from '@material-ui/core';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import formatDate from 'utils/formatDate';
-
+import MediaGroup from 'redux/services/mediagroup';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   createSession,
@@ -43,6 +46,15 @@ import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Categories from 'modules/dashboard/CRM/MonthlyEarning/Categories';
 
+const CustomSelect = withStyles((theme) => ({
+  select: {
+    paddingLeft: 12,
+    paddingBottom: 17,
+    paddingTop: 17,
+    backgroundColor: '#eaeaea',
+    color: '#777777',
+  },
+}))(Select);
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: 'none',
@@ -159,6 +171,7 @@ export default function CfgTool(props) {
           assigned_group: group,
           categories: JSON.stringify(category),
           id: singleId,
+          group_id: selectedMediaGroup,
         }),
       ).then((res) => {
         if (res) {
@@ -198,6 +211,7 @@ export default function CfgTool(props) {
             status,
             assigned_group: group,
             categories: JSON.stringify(category),
+            group_id: selectedMediaGroup,
           }),
         );
       }
@@ -231,10 +245,61 @@ export default function CfgTool(props) {
     }
   };
 
-  console.log('here get', state.content);
+  const [groupModal, setGroupModal] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const [mediaGroups, setMediaGroups] = useState([]);
+  const [selectedMediaGroup, setSelectedMediaGroup] = useState(0);
+  useEffect(() => {
+    getMediaGroups();
+  }, []);
+  function handleCloseGroup() {
+    setGroupModal(false);
+  }
+
+  const getMediaGroups = async () => {
+    const data = await MediaGroup.getMediaGroup();
+    setMediaGroups(data.data);
+  };
+
+  const createMediaGroup = async () => {
+    const data = await MediaGroup.createGroup({
+      name: groupName,
+      type: 'private',
+    });
+    setSelectedMediaGroup(data.data.id);
+    setGroupModal(false);
+    getMediaGroups();
+  };
 
   return (
     <div>
+      <Dialog
+        open={groupModal}
+        onClose={handleCloseGroup}
+        aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>Create Group</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Enter Group Name</DialogContentText>
+          <TextField
+            autoFocus
+            margin='dense'
+            id='name'
+            label='Enter group name'
+            type='text'
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseGroup} color='primary'>
+            Cancel
+          </Button>
+          <Button onClick={createMediaGroup} color='primary'>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog open={dialogOpen}>
         <DialogTitle>
           <div style={{minWidth: '400px'}}>Add New CFG Session</div>
@@ -365,6 +430,27 @@ export default function CfgTool(props) {
               </Select>
             </ListItem>
             <ListItem>
+              <CustomSelect
+                fullWidth
+                placeholder='Media Group'
+                onChange={(e) => {
+                  setSelectedMediaGroup(e.target.value);
+                }}
+                value={selectedMediaGroup}>
+                <MenuItem value={0}>Select Media Group</MenuItem>
+                <MenuItem onClick={() => setGroupModal(true)}>
+                  + Add Group
+                </MenuItem>
+                {mediaGroups.map((element, index) => {
+                  return (
+                    <MenuItem value={element.id} key={index}>
+                      {element.name}
+                    </MenuItem>
+                  );
+                })}
+              </CustomSelect>
+            </ListItem>
+            <ListItem>
               <div
                 style={{
                   display: 'flex',
@@ -490,7 +576,6 @@ export default function CfgTool(props) {
                       placeholder='Publish date'
                       className={classes.root}
                       onChange={(e) => {
-                        console.log('the', e);
                         if (e && e !== '')
                           setPublishdateFilter(
                             moment(e).format('YYYY-MM-DD').toString(),
@@ -603,7 +688,6 @@ export default function CfgTool(props) {
                       .startsWith(publishDateFilter),
                   )
                   .map((row, index) => {
-                    console.log('the row', row);
                     return (
                       <StyledTableRow key={index}>
                         <StyledTableCell>

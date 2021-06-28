@@ -13,7 +13,9 @@ import Container from '@material-ui/core/Container';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import ResetIcon from '@material-ui/icons/VpnKey';
 import LockIcon from '@material-ui/icons/Lock';
 import ApproveIcon from '@material-ui/icons/CheckCircle';
@@ -29,6 +31,7 @@ import {sendMultipleForgotPasswordAction} from '../../redux/actions/authActions'
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
+import MediaGroup from 'redux/services/mediagroup';
 
 import {
   Dialog,
@@ -87,6 +90,9 @@ export default function UserManagement() {
   const dispatch = useDispatch();
   const [userData, setUserData] = useState([]);
   const [currentCheckState, setCurrentCheckState] = useState(false);
+  const [mediaGroups, setMediaGroups] = useState([]);
+  const [selectedMediaGroup, setSelectedMediaGroup] = useState(0);
+
   const BlackCheckbox = withStyles({
     // root: {
     //   '&$checked': {
@@ -115,8 +121,14 @@ export default function UserManagement() {
     setUserData(userListData);
   }
 
+  const getMediaGroups = async () => {
+    const data = await MediaGroup.getMediaGroup();
+    setMediaGroups(data.data);
+  };
+
   useEffect(() => {
     dispatch(onGetUserList({page: 0}));
+    getMediaGroups();
   }, [dispatch]);
 
   const classes = useStyles();
@@ -159,6 +171,7 @@ export default function UserManagement() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [open1, setOpen1] = useState(false);
+  const [cfgSessionId, setCfgSessionId] = useState(null);
   const userList = useSelector((state) => state.userList);
   const changeUserStatus = (status) => {
     const body = {
@@ -179,6 +192,11 @@ export default function UserManagement() {
   const handleClose1 = () => {
     setOpen1(false);
     dispatch({type: Show_Message, payload: {message: null, success: false}});
+  };
+
+  const assignToGroup = async (user_id, group_id) => {
+    const data = await MediaGroup.assignToGroup(user_id, group_id);
+    console.log(data);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -209,7 +227,11 @@ export default function UserManagement() {
       editUser.status = getUserStatus(parseInt(status));
       setUserIds([]);
       const getResult = await dispatch(editUserInList(editUser));
+
       editUser.status = getUserStatus(parseInt(status));
+      if (selectedMediaGroup) {
+        assignToGroup(userId, selectedMediaGroup);
+      }
       const changedUserData = userData.map((user) => {
         if (user.id === userId) {
           return editUser;
@@ -244,10 +266,53 @@ export default function UserManagement() {
     else if (status === 'pending') return 0;
     else return 2;
   };
-  console.log('the status', status);
+
+  const [groupModal, setGroupModal] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  function handleCloseGroup() {
+    setGroupModal(false);
+  }
+
+  const createMediaGroup = async () => {
+    const data = await MediaGroup.createGroup({
+      name: groupName,
+      type: 'private',
+    });
+
+    setSelectedMediaGroup(data.data.id);
+    setGroupModal(false);
+    getMediaGroups();
+  };
 
   return (
     <div className='body-page' style={{paddingBottom: 80}}>
+      <Dialog
+        open={groupModal}
+        onClose={handleCloseGroup}
+        aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>Create Group</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Enter Group Name</DialogContentText>
+          <TextField
+            autoFocus
+            margin='dense'
+            id='name'
+            label='Enter group name'
+            type='text'
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseGroup} color='primary'>
+            Cancel
+          </Button>
+          <Button onClick={createMediaGroup} color='primary'>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog open={dialogOpen}>
         <DialogTitle>
           <div style={{minWidth: '400px'}}>
@@ -330,6 +395,28 @@ export default function UserManagement() {
                 <MenuItem value={2}>Disabled</MenuItem>
               </CustomSelect>
             </ListItem>
+            <ListItem>
+              <CustomSelect
+                fullWidth
+                placeholder='Media Group'
+                onChange={(e) => {
+                  setSelectedMediaGroup(e.target.value);
+                }}
+                value={selectedMediaGroup}>
+                <MenuItem value={0}>Select Media Group</MenuItem>
+                <MenuItem onClick={() => setGroupModal(true)}>
+                  + Add Group
+                </MenuItem>
+                {mediaGroups.map((element, index) => {
+                  return (
+                    <MenuItem value={element.id} key={index}>
+                      {element.name}
+                    </MenuItem>
+                  );
+                })}
+              </CustomSelect>
+            </ListItem>
+
             <ListItem>
               <div
                 style={{
@@ -571,7 +658,6 @@ export default function UserManagement() {
                   page={page}
                   userData={userData}
                   onChangeSendRequest={(page) => {
-                    console.log('the page', page);
                     dispatch(onGetUserList({page}));
                   }}
                   setPage={(page) => setPage(page)}

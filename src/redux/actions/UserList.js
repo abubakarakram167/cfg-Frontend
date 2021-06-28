@@ -67,11 +67,19 @@ export const addUserToList = (body) => {
   };
 };
 export const editUserInList = (body) => {
+  console.log(body);
   return (dispatch) => {
     dispatch({type: FETCH_START});
     Api.put('/api/users/', body)
       .then((data) => {
+        console.log('edited', data);
         if (data.status === 200) {
+          console.log('hello');
+          const newUserObj = JSON.parse(localStorage.getItem('current-user'));
+          if (newUserObj.id === body.id) {
+            newUserObj.cfg_session_id = body.cfg_session_id;
+            localStorage.setItem('current-user', JSON.stringify(newUserObj));
+          }
           dispatch({type: FETCH_SUCCESS});
           dispatch({
             type: Show_Message,
