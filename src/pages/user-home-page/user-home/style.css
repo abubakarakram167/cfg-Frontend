@@ -1,0 +1,25 @@
+.conversationHeader {
+  font-weight: 600;
+  font-size: 16px;
+  color: #929292;
+}
+.conversation-child-list {
+  list-style-type: none;
+  font-size: 12px;
+  margin-left: 10px;
+  color: #929292;
+}
+
+.conversation-child-element {
+}
+.conversation-container {
+  position: relative;
+}
+.conversation-lists {
+  position: absolute;
+  top: -25px;
+  left: 10px;
+}
+.conversation-lists a {
+  color: grey !important;
+}

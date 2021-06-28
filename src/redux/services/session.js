@@ -27,6 +27,9 @@ class Session {
       ...params,
     });
   }
+  static getSessionById(id) {
+    return axiosInstance.get('/api/content/list/content/session/' + id);
+  }
 }
 
 export default Session;

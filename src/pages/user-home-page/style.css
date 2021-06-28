@@ -1,0 +1,12 @@
+.conversation-container {
+  position: relative;
+}
+.conversation-lists {
+  position: absolute;
+  top: -10px;
+  left: 72px;
+}
+
+.conversation-container {
+  min-height: 40px;
+}

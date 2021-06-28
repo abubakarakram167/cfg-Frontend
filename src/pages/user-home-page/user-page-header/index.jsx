@@ -89,7 +89,7 @@ export default function AdminHeader() {
     const user = JSON.parse(localStorage.getItem('current-user'));
 
     socket.logoutAction(user.id);
-    localStorage.removeItem('user');
+    localStorage.removeItem('current-user');
     localStorage.removeItem('auth-token');
     jsCookie.remove('login');
     jsCookie.remove('access');
@@ -101,7 +101,7 @@ export default function AdminHeader() {
     socket.logoutAction(state.user.id);
     setAnchorE2(null);
     const user = JSON.parse(localStorage.getItem('current-user'));
-    localStorage.removeItem('user');
+    localStorage.removeItem('current-user');
     socket.logoutAction(user.id);
     localStorage.removeItem('auth-token');
     jsCookie.remove('login');
