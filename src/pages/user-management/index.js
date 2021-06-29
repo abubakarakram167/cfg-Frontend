@@ -109,6 +109,11 @@ export default function UserManagement() {
     else return 'disabled';
   };
 
+  const getUserGroupById = async (id) => {
+    const data = await MediaGroup.getUserGroupById(id);
+    console.log(data);
+  };
+
   const userListData = useSelector(({userList}) => {
     return userList.usersList.map((user) => {
       return {
@@ -630,6 +635,7 @@ export default function UserManagement() {
                             setRole(row.role);
                             setStatus(getStatusValue(row.status));
                             toggleCheckbox(row.id);
+                            // getUserGroupById(row.id)
                           }}
                         />
                       </StyledTableCell>
