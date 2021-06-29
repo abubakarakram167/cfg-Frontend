@@ -19,6 +19,13 @@ class MediaGroup {
   static getSessionsByGroupId(id) {
     return axiosInstance.get('/api/content/getSessionsBygroup/' + id);
   }
+  static getUserGroupById(id) {
+    return axiosInstance.get('/api/users/groupById', {
+      data: JSON.stringify({
+        user_id: 33,
+      }),
+    });
+  }
   // static getUserPosts(count) {
   //     return axiosInstance.get('/api/userPosts?_count=' + count);
   // }

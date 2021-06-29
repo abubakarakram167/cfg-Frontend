@@ -120,9 +120,13 @@ export default function UserHomePage() {
           </div>
         </ListItemText>
       </ListItem>
-      <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
+      <Collapse
+        in={conversationExtended}
+        className='collapse-style'
+        timeout='auto'
+        unmountOnExit>
         <List>
-          <ListItemText style={{paddingLeft: '60px'}}>
+          <ListItemText>
             <List>
               <div className='conversation-container'>
                 <div className='conversation-lists'>
@@ -134,11 +138,24 @@ export default function UserHomePage() {
                   <ul className='conversation-child-list'>
                     {conversation?.titles.rows.map((element, index) => {
                       return (
-                        <li className='conversation-child-element'>
-                          <Link to={`/home/conversation/${element.id}`}>
-                            {index + 1}. {element.title}
-                          </Link>
-                        </li>
+                        <div key={index}>
+                          <li className='conversation-child-element'>
+                            <Link to={`/home/conversation/${element.id}`}>
+                              <strong>{element.title}</strong>
+                            </Link>
+                          </li>
+                          <ul className='subtitle'>
+                            {element.subtitles.rows.map((sub) => {
+                              return (
+                                <li className='subtitle-element'>
+                                  <Link to={`/home/conversation/${sub.id}`}>
+                                    <strong>{sub.title}</strong>
+                                  </Link>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
                       );
                     })}
                   </ul>
