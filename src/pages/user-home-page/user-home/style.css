@@ -13,13 +13,35 @@
 .conversation-child-element {
 }
 .conversation-container {
-  position: relative;
+  /* position: relative;
+  min-height: 1300px; */
 }
 .conversation-lists {
-  position: absolute;
+  /* position: absolute;
   top: -25px;
-  left: 10px;
+  left: 10px; */
 }
 .conversation-lists a {
   color: grey !important;
+}
+
+.collapse-style {
+  height: 200px !important;
+  overflow-y: scroll !important;
+}
+
+.collapse-style::-webkit-scrollbar {
+  width: 5px;
+  background-color: gainsboro;
+  border-radius: 5px;
+}
+
+.collapse-style::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+.subtitle {
+  list-style-type: none;
+  padding-left: 10px;
 }

@@ -712,6 +712,7 @@ export default function CfgTool(props) {
                               setGroup(row.assigned_group);
                               setCategories(JSON.parse(row.categories));
                               toggleCheckbox(row.id);
+                              setSelectedMediaGroup(row.group_id);
                             }}
                           />
                         </StyledTableCell>
