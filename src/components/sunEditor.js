@@ -209,6 +209,7 @@ export default (props) => {
             ['fontSize'],
             ['font', 'align'],
             ['video', 'image'],
+            ['link', 'audio'],
           ], // Or Array of button list, eg. [['font', 'align'], ['image']]
           font: [
             'Arial',

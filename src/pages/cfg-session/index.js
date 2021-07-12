@@ -52,7 +52,7 @@ const CustomSelect = withStyles((theme) => ({
     paddingBottom: 17,
     paddingTop: 17,
     backgroundColor: '#eaeaea',
-    color: '#777777',
+    color: '#232424',
   },
 }))(Select);
 const StyledTableCell = withStyles((theme) => ({

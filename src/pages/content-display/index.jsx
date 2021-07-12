@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router';
+import {useParams, useHistory} from 'react-router';
 import {getContentData} from 'redux/actions/sessionActions';
 import AdminHeader from 'pages/admin-header';
 import './style.css';
@@ -12,6 +12,7 @@ export default function ContentDisplay() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
   const [data, setData] = useState(null);
+  const history = useHistory();
   useEffect(() => {
     dispatch(getContentData(params.id));
   }, [params.id, dispatch]);
@@ -20,6 +21,10 @@ export default function ContentDisplay() {
       setData(state.currentContent);
     }
   }, [state]);
+
+  const getUrlFormat = (url) => {
+    return new URL(url).pathname;
+  };
 
   return (
     <div className='content-display-body'>
@@ -56,12 +61,12 @@ export default function ContentDisplay() {
       <div className='content-display-buttons-container'>
         <div className='content-display-buttons'>
           {data && data.previous_page && (
-            <Link to={`${data.previous_page}`}>
+            <Link to={getUrlFormat(data.previous_page)}>
               <button className='next-prev-button'>Previous</button>
             </Link>
           )}
           {data && data.next_page && (
-            <Link to={`${data.next_page}`}>
+            <Link to={getUrlFormat(data.next_page)}>
               <button className='next-prev-button'>Next</button>
             </Link>
           )}
