@@ -65,17 +65,18 @@ const AppSidebar = (props) => {
   };
   const getSessionById = async (id) => {
     const data = await Session.getSessionById(id);
+
     setConversation(data.data.data);
   };
 
   const getSessionByGroupId = async (id) => {
     const data = await MediaGroup.getSessionsByGroupId(id);
-    getSessionById(data.data[0].id);
+    console.log('the getting sessions', data);
+    if (data && data.data.length) getSessionById(data.data[1].id);
   };
   const getUserGroup = async () => {
     const data = await MediaGroup.getUserGroup();
-
-    getSessionByGroupId(data.data.group_id);
+    if (data && data.data) getSessionByGroupId(data.data.group_id);
   };
   useEffect(() => {
     getUserGroup();
@@ -283,6 +284,7 @@ const AppSidebar = (props) => {
                   </div>
                   <ul className='conversation-child-list'>
                     {conversation?.titles.rows.map((element, index) => {
+                      console.log('the element', element);
                       return (
                         <li className='conversation-child-element'>
                           <Link to={`/home/conversation/${element.id}`}>
