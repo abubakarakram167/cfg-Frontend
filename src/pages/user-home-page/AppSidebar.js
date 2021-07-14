@@ -1,4 +1,5 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import clsx from 'clsx';
 import './style.css';
@@ -17,9 +18,6 @@ import {
 import {
   ExpandLess,
   ExpandMore,
-  People,
-  Event,
-  ChatBubble,
   Build,
   Group,
   Forum,
@@ -27,12 +25,9 @@ import {
   AccountCircle,
   Bookmark,
   Cancel,
-  CardGiftcard,
 } from '@material-ui/icons';
-import SearchBar from '@crema/core/SearchBar';
 import SearchIcon from '@material-ui/icons/Search';
 import Logout from '@material-ui/icons/ExitToApp';
-import LogoImage from 'assets/jmmb-foundation.png';
 import {Link} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {baseUrl} from 'utils/axios';
@@ -44,13 +39,22 @@ import {socket} from 'socket';
 import jsCookie from 'js-cookie';
 import MediaGroup from 'redux/services/mediagroup';
 import Session from 'redux/services/session';
-
 import './sidestyle.css';
+
+const useStyling = makeStyles({
+  childListPadding: {
+    '& .MuiCollapse-entered': {
+      paddingTop: 25,
+    },
+  },
+});
+
 const AppSidebar = (props) => {
   const [searchResults, setSearchResults] = useState([]);
   const [resultVisibility, setResultVisibility] = useState(false);
   const [navCollapsed, setnavCollapsed] = useState(true);
   const [allSessions, setAllSessions] = useState([]);
+  const classesOther = useStyling();
 
   const searchUser = async (e) => {
     e.persist();
@@ -165,7 +169,7 @@ const AppSidebar = (props) => {
         <br />
         <hr />
         <br />
-        <List>
+        <List className={classesOther.childListPadding}>
           <ListItem>
             <div className='side-search-bar'>
               <div className='search-body'>
@@ -295,27 +299,35 @@ const AppSidebar = (props) => {
                         </div>
                         <ul className='conversation-child-list'>
                           {session?.titles.rows.map((element, index) => {
-                            return (
-                              <div key={index}>
-                                <li className='conversation-child-element'>
-                                  <Link to={`/home/conversation/${element.id}`}>
-                                    <strong>{element.title}</strong>
-                                  </Link>
-                                </li>
-                                <ul className='subtitle'>
-                                  {element.subtitles.rows.map((sub) => {
-                                    return (
-                                      <li className='subtitle-element'>
-                                        <Link
-                                          to={`/home/conversation/${sub.id}`}>
-                                          <strong>{sub.title}</strong>
-                                        </Link>
-                                      </li>
-                                    );
-                                  })}
-                                </ul>
-                              </div>
-                            );
+                            console.log('the element', element);
+                            if (element.status === 'published') {
+                              return (
+                                <div
+                                  className='whole-child-component'
+                                  key={index}>
+                                  <li className='conversation-child-element'>
+                                    <Link
+                                      to={`/home/conversation/${element.id}`}>
+                                      <strong>{element.title}</strong>
+                                    </Link>
+                                  </li>
+                                  <ul className='subtitle'>
+                                    {element.subtitles.rows.map((sub) => {
+                                      if (sub.status === 'published') {
+                                        return (
+                                          <li className='subtitle-element'>
+                                            <Link
+                                              to={`/home/conversation/${sub.id}`}>
+                                              <strong>{sub.title}</strong>
+                                            </Link>
+                                          </li>
+                                        );
+                                      }
+                                    })}
+                                  </ul>
+                                </div>
+                              );
+                            }
                           })}
                         </ul>
                       </div>

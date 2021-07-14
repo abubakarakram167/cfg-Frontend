@@ -7,6 +7,7 @@ import CommonComponent from '../common-component';
 import CfgToolOfTheDay from '../user-home/cfg-tools';
 import OnlineFriend from './online-friend';
 import Session from 'redux/services/session';
+import {makeStyles} from '@material-ui/core/styles';
 
 import {
   List,
@@ -34,6 +35,16 @@ import {baseUrl} from 'utils/axios';
 import Tool from 'redux/services/tool';
 import MediaGroup from 'redux/services/mediagroup';
 
+const useStyling = makeStyles({
+  childListPadding: {
+    '& .MuiCollapse-entered': {
+      paddingTop: 25,
+      height: '100%',
+      overflowY: 'auto',
+    },
+  },
+});
+
 export default function UserHomePage() {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.userPost.posts);
@@ -41,6 +52,7 @@ export default function UserHomePage() {
   const [conversationExtended, setConversationExtended] = useState(false);
   const [count, setCount] = useState(3);
   const [allSessions, setAllSessions] = useState([]);
+  const classesOther = useStyling();
 
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
@@ -102,7 +114,7 @@ export default function UserHomePage() {
   };
 
   const left = (
-    <List>
+    <List className={classesOther.childListPadding}>
       <ListItem>
         <ListItemIcon>
           <Forum style={{color: 'red'}} />
@@ -146,26 +158,32 @@ export default function UserHomePage() {
                     </div>
                     <ul className='conversation-child-list'>
                       {session?.titles.rows.map((element, index) => {
-                        return (
-                          <div key={index}>
-                            <li className='conversation-child-element'>
-                              <Link to={`/home/conversation/${element.id}`}>
-                                <strong>{element.title}</strong>
-                              </Link>
-                            </li>
-                            <ul className='subtitle'>
-                              {element.subtitles.rows.map((sub) => {
-                                return (
-                                  <li className='subtitle-element'>
-                                    <Link to={`/home/conversation/${sub.id}`}>
-                                      <strong>{sub.title}</strong>
-                                    </Link>
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          </div>
-                        );
+                        console.log('the element', element);
+                        if (element.status === 'published') {
+                          return (
+                            <div className='whole-child-component' key={index}>
+                              <li className='conversation-child-element'>
+                                <Link to={`/home/conversation/${element.id}`}>
+                                  <strong>{element.title}</strong>
+                                </Link>
+                              </li>
+                              <ul className='subtitle'>
+                                {element.subtitles.rows.map((sub) => {
+                                  if (sub.status === 'published') {
+                                    return (
+                                      <li className='subtitle-element'>
+                                        <Link
+                                          to={`/home/conversation/${sub.id}`}>
+                                          <strong>{sub.title}</strong>
+                                        </Link>
+                                      </li>
+                                    );
+                                  }
+                                })}
+                              </ul>
+                            </div>
+                          );
+                        }
                       })}
                     </ul>
                   </div>
