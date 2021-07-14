@@ -50,7 +50,7 @@ const AppSidebar = (props) => {
   const [searchResults, setSearchResults] = useState([]);
   const [resultVisibility, setResultVisibility] = useState(false);
   const [navCollapsed, setnavCollapsed] = useState(true);
-  const [conversation, setConversation] = useState(null);
+  const [allSessions, setAllSessions] = useState([]);
 
   const searchUser = async (e) => {
     e.persist();
@@ -63,16 +63,20 @@ const AppSidebar = (props) => {
   const sendFriendRequest = async (id) => {
     const data = await Friend.sendFriendRequest({userId: id});
   };
-  const getSessionById = async (id) => {
-    const data = await Session.getSessionById(id);
-
-    setConversation(data.data.data);
+  const getSessionById = (id) => {
+    return Session.getSessionById(id);
   };
 
   const getSessionByGroupId = async (id) => {
     const data = await MediaGroup.getSessionsByGroupId(id);
-    console.log('the getting sessions', data);
-    if (data && data.data.length) getSessionById(data.data[1].id);
+    let allSessionData = [];
+    if (data && data.data.length) {
+      for (let getSession of data.data)
+        allSessionData.push(getSessionById(getSession.id));
+      const getAllSessionsData = await Promise.all(allSessionData);
+      setAllSessions(getAllSessionsData.map((session) => session.data.data));
+    }
+    getSessionById(data.data[0].id);
   };
   const getUserGroup = async () => {
     const data = await MediaGroup.getUserGroup();
@@ -258,7 +262,7 @@ const AppSidebar = (props) => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
-                <div>My Conversations</div>
+                <div>My Conversationss</div>
                 {conversationExtended ? (
                   <ExpandLess
                     onClick={toggleExpansion}
@@ -273,31 +277,54 @@ const AppSidebar = (props) => {
               </div>
             </ListItemText>
           </ListItem>
-          <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
-            <List>
-              <div className='conversation-container'>
-                <div className='conversation-lists'>
-                  <div className='conversationHeader'>
-                    <Link to={`/home/conversation/${conversation?.rows[0].id}`}>
-                      {conversation?.rows[0].title}
-                    </Link>
-                  </div>
-                  <ul className='conversation-child-list'>
-                    {conversation?.titles.rows.map((element, index) => {
-                      console.log('the element', element);
-                      return (
-                        <li className='conversation-child-element'>
-                          <Link to={`/home/conversation/${element.id}`}>
-                            {index + 1}. {element.title}
+          {allSessions.length &&
+            allSessions.map((session) => {
+              console.log('in looping the session', session);
+              return (
+                <Collapse
+                  in={conversationExtended}
+                  timeout='auto'
+                  unmountOnExit>
+                  <List>
+                    <div className='conversation-container'>
+                      <div className='conversation-lists'>
+                        <div className='conversationHeader'>
+                          <Link
+                            to={`/home/conversation/${session?.rows[0].id}`}>
+                            {session?.rows[0].title}
                           </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
-            </List>
-          </Collapse>
+                        </div>
+                        <ul className='conversation-child-list'>
+                          {session?.titles.rows.map((element, index) => {
+                            return (
+                              <div key={index}>
+                                <li className='conversation-child-element'>
+                                  <Link to={`/home/conversation/${element.id}`}>
+                                    <strong>{element.title}</strong>
+                                  </Link>
+                                </li>
+                                <ul className='subtitle'>
+                                  {element.subtitles.rows.map((sub) => {
+                                    return (
+                                      <li className='subtitle-element'>
+                                        <Link
+                                          to={`/home/conversation/${sub.id}`}>
+                                          <strong>{sub.title}</strong>
+                                        </Link>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              </div>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </div>
+                  </List>
+                </Collapse>
+              );
+            })}
           <Link to='/home/user-achievements'>
             <ListItem>
               <ListItemIcon>
