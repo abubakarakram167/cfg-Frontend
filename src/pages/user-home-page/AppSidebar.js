@@ -76,7 +76,6 @@ const AppSidebar = (props) => {
       const getAllSessionsData = await Promise.all(allSessionData);
       setAllSessions(getAllSessionsData.map((session) => session.data.data));
     }
-    getSessionById(data.data[0].id);
   };
   const getUserGroup = async () => {
     const data = await MediaGroup.getUserGroup();

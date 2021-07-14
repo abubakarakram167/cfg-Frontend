@@ -69,7 +69,6 @@ export default function UserHomePage() {
       const getAllSessionsData = await Promise.all(allSessionData);
       setAllSessions(getAllSessionsData.map((session) => session.data.data));
     }
-    getSessionById(data.data[0].id);
   };
 
   const getUserGroup = async () => {
