@@ -706,7 +706,8 @@ export default function CfgTool(props) {
                               setCurrentIds(allIds);
                               setTitle(row.title);
                               setPublishDate(row.created_at);
-                              // setend_date(row.end_date);
+                              setstart_date(row.start_date);
+                              setend_date(row.end_date);
                               settotal_points(row.total_points);
                               setStatus(row.status);
                               setGroup(row.assigned_group);
