@@ -108,20 +108,6 @@ const ToolReducer = (state = INIT_STATE, action) => {
         editedContent: true,
         currentContent: payload.content,
       };
-    case actions.GET_CONTENT_DATA:
-      payload = action.payload;
-      if (payload.error) {
-        return {
-          ...state,
-          error: true,
-          // currentContent: null,
-        };
-      }
-      return {
-        ...state,
-        currentContent: payload,
-      };
-
     case actions.SET_SELECTED_TOOL:
       const selected = state.tools.filter((tool) => {
         if (tool) {

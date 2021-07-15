@@ -49,6 +49,7 @@ export default function Editor() {
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
+  state.currentContent = state.newData;
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('Enter a title');
   const [sub_title, setsub_title] = useState('Enter a subtitle');
@@ -73,8 +74,6 @@ export default function Editor() {
   const [isContentChange, setContentChanged] = useState(false);
   const [featuredImage, setFeaturedImage] = useState('');
   const [showDialogue, setShowDialogue] = useState(false);
-
-  let filesUrl = [];
   const classes = useStyles();
   const history = useHistory();
 
@@ -139,7 +138,9 @@ export default function Editor() {
     }
     if (state.current) setOriginalTotalPoints(state.current.total_points || 0);
     if (state.currentContent) {
-      setTitle((params.title && params.title.replaceAll('^', '?')) || '');
+      setTitle(
+        (state.currentContent.title && state.currentContent.title) || '',
+      );
       setsub_title(state.currentContent.sub_title || '');
       setContent(state.currentContent.detail || '');
       setstart_date(
@@ -265,7 +266,6 @@ export default function Editor() {
     formData.append('category', 'cover');
     const data = await Media.addMedia(formData);
     const photo_url = baseUrl + 'static/' + data.data[0].file_name;
-    console.log(photo_url);
     uploadHandler({
       result: [
         {
@@ -346,7 +346,6 @@ export default function Editor() {
           onClose={() => setShowDialogue(false)}
           onImageSave={(image) => {
             setFeaturedImage(image[0].url);
-            console.log('the image', image);
           }}
         />
         <div className='editor-container'>
