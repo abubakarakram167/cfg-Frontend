@@ -617,7 +617,7 @@ export default function CfgTool(props) {
                             }}
                             className='custom-row-design-header summary-margin-left-concise'>
                             <Link
-                              to={`/admin/content/edit/${row.id}/null/${row.title}/session/${row.type}`}>
+                              to={`/admin/content/edit/${row.id}/null/session/${row.type}`}>
                               {row.title}
                             </Link>
                           </div>

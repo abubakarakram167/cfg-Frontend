@@ -10,6 +10,7 @@ const INIT_STATE = {
   currentContent: null,
   createdContent: null,
   editedContent: false,
+  newData: null,
 };
 let payload = null;
 const sessionReducer = (state = INIT_STATE, action) => {
@@ -94,16 +95,11 @@ const sessionReducer = (state = INIT_STATE, action) => {
       };
     case actions.GET_CONTENT_DATA:
       payload = action.payload;
-      if (payload.error) {
-        return {
-          ...state,
-          error: true,
-          currentContent: null,
-        };
-      }
+      console.log('int ht epayload session', payload);
       return {
         ...state,
         currentContent: payload,
+        newData: payload,
       };
     default:
       return state;
