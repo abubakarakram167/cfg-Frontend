@@ -11,17 +11,18 @@
 }
 
 .conversation-child-element {
+  margin-top: 10px;
+  padding-bottom: 10px;
 }
+
 .conversation-container {
   /* position: relative;
   min-height: 1300px; */
 }
 .conversation-lists {
-  /* position: absolute;
-  top: -25px;
-  left: 10px; */
-}
-.conversation-lists a {
+  position: relative;
+  top: -10px;
+  left: 72px;
   color: grey !important;
 }
 

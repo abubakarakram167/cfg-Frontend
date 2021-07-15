@@ -7,6 +7,7 @@ import CommonComponent from '../common-component';
 import CfgToolOfTheDay from '../user-home/cfg-tools';
 import OnlineFriend from './online-friend';
 import Session from 'redux/services/session';
+import {makeStyles} from '@material-ui/core/styles';
 
 import {
   List,
@@ -34,32 +35,54 @@ import {baseUrl} from 'utils/axios';
 import Tool from 'redux/services/tool';
 import MediaGroup from 'redux/services/mediagroup';
 
+const useStyling = makeStyles({
+  childListPadding: {
+    '& .MuiCollapse-entered': {
+      paddingTop: 25,
+      height: '100%',
+      overflowY: 'auto',
+    },
+  },
+});
+
 export default function UserHomePage() {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.userPost.posts);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [conversationExtended, setConversationExtended] = useState(false);
   const [count, setCount] = useState(3);
-  const [conversation, setConversation] = useState(null);
+  const [allSessions, setAllSessions] = useState([]);
+  const classesOther = useStyling();
 
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
   const [dayTools, setDayTools] = useState([]);
   const getDayTools = async () => {
-    const data = await Tool.getDayTools();
-    setDayTools(data.data);
+    try {
+      const data = await Tool.getDayTools();
+
+      setDayTools(data.data);
+    } catch (err) {
+      setDayTools([]);
+    }
   };
 
-  const getSessionById = async (id) => {
-    const data = await Session.getSessionById(id);
-    setConversation(data.data.data);
+  const getSessionById = (id) => {
+    return Session.getSessionById(id);
   };
 
   const getSessionByGroupId = async (id) => {
     const data = await MediaGroup.getSessionsByGroupId(id);
-    getSessionById(data.data[0].id);
+    let allSessionData = [];
+    if (data && data.data.length) {
+      for (let getSession of data.data)
+        allSessionData.push(getSessionById(getSession.id));
+      const getAllSessionsData = await Promise.all(allSessionData);
+      setAllSessions(getAllSessionsData.map((session) => session.data.data));
+    }
   };
+
   const getUserGroup = async () => {
     const data = await MediaGroup.getUserGroup();
 
@@ -91,7 +114,7 @@ export default function UserHomePage() {
   };
 
   const left = (
-    <List>
+    <List className={classesOther.childListPadding}>
       <ListItem>
         <ListItemIcon>
           <Forum style={{color: 'red'}} />
@@ -120,51 +143,55 @@ export default function UserHomePage() {
           </div>
         </ListItemText>
       </ListItem>
-      <Collapse
-        in={conversationExtended}
-        className='collapse-style'
-        timeout='auto'
-        unmountOnExit>
-        <List>
-          <ListItemText>
-            <List>
-              <div className='conversation-container'>
-                <div className='conversation-lists'>
-                  <div className='conversationHeader'>
-                    <Link to={`/home/conversation/${conversation?.rows[0].id}`}>
-                      {conversation?.rows[0].title}
-                    </Link>
+      {allSessions.length &&
+        allSessions.map((session) => {
+          console.log('in looping the session', session);
+          return (
+            <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
+              <List>
+                <div className='conversation-container'>
+                  <div className='conversation-lists'>
+                    <div className='conversationHeader'>
+                      <Link to={`/home/conversation/${session?.rows[0].id}`}>
+                        {session?.rows[0].title}
+                      </Link>
+                    </div>
+                    <ul className='conversation-child-list'>
+                      {session?.titles.rows.map((element, index) => {
+                        console.log('the element', element);
+                        if (element.status === 'published') {
+                          return (
+                            <div className='whole-child-component' key={index}>
+                              <li className='conversation-child-element'>
+                                <Link to={`/home/conversation/${element.id}`}>
+                                  <strong>{element.title}</strong>
+                                </Link>
+                              </li>
+                              <ul className='subtitle'>
+                                {element.subtitles.rows.map((sub) => {
+                                  if (sub.status === 'published') {
+                                    return (
+                                      <li className='subtitle-element'>
+                                        <Link
+                                          to={`/home/conversation/${sub.id}`}>
+                                          <strong>{sub.title}</strong>
+                                        </Link>
+                                      </li>
+                                    );
+                                  }
+                                })}
+                              </ul>
+                            </div>
+                          );
+                        }
+                      })}
+                    </ul>
                   </div>
-                  <ul className='conversation-child-list'>
-                    {conversation?.titles.rows.map((element, index) => {
-                      return (
-                        <div key={index}>
-                          <li className='conversation-child-element'>
-                            <Link to={`/home/conversation/${element.id}`}>
-                              <strong>{element.title}</strong>
-                            </Link>
-                          </li>
-                          <ul className='subtitle'>
-                            {element.subtitles.rows.map((sub) => {
-                              return (
-                                <li className='subtitle-element'>
-                                  <Link to={`/home/conversation/${sub.id}`}>
-                                    <strong>{sub.title}</strong>
-                                  </Link>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </div>
-                      );
-                    })}
-                  </ul>
                 </div>
-              </div>
-            </List>
-          </ListItemText>
-        </List>
-      </Collapse>
+              </List>
+            </Collapse>
+          );
+        })}
       <Link to='/home/user-connections'>
         <ListItem>
           <ListItemIcon>

@@ -1,4 +1,5 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import clsx from 'clsx';
 import './style.css';
@@ -17,9 +18,6 @@ import {
 import {
   ExpandLess,
   ExpandMore,
-  People,
-  Event,
-  ChatBubble,
   Build,
   Group,
   Forum,
@@ -27,12 +25,9 @@ import {
   AccountCircle,
   Bookmark,
   Cancel,
-  CardGiftcard,
 } from '@material-ui/icons';
-import SearchBar from '@crema/core/SearchBar';
 import SearchIcon from '@material-ui/icons/Search';
 import Logout from '@material-ui/icons/ExitToApp';
-import LogoImage from 'assets/jmmb-foundation.png';
 import {Link} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {baseUrl} from 'utils/axios';
@@ -44,13 +39,22 @@ import {socket} from 'socket';
 import jsCookie from 'js-cookie';
 import MediaGroup from 'redux/services/mediagroup';
 import Session from 'redux/services/session';
-
 import './sidestyle.css';
+
+const useStyling = makeStyles({
+  childListPadding: {
+    '& .MuiCollapse-entered': {
+      paddingTop: 25,
+    },
+  },
+});
+
 const AppSidebar = (props) => {
   const [searchResults, setSearchResults] = useState([]);
   const [resultVisibility, setResultVisibility] = useState(false);
   const [navCollapsed, setnavCollapsed] = useState(true);
-  const [conversation, setConversation] = useState(null);
+  const [allSessions, setAllSessions] = useState([]);
+  const classesOther = useStyling();
 
   const searchUser = async (e) => {
     e.persist();
@@ -63,19 +67,23 @@ const AppSidebar = (props) => {
   const sendFriendRequest = async (id) => {
     const data = await Friend.sendFriendRequest({userId: id});
   };
-  const getSessionById = async (id) => {
-    const data = await Session.getSessionById(id);
-    setConversation(data.data.data);
+  const getSessionById = (id) => {
+    return Session.getSessionById(id);
   };
 
   const getSessionByGroupId = async (id) => {
     const data = await MediaGroup.getSessionsByGroupId(id);
-    getSessionById(data.data[0].id);
+    let allSessionData = [];
+    if (data && data.data.length) {
+      for (let getSession of data.data)
+        allSessionData.push(getSessionById(getSession.id));
+      const getAllSessionsData = await Promise.all(allSessionData);
+      setAllSessions(getAllSessionsData.map((session) => session.data.data));
+    }
   };
   const getUserGroup = async () => {
     const data = await MediaGroup.getUserGroup();
-
-    getSessionByGroupId(data.data.group_id);
+    if (data && data.data) getSessionByGroupId(data.data.group_id);
   };
   useEffect(() => {
     getUserGroup();
@@ -161,7 +169,7 @@ const AppSidebar = (props) => {
         <br />
         <hr />
         <br />
-        <List>
+        <List className={classesOther.childListPadding}>
           <ListItem>
             <div className='side-search-bar'>
               <div className='search-body'>
@@ -257,7 +265,7 @@ const AppSidebar = (props) => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
-                <div>My Conversations</div>
+                <div>My Conversationss</div>
                 {conversationExtended ? (
                   <ExpandLess
                     onClick={toggleExpansion}
@@ -272,30 +280,62 @@ const AppSidebar = (props) => {
               </div>
             </ListItemText>
           </ListItem>
-          <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
-            <List>
-              <div className='conversation-container'>
-                <div className='conversation-lists'>
-                  <div className='conversationHeader'>
-                    <Link to={`/home/conversation/${conversation?.rows[0].id}`}>
-                      {conversation?.rows[0].title}
-                    </Link>
-                  </div>
-                  <ul className='conversation-child-list'>
-                    {conversation?.titles.rows.map((element, index) => {
-                      return (
-                        <li className='conversation-child-element'>
-                          <Link to={`/home/conversation/${element.id}`}>
-                            {index + 1}. {element.title}
+          {allSessions.length &&
+            allSessions.map((session) => {
+              console.log('in looping the session', session);
+              return (
+                <Collapse
+                  in={conversationExtended}
+                  timeout='auto'
+                  unmountOnExit>
+                  <List>
+                    <div className='conversation-container'>
+                      <div className='conversation-lists'>
+                        <div className='conversationHeader'>
+                          <Link
+                            to={`/home/conversation/${session?.rows[0].id}`}>
+                            {session?.rows[0].title}
                           </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
-            </List>
-          </Collapse>
+                        </div>
+                        <ul className='conversation-child-list'>
+                          {session?.titles.rows.map((element, index) => {
+                            console.log('the element', element);
+                            if (element.status === 'published') {
+                              return (
+                                <div
+                                  className='whole-child-component'
+                                  key={index}>
+                                  <li className='conversation-child-element'>
+                                    <Link
+                                      to={`/home/conversation/${element.id}`}>
+                                      <strong>{element.title}</strong>
+                                    </Link>
+                                  </li>
+                                  <ul className='subtitle'>
+                                    {element.subtitles.rows.map((sub) => {
+                                      if (sub.status === 'published') {
+                                        return (
+                                          <li className='subtitle-element'>
+                                            <Link
+                                              to={`/home/conversation/${sub.id}`}>
+                                              <strong>{sub.title}</strong>
+                                            </Link>
+                                          </li>
+                                        );
+                                      }
+                                    })}
+                                  </ul>
+                                </div>
+                              );
+                            }
+                          })}
+                        </ul>
+                      </div>
+                    </div>
+                  </List>
+                </Collapse>
+              );
+            })}
           <Link to='/home/user-achievements'>
             <ListItem>
               <ListItemIcon>
