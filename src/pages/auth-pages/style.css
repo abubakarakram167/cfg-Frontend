@@ -148,7 +148,7 @@
   .main {
     width: 100%;
     position: unset;
-    margin-top: 20px;
+    margin-top: 30%;
   }
   .right-box {
     position: unset;
@@ -217,7 +217,7 @@
 }
 @media only screen and (max-width: 992px) {
   .main {
-    opacity: 0.7;
+    opacity: 0.92;
   }
 }
 
@@ -314,11 +314,7 @@
   } */
 }
 
-@media only screen and (max-width: 799px) and (min-width: 600px) {
-  /* .logo-image-screen {
-    width: 15%;
-  } */
-}
+
 @media only screen and (max-width: 599px) and (min-width: 400px) {
   /* .logo-image-screen {
     width: 15%;
@@ -348,4 +344,29 @@
     margin-top: 20px;
     font-size: 15px;
   }
+}
+
+@media only screen and (max-width: 700px) and (min-width: 600px) {
+  
+}
+
+@media only screen and (max-width: 700px) {
+  .left-box {
+    background-image: url('../../assets/jmmb-foundation-mobile.png');
+    /* width: 100%; */
+    background-color: #f0f2f5;
+    display: flex;
+    align-items: stretch;
+    /* width: 75%; */
+    height: 91.75vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: -150px;
+    border-radius: -50%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
 }
