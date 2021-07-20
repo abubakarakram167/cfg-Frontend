@@ -14,7 +14,9 @@ const useStyles = makeStyles({
   },
   media: {
     height: 200,
-    backgroundSize: 'contain',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: '100% 100%',
   },
 });
 
