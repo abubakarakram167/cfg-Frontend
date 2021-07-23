@@ -5,7 +5,7 @@ import LogoImage from 'assets/cfgWhiteLogo.png';
 
 export default function AdminHeader() {
   return (
-    <div>
+    <div class="logo-image-white-div">
       <AppHeader style={{height: 180}}>
         {/* <div className='text'>JMMB Foundation</div> */}
         <img src={LogoImage} className='logo-image-white' alt='test' />

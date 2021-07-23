@@ -53,7 +53,7 @@
     justify-content: center;
   }
   .left {
-    margin-left: 120px;
+    margin-left: 0px;
   }
   .right {
     display: none;
@@ -70,13 +70,33 @@
   }
 }
 
+
+
 .text {
   color: white !important;
   font-size: 30px;
   font-size: 600;
 }
 .logo-image-white {
-  width: 200px;
-  height: 70px;
+  width: auto;
+  height: 100px;
   margin-top: 10px;
+}
+
+@media only screen and (max-width: 700px) {
+
+  .makeStyles-appHeader-1 {
+    justify-content: center;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+ .logo-image-white {
+    width: 80%;
+    height: auto;
+    margin-top: 10px;
+    justify-content: center;
+  }
+    
+ 
 }

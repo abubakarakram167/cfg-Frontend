@@ -19,7 +19,6 @@ import {
 } from '@material-ui/core';
 import {
   Forum,
-  People,
   Group,
   Event,
   Build,
@@ -41,6 +40,7 @@ const useStyling = makeStyles({
       paddingTop: 25,
       height: '100%',
       overflowY: 'auto',
+      overflowX: 'hidden',
     },
   },
 });
