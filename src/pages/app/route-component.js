@@ -3,6 +3,7 @@ import {Redirect, Route, Switch} from 'react-router';
 import {BrowserRouter as Router, withRouter} from 'react-router-dom';
 import Admin from './admin';
 import Auth from 'pages/auth-pages';
+import UnAuthorizedPage from 'pages/unauthorized-page';
 import ResetPassword from 'pages/auth-pages/reset-password/index';
 import CreatePassword from 'pages/auth-pages/create-password/index';
 import ProtectedRoute from './protectedRouter';
@@ -34,7 +35,9 @@ const RouteComponent = (props) => {
           <Route path='/'>
             <Auth />
           </Route>
-
+          <Route path='/unAuthorizedPage'>
+            <UnAuthorizedPage />
+          </Route>
           {/* <Route path='/editor'>
             <Editor />
           </Route> */}
