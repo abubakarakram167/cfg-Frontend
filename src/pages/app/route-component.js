@@ -1,16 +1,29 @@
 import React, {useState, useEffect} from 'react';
 import {Redirect, Route, Switch} from 'react-router';
-import {BrowserRouter as Router, withRouter} from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  withRouter,
+  useHistory,
+} from 'react-router-dom';
 import Admin from './admin';
+import Home from './home';
 import Auth from 'pages/auth-pages';
-import UnAuthorizedPage from 'pages/unauthorized-page';
 import ResetPassword from 'pages/auth-pages/reset-password/index';
 import CreatePassword from 'pages/auth-pages/create-password/index';
-import ProtectedRoute from './protectedRouter';
-import AdminHeader from 'pages/auth-pages/auth-header';
 
+import UnAuthorizedPage from 'pages/unauthorized-page';
+
+const user = JSON.parse(localStorage.getItem('current-user'));
 const RouteComponent = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
+  let history = useHistory();
+
+  const isAdminUrl = () => {
+    if (window.location.href.indexOf('admin') > -1) {
+      return true;
+    }
+    return false;
+  };
 
   useEffect(() => {
     if (localStorage.getItem('auth-token')) {
@@ -27,16 +40,19 @@ const RouteComponent = (props) => {
           <Route exact path='/createPassword'>
             <CreatePassword />
           </Route>
-
           <Route exact path='/reset'>
             <ResetPassword />
           </Route>
+          <Route path='/unAuthorizedPage'>
+            <UnAuthorizedPage />
+          </Route>
+          {user && user.role === 'candidate' && isAdminUrl() && (
+            <Redirect to='/unAuthorizedPage' />
+          )}
+          {Home}
           {Admin}
           <Route path='/'>
             <Auth />
-          </Route>
-          <Route path='/unAuthorizedPage'>
-            <UnAuthorizedPage />
           </Route>
           {/* <Route path='/editor'>
             <Editor />

@@ -33,8 +33,8 @@ export default function AdminHeader() {
   const state = useSelector((state) => {
     return state.auth;
   });
+  const user = JSON.parse(localStorage.getItem('current-user'));
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('current-user'));
     dispatch(setCurrentUser(user));
   }, []);
 
@@ -105,16 +105,18 @@ export default function AdminHeader() {
           <div className='left'>
             <div className='left-user-info'>
               <Avatar alt='User Avatar' src={Logo} className='logo-style' />
-              <Link to='/admin'>
-                <Home
-                  style={{
-                    fill: '#ffffff',
-                    marginRight: '10px',
-                    marginLeft: '10px',
-                    fontSize: 30,
-                  }}
-                />
-              </Link>
+              {user && user.role !== 'candidate' && (
+                <Link to='/admin'>
+                  <Home
+                    style={{
+                      fill: '#ffffff',
+                      marginRight: '10px',
+                      marginLeft: '10px',
+                      fontSize: 30,
+                    }}
+                  />
+                </Link>
+              )}
             </div>
             <div className='admin-search-bar'>
               <SearchBar onChange={searchUser} />
