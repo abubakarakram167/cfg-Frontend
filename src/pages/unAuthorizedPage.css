@@ -1,0 +1,10 @@
+.home-button {
+  margin-top: 40px;
+  padding: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 20px;
+  color: white;
+  background-color: red;
+  border-width: thin;
+}
