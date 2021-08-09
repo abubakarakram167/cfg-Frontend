@@ -19,6 +19,7 @@ import CustomTablePagination from '../user-management/pagination';
 import moment from 'moment';
 import jsCookie from 'js-cookie';
 import FilterList from '@material-ui/icons/FilterList';
+import {useHistory} from 'react-router-dom';
 import {
   Dialog,
   List,
@@ -96,6 +97,7 @@ const useStyles = makeStyles({
 export default function CfgTool(props) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
+  const permissions = useSelector((state) => state.roles.permissions);
   const [content, setContent] = useState([]);
   const [checked, setChecked] = useState([]);
   const [page, setPage] = React.useState(0);
@@ -120,10 +122,10 @@ export default function CfgTool(props) {
   const [publishDateFilter, setPublishdateFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
-  const [createAtFilter, setCreateAtFilter] = useState('');
   const [category, setCategories] = useState([]);
   const [group, setGroup] = useState('candidate');
   const [value, setValue] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
     setContent(state.content);
@@ -133,6 +135,14 @@ export default function CfgTool(props) {
     dispatch(getSessionData());
     setAuthor(JSON.parse(jsCookie.get('user')).user_name);
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!permissions.cfgSession.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
 
   const toggleCheckbox = (id) => {
     if (checked.includes(id)) {

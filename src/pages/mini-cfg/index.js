@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {useSelector} from 'react-redux';
 import AdminHeader from 'pages/admin-header';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -11,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
+import {useHistory} from 'react-router-dom';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -76,7 +78,8 @@ export default function MiniCfg() {
     },
   ]);
   const [currentCheckState, setCurrentCheckState] = useState(false);
-
+  const permissions = useSelector((state) => state.roles.permissions);
+  const history = useHistory();
   const classes = useStyles();
 
   const toggleCheckbox = (id) => {
@@ -101,6 +104,14 @@ export default function MiniCfg() {
       }),
     );
   };
+
+  useEffect(() => {
+    if (!permissions.miniCfg.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
 
   return (
     <div>

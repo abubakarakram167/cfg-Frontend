@@ -13,12 +13,12 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
-import EditIcon from '@material-ui/icons/Edit';
 import {Link} from 'react-router-dom';
 import CustomTablePagination from '../user-management/pagination';
 import moment from 'moment';
 import jsCookie from 'js-cookie';
 import FilterList from '@material-ui/icons/FilterList';
+import {useHistory} from 'react-router-dom';
 import {
   Dialog,
   List,
@@ -84,6 +84,7 @@ const useStyles = makeStyles({
 export default function CfgTool(props) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.tool);
+  const permissions = useSelector((state) => state.roles.permissions);
   const [content, setContent] = useState([]);
   const [checked, setChecked] = useState([]);
   const [page, setPage] = React.useState(0);
@@ -108,10 +109,10 @@ export default function CfgTool(props) {
   const [publishDateFilter, setPublishdateFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [totalPointsFilter, settotalPointsFilter] = useState('');
-  const [createAtFilter, setCreateAtFilter] = useState('');
   const [category, setCategories] = useState([]);
   const [group, setGroup] = useState('candidate');
   const [value, setValue] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
     setContent(state.content);
@@ -121,6 +122,14 @@ export default function CfgTool(props) {
     dispatch(getTimelineData());
     setAuthor(JSON.parse(jsCookie.get('user')).user_name);
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!permissions.timeline.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
 
   const toggleCheckbox = (id) => {
     if (checked.includes(id)) {
@@ -481,38 +490,6 @@ export default function CfgTool(props) {
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
-                {/* <StyledTableCell>
-                  <span className='column-heading'> End Date </span>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      height: 40,
-                    }}>
-                    <KeyboardDatePicker
-                      disableToolbar
-                      style={{backgroundColor: '#eaeaea'}}
-                      variant='filled'
-                      format='YYYY-MM-DD'
-                      autoOk={true}
-                      value={endDateFilter === '' ? null : endDateFilter}
-                      fullWidth={true}
-                      placeholder='End date'
-                      className={classes.root}
-                      onChange={(e) => {
-                        if (e && e !== '')
-                          setEnddateFilter(
-                            moment(e).format('YYYY-MM-DD').toString(),
-                          );
-                        else setEnddateFilter('');
-                      }}
-                      KeyboardButtonProps={{
-                        'aria-label': 'change date',
-                      }}
-                    />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
-                  </div>
-                </StyledTableCell> */}
                 <StyledTableCell>
                   <span className='column-heading'> Total Points </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
