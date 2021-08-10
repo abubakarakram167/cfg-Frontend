@@ -415,6 +415,7 @@ export default function CfgTool(props) {
             <Chip
               icon={<ControlPoint style={{fill: 'white'}} />}
               label={'ADD NEW'}
+              disabled={!permissions.timeline.create}
               className='chip-style'
             />
           </Link>
@@ -594,6 +595,11 @@ export default function CfgTool(props) {
                             }}
                             className='custom-row-design-header summary-margin-left-concise'>
                             <Link
+                              style={
+                                !permissions.timeline.update
+                                  ? {pointerEvents: 'none'}
+                                  : {pointerEvents: 'auto'}
+                              }
                               to={`/admin/content/edit/${row.id}/null/session/${row.type}`}>
                               {row.title}
                             </Link>

@@ -101,7 +101,7 @@ export default function Preferences() {
   }, [dispatch, preferences]);
 
   useEffect(() => {
-    if (!permissions.timeline.view) {
+    if (!permissions.preference.view) {
       history.push({
         pathname: '/unAuthorizedPage',
       });
@@ -230,6 +230,7 @@ export default function Preferences() {
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
             label={'Edit Preference'}
+            disabled={!permissions.preference.create}
             className='chip-style'
             onClick={() => setDialogOpen(true)}
           />

@@ -503,6 +503,7 @@ export default function CfgTool(props) {
           <Typography variant='h6'>CFG Session</Typography>
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
+            disabled={!permissions.cfgSession.create}
             label={'ADD NEW'}
             className='chip-style'
             onClick={() => {
@@ -522,6 +523,7 @@ export default function CfgTool(props) {
           <Chip
             icon={<EditIcon style={{fill: 'white', fontSize: 20}} />}
             label={'EDIT'}
+            disabled={!permissions.cfgSession.update}
             className='chip-style gray-chip'
             onClick={() => {
               setEdit(true);

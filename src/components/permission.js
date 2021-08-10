@@ -349,22 +349,22 @@ export default (user) => {
       mediaLibrary: {
         create: false,
         update: false,
-        view: false,
+        view: true,
       },
       miniCfg: {
         create: false,
         update: false,
-        view: false,
+        view: true,
       },
       rewards: {
         create: false,
         update: false,
-        view: false,
+        view: true,
       },
       events: {
         create: false,
         update: false,
-        view: false,
+        view: true,
       },
       quiz: {
         create: false,

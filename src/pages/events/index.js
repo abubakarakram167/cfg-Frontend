@@ -254,10 +254,12 @@ export default function Events() {
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
             className='chip-style'
+            disabled={!permissions.events.create}
             onClick={() => setDialogOpen(true)}
           />
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
+            disabled={!permissions.events.update}
             label={'EDIT'}
             className='chip-style gray-chip'
           />

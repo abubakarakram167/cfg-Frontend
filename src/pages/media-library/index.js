@@ -151,6 +151,7 @@ export default function MediaLibrary() {
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
+            disabled={!permissions.mediaLibrary.create}
             className='chip-style'
             onClick={() => setDialogOpen(true)}
           />
@@ -231,7 +232,6 @@ export default function MediaLibrary() {
         <div style={{paddingBottom: 50}} className='container'>
           <div className={'gallery'}>
             {filesPreview.map((element, index) => {
-              console.log('the element', element);
               if (
                 ['jpeg', 'png', 'jpg', 'JPG', 'PNG'].includes(
                   element.url.split('.').pop(),
@@ -239,7 +239,12 @@ export default function MediaLibrary() {
               ) {
                 return (
                   <div
-                    className={currentView !== 'grid' ? 'media-container' : {}}>
+                    className={currentView !== 'grid' ? 'media-container' : {}}
+                    style={
+                      !permissions.mediaLibrary.create
+                        ? {pointerEvents: 'none'}
+                        : {pointerEvents: 'auto'}
+                    }>
                     <img
                       src={element.url}
                       className={'gallery-image'}

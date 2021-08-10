@@ -255,11 +255,13 @@ export default function Rewards() {
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
+            disabled={!permissions.rewards.create}
             className='chip-style'
             onClick={() => setDialogOpen(true)}
           />
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
+            disabled={!permissions.rewards.update}
             label={'EDIT'}
             className='chip-style gray-chip'
           />

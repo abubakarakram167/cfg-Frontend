@@ -380,6 +380,7 @@ export default function CfgTool(props) {
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
+            disabled={!permissions.cfgTools.create}
             className='chip-style'
             onClick={() => {
               if (singleId) toggleCheckbox(singleId);
@@ -398,6 +399,7 @@ export default function CfgTool(props) {
           <Chip
             icon={<EditIcon style={{fill: 'white', fontSize: 20}} />}
             label={'EDIT'}
+            disabled={!permissions.cfgTools.update}
             className='chip-style gray-chip'
             onClick={() => {
               setEdit(true);

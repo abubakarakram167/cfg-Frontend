@@ -464,6 +464,7 @@ export default function UserManagement() {
           <Chip
             icon={<AddCircleRoundedIcon style={{fill: 'white'}} />}
             label={'ADD NEW'}
+            disabled={!permissions.userManagement.create}
             className='chip-style'
             onClick={() => {
               setEditForm(false);
@@ -479,12 +480,14 @@ export default function UserManagement() {
           <Chip
             icon={<ResetIcon style={{fill: 'white'}} />}
             label={'RESET'}
+            disabled={!permissions.userManagement.update}
             className='chip-style'
             onClick={() => resetFilters()}
           />
           <Chip
             icon={<LockIcon style={{fill: 'white'}} />}
             label={'LOCK'}
+            disabled={!permissions.userManagement.update}
             className='chip-style'
             onClick={() => {
               changeUserStatus('disabled');
@@ -493,6 +496,7 @@ export default function UserManagement() {
           <Chip
             icon={<ApproveIcon style={{fill: 'white'}} />}
             label={'APPROVE'}
+            disabled={!permissions.userManagement.update}
             className='chip-style'
             onClick={() => {
               changeUserStatus('approved');
@@ -501,6 +505,7 @@ export default function UserManagement() {
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
             label={'EDIT'}
+            disabled={!permissions.userManagement.update}
             className='chip-style'
             onClick={() => {
               setEditForm(true);
