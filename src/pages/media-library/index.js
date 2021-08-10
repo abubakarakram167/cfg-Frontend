@@ -24,18 +24,19 @@ import TocIcon from '@material-ui/icons/Toc';
 import ReactPlayer from 'react-player';
 import baseUrl from '../../utils/url';
 import moment from 'moment';
-var btoa = require('btoa');
+import {useHistory} from 'react-router-dom';
 
 export default function MediaLibrary() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [files, setFiles] = useState([]);
   const [filesPreview, setFilesPreview] = useState([]);
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState(null);
   const [selectMedia, setSelectMedia] = useState(null);
   const message = useSelector((state) => state.userList);
   const [showSideBar, setShowSideBar] = useState(false);
   const [currentView, setCurrentView] = useState('grid');
+  const permissions = useSelector((state) => state.roles.permissions);
+  const history = useHistory();
 
   const readImage = (file, callback) => {
     let reader = new FileReader();
@@ -52,7 +53,6 @@ export default function MediaLibrary() {
   if (mediaFilesData.length && !filesPreview.length)
     setFilesPreview(mediaFilesData);
   const handleSave = (files) => {
-    console.log('the files', files);
     const data = new FormData();
     for (const file of files) {
       data.append('media', file);
@@ -117,6 +117,14 @@ export default function MediaLibrary() {
     dispatch(getUserMediaList());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!permissions.mediaLibrary.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
+
   return (
     <div style={{backgroundColor: '#f0f2f5'}}>
       <div className='toolbar-container'>
@@ -143,6 +151,7 @@ export default function MediaLibrary() {
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
+            disabled={!permissions.mediaLibrary.create}
             className='chip-style'
             onClick={() => setDialogOpen(true)}
           />
@@ -223,7 +232,6 @@ export default function MediaLibrary() {
         <div style={{paddingBottom: 50}} className='container'>
           <div className={'gallery'}>
             {filesPreview.map((element, index) => {
-              console.log('the element', element);
               if (
                 ['jpeg', 'png', 'jpg', 'JPG', 'PNG'].includes(
                   element.url.split('.').pop(),
@@ -231,7 +239,12 @@ export default function MediaLibrary() {
               ) {
                 return (
                   <div
-                    className={currentView !== 'grid' ? 'media-container' : {}}>
+                    className={currentView !== 'grid' ? 'media-container' : {}}
+                    style={
+                      !permissions.mediaLibrary.create
+                        ? {pointerEvents: 'none'}
+                        : {pointerEvents: 'auto'}
+                    }>
                     <img
                       src={element.url}
                       className={'gallery-image'}

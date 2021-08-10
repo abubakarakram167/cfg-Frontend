@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
+import {useSelector} from 'react-redux';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,6 +14,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
+import {useHistory} from 'react-router-dom';
 import {
   Dialog,
   List,
@@ -89,7 +91,8 @@ export default function Events() {
     },
   ]);
   const [currentCheckState, setCurrentCheckState] = useState(false);
-
+  const permissions = useSelector((state) => state.roles.permissions);
+  const history = useHistory();
   const classes = useStyles();
 
   const toggleCheckbox = (id) => {
@@ -104,6 +107,14 @@ export default function Events() {
       }),
     );
   };
+
+  useEffect(() => {
+    if (!permissions.miniCfg.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
 
   const toggleAll = () => {
     setEventData(
@@ -120,7 +131,6 @@ export default function Events() {
   const [endDate, setEndDate] = useState(new Date());
   const [totalPoints, setTotalPoints] = useState('');
   const [status, setStatus] = useState('');
-
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -244,10 +254,12 @@ export default function Events() {
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
             className='chip-style'
+            disabled={!permissions.events.create}
             onClick={() => setDialogOpen(true)}
           />
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
+            disabled={!permissions.events.update}
             label={'EDIT'}
             className='chip-style gray-chip'
           />

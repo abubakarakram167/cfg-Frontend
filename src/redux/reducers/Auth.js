@@ -50,7 +50,6 @@ const authReducer = (state = INIT_STATE, action) => {
         error: null,
       };
     case 'LOGIN':
-      console.log('here', action.payload);
       payload = action.payload;
       let error = null;
       if (payload.token) {

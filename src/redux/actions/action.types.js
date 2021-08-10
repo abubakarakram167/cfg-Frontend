@@ -34,3 +34,4 @@ export const GET_ALL_COMPLETE_QUESTIONS = 'GET_ALL_COMPLETE_QUESTIONS';
 export const GET_ALL_BANK_QUESTIONS = 'GET_ALL_BANK_QUESTIONS';
 export const Edit_QUIZ = 'Edit_QUIZ';
 export const GET_POST_BY_ID = 'GET_POST_BY_ID';
+export const setPermissions = 'setPermissions';

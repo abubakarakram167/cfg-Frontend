@@ -1,4 +1,4 @@
-import {LOGIN} from './action.types';
+import {LOGIN, setPermissions} from './action.types';
 import Auth from '../services/auth';
 import jsCookie from 'js-cookie';
 import * as actions from './action.types';
@@ -13,14 +13,16 @@ export const loginAction = (params) => {
       const response = await Auth.login(params);
       if (response.status === 200) {
         const data_resp = await response.data;
-        console.log('after loginnnn....', data_resp);
         jsCookie.set('login', 'yes');
-
         jsCookie.set('user', data_resp.user);
 
         dispatch({
           type: LOGIN,
           payload: {...data_resp, error: null},
+        });
+        dispatch({
+          type: setPermissions,
+          payload: data_resp.user,
         });
       }
     } catch (error) {

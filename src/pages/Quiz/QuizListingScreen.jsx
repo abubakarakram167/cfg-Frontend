@@ -20,6 +20,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import moment from 'moment';
 import jsCookie from 'js-cookie';
 import FilterList from '@material-ui/icons/FilterList';
+import {useHistory} from 'react-router-dom';
 import {
   Dialog,
   List,
@@ -43,7 +44,6 @@ import {
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
-import Categories from 'modules/dashboard/CRM/MonthlyEarning/Categories';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -116,6 +116,8 @@ export default function CfgTool(props) {
   const [categoryValue, setCategoryValue] = useState('');
   const [successNavigatePage, setSuccessNavigatePage] = useState('');
   const [failNavigatePage, setFailNavigatePage] = useState('');
+  const history = useHistory();
+  const permissions = useSelector((state) => state.roles.permissions);
 
   useEffect(() => {
     setContent(state.content);
@@ -126,6 +128,14 @@ export default function CfgTool(props) {
     dispatch(quizList());
     setAuthor(JSON.parse(jsCookie.get('user')).user_name);
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!permissions.quiz.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
 
   const toggleCheckbox = (id) => {
     if (checked.includes(id)) {
@@ -403,6 +413,7 @@ export default function CfgTool(props) {
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
+            disabled={!permissions.quiz.create}
             className='chip-style'
             onClick={() => {
               if (singleId) toggleCheckbox(singleId);
@@ -421,6 +432,7 @@ export default function CfgTool(props) {
           <Chip
             icon={<EditIcon style={{fill: 'white', fontSize: 20}} />}
             label={'EDIT'}
+            disabled={!permissions.quiz.update}
             className='chip-style gray-chip'
             onClick={() => {
               setEdit(true);

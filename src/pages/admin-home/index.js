@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import './style.css';
 import {Container} from '@material-ui/core';
 import AppCard from '@crema/core/AppCard';
+import {useHistory} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 import {
   TrendingUp,
   Settings,
@@ -18,7 +20,18 @@ import {
 } from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 
-export default function index() {
+export default function Index() {
+  const permissions = useSelector((state) => state.roles.permissions);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!permissions.admin.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
+
   return (
     <div>
       <div className='toolbar-container'>
