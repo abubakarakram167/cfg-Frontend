@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
-import {useSelector} from 'react-redux';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,6 +13,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
+import {Link} from 'react-router-dom';
+import CustomTablePagination from '../user-management/pagination';
+import moment from 'moment';
+import jsCookie from 'js-cookie';
+import FilterList from '@material-ui/icons/FilterList';
 import {useHistory} from 'react-router-dom';
 import {
   Dialog,
@@ -22,10 +26,17 @@ import {
   DialogTitle,
   TextField,
   Button,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
-
-import EditIcon from '@material-ui/icons/Edit';
 import {KeyboardDatePicker} from '@material-ui/pickers';
+import formatDate from 'utils/formatDate';
+
+import {useDispatch, useSelector} from 'react-redux';
+import {createResource, getResourceData, editContent} from 'redux/actions/cfg';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import {Show_Message} from '../../shared/constants/ActionTypes';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -45,120 +56,192 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
+const StyledTextField = withStyles((theme) => ({}))(TextField);
+
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
   },
+  root: {
+    '& .MuiInputBase-root': {
+      height: 45,
+      paddingLeft: 10,
+      color: '#020101',
+    },
+  },
+  secondRoot: {
+    '& .MuiInputBase-root': {
+      width: '100%',
+    },
+  },
 });
 
-export default function Events() {
-  const [eventData, setEventData] = useState([
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
-      status: 'Approved',
-    },
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
-      status: 'Approved',
-    },
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
-      status: 'Approved',
-    },
-    {
-      checked: false,
-      name: 'JaneDoe',
-      author: 'Jane Doe',
-      startDate: '2020/1/1',
-      endDate: '2020/1/1',
-      totalPoints: 500,
-      status: 'Approved',
-    },
-  ]);
-  const [currentCheckState, setCurrentCheckState] = useState(false);
+export default function CfgTool(props) {
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state.cfg);
   const permissions = useSelector((state) => state.roles.permissions);
-  const history = useHistory();
+  const [content, setContent] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [start_date, setstart_date] = useState(new Date());
+  const [publishDate, setPublishDate] = useState(new Date());
+  const [end_date, setend_date] = useState(new Date());
+  const [total_points, settotal_points] = useState('');
+  const [status, setStatus] = useState('draft');
+  const [edit, setEdit] = useState(false);
+  const [currentIds, setCurrentIds] = useState([]);
+  const [singleId, setSingleId] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const userList = useSelector((state) => state.userList);
+  const [currentCheckState, setCurrentCheckState] = useState(false);
   const classes = useStyles();
-
-  const toggleCheckbox = (id) => {
-    setEventData(
-      eventData.filter((data, index) => {
-        if (id === index) {
-          data.checked = !data.checked;
-          return data;
-        }
-
-        return data;
-      }),
-    );
-  };
+  const [nameFilter, setNameFilter] = useState('');
+  const [authorFilter, setAuthorFilter] = useState('');
+  const [publishDateFilter, setPublishdateFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [totalPointsFilter, settotalPointsFilter] = useState('');
+  const [category, setCategories] = useState([]);
+  const [group, setGroup] = useState('candidate');
+  const [value, setValue] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
-    if (!permissions.miniCfg.view) {
+    setContent(state.content);
+  }, [state]);
+
+  useEffect(() => {
+    dispatch(getResourceData('event'));
+    setAuthor(JSON.parse(jsCookie.get('user')).user_name);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!permissions.events.view) {
       history.push({
         pathname: '/unAuthorizedPage',
       });
     }
   }, []);
 
-  const toggleAll = () => {
-    setEventData(
-      eventData.filter((data, index) => {
-        data.checked = !currentCheckState;
-        setCurrentCheckState(!currentCheckState);
-        return data;
-      }),
-    );
+  const toggleCheckbox = (id) => {
+    if (checked.includes(id)) {
+      setChecked(checked.filter((element) => element !== id));
+    } else {
+      setChecked([...checked, id]);
+    }
   };
-  const [name, setName] = useState('');
-  const [author, setAuthor] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [totalPoints, setTotalPoints] = useState('');
-  const [status, setStatus] = useState('');
-  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const toggleAll = () => {
+    if (!currentCheckState) {
+      let arr = [];
+      content.forEach((element) => {
+        arr.push(element.id);
+      });
+      setChecked(arr);
+      setCurrentCheckState(true);
+    } else {
+      setCurrentCheckState(false);
+      setChecked([]);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setEventData([
-      ...eventData,
-      {
-        name,
-        author,
-        startDate,
-        endDate,
-        totalPoints,
-        status,
-      },
-    ]);
-    setName('');
+
+    if (edit) {
+      dispatch(
+        editContent({
+          title,
+          type: 'tool',
+          start_date,
+          total_points,
+          end_date,
+          status,
+          assigned_group: group,
+          categories: JSON.stringify(category),
+          id: singleId,
+        }),
+      ).then((res) => {
+        if (res) {
+          const allContent = content.map((content) => {
+            if (content.id === singleId) {
+              return {
+                ...content,
+                title,
+                total_points,
+                status,
+                start_date: moment(start_date).format('YYYY-MM-DD'),
+                end_date: moment(end_date).format('YYYY-MM-DD'),
+                assigned_group: group,
+              };
+            } else return content;
+          });
+          toggleCheckbox(singleId);
+          setSingleId(null);
+          setContent(allContent);
+        }
+      });
+    } else {
+      let allContents = state.content;
+      if (allContents.filter((content) => content.title === title).length > 0) {
+        dispatch({
+          type: Show_Message,
+          payload: {message: 'Title already Exist', success: false},
+        });
+      } else {
+        dispatch(
+          createResource(
+            {
+              title,
+              author,
+              start_date: formatDate(start_date),
+              end_date: formatDate(end_date),
+              total_points,
+              status,
+              assigned_group: group,
+              categories: JSON.stringify(category),
+            },
+            'event',
+          ),
+        );
+      }
+    }
+
+    setTitle('');
     setAuthor('');
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setTotalPoints('');
+    setstart_date(new Date());
+    setend_date(new Date());
+    settotal_points('');
     setStatus('');
     setDialogOpen(false);
   };
 
+  const handleClose1 = () => {
+    setOpen1(false);
+    dispatch({type: Show_Message, payload: {message: null, success: false}});
+  };
+
+  const handleKeywordSubmit = (e) => {
+    e.preventDefault();
+    setCategories([...category, value]);
+    setValue('');
+  };
+
+  const keyPress = (e) => {
+    if (e.keyCode == 13) {
+      setCategories([...category, e.target.value]);
+      e.preventDefault();
+    }
+  };
+
   return (
-    <div>
+    <div style={{paddingBottom: 80}}>
       <Dialog open={dialogOpen}>
         <DialogTitle>
-          <div style={{minWidth: '400px'}}>Add New Event Data</div>
+          <div style={{minWidth: '400px'}}>Add New CFG Tool</div>
         </DialogTitle>
         <form onSubmit={handleSubmit}>
           <List>
@@ -167,15 +250,9 @@ export default function Events() {
                 label='Name'
                 variant='filled'
                 fullWidth
-                onChange={(e) => setName(e.target.value)}
-              />
-            </ListItem>
-            <ListItem>
-              <TextField
-                label='Author'
-                variant='filled'
-                fullWidth
-                onChange={(e) => setAuthor(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                value={title}
               />
             </ListItem>
             <ListItem>
@@ -186,11 +263,12 @@ export default function Events() {
                 margin='normal'
                 fullWidth={true}
                 label='Start Date'
-                value={startDate}
-                onChange={(e) => setStartDate(e)}
+                value={moment(start_date).format('MM/DD/yyyy')}
+                onChange={(e) => setstart_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </ListItem>
             <ListItem>
@@ -201,11 +279,12 @@ export default function Events() {
                 margin='normal'
                 fullWidth={true}
                 label='End Date'
-                value={endDate}
-                onChange={(e) => setEndDate(e)}
+                value={moment(end_date).format('MM/DD/yyyy')}
+                onChange={(e) => setend_date(e)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </ListItem>
             <ListItem>
@@ -213,16 +292,81 @@ export default function Events() {
                 label='Total Points'
                 variant='filled'
                 fullWidth
-                onChange={(e) => setTotalPoints(e.target.value)}
+                onChange={(e) => settotal_points(e.target.value)}
+                required
+                value={total_points}
+                type='number'
               />
             </ListItem>
             <ListItem>
-              <TextField
-                label='Status'
+              <Select
+                labelId='demo-simple-select-filled-label'
+                id='demo-simple-select-filled'
+                onChange={(e) => setGroup(e.target.value)}
                 variant='filled'
                 fullWidth
+                value={group}
+                label='Group'
+                required>
+                <MenuItem value={'candidate'}>Candidate</MenuItem>
+                <MenuItem value={'facilitator'}>Facilitator</MenuItem>
+                <MenuItem value={'content-manager'}>Content Manager</MenuItem>
+                <MenuItem value={'support'}>Support</MenuItem>
+                <MenuItem value={'reviewer'}>Reviewer</MenuItem>
+                <MenuItem value={'system-administrator'}>
+                  System Adminsitrator
+                </MenuItem>
+                <MenuItem value={'auditor'}>Auditor</MenuItem>
+              </Select>
+            </ListItem>
+            <ListItem>
+              <div>
+                {category &&
+                  category.map((element, index) => {
+                    return (
+                      <Chip
+                        label={element}
+                        key={index}
+                        className='chip-style'
+                        onDelete={() => {
+                          setCategories(
+                            category.filter((value) => value !== element),
+                          );
+                        }}
+                      />
+                    );
+                  })}
+              </div>
+            </ListItem>
+            <ListItem>
+              <div style={{width: '100%'}}>
+                <TextField
+                  className={classes.secondRoot}
+                  variant='filled'
+                  value={value}
+                  onKeyDown={keyPress}
+                  onChange={(e) => setValue(e.target.value)}
+                  fullWidth
+                  label='Categories'
+                />
+              </div>
+            </ListItem>
+            <ListItem>
+              <Select
+                value={status}
                 onChange={(e) => setStatus(e.target.value)}
-              />
+                variant='filled'
+                fullWidth
+                value={status}
+                label='status'
+                required>
+                <MenuItem value={''}>
+                  <em>Status</em>
+                </MenuItem>
+                <MenuItem value={'saved'}>Saved</MenuItem>
+                <MenuItem value={'draft'}>Draft</MenuItem>
+                <MenuItem value={'published'}>Published</MenuItem>
+              </Select>
             </ListItem>
             <ListItem>
               <div
@@ -247,22 +391,32 @@ export default function Events() {
       </div>
       <br />
       <br />
-      <Container>
+      <Container
+        style={{
+          maxWidth: 5000,
+          width: '96%',
+        }}>
+        <Snackbar
+          open={userList.message}
+          autoHideDuration={6000}
+          onClose={handleClose1}>
+          <Alert
+            variant='filled'
+            onClose={handleClose1}
+            severity={userList.success ? 'success' : 'error'}>
+            {userList.message}
+          </Alert>
+        </Snackbar>
         <div className='options'>
           <Typography variant='h6'>Events</Typography>
-          <Chip
-            icon={<ControlPoint style={{fill: 'white'}} />}
-            label={'ADD NEW'}
-            className='chip-style'
-            disabled={!permissions.events.create}
-            onClick={() => setDialogOpen(true)}
-          />
-          <Chip
-            icon={<EditIcon style={{fill: 'white'}} />}
-            disabled={!permissions.events.update}
-            label={'EDIT'}
-            className='chip-style gray-chip'
-          />
+          <Link to={`/admin/cfg-session/null/null/null/event`}>
+            <Chip
+              icon={<ControlPoint style={{fill: 'white'}} />}
+              label={'ADD NEW'}
+              disabled={!permissions.events.create}
+              className='chip-style'
+            />
+          </Link>
         </div>
         <br />
         <TableContainer component={Paper}>
@@ -272,33 +426,207 @@ export default function Events() {
                 <StyledTableCell>
                   <Checkbox checked={currentCheckState} onChange={toggleAll} />
                 </StyledTableCell>
-                <StyledTableCell>Name</StyledTableCell>
-                <StyledTableCell>Author</StyledTableCell>
-                <StyledTableCell>Start Date</StyledTableCell>
-                <StyledTableCell>End Date</StyledTableCell>
-                <StyledTableCell>Total Points</StyledTableCell>
-                <StyledTableCell>Status</StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Name </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Name'
+                      placeholder=''
+                      value={nameFilter}
+                      onChange={(e) => setNameFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Author </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Author'
+                      placeholder=''
+                      value={authorFilter}
+                      onChange={(e) => setAuthorFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Publish Date </span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      height: 40,
+                    }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      style={{backgroundColor: '#eaeaea'}}
+                      variant='filled'
+                      format='YYYY-MM-DD'
+                      autoOk={true}
+                      value={
+                        publishDateFilter === '' ? null : publishDateFilter
+                      }
+                      fullWidth={true}
+                      placeholder='Publish date'
+                      className={classes.root}
+                      onChange={(e) => {
+                        console.log('the', e);
+                        if (e && e !== '')
+                          setPublishdateFilter(
+                            moment(e).format('YYYY-MM-DD').toString(),
+                          );
+                        else setPublishdateFilter('');
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Total Points </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Total Points'
+                      placeholder=''
+                      value={totalPointsFilter}
+                      onChange={(e) => settotalPointsFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span className='column-heading'> Status </span>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <TextField
+                      variant='filled'
+                      size='small'
+                      label='Status'
+                      placeholder=''
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                    />
+                    <FilterList style={{fill: 'black', fontSize: 30}} />
+                  </div>
+                </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {eventData.map((row, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell>
-                    <Checkbox
-                      checked={row.checked}
-                      onChange={() => {
-                        toggleCheckbox(index);
-                      }}
-                    />
-                  </StyledTableCell>
-                  <StyledTableCell>{row.name}</StyledTableCell>
-                  <StyledTableCell>{row.author}</StyledTableCell>
-                  <StyledTableCell>{row.startDate.toString()}</StyledTableCell>
-                  <StyledTableCell>{row.endDate.toString()}</StyledTableCell>
-                  <StyledTableCell>{row.totalPoints}</StyledTableCell>
-                  <StyledTableCell>{row.status}</StyledTableCell>
-                </StyledTableRow>
-              ))}
+              {content.length > 0 &&
+                rowsPerPage > 0 &&
+                content
+                  .sort(function (a, b) {
+                    return new Date(b.created_at) - new Date(a.created_at);
+                  })
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .filter((element) =>
+                    (element.title ? element.title : '')
+                      .toLowerCase()
+                      .startsWith(nameFilter),
+                  )
+                  .filter((element) =>
+                    (element.author ? element.author.user_name : '')
+                      .toLowerCase()
+                      .startsWith(authorFilter),
+                  )
+                  .filter((element) =>
+                    (element.status ? element.status : '')
+                      .toLowerCase()
+                      .startsWith(statusFilter),
+                  )
+                  .filter((element) =>
+                    (element.total_points
+                      ? element.total_points.toString()
+                      : ''
+                    )
+                      .toLowerCase()
+                      .startsWith(totalPointsFilter),
+                  )
+                  .filter((element) =>
+                    (element.created_at ? element.created_at.toString() : '')
+                      .toLowerCase()
+                      .startsWith(publishDateFilter),
+                  )
+                  .map((row, index) => {
+                    return (
+                      <StyledTableRow key={index}>
+                        <StyledTableCell>
+                          <Checkbox
+                            checked={checked.includes(row.id)}
+                            onChange={() => {
+                              const {author} = row;
+                              let allIds = currentIds.length ? currentIds : [];
+                              if (!allIds.includes(row.id)) allIds.push(row.id);
+                              else {
+                                allIds = allIds.filter(
+                                  (userId) => userId !== row.id,
+                                );
+                              }
+                              setSingleId(row.id);
+                              setCurrentIds(allIds);
+                              setTitle(row.title);
+                              setPublishDate(row.created_at);
+                              // setend_date(row.end_date);
+                              settotal_points(row.total_points);
+                              setStatus(row.status);
+                              setGroup(row.assigned_group);
+                              setCategories(JSON.parse(row.categories));
+                              toggleCheckbox(row.id);
+                            }}
+                          />
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          <div
+                            style={{
+                              fontSize: 14,
+                              marginLeft: 0,
+                              fontWeight: '500',
+                              paddingLeft: 0,
+                            }}
+                            className='custom-row-design-header summary-margin-left-concise'>
+                            <Link
+                              style={
+                                !permissions.events.update
+                                  ? {pointerEvents: 'none'}
+                                  : {pointerEvents: 'auto'}
+                              }
+                              to={`/admin/content/edit/${row.id}/null/session/${row.type}`}>
+                              {row.title}
+                            </Link>
+                          </div>
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          {row.author
+                            ? row.author.user_name
+                            : 'Name Not Present'}
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          {moment(row.created_at).format('YYYY-MM-DD')}
+                        </StyledTableCell>
+                        {/* <StyledTableCell>{row.end_date}</StyledTableCell> */}
+                        <StyledTableCell>{row.total_points}</StyledTableCell>
+                        <StyledTableCell>{row.status}</StyledTableCell>
+                      </StyledTableRow>
+                    );
+                  })}
+              <StyledTableRow style={{width: 200}}>
+                <CustomTablePagination
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  userData={content}
+                  style={{width: 200}}
+                  setPage={(page) => setPage(page)}
+                  setRowsPerPage={(page) => setRowsPerPage(page)}
+                />
+              </StyledTableRow>
             </TableBody>
           </Table>
         </TableContainer>
