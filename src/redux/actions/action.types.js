@@ -35,5 +35,3 @@ export const GET_ALL_BANK_QUESTIONS = 'GET_ALL_BANK_QUESTIONS';
 export const Edit_QUIZ = 'Edit_QUIZ';
 export const GET_POST_BY_ID = 'GET_POST_BY_ID';
 export const setPermissions = 'setPermissions';
-export const CREATE_Resource = 'createResource';
-export const GET_Resource_DATA = 'GET_RESOURCE_DATA';
