@@ -513,7 +513,7 @@ export default function Editor() {
               />
               {parseInt(total_points) + parseInt(accumulativeTitlePoints) >
                 originalTotalPoints &&
-                !['event', 'timeline', 'mini'].includes(params.cfgType) && (
+                params.contentType !== 'timeline' && (
                   <p className='total-points-text'>
                     <InfoIcon
                       style={{

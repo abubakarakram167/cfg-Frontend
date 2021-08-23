@@ -26,7 +26,6 @@ import InfoIcon from '@material-ui/icons/Info';
 import {useHistory} from 'react-router-dom';
 import moment from 'moment';
 import {createTimeline, getTimelineData} from 'redux/actions/Timeline';
-import {createResource, getResourceData} from 'redux/actions/cfg';
 import jsCookie from 'js-cookie';
 import PromptModal from 'components/PromptModal';
 import NavigationPrompt from 'react-router-navigation-prompt';
@@ -35,7 +34,6 @@ import MediaUpload from 'components/MediaUpload';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
-import {parseXML} from 'jquery';
 const useStyles = makeStyles({
   datePicker: {
     '& .MuiFormLabel-root': {
@@ -132,7 +130,7 @@ export default function Editor() {
   }, []);
 
   useEffect(() => {
-    if (['event', 'timeline', 'mini'].includes(params.cfgType))
+    if (params.cfgType !== 'timeline')
       dispatch(getSessionListData(params.id, params.cfgType));
   }, []);
 
@@ -146,9 +144,7 @@ export default function Editor() {
   };
 
   useEffect(() => {
-    console.log('the params', params.cfgType);
-    if (['event', 'timeline', 'mini'].includes(params.cfgType))
-      dispatch(getResourceData(params.cfgType));
+    if (params.cfgType === 'timeline') dispatch(getTimelineData());
   }, [dispatch]);
 
   useEffect(() => {
@@ -211,7 +207,7 @@ export default function Editor() {
       });
     });
 
-    if (['event', 'timeline', 'mini'].includes(params.cfgType)) {
+    if (params.cfgType === 'timeline') {
       if (
         (total_points === '0' ||
           title === '' ||
@@ -250,22 +246,19 @@ export default function Editor() {
             });
           } else {
             dispatch(
-              createResource(
-                {
-                  title,
-                  author: author,
-                  start_date: formatDate(start_date),
-                  end_date: formatDate(end_date),
-                  total_points,
-                  status: publishStatus === 'publish' ? status : 'draft',
-                  tags: totalTags,
-                  detail: content,
-                  assigned_group: group,
-                  categories: JSON.stringify(categories),
-                  featured_image_url: featuredImage,
-                },
-                params.cfgType,
-              ),
+              createTimeline({
+                title,
+                author: author,
+                start_date: formatDate(start_date),
+                end_date: formatDate(end_date),
+                total_points,
+                status: publishStatus === 'publish' ? status : 'draft',
+                tags: totalTags,
+                detail: content,
+                assigned_group: group,
+                categories: JSON.stringify(categories),
+                featured_image_url: featuredImage,
+              }),
             ).then((response) => {
               if (response) {
                 setTimeout(() => {
@@ -302,13 +295,11 @@ export default function Editor() {
         let isSubtitleFound = false;
         let subtitles = [];
 
-        subtitles = allTitles
-          ? allTitles.filter(
-              (content) => content.id === parseInt(params.contentHeaderId),
-            )[0]
-          : [];
+        subtitles = allTitles.filter(
+          (content) => content.id === parseInt(params.contentHeaderId),
+        )[0];
         subtitles =
-          subtitles && subtitles.length && subtitles.subtitles.rows.length
+          subtitles && subtitles.subtitles.rows.length
             ? subtitles.subtitles.rows
             : [];
 
