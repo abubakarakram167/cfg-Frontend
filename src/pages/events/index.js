@@ -316,7 +316,7 @@ export default function CfgTool(props) {
                 <MenuItem value={'system-administrator'}>
                   System Adminsitrator
                 </MenuItem>
-                <MenuItem value={'auditor'}>Auditor</MenuItem>
+                <MenuItem value={'auditor'}>Auditors</MenuItem>
               </Select>
             </ListItem>
             <ListItem>
