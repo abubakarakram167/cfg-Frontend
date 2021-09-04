@@ -30,6 +30,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 import Api from '../../utils/axios';
+import {getSignedUrl} from '../../redux/actions/media';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -361,8 +362,10 @@ export default function Editor() {
         <MediaUpload
           showDialogue={showDialogue}
           onClose={() => setShowDialogue(false)}
-          onImageSave={(image) => {
-            setFeaturedImage(image[0].url);
+          onImageSave={(file) => {
+            getSignedUrl(file[0]).then((res) => {
+              setFeaturedImage(res.newUrl);
+            });
           }}
         />
         <div className='editor-container'>

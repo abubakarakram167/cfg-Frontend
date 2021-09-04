@@ -10,6 +10,7 @@ import {
   getUserMediaList,
   editMediaData,
   deleteMediaData,
+  getSignedUrl,
 } from '../../redux/actions/media';
 import {useDispatch, useSelector} from 'react-redux';
 import './style.css';
@@ -38,20 +39,20 @@ export default function MediaLibrary() {
   const permissions = useSelector((state) => state.roles.permissions);
   const history = useHistory();
 
-  const readImage = (file, callback) => {
-    let reader = new FileReader();
-    reader.onload = function (file) {
-      callback(file.target.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
   const mediaFilesData = useSelector(({mediaList}) => {
     return mediaList.mediaList;
   });
 
-  if (mediaFilesData.length && !filesPreview.length)
-    setFilesPreview(mediaFilesData);
+  if (mediaFilesData.length && !filesPreview.length) {
+    const allMediaGet = [];
+    mediaFilesData.map((media) => {
+      allMediaGet.push(getSignedUrl(media));
+    });
+    Promise.all(allMediaGet).then((res) => {
+      setFilesPreview(res);
+    });
+  }
+
   const handleSave = (files) => {
     const data = new FormData();
     for (const file of files) {
@@ -61,14 +62,20 @@ export default function MediaLibrary() {
       const data = res.data.map((file) => {
         return {
           url: baseUrl + 'static/' + file.file_name,
-          fileName: file.title,
+          fileName: file.file_name,
           description: file.description,
           uploadedOn: file.created_at,
           id: file.id,
         };
       });
-
-      setFilesPreview(filesPreview.concat(data));
+      const allMediaGet = [];
+      data.map((media) => {
+        allMediaGet.push(getSignedUrl(media));
+      });
+      Promise.all(allMediaGet).then((res) => {
+        console.log('after adding alll', res);
+        setFilesPreview(filesPreview.concat(res));
+      });
     });
     setFiles(files);
     setDialogOpen(false);
@@ -94,7 +101,14 @@ export default function MediaLibrary() {
             };
           } else return file;
         });
-        setFilesPreview(data);
+
+        const allMediaGet = [];
+        data.map((media) => {
+          allMediaGet.push(getSignedUrl(media));
+        });
+        Promise.all(allMediaGet).then((res) => {
+          setFilesPreview(res);
+        });
       }
     });
   };
@@ -232,6 +246,7 @@ export default function MediaLibrary() {
         <div style={{paddingBottom: 50}} className='container'>
           <div className={'gallery'}>
             {filesPreview.map((element, index) => {
+              console.log('the element', element);
               if (
                 ['jpeg', 'png', 'jpg', 'JPG', 'PNG'].includes(
                   element.url.split('.').pop(),
@@ -246,7 +261,7 @@ export default function MediaLibrary() {
                         : {pointerEvents: 'auto'}
                     }>
                     <img
-                      src={element.url}
+                      src={element.newUrl}
                       className={'gallery-image'}
                       style={
                         selectMedia && element.id === selectMedia.id
@@ -284,7 +299,7 @@ export default function MediaLibrary() {
                   <div
                     className={currentView !== 'grid' ? 'media-container' : {}}>
                     <ReactPlayer
-                      url={element.url}
+                      url={element.newUrl}
                       light={element.thumbnailPreview}
                       style={
                         selectMedia && element.id === selectMedia.id
