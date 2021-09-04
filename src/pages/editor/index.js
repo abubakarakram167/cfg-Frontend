@@ -14,7 +14,7 @@ import {
   getContentData,
   getSessionListData,
 } from 'redux/actions/sessionActions';
-import {getUserMediaList} from '../../redux/actions/media';
+import {getUserMediaList, getSignedUrl} from '../../redux/actions/media';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -94,7 +94,6 @@ export default function Editor() {
     formData.append('category', 'cover');
     const data = await Media.addMedia(formData);
     const photo_url = baseUrl + 'static/' + data.data[0].file_name;
-    console.log(photo_url);
     uploadHandler({
       result: [
         {
@@ -535,8 +534,10 @@ export default function Editor() {
         <MediaUpload
           showDialogue={showDialogue}
           onClose={() => setShowDialogue(false)}
-          onImageSave={(image) => {
-            setFeaturedImage(image[0].url);
+          onImageSave={(file) => {
+            getSignedUrl(file[0]).then((res) => {
+              setFeaturedImage(res.newUrl);
+            });
           }}
         />
         <div className='editor-container'>
