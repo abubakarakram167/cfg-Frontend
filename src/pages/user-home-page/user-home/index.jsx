@@ -4,11 +4,9 @@ import CreatePost from '../create-post-box';
 import './style.css';
 import PostDetails from '../post-details';
 import CommonComponent from '../common-component';
-import CfgToolOfTheDay from '../user-home/cfg-tools';
-import OnlineFriend from './online-friend';
 import Session from 'redux/services/session';
 import {makeStyles} from '@material-ui/core/styles';
-
+import {useHistory} from 'react-router-dom';
 import {
   List,
   ListItemIcon,
@@ -53,6 +51,8 @@ export default function UserHomePage() {
   const [count, setCount] = useState(3);
   const [allSessions, setAllSessions] = useState([]);
   const classesOther = useStyling();
+  const permissions = useSelector((state) => state.roles.permissions);
+  const history = useHistory();
 
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
@@ -99,6 +99,14 @@ export default function UserHomePage() {
     const user = JSON.parse(localStorage.getItem('current-user'));
     // getSessionById(user.cfg_session_id)
     getUserGroup();
+  }, []);
+
+  useEffect(() => {
+    if (!permissions.home.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
   }, []);
 
   const createComment = (id, commentText) => {

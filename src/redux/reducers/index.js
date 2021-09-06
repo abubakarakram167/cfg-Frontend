@@ -21,6 +21,8 @@ import mediaReducer from './media';
 import UserPost from './UserPost';
 import Comment from './Comments';
 import Quiz from './Quiz';
+import Roles from './Roles';
+import Cfg from './cfg';
 
 const reducers = (history) =>
   combineReducers({
@@ -46,5 +48,7 @@ const reducers = (history) =>
     preference: Preference,
     mediaList: mediaReducer,
     quiz: Quiz,
+    roles: Roles,
+    cfg: Cfg,
   });
 export default reducers;

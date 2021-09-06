@@ -13,7 +13,6 @@ import Container from '@material-ui/core/Container';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-import ControlPoint from '@material-ui/icons/ControlPoint';
 import FilterList from '@material-ui/icons/FilterList';
 import {getUserPreferencesList} from '../../redux/actions/Preference';
 import CustomTablePagination from '../user-management/pagination';
@@ -23,6 +22,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import '../user-management/style.css';
+import {useHistory} from 'react-router-dom';
 import {
   Dialog,
   List,
@@ -73,32 +73,6 @@ const useStyles = makeStyles({
 });
 
 export default function Preferences() {
-  // const [preferences, setPreferences] = useState([
-  //   {
-  //     checked: false,
-  //     option: 'Login with username',
-  //     value: 'Jane Doe',
-  //     description: 'hello world this is a description',
-  //   },
-  //   {
-  //     checked: false,
-  //     option: 'Login with username',
-  //     value: 'Jane Doe',
-  //     description: 'hello world this is a description',
-  //   },
-  //   {
-  //     checked: false,
-  //     option: 'Login with username',
-  //     value: 'Jane Doe',
-  //     description: 'hello world this is a description',
-  //   },
-  //   {
-  //     checked: false,
-  //     option: 'Login with username',
-  //     value: 'Jane Doe',
-  //     description: 'hello world this is a description',
-  //   },
-  // ]);
   const [option, setOption] = useState('');
   const [value, setValue] = useState('');
   const [description, setDescription] = useState('');
@@ -116,6 +90,8 @@ export default function Preferences() {
   const dispatch = useDispatch();
   const {preferenceList} = useSelector((state) => state.preference);
   const message = useSelector((state) => state.userList);
+  const permissions = useSelector((state) => state.roles.permissions);
+  const history = useHistory();
 
   if (preferences.length === 0 && preferenceList.length)
     setPreferences(preferenceList);
@@ -124,7 +100,13 @@ export default function Preferences() {
     dispatch(getUserPreferencesList());
   }, [dispatch, preferences]);
 
-  console.log('the option', optionFilter);
+  useEffect(() => {
+    if (!permissions.preference.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
 
   const toggleCheckbox = (id) => {
     setPreferences(
@@ -248,6 +230,7 @@ export default function Preferences() {
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
             label={'Edit Preference'}
+            disabled={!permissions.preference.create}
             className='chip-style'
             onClick={() => setDialogOpen(true)}
           />

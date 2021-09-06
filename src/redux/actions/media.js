@@ -8,8 +8,24 @@ import {
 } from '../../shared/constants/ActionTypes';
 // import Api from '../../@crema/services/ApiConfig';
 import Api from '../../utils/axios';
-import React from 'react';
 import baseUrl from '../../utils/url';
+
+export const getSignedUrl = (media) => {
+  console.log('the media received', media);
+  return new Promise((res, rej) => {
+    Api.get(`api/media/cf/${media.fileName}`)
+      .then((data) => {
+        console.log('after signed url', data);
+        if (data.status === 200) {
+          media.newUrl = data.data;
+        }
+        res(media);
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+  });
+};
 
 export const createOneMedia = (formData) => {
   return (dispatch) => {
@@ -17,10 +33,7 @@ export const createOneMedia = (formData) => {
       dispatch({type: FETCH_START});
       Api.post('/api/media/', formData)
         .then((data) => {
-          console.log('afterr....');
-          console.log('after created...', data);
           if (data.status === 200) {
-            console.log('the data to be fetched', data);
             dispatch({
               type: Show_Message,
               payload: {message: 'Added SuccessFully', success: true},
@@ -34,7 +47,6 @@ export const createOneMedia = (formData) => {
           }
         })
         .catch((error) => {
-          console.log('error', error.response);
           dispatch({type: FETCH_ERROR, payload: error.message});
         });
     });
@@ -47,9 +59,7 @@ export const deleteMediaData = (formData) => {
       dispatch({type: FETCH_START});
       Api.delete(`/api/media/${formData.id}`)
         .then((data) => {
-          console.log('the data after del', data);
           if (data.status === 200) {
-            console.log('the data to be fetched', data);
             dispatch({
               type: Show_Message,
               payload: {message: 'Delete SuccessFully', success: true},
@@ -82,7 +92,6 @@ export const editMediaData = (formData) => {
       Api.put(`/api/media/${formData.id}`, body)
         .then((data) => {
           if (data.status === 200) {
-            console.log('the data to be fetched', data);
             dispatch({
               type: Show_Message,
               payload: {message: 'Edit SuccessFully', success: true},
@@ -114,7 +123,7 @@ export const getUserMediaListEditor = () => {
             const allMediaData = allMedia.map((file) => {
               return {
                 url: baseUrl + 'static/' + file.file_name,
-                fileName: file.title,
+                fileName: file.file_name,
                 description: file.description,
                 uploadedOn: file.created_at,
                 thumbnailPreview:
@@ -144,7 +153,7 @@ export const getUserMediaList = (formData) => {
             payload: allMedia.map((file) => {
               return {
                 url: baseUrl + 'static/' + file.file_name,
-                fileName: file.title,
+                fileName: file.file_name,
                 description: file.description,
                 uploadedOn: file.created_at,
                 thumbnailPreview:

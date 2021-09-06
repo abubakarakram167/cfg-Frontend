@@ -7,6 +7,7 @@ import {
   getUserMediaList,
   createOneMedia,
   getUserMediaListEditor,
+  getSignedUrl,
 } from '../redux/actions/media';
 import baseUrl from '../utils/url';
 import {useDispatch, useSelector} from 'react-redux';
@@ -30,41 +31,50 @@ export default (props) => {
   contentData = props.content;
   useEffect(() => {
     dispatch(getUserMediaListEditor()).then((mediaData) => {
-      if (mediaData.length) {
-        for (let image of mediaData) {
-          if (
-            ['jpeg', 'png', 'jpg', 'JPG', 'PNG'].includes(
-              image.url.split('.').pop(),
+      const allMediaGet = [];
+      mediaData.map((media) => {
+        console.log('the media too send', media);
+        allMediaGet.push(getSignedUrl(media));
+      });
+      Promise.all(allMediaGet).then((res) => {
+        console.log('all the res', res);
+        if (res.length) {
+          for (let image of res) {
+            console.log('the new image read', image);
+            if (
+              ['jpeg', 'png', 'jpg', 'JPG', 'PNG'].includes(
+                image.url.split('.').pop(),
+              )
             )
-          )
-            allImages.push(
-              `<span style = "float: left;" ><img class="select-images" style = "height: 80px; width: 120px; cursor: pointer; margin: 20px;" src = "${image.url}"/><p style = "text-align: center; max-width: 100px; font-size: 10px; margin: auto; font-weight: 700;" >${image.fileName}</p></span>`,
-            );
+              allImages.push(
+                `<span style = "float: left;" ><img class="select-images" style = "height: 80px; width: 120px; cursor: pointer; margin: 20px;" src = "${image.newUrl}"/><p style = "text-align: center; max-width: 100px; font-size: 10px; margin: auto; font-weight: 700;" >${image.fileName}</p></span>`,
+              );
+          }
+          setRender(true);
+          $(`<div class = "_se_tab_content_library" style = "height: 200px; display : none; overflow-y: auto; " > 
+            ${allImages.toString().replace(/,/g, '')}
+          </div>`).insertAfter('._se_tab_content_url');
+          $(`<button style = " display: block; color: white; font-size: 15px; font-weight: 500; width: 30%; border-radius: 20px;
+            margin: auto;  background-color: rgb(96 179 218); padding: 10px;margin-bottom: 10px; " class = "upload-link-button" >Select Url</p>`).insertAfter(
+            '._se_tab_content_url',
+          );
+          $('.se-file-browser-list').append('asdasd');
+          $('.select-images').on('click', function (e) {
+            add = false;
+            fileData = this.src;
+            appendImage();
+          });
+          $('.se-tooltip').on('click', function (e) {
+            $('.upload-link-button').css('display', 'none');
+            $('._se_tab_content_library').css('display', 'none');
+          });
+          $('.upload-link-button').on('click', function (e) {
+            add = false;
+            var urlToDownload = $('.se-input-url').val();
+            addMediaUrl(urlToDownload);
+          });
         }
-        setRender(true);
-        $(`<div class = "_se_tab_content_library" style = "height: 200px; display : none; overflow-y: auto; " > 
-          ${allImages.toString().replace(/,/g, '')}
-        </div>`).insertAfter('._se_tab_content_url');
-        $(`<button style = " display: block; color: white; font-size: 15px; font-weight: 500; width: 30%; border-radius: 20px;
-          margin: auto;  background-color: rgb(96 179 218); padding: 10px;margin-bottom: 10px; " class = "upload-link-button" >Select Url</p>`).insertAfter(
-          '._se_tab_content_url',
-        );
-        $('.se-file-browser-list').append('asdasd');
-        $('.select-images').on('click', function (e) {
-          add = false;
-          fileData = this.src;
-          appendImage();
-        });
-        $('.se-tooltip').on('click', function (e) {
-          $('.upload-link-button').css('display', 'none');
-          $('._se_tab_content_library').css('display', 'none');
-        });
-        $('.upload-link-button').on('click', function (e) {
-          add = false;
-          var urlToDownload = $('.se-input-url').val();
-          addMediaUrl(urlToDownload);
-        });
-      }
+      });
     });
   }, []);
 

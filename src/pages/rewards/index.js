@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
 import EditIcon from '@material-ui/icons/Edit';
+import {useHistory} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 import {
   Dialog,
   List,
@@ -89,7 +91,15 @@ export default function Rewards() {
     },
   ]);
   const [currentCheckState, setCurrentCheckState] = useState(false);
-
+  const [name, setName] = useState('');
+  const [author, setAuthor] = useState('');
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [totalPoints, setTotalPoints] = useState('');
+  const [status, setStatus] = useState('');
+  const permissions = useSelector((state) => state.roles.permissions);
+  const history = useHistory();
+  const [dialogOpen, setDialogOpen] = useState(false);
   const classes = useStyles();
 
   const toggleCheckbox = (id) => {
@@ -114,14 +124,15 @@ export default function Rewards() {
       }),
     );
   };
-  const [name, setName] = useState('');
-  const [author, setAuthor] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [totalPoints, setTotalPoints] = useState('');
-  const [status, setStatus] = useState('');
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  useEffect(() => {
+    if (!permissions.rewards.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setRewardData([
@@ -244,11 +255,13 @@ export default function Rewards() {
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
+            disabled={!permissions.rewards.create}
             className='chip-style'
             onClick={() => setDialogOpen(true)}
           />
           <Chip
             icon={<EditIcon style={{fill: 'white'}} />}
+            disabled={!permissions.rewards.update}
             label={'EDIT'}
             className='chip-style gray-chip'
           />

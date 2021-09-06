@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import AdminHeader from 'pages/admin-header';
 import {Container, Select, MenuItem, TextField} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
-import ContentEditable from 'react-contenteditable';
 import './style.css';
 import SunEditor from '../../components/sunEditor';
 import {KeyboardDatePicker} from '@material-ui/pickers';
@@ -15,17 +14,16 @@ import {
   getContentData,
   getSessionListData,
 } from 'redux/actions/sessionActions';
-import {getUserMediaList} from '../../redux/actions/media';
+import {getUserMediaList, getSignedUrl} from '../../redux/actions/media';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-import {Link} from 'react-router-dom';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import InfoIcon from '@material-ui/icons/Info';
 import {useHistory} from 'react-router-dom';
 import moment from 'moment';
-import {createTimeline, getTimelineData} from 'redux/actions/Timeline';
+import {createResource, getResourceData} from 'redux/actions/cfg';
 import jsCookie from 'js-cookie';
 import PromptModal from 'components/PromptModal';
 import NavigationPrompt from 'react-router-navigation-prompt';
@@ -34,6 +32,9 @@ import MediaUpload from 'components/MediaUpload';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
+import {parseXML} from 'jquery';
+import Api from '../../utils/axios';
+
 const useStyles = makeStyles({
   datePicker: {
     '& .MuiFormLabel-root': {
@@ -81,15 +82,18 @@ export default function Editor() {
   const [featuredImage, setFeaturedImage] = useState('');
   const [showDialogue, setShowDialogue] = useState(false);
   const [timelineContent, setTimelineContent] = useState([]);
-  const classes = useStyles();
+  const [eventType, setEventType] = useState('live-video');
+  const [duration, setDuration] = useState(0);
+  const [facilitator, setFacilitator] = useState('');
+  const [facilitatorUsers, setFacilitatorUsers] = useState([]);
 
+  const classes = useStyles();
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
     const formData = new FormData();
     formData.append('media', files[0]);
     formData.append('category', 'cover');
     const data = await Media.addMedia(formData);
     const photo_url = baseUrl + 'static/' + data.data[0].file_name;
-    console.log(photo_url);
     uploadHandler({
       result: [
         {
@@ -127,10 +131,16 @@ export default function Editor() {
 
   useEffect(() => {
     dispatch(getUserMediaList());
+    Api.get('api/users/list?_count=10000&_pageNo=1').then((users) => {
+      setFacilitator(
+        users.data.userResponse.length ? users.data.userResponse[0].id : '',
+      );
+      setFacilitatorUsers(users.data.userResponse);
+    });
   }, []);
 
   useEffect(() => {
-    if (params.cfgType !== 'timeline')
+    if (['event', 'timeline', 'mini'].includes(params.cfgType))
       dispatch(getSessionListData(params.id, params.cfgType));
   }, []);
 
@@ -144,7 +154,9 @@ export default function Editor() {
   };
 
   useEffect(() => {
-    if (params.cfgType === 'timeline') dispatch(getTimelineData());
+    console.log('the params', params.cfgType);
+    if (['event', 'timeline', 'mini'].includes(params.cfgType))
+      dispatch(getResourceData(params.cfgType));
   }, [dispatch]);
 
   useEffect(() => {
@@ -207,7 +219,7 @@ export default function Editor() {
       });
     });
 
-    if (params.cfgType === 'timeline') {
+    if (['event', 'timeline', 'mini'].includes(params.cfgType)) {
       if (
         (total_points === '0' ||
           title === '' ||
@@ -246,19 +258,25 @@ export default function Editor() {
             });
           } else {
             dispatch(
-              createTimeline({
-                title,
-                author: author,
-                start_date: formatDate(start_date),
-                end_date: formatDate(end_date),
-                total_points,
-                status: publishStatus === 'publish' ? status : 'draft',
-                tags: totalTags,
-                detail: content,
-                assigned_group: group,
-                categories: JSON.stringify(categories),
-                featured_image_url: featuredImage,
-              }),
+              createResource(
+                {
+                  title,
+                  author: author,
+                  start_date: formatDate(start_date),
+                  end_date: formatDate(end_date),
+                  total_points,
+                  status: publishStatus === 'publish' ? status : 'draft',
+                  tags: totalTags,
+                  detail: content,
+                  assigned_group: group,
+                  categories: JSON.stringify(categories),
+                  featured_image_url: featuredImage,
+                  event_type: eventType,
+                  duration: parseInt(duration),
+                  facilitator,
+                },
+                params.cfgType,
+              ),
             ).then((response) => {
               if (response) {
                 setTimeout(() => {
@@ -295,11 +313,13 @@ export default function Editor() {
         let isSubtitleFound = false;
         let subtitles = [];
 
-        subtitles = allTitles.filter(
-          (content) => content.id === parseInt(params.contentHeaderId),
-        )[0];
+        subtitles = allTitles
+          ? allTitles.filter(
+              (content) => content.id === parseInt(params.contentHeaderId),
+            )[0]
+          : [];
         subtitles =
-          subtitles && subtitles.subtitles.rows.length
+          subtitles && subtitles.length && subtitles.subtitles.rows.length
             ? subtitles.subtitles.rows
             : [];
 
@@ -393,6 +413,9 @@ export default function Editor() {
                       previous_page,
                       next_page,
                       featured_image_url: featuredImage,
+                      event_type: eventType,
+                      duration,
+                      facilitator,
                     },
                     params.type,
                   ),
@@ -511,8 +534,10 @@ export default function Editor() {
         <MediaUpload
           showDialogue={showDialogue}
           onClose={() => setShowDialogue(false)}
-          onImageSave={(image) => {
-            setFeaturedImage(image[0].url);
+          onImageSave={(file) => {
+            getSignedUrl(file[0]).then((res) => {
+              setFeaturedImage(res.newUrl);
+            });
           }}
         />
         <div className='editor-container'>
@@ -526,27 +551,65 @@ export default function Editor() {
           </div>
 
           <div className='options-side'>
-            <div>
-              <Select
-                labelId='demo-simple-select-filled-label'
-                id='demo-simple-select-filled'
-                onChange={(e) => setGroup(e.target.value)}
-                variant='filled'
-                fullWidth
-                value={group}
-                label='Group'
-                required>
-                <MenuItem value={'candidate'}>Candidate</MenuItem>
-                <MenuItem value={'facilitator'}>Facilitator</MenuItem>
-                <MenuItem value={'content-manager'}>Content Manager</MenuItem>
-                <MenuItem value={'support'}>Support</MenuItem>
-                <MenuItem value={'reviewer'}>Reviewer</MenuItem>
-                <MenuItem value={'system-administrator'}>
-                  System Adminsitrator
-                </MenuItem>
-                <MenuItem value={'auditor'}>Auditor</MenuItem>
-              </Select>
-            </div>
+            {!['mini', 'event'].includes(params.cfgType) && (
+              <div>
+                <Select
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => setGroup(e.target.value)}
+                  variant='filled'
+                  fullWidth
+                  value={group}
+                  label='Group'
+                  required>
+                  <MenuItem value={'candidate'}>Candidate</MenuItem>
+                  <MenuItem value={'facilitator'}>Facilitator</MenuItem>
+                  <MenuItem value={'content-manager'}>Content Manager</MenuItem>
+                  <MenuItem value={'support'}>Support</MenuItem>
+                  <MenuItem value={'reviewer'}>Reviewer</MenuItem>
+                  <MenuItem value={'system-administrator'}>
+                    System Adminsitrator
+                  </MenuItem>
+                  <MenuItem value={'auditor'}>Auditor</MenuItem>
+                </Select>
+              </div>
+            )}
+
+            {params.cfgType === 'event' && (
+              <div>
+                <Select
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => setEventType(e.target.value)}
+                  variant='filled'
+                  fullWidth
+                  value={eventType}
+                  label='Event Type'
+                  required>
+                  <MenuItem value={'live-video'}>Live Video</MenuItem>
+                  <MenuItem value={'group-chat'}>Group Chat</MenuItem>
+                  <MenuItem value={'zoom-video'}>Zoom Video</MenuItem>
+                </Select>
+              </div>
+            )}
+            {params.cfgType === 'mini' && (
+              <div>
+                <Select
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => setFacilitator(e.target.value)}
+                  variant='filled'
+                  fullWidth
+                  value={facilitator}
+                  label='Facilitator'
+                  required>
+                  {facilitatorUsers.map((user) => (
+                    <MenuItem value={user.id}>{user.first_name}</MenuItem>
+                  ))}
+                </Select>
+              </div>
+            )}
+
             <br />
             {showMessageError && group === '' && (
               <p className='showErrorMessage'> group is required</p>
@@ -651,6 +714,22 @@ export default function Editor() {
               />
             </div>
             <br />
+            {['mini', 'event'].includes(params.cfgType) && (
+              <div>
+                <div>
+                  <TextField
+                    type='number'
+                    variant='filled'
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    fullWidth
+                    label='Duration (In minutes)'
+                    required
+                  />
+                </div>
+                <br />
+              </div>
+            )}
             <div>
               <Select
                 variant='filled'
@@ -695,29 +774,33 @@ export default function Editor() {
               <p className='showErrorMessage'>Total Points are required </p>
             )}
             <br />
-            <div>
-              <TextField
-                type='url'
-                variant='filled'
-                value={previous_page}
-                onChange={(e) => setprevious_page(e.target.value)}
-                fullWidth
-                label='previous page url'
-                required
-              />
-            </div>
+            {!['event', 'mini'].includes(params.cfgType) && (
+              <div>
+                <TextField
+                  type='url'
+                  variant='filled'
+                  value={previous_page}
+                  onChange={(e) => setprevious_page(e.target.value)}
+                  fullWidth
+                  label='previous page url'
+                  required
+                />
+              </div>
+            )}
             <br />
-            <div>
-              <TextField
-                type='url'
-                variant='filled'
-                value={next_page}
-                onChange={(e) => setnext_page(e.target.value)}
-                fullWidth
-                label='next page url'
-                required
-              />
-            </div>
+            {!['event', 'mini'].includes(params.cfgType) && (
+              <div>
+                <TextField
+                  type='url'
+                  variant='filled'
+                  value={next_page}
+                  onChange={(e) => setnext_page(e.target.value)}
+                  fullWidth
+                  label='next page url'
+                  required
+                />
+              </div>
+            )}
             <br />
             <div>
               <div style={{display: 'flex'}}>

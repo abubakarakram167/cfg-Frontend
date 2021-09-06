@@ -16,7 +16,7 @@ export default (props) => {
       const data = res.data.map((file) => {
         return {
           url: baseUrl + 'static/' + file.file_name,
-          fileName: file.title,
+          fileName: file.file_name,
           description: file.description,
           uploadedOn: file.created_at,
           id: file.id,

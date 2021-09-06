@@ -27,11 +27,10 @@ import NavigationPrompt from 'react-router-navigation-prompt';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MediaUpload from 'components/MediaUpload';
 import {makeStyles} from '@material-ui/core/styles';
-import $ from 'jquery';
-
-import {createOneMedia} from '../../redux/actions/media';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
+import Api from '../../utils/axios';
+import {getSignedUrl} from '../../redux/actions/media';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -74,6 +73,11 @@ export default function Editor() {
   const [isContentChange, setContentChanged] = useState(false);
   const [featuredImage, setFeaturedImage] = useState('');
   const [showDialogue, setShowDialogue] = useState(false);
+  const [eventType, setEventType] = useState('live-video');
+  const [duration, setDuration] = useState(0);
+  const [facilitator, setFacilitator] = useState('');
+  const [facilitatorUsers, setFacilitatorUsers] = useState([]);
+
   const classes = useStyles();
   const history = useHistory();
 
@@ -104,6 +108,9 @@ export default function Editor() {
 
   useEffect(() => {
     dispatch(getSessionListData(params.id, params.type));
+    Api.get('api/users/list?_count=10000&_pageNo=1').then((users) => {
+      setFacilitatorUsers(users.data.userResponse);
+    });
   }, []);
 
   useEffect(() => {
@@ -138,6 +145,7 @@ export default function Editor() {
     }
     if (state.current) setOriginalTotalPoints(state.current.total_points || 0);
     if (state.currentContent) {
+      console.log('the current content', state.currentContent);
       setTitle(
         (state.currentContent.title && state.currentContent.title) || '',
       );
@@ -151,6 +159,9 @@ export default function Editor() {
         moment(state.currentContent.created_at).format('MM/DD/yyyy'),
       );
       setStatus(state.currentContent.status || 'draft');
+      setEventType(state.currentContent.eventType || 'live-video');
+      setDuration(state.currentContent.duration || 0);
+      setFacilitator(state.currentContent.facilitator || '');
       setFeaturedImage(state.currentContent.featured_image_url || '');
       if (
         state.currentContent.tags &&
@@ -237,22 +248,29 @@ export default function Editor() {
             updated_at: moment(moment()).format('YYYY-MM-DD'),
             previous_page,
             featured_image_url: featuredImage,
+            event_type: eventType,
+            duration,
+            facilitator,
           },
           params.id,
         ),
-      ).then((response) => {
-        if (response) {
-          setTimeout(() => {
-            if (!isContentChange) {
-              history.push(`/admin/content/display/${params.id}`);
-            } else {
-              setTimeout(() => {
+      )
+        .then((response) => {
+          if (response) {
+            setTimeout(() => {
+              if (!isContentChange) {
                 history.push(`/admin/content/display/${params.id}`);
-              }, 500);
-            }
-          }, 1000);
-        }
-      });
+              } else {
+                setTimeout(() => {
+                  history.push(`/admin/content/display/${params.id}`);
+                }, 500);
+              }
+            }, 1000);
+          }
+        })
+        .catch((err) => {
+          console.log('the error', err);
+        });
     }
   };
   const [open1, setOpen1] = useState(false);
@@ -344,8 +362,10 @@ export default function Editor() {
         <MediaUpload
           showDialogue={showDialogue}
           onClose={() => setShowDialogue(false)}
-          onImageSave={(image) => {
-            setFeaturedImage(image[0].url);
+          onImageSave={(file) => {
+            getSignedUrl(file[0]).then((res) => {
+              setFeaturedImage(res.newUrl);
+            });
           }}
         />
         <div className='editor-container'>
@@ -359,27 +379,65 @@ export default function Editor() {
           </div>
 
           <div className='options-side'>
-            <div>
-              <Select
-                labelId='demo-simple-select-filled-label'
-                id='demo-simple-select-filled'
-                onChange={(e) => setGroup(e.target.value)}
-                variant='filled'
-                fullWidth
-                value={group}
-                label='Group'
-                required>
-                <MenuItem value={'candidate'}>Candidate</MenuItem>
-                <MenuItem value={'facilitator'}>Facilitator</MenuItem>
-                <MenuItem value={'content-manager'}>Content Manager</MenuItem>
-                <MenuItem value={'support'}>Support</MenuItem>
-                <MenuItem value={'reviewer'}>Reviewer</MenuItem>
-                <MenuItem value={'system-administrator'}>
-                  System Adminsitrator
-                </MenuItem>
-                <MenuItem value={'auditor'}>Auditor</MenuItem>
-              </Select>
-            </div>
+            {!['mini', 'event'].includes(params.contentType) && (
+              <div>
+                <Select
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => setGroup(e.target.value)}
+                  variant='filled'
+                  fullWidth
+                  value={group}
+                  label='Group'
+                  required>
+                  <MenuItem value={'candidate'}>Candidate</MenuItem>
+                  <MenuItem value={'facilitator'}>Facilitator</MenuItem>
+                  <MenuItem value={'content-manager'}>Content Manager</MenuItem>
+                  <MenuItem value={'support'}>Support</MenuItem>
+                  <MenuItem value={'reviewer'}>Reviewer</MenuItem>
+                  <MenuItem value={'system-administrator'}>
+                    System Adminsitrator
+                  </MenuItem>
+                  <MenuItem value={'auditor'}>Auditor</MenuItem>
+                </Select>
+              </div>
+            )}
+
+            {params.contentType === 'event' && (
+              <div>
+                <Select
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => setEventType(e.target.value)}
+                  variant='filled'
+                  fullWidth
+                  value={eventType}
+                  label='Event Type'
+                  required>
+                  <MenuItem value={'live-video'}>Live Video</MenuItem>
+                  <MenuItem value={'group-chat'}>Group Chat</MenuItem>
+                  <MenuItem value={'zoom-video'}>Zoom Video</MenuItem>
+                </Select>
+              </div>
+            )}
+            {params.contentType === 'mini' && (
+              <div>
+                <Select
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => setFacilitator(e.target.value)}
+                  variant='filled'
+                  fullWidth
+                  value={facilitator}
+                  label='Facilitator'
+                  required>
+                  {facilitatorUsers.map((user) => (
+                    <MenuItem value={user.id}>{user.first_name}</MenuItem>
+                  ))}
+                </Select>
+              </div>
+            )}
+
             <br />
             {showMessageError && group === '' && (
               <p className='showErrorMessage'> group is required</p>
@@ -488,6 +546,22 @@ export default function Editor() {
               />
             </div>
             <br />
+            {['mini', 'event'].includes(params.contentType) && (
+              <div>
+                <div>
+                  <TextField
+                    type='number'
+                    variant='filled'
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    fullWidth
+                    label='Duration (In minutes)'
+                    required
+                  />
+                </div>
+                <br />
+              </div>
+            )}
             <div>
               <Select
                 variant='filled'
@@ -513,7 +587,7 @@ export default function Editor() {
               />
               {parseInt(total_points) + parseInt(accumulativeTitlePoints) >
                 originalTotalPoints &&
-                params.contentType !== 'timeline' && (
+                !['event', 'timeline', 'mini'].includes(params.contentType) && (
                   <p className='total-points-text'>
                     <InfoIcon
                       style={{
@@ -532,29 +606,33 @@ export default function Editor() {
               <p className='showErrorMessage'>Total Points are required </p>
             )}
             <br />
-            <div>
-              <TextField
-                type='url'
-                variant='filled'
-                value={previous_page}
-                onChange={(e) => setprevious_page(e.target.value)}
-                fullWidth
-                label='previous page url'
-                required
-              />
-            </div>
+            {!['event', 'mini'].includes(params.contentType) && (
+              <div>
+                <TextField
+                  type='url'
+                  variant='filled'
+                  value={previous_page}
+                  onChange={(e) => setprevious_page(e.target.value)}
+                  fullWidth
+                  label='previous page url'
+                  required
+                />
+              </div>
+            )}
             <br />
-            <div>
-              <TextField
-                type='url'
-                variant='filled'
-                value={next_page}
-                onChange={(e) => setnext_page(e.target.value)}
-                fullWidth
-                label='next page url'
-                required
-              />
-            </div>
+            {!['event', 'mini'].includes(params.contentType) && (
+              <div>
+                <TextField
+                  type='url'
+                  variant='filled'
+                  value={next_page}
+                  onChange={(e) => setnext_page(e.target.value)}
+                  fullWidth
+                  label='next page url'
+                  required
+                />
+              </div>
+            )}
             <br />
             <div>
               <div style={{display: 'flex'}}>

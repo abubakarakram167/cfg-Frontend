@@ -10,6 +10,7 @@ import {
   getUserMediaList,
   editMediaData,
   deleteMediaData,
+  getSignedUrl,
 } from '../../redux/actions/media';
 import {useDispatch, useSelector} from 'react-redux';
 import './style.css';
@@ -24,35 +25,35 @@ import TocIcon from '@material-ui/icons/Toc';
 import ReactPlayer from 'react-player';
 import baseUrl from '../../utils/url';
 import moment from 'moment';
-var btoa = require('btoa');
+import {useHistory} from 'react-router-dom';
 
 export default function MediaLibrary() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [files, setFiles] = useState([]);
   const [filesPreview, setFilesPreview] = useState([]);
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState(null);
   const [selectMedia, setSelectMedia] = useState(null);
   const message = useSelector((state) => state.userList);
   const [showSideBar, setShowSideBar] = useState(false);
   const [currentView, setCurrentView] = useState('grid');
-
-  const readImage = (file, callback) => {
-    let reader = new FileReader();
-    reader.onload = function (file) {
-      callback(file.target.result);
-    };
-    reader.readAsDataURL(file);
-  };
+  const permissions = useSelector((state) => state.roles.permissions);
+  const history = useHistory();
 
   const mediaFilesData = useSelector(({mediaList}) => {
     return mediaList.mediaList;
   });
 
-  if (mediaFilesData.length && !filesPreview.length)
-    setFilesPreview(mediaFilesData);
+  if (mediaFilesData.length && !filesPreview.length) {
+    const allMediaGet = [];
+    mediaFilesData.map((media) => {
+      allMediaGet.push(getSignedUrl(media));
+    });
+    Promise.all(allMediaGet).then((res) => {
+      setFilesPreview(res);
+    });
+  }
+
   const handleSave = (files) => {
-    console.log('the files', files);
     const data = new FormData();
     for (const file of files) {
       data.append('media', file);
@@ -61,14 +62,20 @@ export default function MediaLibrary() {
       const data = res.data.map((file) => {
         return {
           url: baseUrl + 'static/' + file.file_name,
-          fileName: file.title,
+          fileName: file.file_name,
           description: file.description,
           uploadedOn: file.created_at,
           id: file.id,
         };
       });
-
-      setFilesPreview(filesPreview.concat(data));
+      const allMediaGet = [];
+      data.map((media) => {
+        allMediaGet.push(getSignedUrl(media));
+      });
+      Promise.all(allMediaGet).then((res) => {
+        console.log('after adding alll', res);
+        setFilesPreview(filesPreview.concat(res));
+      });
     });
     setFiles(files);
     setDialogOpen(false);
@@ -94,7 +101,14 @@ export default function MediaLibrary() {
             };
           } else return file;
         });
-        setFilesPreview(data);
+
+        const allMediaGet = [];
+        data.map((media) => {
+          allMediaGet.push(getSignedUrl(media));
+        });
+        Promise.all(allMediaGet).then((res) => {
+          setFilesPreview(res);
+        });
       }
     });
   };
@@ -116,6 +130,14 @@ export default function MediaLibrary() {
   useEffect(() => {
     dispatch(getUserMediaList());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!permissions.mediaLibrary.view) {
+      history.push({
+        pathname: '/unAuthorizedPage',
+      });
+    }
+  }, []);
 
   return (
     <div style={{backgroundColor: '#f0f2f5'}}>
@@ -143,6 +165,7 @@ export default function MediaLibrary() {
           <Chip
             icon={<ControlPoint style={{fill: 'white'}} />}
             label={'ADD NEW'}
+            disabled={!permissions.mediaLibrary.create}
             className='chip-style'
             onClick={() => setDialogOpen(true)}
           />
@@ -231,9 +254,14 @@ export default function MediaLibrary() {
               ) {
                 return (
                   <div
-                    className={currentView !== 'grid' ? 'media-container' : {}}>
+                    className={currentView !== 'grid' ? 'media-container' : {}}
+                    style={
+                      !permissions.mediaLibrary.create
+                        ? {pointerEvents: 'none'}
+                        : {pointerEvents: 'auto'}
+                    }>
                     <img
-                      src={element.url}
+                      src={element.newUrl}
                       className={'gallery-image'}
                       style={
                         selectMedia && element.id === selectMedia.id
@@ -271,7 +299,7 @@ export default function MediaLibrary() {
                   <div
                     className={currentView !== 'grid' ? 'media-container' : {}}>
                     <ReactPlayer
-                      url={element.url}
+                      url={element.newUrl}
                       light={element.thumbnailPreview}
                       style={
                         selectMedia && element.id === selectMedia.id
