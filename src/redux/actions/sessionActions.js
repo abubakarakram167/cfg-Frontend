@@ -107,6 +107,8 @@ export const createSessionTitle = (params, type) => {
 // };
 
 export const editContent = (params, type) => {
+  if (params.type !== 'mini') delete params.facilitator;
+
   return (dispatch) => {
     return new Promise((res, rej) => {
       Session.editTitle(params, type)
