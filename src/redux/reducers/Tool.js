@@ -108,7 +108,7 @@ const ToolReducer = (state = INIT_STATE, action) => {
         editedContent: true,
         currentContent: payload.content,
       };
-    case actions.SET_SELECTED_TOOL:
+    case actions.SET_SELECTED_TOOLS:
       const selected = state.tools.filter((tool) => {
         if (tool) {
           return tool.id === action.payload;
