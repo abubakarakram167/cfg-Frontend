@@ -6,7 +6,7 @@ import {
   UPDATE_CONTENT_DATA,
   GET_LIST_DATA,
   GET_ALL_TOOLS_DATA,
-  SET_SELECTED_TOOL,
+  SET_SELECTED_TOOLS,
 } from './action.types';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Tool from '../services/tool';
@@ -208,7 +208,7 @@ export const getToolsData = (id) => {
 
 export const setSelectedToolData = (id) => {
   return {
-    type: SET_SELECTED_TOOL,
+    type: SET_SELECTED_TOOLS,
     payload: id,
   };
 };
