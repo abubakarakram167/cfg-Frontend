@@ -4,7 +4,7 @@ import CfgCard from './cfg-card';
 import './style.css';
 import {getToolsData} from '../../../redux/actions/toolActions';
 import {useDispatch, useSelector} from 'react-redux';
-import {elementType} from 'prop-types';
+
 export default function HomeCFGTools() {
   const dispatch = useDispatch();
   const tools = useSelector((state) => state.tool.tools);

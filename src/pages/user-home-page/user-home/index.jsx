@@ -61,7 +61,7 @@ export default function UserHomePage() {
   const getDayTools = async () => {
     try {
       const data = await Tool.getDayTools();
-
+      console.log('the data', data);
       setDayTools(data.data);
     } catch (err) {
       setDayTools([]);
@@ -267,7 +267,9 @@ export default function UserHomePage() {
                 <Build />
               </ListItemIcon>
             )}
-            <ListItemText primary={tool.title} />
+            <Link to={`/home/cfg-tools/${tool.id}`}>
+              <ListItemText primary={tool.title} />q
+            </Link>
           </ListItem>
         );
       })}

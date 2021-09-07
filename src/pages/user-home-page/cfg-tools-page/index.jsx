@@ -14,7 +14,9 @@ export default function CfgToolsPage() {
   const params = useParams();
 
   const selectedTool = useSelector((state) => state.tool.selectedTool);
-
+  const statedTool = useSelector((state) =>
+    console.log('the state to be find', state),
+  );
   const dispatch = useDispatch();
   const [titles, setTitles] = useState([]);
 
@@ -31,11 +33,6 @@ export default function CfgToolsPage() {
 
   return (
     <CommonComponent left={''} right={''}>
-      {/* <Banner
-        url={
-          'https://opalwealthadvisors.com/wp-content/uploads/2019/05/blog-052919.jpg'
-        }
-      /> */}
       <br />
       <div className='learn-data-container'>
         {titles &&
