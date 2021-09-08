@@ -35,7 +35,6 @@ export default function BioCard() {
     if (user) {
       setBio(user.bio || '');
       setImage(user.photo_url || UserAvatar);
-      console.log(user.photo_url);
     }
   }, [user]);
 
