@@ -4,7 +4,6 @@ import 'suneditor/dist/css/suneditor.min.css';
 import {Show_Message} from '../shared/constants/ActionTypes';
 import $ from 'jquery';
 import {
-  getUserMediaList,
   createOneMedia,
   getUserMediaListEditor,
   getSignedUrl,
@@ -33,14 +32,11 @@ export default (props) => {
     dispatch(getUserMediaListEditor()).then((mediaData) => {
       const allMediaGet = [];
       mediaData.map((media) => {
-        console.log('the media too send', media);
         allMediaGet.push(getSignedUrl(media));
       });
       Promise.all(allMediaGet).then((res) => {
-        console.log('all the res', res);
         if (res.length) {
           for (let image of res) {
-            console.log('the new image read', image);
             if (
               ['jpeg', 'png', 'jpg', 'JPG', 'PNG'].includes(
                 image.url.split('.').pop(),
@@ -187,12 +183,22 @@ export default (props) => {
     formData.append('media', files[0]);
     formData.append('category', 'cover');
     const data = await Media.addMedia(formData);
-    const photo_url = baseUrl + 'static/' + data.data[0].file_name;
-    console.log(photo_url);
+    const file = data.data[0];
+    console.log('this is media to be download..', data);
+    const urlBody = {
+      url: baseUrl + 'static/' + file.file_name,
+      fileName: file.file_name,
+      description: file.description,
+      uploadedOn: file.created_at,
+      thumbnailPreview: baseUrl + 'static/thumbnails/' + file.file_name,
+      id: file.id,
+    };
+    const cloudfrontUrl = await getSignedUrl(urlBody);
+    console.log('the cloudfront', cloudfrontUrl);
     uploadHandler({
       result: [
         {
-          url: photo_url,
+          url: cloudfrontUrl.newUrl,
           name: data.data[0].file_name,
           size: files[0].size,
         },

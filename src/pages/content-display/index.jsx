@@ -26,6 +26,11 @@ export default function ContentDisplay() {
     return new URL(url).pathname;
   };
 
+  const isUrl = (string) => {
+    var matcher = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
+    return matcher.test(string);
+  };
+
   return (
     <div className='content-display-body'>
       <div className='toolbar-container'>
@@ -60,12 +65,12 @@ export default function ContentDisplay() {
 
       <div className='content-display-buttons-container'>
         <div className='content-display-buttons'>
-          {data && data.previous_page && (
+          {data && isUrl(data.previous_page) && data.previous_page && (
             <Link to={getUrlFormat(data.previous_page)}>
               <button className='next-prev-button'>Previous</button>
             </Link>
           )}
-          {data && data.next_page && (
+          {data && isUrl(data.next_page) && data.next_page && (
             <Link to={getUrlFormat(data.next_page)}>
               <button className='next-prev-button'>Next</button>
             </Link>
