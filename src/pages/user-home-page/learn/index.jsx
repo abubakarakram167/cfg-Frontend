@@ -14,18 +14,18 @@ export default function Learn() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentContent, setCurrentContent] = useState(null);
   const dispatch = useDispatch();
-  const content = useSelector((state) => state.tool.currentContent);
+  const content = useSelector((state) => {
+    return state.session.currentContent;
+  });
 
   useEffect(() => {
-    console.log(params.learnId);
+    console.log(params);
     dispatch(getContentData(params.learnId));
   }, []);
 
   useEffect(() => {
     console.log(content);
   }, [content]);
-
-  console.log(content, 'content');
 
   const setPrevious = (id) => {
     history.push(`/home/cfg-tools/4/${id}`);
