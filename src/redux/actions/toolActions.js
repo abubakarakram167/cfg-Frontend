@@ -15,9 +15,7 @@ import jsCookie from 'js-cookie';
 export const createTool = (params) => {
   return async function (dispatch) {
     try {
-      console.log('the params', params);
       const response = await Tool.createTool(params);
-      console.log('the response after creating', response);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
@@ -116,10 +114,8 @@ export const getToolData = () => {
   return async function (dispatch) {
     try {
       const response = await Tool.toolData();
-      console.log('the response', response);
       if (response.status === 200) {
         const data_resp = await response.data;
-        console.log('the data_resp', data_resp);
         jsCookie.set('login', 'yes');
         dispatch({
           type: GET_TOOL_DATA,
@@ -143,7 +139,6 @@ export const getToolListData = (id) => {
   return async function (dispatch) {
     try {
       const response = await Tool.getListData(id);
-
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
@@ -153,7 +148,6 @@ export const getToolListData = (id) => {
         });
       }
     } catch (error) {
-      console.log('on the error', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: GET_LIST_DATA,
