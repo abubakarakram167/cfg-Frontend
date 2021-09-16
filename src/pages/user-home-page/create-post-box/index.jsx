@@ -118,10 +118,7 @@ export default function CreatePostBox() {
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
             <div className='create-post-dialog-user-info'>
-              <Avatar
-                alt='user-avatar'
-                src={baseUrl + 'static/' + user.photo_url}
-              />
+              <Avatar alt='user-avatar' src={user.photo_url} />
               <span className='app-card-bottom-text'>
                 {user.first_name} {user.last_name}
               </span>
@@ -169,10 +166,7 @@ export default function CreatePostBox() {
       <AppCard>
         <div className='create-post-app-card-container'>
           <div className='create-post-app-card-top'>
-            <Avatar
-              alt='user-avatar'
-              src={baseUrl + 'static/' + user.photo_url}
-            />
+            <Avatar alt='user-avatar' src={user.photo_url} />
             <input
               onClick={handleClickOpen}
               type='text'
