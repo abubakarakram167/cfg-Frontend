@@ -22,6 +22,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {createUserPost, getUserPost} from 'redux/actions/UserPost';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
+import {getSignedUrl} from '../../../redux/actions/media';
+import MediaUpload from 'components/MediaUpload';
+
 export default function CreatePostBox() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -35,6 +38,7 @@ export default function CreatePostBox() {
   });
   const [mediaType, setMediaType] = useState('');
   const currentUser = useSelector((state) => state.auth.user);
+  const [showDialogue, setShowDialogue] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -82,15 +86,19 @@ export default function CreatePostBox() {
   const mediaJSX = () => {
     switch (mediaType) {
       case 'image':
-        return <img src={baseUrl + 'static/' + media} width='100%' />;
+        return <img src={media} width='100%' />;
       case 'video':
         return (
           <video width='100%' controls>
-            <source src={baseUrl + 'static/' + media} type='video/mp4' />
+            <source src={media} type='video/mp4' />
             {/* <source src="mov_bbb.ogg" type="video/ogg" /> */}
           </video>
         );
     }
+  };
+  const setMediaAsset = (url) => {
+    console.log('in media asset', url);
+    setMedia(url);
   };
 
   return (
@@ -138,12 +146,15 @@ export default function CreatePostBox() {
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{width: '100%'}}>
-          <input
-            type='file'
-            name=''
-            id='media-upload'
-            style={{display: 'none'}}
-            onChange={handleFile}
+          <MediaUpload
+            showDialogue={showDialogue}
+            onClose={() => setShowDialogue(false)}
+            onImageSave={(file) => {
+              getSignedUrl(file[0]).then((res) => {
+                console.log('after getting response', res);
+                setMediaAsset(res.newUrl);
+              });
+            }}
           />
           <label htmlFor='media-upload'>
             <div className='create-post-dialog-action-content'>
@@ -153,8 +164,19 @@ export default function CreatePostBox() {
               <div className='create-post-action-icons'>
                 <Videocam style={{color: 'red'}} />
               </div>
-              <div className='create-post-action-icons'>
-                <PermMedia style={{color: 'red'}} />
+              <div
+                onClick={() => {
+                  setShowDialogue(true);
+                  setMediaType('image');
+                }}
+                className='create-post-action-icons'>
+                <PermMedia
+                  onClick={() => {
+                    setShowDialogue(true);
+                    setMediaType('video');
+                  }}
+                  style={{color: 'red'}}
+                />
               </div>
               <div className='create-post-action-icons'>
                 <EmojiEmotions style={{color: 'red'}} />

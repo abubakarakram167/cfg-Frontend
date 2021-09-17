@@ -118,6 +118,11 @@ export default function UserHomePage() {
     setDrawerOpen(!drawerOpen);
   };
 
+  const transform = posts.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+  );
+  console.log('the transform', transform);
+
   const left = (
     <List className={classesOther.childListPadding}>
       <ListItem>
@@ -313,7 +318,7 @@ export default function UserHomePage() {
         setCount(count + 3);
       }}>
       <CreatePost />
-      {posts.map((element, index) => {
+      {transform.map((element, index) => {
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>
             <PostDetails post={element} />
