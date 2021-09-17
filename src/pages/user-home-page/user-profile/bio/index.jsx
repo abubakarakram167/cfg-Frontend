@@ -13,6 +13,8 @@ import {Dialog, DialogTitle, DialogActions, TextField} from '@material-ui/core';
 import {updateUser} from 'redux/actions/authActions';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
+import MediaUpload from 'components/MediaUpload';
+import {getSignedUrl} from '../../../../redux/actions/media';
 
 const useStyles = makeStyles({
   root: {
@@ -30,6 +32,7 @@ export default function BioCard() {
   const [bio, setBio] = useState('');
   const [image, setImage] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showDialogue, setShowDialogue] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -40,21 +43,6 @@ export default function BioCard() {
 
   const handleClose = () => {
     setDialogOpen(false);
-  };
-
-  const handleFile = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('media', file);
-    formData.append('category', 'cover');
-    const data = await Media.addMedia(formData);
-    const photo_url = data.data[0].file_name;
-    dispatch(
-      updateUser({
-        id: user.id,
-        photo_url,
-      }),
-    );
   };
 
   const saveBio = () => {
@@ -100,7 +88,7 @@ export default function BioCard() {
         <CardActionArea>
           <CardMedia
             className={classes.media}
-            image={baseUrl + 'static/' + image}
+            image={image}
             title='user-photo'
           />
           <CardContent>
@@ -119,13 +107,20 @@ export default function BioCard() {
             onClick={() => setDialogOpen(true)}>
             Add Bio
           </Button>
-
-          <input
-            type='file'
-            name=''
-            id='file-input'
-            style={{display: 'none'}}
-            onChange={handleFile}
+          <MediaUpload
+            showDialogue={showDialogue}
+            onClose={() => setShowDialogue(false)}
+            onImageSave={(file) => {
+              getSignedUrl(file[0]).then((res) => {
+                const photo_url = res.url;
+                dispatch(
+                  updateUser({
+                    id: user.id,
+                    photo_url,
+                  }),
+                );
+              });
+            }}
           />
           <label htmlFor='file-input'>
             <div
@@ -137,7 +132,8 @@ export default function BioCard() {
                 padding: '6px',
                 fontSize: '12px',
                 fontWeight: 600,
-              }}>
+              }}
+              onClick={() => setShowDialogue(true)}>
               Add Image
             </div>
           </label>

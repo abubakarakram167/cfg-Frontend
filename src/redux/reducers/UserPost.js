@@ -37,14 +37,18 @@ const userPostReducer = (state = INIT_STATE, action) => {
       payload = action.payload;
       if (payload.error) {
         console.log('there was an error');
-      } else console.log(payload);
+      } else {
+        return {
+          ...state,
+          posts: state.posts.filter((post) => post.id !== payload.id),
+        };
+      }
       return state;
     case actions.UPDATE_USER_POST:
       payload = action.payload;
       if (payload.error) {
         return {...state, error: 'There was an error while updating the post.'};
       }
-
       const posts = state.posts.map((post) => {
         if (post.id === action.id) {
           if (post.love_count) {

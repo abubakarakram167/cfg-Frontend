@@ -13,7 +13,6 @@ import {
   ListItemText,
   ListItem,
   Collapse,
-  Avatar,
 } from '@material-ui/core';
 import {
   Forum,
@@ -28,7 +27,6 @@ import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
 import {getToolsData} from 'redux/actions/toolActions';
-import {baseUrl} from 'utils/axios';
 import Tool from 'redux/services/tool';
 import MediaGroup from 'redux/services/mediagroup';
 
@@ -61,7 +59,6 @@ export default function UserHomePage() {
   const getDayTools = async () => {
     try {
       const data = await Tool.getDayTools();
-      console.log('the data', data);
       setDayTools(data.data);
     } catch (err) {
       setDayTools([]);
@@ -151,9 +148,8 @@ export default function UserHomePage() {
           </div>
         </ListItemText>
       </ListItem>
-      {allSessions.length &&
+      {allSessions.length !== 0 &&
         allSessions.map((session) => {
-          console.log('in looping the session', session);
           return (
             <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
               <List>
@@ -166,7 +162,6 @@ export default function UserHomePage() {
                     </div>
                     <ul className='conversation-child-list'>
                       {session?.titles.rows.map((element, index) => {
-                        console.log('the element', element);
                         if (element.status === 'published') {
                           return (
                             <div className='whole-child-component' key={index}>
@@ -318,7 +313,6 @@ export default function UserHomePage() {
         setCount(count + 3);
       }}>
       <CreatePost />
-
       {posts.map((element, index) => {
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>

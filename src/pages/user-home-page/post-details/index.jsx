@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {
   Card,
   CardHeader,
-  CardMedia,
   CardActions,
   CardContent,
   Collapse,
@@ -26,6 +25,7 @@ import {
   Favorite,
   ArrowRight,
   Edit,
+  Delete,
 } from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
@@ -33,11 +33,10 @@ import Friend from 'redux/services/friends';
 import {baseUrl} from 'utils/axios';
 import Comments from 'redux/services/comment';
 import {useDispatch, useSelector} from 'react-redux';
-import {updateUserPost} from 'redux/actions/UserPost';
 import Posts from 'redux/services/post';
-import {formatDate, formatDatePost} from 'utils/stampToFormat';
-import EditorComponent from 'pages/editor-component';
-import SunEditor from 'suneditor-react';
+import {formatDatePost} from 'utils/stampToFormat';
+import SunEditor from '../../../components/sunEditor';
+import * as actions from '../../../redux/actions/action.types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,8 +67,10 @@ export default function RecipeReviewCard({post}) {
   const [comment, setComment] = React.useState('');
   const currentUser = useSelector((state) => state.auth.user);
   const [editText, setEditText] = useState(post.content);
-  const [editedText, setEditedText] = useState('');
+  const [content, setContent] = useState('');
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [isContentChange, setContentChanged] = useState(false);
+  const [showEditor, setShowEditor] = useState(null);
 
   const [user, setUser] = useState({
     first_name: '',
@@ -78,11 +79,8 @@ export default function RecipeReviewCard({post}) {
     photo_url: '',
   });
 
-  // console.log('user', user)
-  // console.log('currentUSer', currentUser)
   const [loveCount, setLoveCount] = useState(post.love_count || 0);
   const dispatch = useDispatch();
-
   const [comments, setComments] = useState([]);
 
   async function getUserData() {
@@ -139,6 +137,16 @@ export default function RecipeReviewCard({post}) {
     setEditDialogOpen(false);
   };
 
+  const deleteUserPost = async (post) => {
+    const data = await Posts.deleteUserPost(post.id);
+    if (data.status === 200) {
+      dispatch({
+        type: actions.DELETE_USER_POST,
+        payload: {id: post.id},
+      });
+    }
+  };
+
   const mediaJSX = () => {
     let mediaType = null;
     if (
@@ -183,7 +191,11 @@ export default function RecipeReviewCard({post}) {
         )}
 
         {post && post.assigned_group && (
-          <EditorComponent content={editText} setContent={setEditText} />
+          <SunEditor
+            onContentSave={(content) => setEditText(content)}
+            content={editText}
+            onContentChanged={() => setContentChanged(true)}
+          />
         )}
 
         <DialogActions style={{width: '100%'}}>
@@ -216,15 +228,20 @@ export default function RecipeReviewCard({post}) {
             <Avatar
               aria-label='recipe'
               className={classes.avatar}
-              src={baseUrl + 'static/' + user.photo_url}
+              src={user.photo_url}
             />
           }
           action={
             currentUser &&
             currentUser.user_name === user.user_name && (
-              <IconButton aria-label='edit'>
-                <Edit onClick={() => setEditDialogOpen(true)} />
-              </IconButton>
+              <div>
+                <IconButton aria-label='delete'>
+                  <Delete onClick={() => deleteUserPost(post)} />
+                </IconButton>
+                <IconButton aria-label='edit'>
+                  <Edit onClick={() => setEditDialogOpen(true)} />
+                </IconButton>
+              </div>
             )
           }
           title={`${user.first_name} ${user.last_name} ${
@@ -246,12 +263,11 @@ export default function RecipeReviewCard({post}) {
               //   className='caption-text'
               //   dangerouslySetInnerHTML={{ __html: editText }}></div>
               <div className='rich-content-user-container'>
-                <SunEditor
-                  disable={true}
-                  height='100%'
-                  setContents={editText}
-                  showToolbar={false}
-                />
+                {/* <SunEditor
+                  onContentSave={(content) => setContent(content)}
+                  content={content}
+                  onContentChanged={() => setContentChanged(true)}
+                /> */}
               </div>
             ) : (
               <span className='caption-text'>{editText}</span>
@@ -263,9 +279,6 @@ export default function RecipeReviewCard({post}) {
             <Favorite style={{color: 'red'}} />
             <div style={{marginLeft: '10px'}}>{loveCount}</div>
           </IconButton>
-          {/* <IconButton aria-label='share'>
-          <Share />
-        </IconButton> */}
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
