@@ -8,13 +8,15 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  IconButton,
 } from '@material-ui/core';
+import {Delete} from '@material-ui/icons';
 import Reply from './reply';
 import './style.css';
 import Friend from 'redux/services/friends';
 import {baseUrl} from 'utils/axios';
-import {Edit} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
+
 export default function Comment({comment, addReplyAction, replies}) {
   const [reply, setReply] = useState('');
   const [user, setUser] = useState({
@@ -94,10 +96,7 @@ export default function Comment({comment, addReplyAction, replies}) {
       <Card className='comment-card'>
         <div className='comment-card-content'>
           <div className='comment-card-content-left'>
-            <Avatar
-              alt='user-avatar'
-              src={baseUrl + 'static/' + user.photo_url}
-            />
+            <Avatar alt='user-avatar' src={user.photo_url} />
             <div style={{display: 'flex', flexDirection: 'column'}}>
               <div
                 style={{
@@ -115,6 +114,15 @@ export default function Comment({comment, addReplyAction, replies}) {
               </div>
               <span className='comment-text'>{comment.content}</span>
             </div>
+            <span>
+              <IconButton aria-label='delete'>
+                <Delete
+                  onClick={() => {
+                    console.log('it is calling...');
+                  }}
+                />
+              </IconButton>
+            </span>
           </div>
         </div>
         <div className='comment-card-reply-section'>

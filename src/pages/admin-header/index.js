@@ -95,9 +95,13 @@ export default function AdminHeader() {
     setSearchResults(data.data.users);
     setResultVisibility(true);
   };
+
   const sendFriendRequest = async (id) => {
     const data = await Friend.sendFriendRequest({userId: id});
   };
+
+  console.log('the image...', image);
+
   return (
     <div>
       <AppHeader>
@@ -241,10 +245,7 @@ export default function AdminHeader() {
           </div>
           <div className='right'>
             <div className='right-user-info'>
-              <Avatar
-                alt='User Avatar'
-                src={image && baseUrl + 'static/' + image}
-              />
+              <Avatar alt='User Avatar' src={image} />
 
               <div className='user-name-text'>
                 <Link to='/home/user-profile'>
