@@ -79,7 +79,7 @@ export default function Editor() {
   const [author, setAuthor] = useState('');
   const [isContentChange, setContentChanged] = useState(false);
   const {id} = useParams();
-  const [featuredImage, setFeaturedImage] = useState('');
+  const [featuredImage, setFeaturedImage] = useState(null);
   const [showDialogue, setShowDialogue] = useState(false);
   const [timelineContent, setTimelineContent] = useState([]);
   const [eventType, setEventType] = useState('live-video');
@@ -154,7 +154,6 @@ export default function Editor() {
   };
 
   useEffect(() => {
-    console.log('the params', params.cfgType);
     if (['event', 'timeline', 'mini'].includes(params.cfgType))
       dispatch(getResourceData(params.cfgType));
   }, [dispatch]);
@@ -270,7 +269,7 @@ export default function Editor() {
                   detail: content,
                   assigned_group: group,
                   categories: JSON.stringify(categories),
-                  featured_image_url: featuredImage,
+                  featured_image_url: featuredImage.fileName,
                   event_type: eventType,
                   duration: parseInt(duration),
                   facilitator,
@@ -412,7 +411,7 @@ export default function Editor() {
                       status: publishStatus === 'publish' ? status : 'draft',
                       previous_page,
                       next_page,
-                      featured_image_url: featuredImage,
+                      featured_image_url: featuredImage.fileName,
                       event_type: eventType,
                       duration,
                       facilitator,
@@ -536,7 +535,7 @@ export default function Editor() {
           onClose={() => setShowDialogue(false)}
           onImageSave={(file) => {
             getSignedUrl(file[0]).then((res) => {
-              setFeaturedImage(res.newUrl);
+              setFeaturedImage(res);
             });
           }}
         />
@@ -817,10 +816,10 @@ export default function Editor() {
               </div>
               <div style={{display: 'flex'}}>
                 <div className='image-preview'>
-                  {featuredImage !== '' && (
+                  {featuredImage && (
                     <img
                       style={{width: 50, height: 50}}
-                      src={featuredImage}
+                      src={featuredImage.newUrl}
                       alt='data-text'
                     />
                   )}

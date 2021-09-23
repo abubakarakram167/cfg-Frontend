@@ -39,9 +39,13 @@ export default function CreatePostBox() {
   const [mediaType, setMediaType] = useState('');
   const currentUser = useSelector((state) => state.auth.user);
   const [showDialogue, setShowDialogue] = useState(false);
+  const [avatarImage, setAvatarImage] = useState(null);
 
   useEffect(() => {
     if (currentUser) {
+      getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
+        setAvatarImage(res.newUrl);
+      });
       setUser(currentUser);
     }
   }, [currentUser]);
@@ -63,25 +67,6 @@ export default function CreatePostBox() {
     setContent('');
     setMedia(null);
   };
-  const handleFile = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('media', file);
-    formData.append('category', 'cover');
-    const data = await Media.addMedia(formData);
-    const photo_url = data.data[0].file_name;
-    setMedia(photo_url);
-    if (
-      photo_url.split('.').pop() === 'JPG' ||
-      photo_url.split('.').pop() === 'png' ||
-      photo_url.split('.').pop() === 'jpg' ||
-      photo_url.split('.').pop() === 'PNG'
-    ) {
-      setMediaType('image');
-    } else if (photo_url.split('.').pop() === 'mp4') {
-      setMediaType('video');
-    }
-  };
 
   const mediaJSX = () => {
     switch (mediaType) {
@@ -97,7 +82,6 @@ export default function CreatePostBox() {
     }
   };
   const setMediaAsset = (url) => {
-    console.log('in media asset', url);
     setMedia(url);
   };
 
@@ -126,7 +110,7 @@ export default function CreatePostBox() {
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
             <div className='create-post-dialog-user-info'>
-              <Avatar alt='user-avatar' src={user.photo_url} />
+              <Avatar alt='user-avatar' src={avatarImage} />
               <span className='app-card-bottom-text'>
                 {user.first_name} {user.last_name}
               </span>
@@ -151,7 +135,6 @@ export default function CreatePostBox() {
             onClose={() => setShowDialogue(false)}
             onImageSave={(file) => {
               getSignedUrl(file[0]).then((res) => {
-                console.log('after getting response', res);
                 setMediaAsset(res.newUrl);
               });
             }}
@@ -188,7 +171,7 @@ export default function CreatePostBox() {
       <AppCard>
         <div className='create-post-app-card-container'>
           <div className='create-post-app-card-top'>
-            <Avatar alt='user-avatar' src={user.photo_url} />
+            <Avatar alt='user-avatar' src={avatarImage} />
             <input
               onClick={handleClickOpen}
               type='text'

@@ -37,6 +37,7 @@ import Posts from 'redux/services/post';
 import {formatDatePost} from 'utils/stampToFormat';
 import SunEditor from '../../../components/sunEditor';
 import * as actions from '../../../redux/actions/action.types';
+import {getSignedUrl} from '../../../redux/actions/media';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,6 +71,7 @@ export default function RecipeReviewCard({post}) {
   const [content, setContent] = useState('');
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isContentChange, setContentChanged] = useState(false);
+  const [avatarImage, setAvatarImage] = useState(null);
 
   const [user, setUser] = useState({
     first_name: '',
@@ -101,6 +103,9 @@ export default function RecipeReviewCard({post}) {
   }
 
   useEffect(() => {
+    getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
+      setAvatarImage(res.newUrl);
+    });
     getUserData();
     getPostComments();
   }, []);
@@ -228,7 +233,7 @@ export default function RecipeReviewCard({post}) {
             <Avatar
               aria-label='recipe'
               className={classes.avatar}
-              src={user.photo_url}
+              src={avatarImage}
             />
           }
           action={
@@ -249,13 +254,9 @@ export default function RecipeReviewCard({post}) {
           }`}
           subheader={formatDatePost(Date.parse(post.createdAt))}
         />
-        {post.media &&
-          // <CardMedia
-          //   className={classes.media}
-          //   image={baseUrl + 'static/' + post.media}
-          //   title='Paella dish'
-          // />
-          mediaJSX()}
+        {/* {post.media &&
+          mediaJSX()
+        } */}
         <CardContent>
           <Typography variant='body2' color='textSecondary' component='p'>
             <span className='caption-text'>

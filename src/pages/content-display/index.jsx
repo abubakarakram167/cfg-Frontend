@@ -6,18 +6,28 @@ import AdminHeader from 'pages/admin-header';
 import './style.css';
 import {Link} from 'react-router-dom';
 import SunEditor from 'suneditor-react';
+import {transformImagesInContent} from '../../components/ReUsable';
 
 export default function ContentDisplay() {
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({detail: ''});
+  const [isContentTransform, setIsContentTransform] = useState(null);
+
   const history = useHistory();
   useEffect(() => {
     dispatch(getContentData(params.id));
   }, [params.id, dispatch]);
   useEffect(() => {
     if (state.currentContent) {
+      transformImagesInContent(
+        state.currentContent.detail,
+        false,
+        params.id,
+      ).then((res) => {
+        setIsContentTransform(res.html);
+      });
       setData(state.currentContent);
     }
   }, [state]);
@@ -56,7 +66,9 @@ export default function ContentDisplay() {
             <SunEditor
               disable={true}
               height='100%'
-              setContents={data ? data.detail : ''}
+              setContents={
+                isContentTransform ? isContentTransform : data.detail
+              }
               showToolbar={false}
             />
           </div>

@@ -14,21 +14,14 @@ import {
   ListItem,
   Collapse,
 } from '@material-ui/core';
-import {
-  Forum,
-  Group,
-  Event,
-  Build,
-  ChatBubble,
-  ExpandMore,
-  ExpandLess,
-} from '@material-ui/icons';
+import {Forum, Group, Build, ExpandMore, ExpandLess} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
 import {getToolsData} from 'redux/actions/toolActions';
 import Tool from 'redux/services/tool';
 import MediaGroup from 'redux/services/mediagroup';
+import {transformImagesInContent} from 'components/ReUsable';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -51,6 +44,7 @@ export default function UserHomePage() {
   const classesOther = useStyling();
   const permissions = useSelector((state) => state.roles.permissions);
   const history = useHistory();
+  const [allTransformPosts, setAllTransformPosts] = useState(null);
 
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
@@ -86,9 +80,32 @@ export default function UserHomePage() {
     getSessionByGroupId(data.data.group_id);
   };
 
+  const transformPosts = async (posts) => {
+    let allContent = [];
+    for (let post of posts) {
+      allContent.push(transformImagesInContent(post.content, false, post.id));
+    }
+
+    const allTransformPosts = await Promise.all(allContent);
+    const newContentPosts = posts.map((post) => {
+      return {
+        ...post,
+        content: allTransformPosts.filter(
+          (newPost) => newPost.id === post.id,
+        )[0].html,
+      };
+    });
+
+    setAllTransformPosts(newContentPosts);
+  };
+
   useEffect(() => {
     dispatch(getUserPost(count));
   }, [count]);
+
+  useEffect(() => {
+    transformPosts(posts);
+  }, [posts]);
 
   useEffect(() => {
     dispatch(getToolsData());
@@ -118,10 +135,11 @@ export default function UserHomePage() {
     setDrawerOpen(!drawerOpen);
   };
 
-  const transform = posts.sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-  );
-  console.log('the transform', transform);
+  const transform = allTransformPosts
+    ? allTransformPosts.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+      )
+    : posts;
 
   const left = (
     <List className={classesOther.childListPadding}>
