@@ -16,12 +16,6 @@ import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
 import {socket} from 'socket';
-import {
-  Group,
-  CardGiftcard,
-  Bookmark,
-  ShoppingBasket,
-} from '@material-ui/icons';
 import {useSelector, useDispatch} from 'react-redux';
 import AppSideBar from '../AppSidebar';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
@@ -33,6 +27,7 @@ import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
 import LogoImage from 'assets/cfgWhiteLogo.png';
 import {getPostById} from 'redux/actions/UserPost';
+import {getSignedUrl} from '../../../redux/actions/media';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -70,7 +65,9 @@ export default function AdminHeader() {
   useEffect(() => {
     if (state.user) {
       setUsername(state.user.first_name + ' ' + state.user.last_name);
-      setImage(state.user.photo_url);
+      getSignedUrl({fileName: state.user.photo_url}).then((res) => {
+        setImage(res.newUrl);
+      });
     }
   }, [state]);
 
@@ -208,11 +205,7 @@ export default function AdminHeader() {
                   <div className='mobile-menu-item'>
                     <Avatar
                       alt='User Avatar'
-                      src={
-                        state &&
-                        state.user &&
-                        baseUrl + 'static/' + state.user.photo_url
-                      }
+                      src={state && state.user && image}
                     />
                     <div className='user-name-text'>
                       <Link to='/home/user-profile'>
@@ -287,14 +280,7 @@ export default function AdminHeader() {
           </div>
           <div className='right'>
             <div className='right-user-info'>
-              <Avatar
-                alt='User Avatar'
-                src={
-                  state &&
-                  state.user &&
-                  baseUrl + 'static/' + state.user.photo_url
-                }
-              />
+              <Avatar alt='User Avatar' src={state && state.user && image} />
               <div className='user-name-text'>
                 <Link to='/home/user-profile'>
                   <Typography style={{color: 'white'}}>{username}</Typography>

@@ -23,6 +23,7 @@ import Friend from 'redux/services/friends';
 import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {socket} from 'socket';
+import {getSignedUrl} from '../../redux/actions/media';
 
 export default function AdminHeader() {
   const [username, setUsername] = useState('');
@@ -41,7 +42,9 @@ export default function AdminHeader() {
   useEffect(() => {
     if (state.user) {
       setUsername(state.user.first_name + ' ' + state.user.last_name);
-      setImage(state.user.photo_url);
+      getSignedUrl({fileName: state.user.photo_url}).then((res) => {
+        setImage(res.newUrl);
+      });
     }
   }, [state]);
 

@@ -31,6 +31,7 @@ import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 import Api from '../../utils/axios';
 import {getSignedUrl} from '../../redux/actions/media';
+import {transformImagesInContent} from '../../components/ReUsable';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -71,12 +72,13 @@ export default function Editor() {
   const [showMessageError, setShowMessageError] = useState(false);
   const [contentType, setContentType] = useState(false);
   const [isContentChange, setContentChanged] = useState(false);
-  const [featuredImage, setFeaturedImage] = useState('');
+  const [featuredImage, setFeaturedImage] = useState(null);
   const [showDialogue, setShowDialogue] = useState(false);
   const [eventType, setEventType] = useState('live-video');
   const [duration, setDuration] = useState(0);
   const [facilitator, setFacilitator] = useState('');
   const [facilitatorUsers, setFacilitatorUsers] = useState([]);
+  const [isContentTransform, setIsContentTransform] = useState(null);
 
   const classes = useStyles();
   const history = useHistory();
@@ -145,7 +147,6 @@ export default function Editor() {
     }
     if (state.current) setOriginalTotalPoints(state.current.total_points || 0);
     if (state.currentContent) {
-      console.log('the current content', state.currentContent);
       setTitle(
         (state.currentContent.title && state.currentContent.title) || '',
       );
@@ -163,6 +164,22 @@ export default function Editor() {
       setDuration(state.currentContent.duration || 0);
       setFacilitator(state.currentContent.facilitator || '');
       setFeaturedImage(state.currentContent.featured_image_url || '');
+      if (state.currentContent.detail) {
+        transformImagesInContent(
+          state.currentContent.detail,
+          false,
+          state.currentContent.id,
+        ).then((res) => {
+          setIsContentTransform(res.html);
+        });
+      }
+      if (state.currentContent.featured_image_url) {
+        getSignedUrl({
+          fileName: state.currentContent.featured_image_url,
+        }).then((res) => {
+          setFeaturedImage(res);
+        });
+      }
       if (
         state.currentContent.tags &&
         state.currentContent.tags.length &&
@@ -247,7 +264,7 @@ export default function Editor() {
             next_page,
             updated_at: moment(moment()).format('YYYY-MM-DD'),
             previous_page,
-            featured_image_url: featuredImage,
+            featured_image_url: featuredImage.fileName,
             event_type: eventType,
             duration,
             facilitator,
@@ -364,16 +381,18 @@ export default function Editor() {
           onClose={() => setShowDialogue(false)}
           onImageSave={(file) => {
             getSignedUrl(file[0]).then((res) => {
-              setFeaturedImage(res.newUrl);
+              setFeaturedImage(res);
             });
           }}
         />
         <div className='editor-container'>
           <div className='editor-side'>
             <SunEditor
-              onImageUploadBefore={handleImageUploadBefore}
-              onContentSave={(content) => setContent(content)}
-              content={content}
+              onContentSave={(content) => {
+                setContent(content);
+                setIsContentTransform(null);
+              }}
+              content={isContentTransform ? isContentTransform : content}
               onContentChanged={() => setContentChanged(true)}
             />
           </div>
@@ -649,10 +668,10 @@ export default function Editor() {
               </div>
               <div style={{display: 'flex'}}>
                 <div className='image-preview'>
-                  {featuredImage !== '' && (
+                  {featuredImage && (
                     <img
                       style={{width: 50, height: 50}}
-                      src={featuredImage}
+                      src={featuredImage.newUrl}
                       alt='data-text'
                     />
                   )}

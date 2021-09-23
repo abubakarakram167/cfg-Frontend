@@ -11,11 +11,9 @@ import Api from '../../utils/axios';
 import baseUrl from '../../utils/url';
 
 export const getSignedUrl = (media) => {
-  console.log('the media received', media);
   return new Promise((res, rej) => {
     Api.get(`api/media/cf/${media.fileName}`)
       .then((data) => {
-        console.log('after signed url', data);
         if (data.status === 200) {
           media.newUrl = data.data;
         }
