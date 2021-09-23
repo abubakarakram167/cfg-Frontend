@@ -67,6 +67,7 @@ export default (props) => {
           $('.upload-link-button').on('click', function (e) {
             add = false;
             var urlToDownload = $('.se-input-url').val();
+            console.log('the url to download', urlToDownload);
             addMediaUrl(urlToDownload);
           });
         }
@@ -129,62 +130,13 @@ export default (props) => {
     });
   }, []);
 
-  // const handleImageUploadBefore = async (files, info, uploadHandler) => {
-  //   try {
-  //     await handleSave(files, info);
-  //     return true;
-  //   } catch (err) {
-  //     return false;
-  //   }
-  // };
-
-  const handleSave = async (files, info) => {
-    return new Promise((resolve, reject) => {
-      const data = new FormData();
-      for (const file of files) {
-        data.append('media', file);
-      }
-      const isNotUnderSizeLimit = files.filter((file) => {
-        if (file.size >= 5000000) return true;
-      });
-
-      if (isNotUnderSizeLimit.length === 0) {
-        dispatch(createOneMedia(data))
-          .then((res) => {
-            const data = res.data.map((file) => {
-              return {
-                url: baseUrl + 'static/' + file.file_name,
-                fileName: file.title,
-                description: file.description,
-                uploadedOn: file.created_at,
-                id: file.id,
-              };
-            });
-            add = true;
-            fileData = data[0] ? data[0].url : null;
-            if (data.length) {
-              resolve(true);
-            }
-            reject(false);
-          })
-          .catch((err) => {
-            reject(false);
-          });
-      } else {
-        dispatch({
-          type: Show_Message,
-          payload: {message: 'Each image max upto 5mb', success: false},
-        });
-      }
-    });
-  };
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
     const formData = new FormData();
     formData.append('media', files[0]);
     formData.append('category', 'cover');
     const data = await Media.addMedia(formData);
     const file = data.data[0];
-    console.log('this is media to be download..', data);
+
     const urlBody = {
       url: baseUrl + 'static/' + file.file_name,
       fileName: file.file_name,
@@ -194,7 +146,6 @@ export default (props) => {
       id: file.id,
     };
     const cloudfrontUrl = await getSignedUrl(urlBody);
-    console.log('the cloudfront', cloudfrontUrl);
     uploadHandler({
       result: [
         {

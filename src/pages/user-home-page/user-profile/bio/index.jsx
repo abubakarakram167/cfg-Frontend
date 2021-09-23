@@ -37,7 +37,10 @@ export default function BioCard() {
   useEffect(() => {
     if (user) {
       setBio(user.bio || '');
-      setImage(user.photo_url || UserAvatar);
+
+      getSignedUrl({fileName: user.photo_url}).then((res) => {
+        setImage(res.newUrl || UserAvatar);
+      });
     }
   }, [user]);
 
@@ -112,11 +115,11 @@ export default function BioCard() {
             onClose={() => setShowDialogue(false)}
             onImageSave={(file) => {
               getSignedUrl(file[0]).then((res) => {
-                const photo_url = res.url;
+                const photo_url = res.fileName;
                 dispatch(
                   updateUser({
                     id: user.id,
-                    photo_url,
+                    photo_url: photo_url,
                   }),
                 );
               });

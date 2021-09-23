@@ -22,6 +22,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {createUserPost, getUserPost} from 'redux/actions/UserPost';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
+import {getSignedUrl} from '../../../redux/actions/media';
+import MediaUpload from 'components/MediaUpload';
+
 export default function CreatePostBox() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -35,9 +38,14 @@ export default function CreatePostBox() {
   });
   const [mediaType, setMediaType] = useState('');
   const currentUser = useSelector((state) => state.auth.user);
+  const [showDialogue, setShowDialogue] = useState(false);
+  const [avatarImage, setAvatarImage] = useState(null);
 
   useEffect(() => {
     if (currentUser) {
+      getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
+        setAvatarImage(res.newUrl);
+      });
       setUser(currentUser);
     }
   }, [currentUser]);
@@ -59,38 +67,22 @@ export default function CreatePostBox() {
     setContent('');
     setMedia(null);
   };
-  const handleFile = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('media', file);
-    formData.append('category', 'cover');
-    const data = await Media.addMedia(formData);
-    const photo_url = data.data[0].file_name;
-    setMedia(photo_url);
-    if (
-      photo_url.split('.').pop() === 'JPG' ||
-      photo_url.split('.').pop() === 'png' ||
-      photo_url.split('.').pop() === 'jpg' ||
-      photo_url.split('.').pop() === 'PNG'
-    ) {
-      setMediaType('image');
-    } else if (photo_url.split('.').pop() === 'mp4') {
-      setMediaType('video');
-    }
-  };
 
   const mediaJSX = () => {
     switch (mediaType) {
       case 'image':
-        return <img src={baseUrl + 'static/' + media} width='100%' />;
+        return <img src={media} width='100%' />;
       case 'video':
         return (
           <video width='100%' controls>
-            <source src={baseUrl + 'static/' + media} type='video/mp4' />
+            <source src={media} type='video/mp4' />
             {/* <source src="mov_bbb.ogg" type="video/ogg" /> */}
           </video>
         );
     }
+  };
+  const setMediaAsset = (url) => {
+    setMedia(url);
   };
 
   return (
@@ -118,7 +110,7 @@ export default function CreatePostBox() {
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
             <div className='create-post-dialog-user-info'>
-              <Avatar alt='user-avatar' src={user.photo_url} />
+              <Avatar alt='user-avatar' src={avatarImage} />
               <span className='app-card-bottom-text'>
                 {user.first_name} {user.last_name}
               </span>
@@ -138,12 +130,14 @@ export default function CreatePostBox() {
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{width: '100%'}}>
-          <input
-            type='file'
-            name=''
-            id='media-upload'
-            style={{display: 'none'}}
-            onChange={handleFile}
+          <MediaUpload
+            showDialogue={showDialogue}
+            onClose={() => setShowDialogue(false)}
+            onImageSave={(file) => {
+              getSignedUrl(file[0]).then((res) => {
+                setMediaAsset(res.newUrl);
+              });
+            }}
           />
           <label htmlFor='media-upload'>
             <div className='create-post-dialog-action-content'>
@@ -153,8 +147,19 @@ export default function CreatePostBox() {
               <div className='create-post-action-icons'>
                 <Videocam style={{color: 'red'}} />
               </div>
-              <div className='create-post-action-icons'>
-                <PermMedia style={{color: 'red'}} />
+              <div
+                onClick={() => {
+                  setShowDialogue(true);
+                  setMediaType('image');
+                }}
+                className='create-post-action-icons'>
+                <PermMedia
+                  onClick={() => {
+                    setShowDialogue(true);
+                    setMediaType('video');
+                  }}
+                  style={{color: 'red'}}
+                />
               </div>
               <div className='create-post-action-icons'>
                 <EmojiEmotions style={{color: 'red'}} />
@@ -166,7 +171,7 @@ export default function CreatePostBox() {
       <AppCard>
         <div className='create-post-app-card-container'>
           <div className='create-post-app-card-top'>
-            <Avatar alt='user-avatar' src={user.photo_url} />
+            <Avatar alt='user-avatar' src={avatarImage} />
             <input
               onClick={handleClickOpen}
               type='text'

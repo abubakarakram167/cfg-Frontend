@@ -37,6 +37,7 @@ import Posts from 'redux/services/post';
 import {formatDatePost} from 'utils/stampToFormat';
 import SunEditor from '../../../components/sunEditor';
 import * as actions from '../../../redux/actions/action.types';
+import {getSignedUrl} from '../../../redux/actions/media';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +71,7 @@ export default function RecipeReviewCard({post}) {
   const [content, setContent] = useState('');
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isContentChange, setContentChanged] = useState(false);
-  const [showEditor, setShowEditor] = useState(null);
+  const [avatarImage, setAvatarImage] = useState(null);
 
   const [user, setUser] = useState({
     first_name: '',
@@ -102,6 +103,9 @@ export default function RecipeReviewCard({post}) {
   }
 
   useEffect(() => {
+    getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
+      setAvatarImage(res.newUrl);
+    });
     getUserData();
     getPostComments();
   }, []);
@@ -149,23 +153,25 @@ export default function RecipeReviewCard({post}) {
 
   const mediaJSX = () => {
     let mediaType = null;
+    let image = post.media.split('.').pop().substr(0, 3);
+
     if (
-      post.media.split('.').pop() === 'JPG' ||
-      post.media.split('.').pop() === 'png' ||
-      post.media.split('.').pop() === 'jpg' ||
-      post.media.split('.').pop() === 'PNG'
+      image === 'JPG' ||
+      image === 'png' ||
+      image === 'jpg' ||
+      image === 'PNG'
     ) {
       mediaType = 'image';
-    } else if (post.media.split('.').pop() === 'mp4') {
+    } else if (image === 'mp4') {
       mediaType = 'video';
     }
     switch (mediaType) {
       case 'image':
-        return <img src={baseUrl + 'static/' + post.media} width='100%' />;
+        return <img src={post.media} width='100%' />;
       case 'video':
         return (
           <video width='100%' controls>
-            <source src={baseUrl + 'static/' + post.media} type='video/mp4' />
+            <source src={post.media} type='video/mp4' />
             {/* <source src="mov_bbb.ogg" type="video/ogg" /> */}
           </video>
         );
@@ -176,7 +182,7 @@ export default function RecipeReviewCard({post}) {
     <Dialog open={editDialogOpen} fullWidth>
       <DialogTitle>Edit Post</DialogTitle>
       <DialogContent>
-        {post && !post.assigned_group && (
+        {/* {post && !post.assigned_group && (
           <TextField
             style={{width: '100%'}}
             id='standard-multiline-static'
@@ -188,9 +194,8 @@ export default function RecipeReviewCard({post}) {
             onChange={(e) => setEditText(e.target.value)}
             placeholder='How are you feeling in the moment?'
           />
-        )}
-
-        {post && post.assigned_group && (
+        )} */}
+        {post && (
           <SunEditor
             onContentSave={(content) => setEditText(content)}
             content={editText}
@@ -228,7 +233,7 @@ export default function RecipeReviewCard({post}) {
             <Avatar
               aria-label='recipe'
               className={classes.avatar}
-              src={user.photo_url}
+              src={avatarImage}
             />
           }
           action={
@@ -249,29 +254,14 @@ export default function RecipeReviewCard({post}) {
           }`}
           subheader={formatDatePost(Date.parse(post.createdAt))}
         />
-        {post.media &&
-          // <CardMedia
-          //   className={classes.media}
-          //   image={baseUrl + 'static/' + post.media}
-          //   title='Paella dish'
-          // />
-          mediaJSX()}
+        {/* {post.media &&
+          mediaJSX()
+        } */}
         <CardContent>
           <Typography variant='body2' color='textSecondary' component='p'>
-            {post.assigned_group ? (
-              // <div
-              //   className='caption-text'
-              //   dangerouslySetInnerHTML={{ __html: editText }}></div>
-              <div className='rich-content-user-container'>
-                {/* <SunEditor
-                  onContentSave={(content) => setContent(content)}
-                  content={content}
-                  onContentChanged={() => setContentChanged(true)}
-                /> */}
-              </div>
-            ) : (
-              <span className='caption-text'>{editText}</span>
-            )}
+            <span className='caption-text'>
+              <div dangerouslySetInnerHTML={{__html: editText}} />
+            </span>
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
