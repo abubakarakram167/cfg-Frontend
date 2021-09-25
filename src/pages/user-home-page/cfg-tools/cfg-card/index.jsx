@@ -24,11 +24,13 @@ export default function CfgCard({element}) {
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={element.featured_image_url ? element.featured_image_url : ''}
-          title={element.title}
-        />
+        <Link to={`/home/cfg-tools/${element.id}`}>
+          <CardMedia
+            className={classes.media}
+            image={element.newUrl ? element.newUrl : ''}
+            title={element.title}
+          />
+        </Link>
         <CardContent>
           <Typography gutterBottom variant='h5' component='h2'>
             {element.title}
