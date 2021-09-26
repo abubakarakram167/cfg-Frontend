@@ -11,6 +11,7 @@ import {
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Tool from '../services/tool';
 import jsCookie from 'js-cookie';
+import {getSignedUrl} from './media';
 
 export const createTool = (params) => {
   return async function (dispatch) {
@@ -179,16 +180,42 @@ export const getContentData = (id) => {
   };
 };
 
+const getRestoredImage = (featureImageUrl) => {
+  return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
+};
+
 export const getToolsData = (id) => {
   return async function (dispatch) {
     try {
       const response = await Tool.getAllTools();
       if (response.status === 200) {
         const data_resp = await response.data;
+        const tools = data_resp;
+        const images = [];
+
+        tools.map((tool) => {
+          if (tool && tool.featured_image_url !== '') {
+            tool.fileName = getRestoredImage(tool.featured_image_url);
+            images.push(getSignedUrl(tool));
+          }
+        });
+        const getImages = await Promise.all(images);
+        console.log('the getimages', getImages);
+
+        let transformTools = tools.map((tool) => {
+          let specificImage = getImages.filter(
+            (image) => tool && image.fileName === tool.fileName,
+          )[0];
+          if (tool) tool.newUrl = specificImage ? specificImage.newUrl : null;
+          return tool;
+        });
+
+        // console.log("the transform tools", transformTools)
+
         jsCookie.set('login', 'yes');
         dispatch({
           type: GET_ALL_TOOLS_DATA,
-          payload: {...data_resp, error: null},
+          payload: {...transformTools, error: null},
         });
       }
     } catch (error) {
