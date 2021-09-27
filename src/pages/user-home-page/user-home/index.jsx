@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-// import AppSideBar from '../../AppSidebar';
+import React, {useState, useEffect, useRef} from 'react';
 import CreatePost from '../create-post-box';
 import './style.css';
 import PostDetails from '../post-details';
@@ -22,6 +21,7 @@ import {getToolsData} from 'redux/actions/toolActions';
 import Tool from 'redux/services/tool';
 import MediaGroup from 'redux/services/mediagroup';
 import {transformImagesInContent} from 'components/ReUsable';
+import $ from 'jquery';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -109,7 +109,7 @@ export default function UserHomePage() {
 
   useEffect(() => {
     dispatch(getToolsData());
-    getDayTools();
+    // getDayTools();
     const user = JSON.parse(localStorage.getItem('current-user'));
     // getSessionById(user.cfg_session_id)
     getUserGroup();
@@ -139,7 +139,7 @@ export default function UserHomePage() {
     ? allTransformPosts.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
       )
-    : posts;
+    : [];
 
   const left = (
     <List className={classesOther.childListPadding}>
@@ -226,22 +226,6 @@ export default function UserHomePage() {
           <ListItemText primary='My CFG Family' />
         </ListItem>
       </Link>
-      {/* <Link to='/home/user-groups'>
-        <ListItem>
-          <ListItemIcon>
-            <People style={{ color: 'green' }} />
-          </ListItemIcon>
-          <ListItemText primary='Groups' />
-        </ListItem>
-      </Link>
-      <Link to='/home/user-events'>
-        <ListItem>
-          <ListItemIcon>
-            <Event style={{ color: 'blue' }} />
-          </ListItemIcon>
-          <ListItemText primary='Events' />
-        </ListItem>
-      </Link> */}
       <Link to='/home/cfg-tools'>
         <ListItem>
           <ListItemIcon>
@@ -250,14 +234,6 @@ export default function UserHomePage() {
           <ListItemText primary='CFG Tools' />
         </ListItem>
       </Link>
-      {/* <Link to='/home/host-a-conversation'>
-        <ListItem>
-          <ListItemIcon>
-            <ChatBubble style={{ color: 'red' }} />
-          </ListItemIcon>
-          <ListItemText primary='Host A Conversation' />
-        </ListItem>
-      </Link> */}
     </List>
   );
 
@@ -292,39 +268,6 @@ export default function UserHomePage() {
         );
       })}
       <hr />
-      {/* <ListItem>
-        <ListItemIcon>
-          <Event style={{ color: 'blue' }} />
-        </ListItemIcon>
-        <ListItemText primary='Events' />
-      </ListItem> */}
-      {/* <ListItem>
-        <div>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-          <div>21st december 2012</div>
-        </div>
-      </ListItem>
-      <ListItem>
-        <div>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-          <div>21st december 2012</div>
-        </div>
-      </ListItem>
-      <hr />
-      <ListItem>
-        <ListItemIcon>
-          <People style={{color: 'red'}} />
-        </ListItemIcon>
-        <ListItemText primary='Online Family' />
-      </ListItem>
-      <ListItem>
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-          <OnlineFriend name={'Jermaine Gray'} />
-          <OnlineFriend name={'Hassan Yousaf'} />
-          <OnlineFriend name={'Abubakr'} />
-          <OnlineFriend name={'Abrar Farhad'} />
-        </div>
-      </ListItem> */}
     </List>
   );
   return (
