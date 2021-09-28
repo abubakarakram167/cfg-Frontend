@@ -269,7 +269,9 @@ export default function Editor() {
                   detail: content,
                   assigned_group: group,
                   categories: JSON.stringify(categories),
-                  featured_image_url: featuredImage.fileName,
+                  featured_image_url: featuredImage
+                    ? featuredImage.fileName
+                    : '',
                   event_type: eventType,
                   duration: parseInt(duration),
                   facilitator,
@@ -411,7 +413,9 @@ export default function Editor() {
                       status: publishStatus === 'publish' ? status : 'draft',
                       previous_page,
                       next_page,
-                      featured_image_url: featuredImage.fileName,
+                      featured_image_url: featuredImage
+                        ? featuredImage.fileName
+                        : '',
                       event_type: eventType,
                       duration,
                       facilitator,
