@@ -15,9 +15,7 @@ export const onGetUserList = (pagination) => {
     dispatch({type: FETCH_START});
     Api.get(`/api/users/list?_count=100&_page=${pagination.page}`)
       .then((data) => {
-        console.log('the data in new', data);
         if (data.status === 200) {
-          console.log('the data to be fetched', data);
           dispatch({type: FETCH_SUCCESS});
           dispatch({type: GET_USER_LIST, payload: data.data.userResponse});
         } else {

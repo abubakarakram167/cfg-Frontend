@@ -14,9 +14,7 @@ export const getUserPreferencesList = () => {
     dispatch({type: FETCH_START});
     Api.get('/api/preferences/list')
       .then((data) => {
-        console.log('the data in new', data);
         if (data.status === 200) {
-          console.log('the data to be fetched', data);
           dispatch({type: Get_Preferences, payload: data.data});
         } else {
           dispatch({
