@@ -264,7 +264,7 @@ export default function Editor() {
             next_page,
             updated_at: moment(moment()).format('YYYY-MM-DD'),
             previous_page,
-            featured_image_url: featuredImage.fileName,
+            featured_image_url: featuredImage ? featuredImage.fileName : '',
             event_type: eventType,
             duration,
             facilitator,

@@ -192,9 +192,12 @@ export const getToolsData = (id) => {
         const data_resp = await response.data;
         const tools = data_resp;
         const images = [];
-
         tools.map((tool) => {
-          if (tool && tool.featured_image_url !== '') {
+          if (
+            tool &&
+            tool.featured_image_url !== '' &&
+            tool.featured_image_url
+          ) {
             tool.fileName = getRestoredImage(tool.featured_image_url);
             images.push(getSignedUrl(tool));
           }
