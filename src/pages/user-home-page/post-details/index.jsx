@@ -18,19 +18,10 @@ import {
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import {red} from '@material-ui/core/colors';
-import {
-  MoreVert,
-  ExpandMore,
-  Share,
-  Favorite,
-  ArrowRight,
-  Edit,
-  Delete,
-} from '@material-ui/icons';
+import {ExpandMore, Favorite, Edit, Delete} from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
 import Friend from 'redux/services/friends';
-import {baseUrl} from 'utils/axios';
 import Comments from 'redux/services/comment';
 import {useDispatch, useSelector} from 'react-redux';
 import Posts from 'redux/services/post';
@@ -38,6 +29,10 @@ import {formatDatePost} from 'utils/stampToFormat';
 import SunEditor from '../../../components/sunEditor';
 import * as actions from '../../../redux/actions/action.types';
 import {getSignedUrl} from '../../../redux/actions/media';
+import {onGetUserList} from '../../../redux/actions';
+
+let reRender = true;
+let userList = [];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,6 +67,13 @@ export default function RecipeReviewCard({post}) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isContentChange, setContentChanged] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
+  const [userNewList, setUserNewList] = useState([]);
+
+  const userSpecificImage = userList.filter(
+    (user) => user.id === post.user_id,
+  )[0]
+    ? userList.filter((user) => user.id === post.user_id)[0].newUrl
+    : '';
 
   const [user, setUser] = useState({
     first_name: '',
@@ -93,6 +95,12 @@ export default function RecipeReviewCard({post}) {
     }
   }
 
+  const getUserStatus = (status) => {
+    if (status === 0) return 'pending';
+    else if (status === 1) return 'approved';
+    else return 'disabled';
+  };
+
   async function getPostComments() {
     const data = await Comments.getPostComments(post.id);
     if (data) {
@@ -106,9 +114,41 @@ export default function RecipeReviewCard({post}) {
     getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
       setAvatarImage(res.newUrl);
     });
+    dispatch(onGetUserList({page: 0}));
     getUserData();
     getPostComments();
   }, []);
+
+  const getRestoredImage = (featureImageUrl) => {
+    return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
+  };
+
+  const getUserRestoredImages = async (userListData) => {
+    let images = [];
+    userListData.map((user) => {
+      if (user && user.photo_url !== '') {
+        user.fileName = getRestoredImage(user.photo_url);
+        images.push(getSignedUrl(user));
+      }
+    });
+    const getUserImages = await Promise.all(images);
+    userList = getUserImages;
+    setUserNewList(getUserImages);
+  };
+
+  const userListData = useSelector(({userList}) => {
+    return userList.usersList.map((user) => {
+      return {
+        ...user,
+        status: getUserStatus(user.status),
+      };
+    });
+  });
+
+  if (userListData.length !== 0 && reRender) {
+    reRender = false;
+    getUserRestoredImages(userListData);
+  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -172,7 +212,6 @@ export default function RecipeReviewCard({post}) {
         return (
           <video width='100%' controls>
             <source src={post.media} type='video/mp4' />
-            {/* <source src="mov_bbb.ogg" type="video/ogg" /> */}
           </video>
         );
     }
@@ -182,19 +221,6 @@ export default function RecipeReviewCard({post}) {
     <Dialog open={editDialogOpen} fullWidth>
       <DialogTitle>Edit Post</DialogTitle>
       <DialogContent>
-        {/* {post && !post.assigned_group && (
-          <TextField
-            style={{width: '100%'}}
-            id='standard-multiline-static'
-            multiline
-            variant='filled'
-            rows={4}
-            fullwidth
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-            placeholder='How are you feeling in the moment?'
-          />
-        )} */}
         {post && (
           <SunEditor
             onContentSave={(content) => setEditText(content)}
@@ -233,7 +259,7 @@ export default function RecipeReviewCard({post}) {
             <Avatar
               aria-label='recipe'
               className={classes.avatar}
-              src={avatarImage}
+              src={userSpecificImage}
             />
           }
           action={
