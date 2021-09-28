@@ -8,7 +8,6 @@ import {useDispatch, useSelector} from 'react-redux';
 export default function HomeCFGTools() {
   const dispatch = useDispatch();
   const tools = useSelector((state) => state.tool.tools);
-  console.log('the tools', tools);
 
   useEffect(() => {
     dispatch(getToolsData());

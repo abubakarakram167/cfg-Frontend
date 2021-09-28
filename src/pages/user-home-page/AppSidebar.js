@@ -252,7 +252,7 @@ const AppSidebar = (props) => {
             </ListItem>
           </Link>
                     */}
-          <ListItem>
+          {/* <ListItem>
             <ListItemIcon>
               <Forum style={{color: 'red'}} />
             </ListItemIcon>
@@ -279,8 +279,8 @@ const AppSidebar = (props) => {
                 )}
               </div>
             </ListItemText>
-          </ListItem>
-          {allSessions.length &&
+          </ListItem> */}
+          {/* {allSessions.length &&
             allSessions.map((session) => {
               console.log('in looping the session', session);
               return (
@@ -335,7 +335,7 @@ const AppSidebar = (props) => {
                   </List>
                 </Collapse>
               );
-            })}
+            })} */}
           <Link to='/home/user-achievements'>
             <ListItem>
               <ListItemIcon>

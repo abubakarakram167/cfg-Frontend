@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ControlPoint from '@material-ui/icons/ControlPoint';
 import EditIcon from '@material-ui/icons/Edit';
+import CameraIcon from '@material-ui/icons/CameraAlt';
 import {Link} from 'react-router-dom';
 import CustomTablePagination from '../user-management/pagination';
 import moment from 'moment';
@@ -39,6 +40,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Categories from 'modules/dashboard/CRM/MonthlyEarning/Categories';
+import MediaUpload from 'components/MediaUpload';
+import {getSignedUrl} from '../../redux/actions/media';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -78,6 +81,20 @@ const useStyles = makeStyles({
   },
 });
 
+const buttonStyle = {
+  position: 'absolute',
+  top: 220,
+  right: 50,
+  border: '1px solid #c7c6c6',
+  backgroundColor: '#ededed',
+  fontSize: '14px',
+  paddingLeft: 10,
+  paddingRight: 10,
+  padding: 8,
+  color: '#767575',
+  borderRadius: 5,
+};
+
 export default function CfgTool(props) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.tool);
@@ -109,6 +126,8 @@ export default function CfgTool(props) {
   const [category, setCategories] = useState([]);
   const [group, setGroup] = useState('candidate');
   const [value, setValue] = useState('');
+  const [showDialogue, setShowDialogue] = useState(false);
+  const [featuredImageUrl, setFeaturedImageUrl] = useState({});
   const history = useHistory();
 
   useEffect(() => {
@@ -165,6 +184,7 @@ export default function CfgTool(props) {
           assigned_group: group,
           categories: JSON.stringify(category),
           id: singleId,
+          featured_image_url: featuredImageUrl.fileName,
         }),
       ).then((res) => {
         if (res) {
@@ -178,6 +198,7 @@ export default function CfgTool(props) {
                 start_date: moment(start_date).format('YYYY-MM-DD'),
                 end_date: moment(end_date).format('YYYY-MM-DD'),
                 assigned_group: group,
+                featured_image_url: featuredImageUrl.fileName,
               };
             } else return content;
           });
@@ -204,6 +225,7 @@ export default function CfgTool(props) {
             status,
             assigned_group: group,
             categories: JSON.stringify(category),
+            featured_image_url: featuredImageUrl.fileName,
           }),
         );
       }
@@ -216,6 +238,7 @@ export default function CfgTool(props) {
     settotal_points('');
     setStatus('');
     setDialogOpen(false);
+    setFeaturedImageUrl({});
   };
 
   const handleClose1 = () => {
@@ -237,12 +260,45 @@ export default function CfgTool(props) {
     }
   };
 
+  const setCurrentImage = (fileName) => {
+    getSignedUrl({fileName}).then((res) => {
+      setFeaturedImageUrl(res);
+    });
+  };
+
   return (
     <div style={{paddingBottom: 80}}>
       <Dialog open={dialogOpen}>
         <DialogTitle>
           <div style={{minWidth: '400px'}}>Add New CFG Tool</div>
         </DialogTitle>
+        <div style={{textAlign: 'center'}}>
+          <img
+            style={{width: 300, height: 200, position: 'relative'}}
+            src={
+              featuredImageUrl.newUrl && featuredImageUrl.fileName
+                ? featuredImageUrl.newUrl
+                : require('../../assets/LogoCrop.png')
+            }
+          />
+          <button
+            style={buttonStyle}
+            onClick={() => {
+              setShowDialogue(true);
+            }}>
+            <CameraIcon style={{fontSize: 16, marginRight: 5}} />
+            Edit Photo
+          </button>
+        </div>
+        <MediaUpload
+          showDialogue={showDialogue}
+          onClose={() => setShowDialogue(false)}
+          onImageSave={(file) => {
+            getSignedUrl(file[0]).then((res) => {
+              setFeaturedImageUrl(res);
+            });
+          }}
+        />
         <form onSubmit={handleSubmit}>
           <List>
             <ListItem>
@@ -394,6 +450,7 @@ export default function CfgTool(props) {
               setStatus('draft');
               setCategories([]);
               setValue('');
+              setFeaturedImageUrl({});
             }}
           />
           <Chip
@@ -478,38 +535,6 @@ export default function CfgTool(props) {
                     <FilterList style={{fill: 'black', fontSize: 30}} />
                   </div>
                 </StyledTableCell>
-                {/* <StyledTableCell>
-                  <span className='column-heading'> End Date </span>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      height: 40,
-                    }}>
-                    <KeyboardDatePicker
-                      disableToolbar
-                      style={{backgroundColor: '#eaeaea'}}
-                      variant='filled'
-                      format='YYYY-MM-DD'
-                      autoOk={true}
-                      value={endDateFilter === '' ? null : endDateFilter}
-                      fullWidth={true}
-                      placeholder='End date'
-                      className={classes.root}
-                      onChange={(e) => {
-                        if (e && e !== '')
-                          setEnddateFilter(
-                            moment(e).format('YYYY-MM-DD').toString(),
-                          );
-                        else setEnddateFilter('');
-                      }}
-                      KeyboardButtonProps={{
-                        'aria-label': 'change date',
-                      }}
-                    />
-                    <FilterList style={{fill: 'black', fontSize: 30}} />
-                  </div>
-                </StyledTableCell> */}
                 <StyledTableCell>
                   <span className='column-heading'> Total Points </span>
                   <div style={{display: 'flex', alignItems: 'center'}}>
@@ -596,12 +621,12 @@ export default function CfgTool(props) {
                               setCurrentIds(allIds);
                               setTitle(row.title);
                               setPublishDate(row.created_at);
-                              // setend_date(row.end_date);
                               settotal_points(row.total_points);
                               setStatus(row.status);
                               setGroup(row.assigned_group);
                               setCategories(JSON.parse(row.categories));
                               toggleCheckbox(row.id);
+                              setCurrentImage(row.featured_image_url);
                             }}
                           />
                         </StyledTableCell>

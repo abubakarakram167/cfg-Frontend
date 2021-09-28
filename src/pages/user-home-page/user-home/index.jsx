@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-// import AppSideBar from '../../AppSidebar';
+import React, {useState, useEffect, useRef} from 'react';
 import CreatePost from '../create-post-box';
 import './style.css';
 import PostDetails from '../post-details';
@@ -22,6 +21,8 @@ import {getToolsData} from 'redux/actions/toolActions';
 import Tool from 'redux/services/tool';
 import MediaGroup from 'redux/services/mediagroup';
 import {transformImagesInContent} from 'components/ReUsable';
+import $ from 'jquery';
+import {getSignedUrl} from '../../../redux/actions/media';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -50,11 +51,27 @@ export default function UserHomePage() {
     setConversationExtended(!conversationExtended);
   };
   const [dayTools, setDayTools] = useState([]);
+
+  const getRestoredImage = (featureImageUrl) => {
+    return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
+  };
+
   const getDayTools = async () => {
     try {
+      let images = [];
       const data = await Tool.getDayTools();
+      const tools = data.data;
+      tools.map((tool) => {
+        if (tool && tool.featured_image_url !== '') {
+          tool.fileName = getRestoredImage(tool.featured_image_url);
+          images.push(getSignedUrl(tool));
+        }
+      });
+      const getAllTransformTools = await Promise.all(images);
+      console.log('on getting day tools data', data);
       setDayTools(data.data);
     } catch (err) {
+      console.log('the error reponse', err.response);
       setDayTools([]);
     }
   };
@@ -139,7 +156,7 @@ export default function UserHomePage() {
     ? allTransformPosts.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
       )
-    : posts;
+    : [];
 
   const left = (
     <List className={classesOther.childListPadding}>
@@ -226,22 +243,6 @@ export default function UserHomePage() {
           <ListItemText primary='My CFG Family' />
         </ListItem>
       </Link>
-      {/* <Link to='/home/user-groups'>
-        <ListItem>
-          <ListItemIcon>
-            <People style={{ color: 'green' }} />
-          </ListItemIcon>
-          <ListItemText primary='Groups' />
-        </ListItem>
-      </Link>
-      <Link to='/home/user-events'>
-        <ListItem>
-          <ListItemIcon>
-            <Event style={{ color: 'blue' }} />
-          </ListItemIcon>
-          <ListItemText primary='Events' />
-        </ListItem>
-      </Link> */}
       <Link to='/home/cfg-tools'>
         <ListItem>
           <ListItemIcon>
@@ -250,14 +251,6 @@ export default function UserHomePage() {
           <ListItemText primary='CFG Tools' />
         </ListItem>
       </Link>
-      {/* <Link to='/home/host-a-conversation'>
-        <ListItem>
-          <ListItemIcon>
-            <ChatBubble style={{ color: 'red' }} />
-          </ListItemIcon>
-          <ListItemText primary='Host A Conversation' />
-        </ListItem>
-      </Link> */}
     </List>
   );
 
@@ -273,12 +266,18 @@ export default function UserHomePage() {
         return (
           <ListItem key={index}>
             {tool.featured_image_url && (
-              <img
-                src={tool.featured_image_url}
-                width='50px'
-                height='50px'
-                alt=''
-              />
+              <Link to={`/home/cfg-tools/${tool.id}`}>
+                <img
+                  style={{
+                    width: 120,
+                    height: 100,
+                    marginRight: 10,
+                    borderRadius: 10,
+                  }}
+                  src={tool.newUrl ? tool.newUrl : ''}
+                  alt=''
+                />
+              </Link>
             )}
             {!tool.featured_image_url && (
               <ListItemIcon>
@@ -286,45 +285,19 @@ export default function UserHomePage() {
               </ListItemIcon>
             )}
             <Link to={`/home/cfg-tools/${tool.id}`}>
-              <ListItemText primary={tool.title} />q
+              <div
+                style={{
+                  textAlign: left,
+                  fontSize: 14,
+                  color: '#9d9d9d',
+                }}>
+                {tool.title}
+              </div>
             </Link>
           </ListItem>
         );
       })}
       <hr />
-      {/* <ListItem>
-        <ListItemIcon>
-          <Event style={{ color: 'blue' }} />
-        </ListItemIcon>
-        <ListItemText primary='Events' />
-      </ListItem> */}
-      {/* <ListItem>
-        <div>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-          <div>21st december 2012</div>
-        </div>
-      </ListItem>
-      <ListItem>
-        <div>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-          <div>21st december 2012</div>
-        </div>
-      </ListItem>
-      <hr />
-      <ListItem>
-        <ListItemIcon>
-          <People style={{color: 'red'}} />
-        </ListItemIcon>
-        <ListItemText primary='Online Family' />
-      </ListItem>
-      <ListItem>
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-          <OnlineFriend name={'Jermaine Gray'} />
-          <OnlineFriend name={'Hassan Yousaf'} />
-          <OnlineFriend name={'Abubakr'} />
-          <OnlineFriend name={'Abrar Farhad'} />
-        </div>
-      </ListItem> */}
     </List>
   );
   return (
