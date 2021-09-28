@@ -22,6 +22,7 @@ import Tool from 'redux/services/tool';
 import MediaGroup from 'redux/services/mediagroup';
 import {transformImagesInContent} from 'components/ReUsable';
 import $ from 'jquery';
+import {getSignedUrl} from '../../../redux/actions/media';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -50,11 +51,27 @@ export default function UserHomePage() {
     setConversationExtended(!conversationExtended);
   };
   const [dayTools, setDayTools] = useState([]);
+
+  const getRestoredImage = (featureImageUrl) => {
+    return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
+  };
+
   const getDayTools = async () => {
     try {
+      let images = [];
       const data = await Tool.getDayTools();
+      const tools = data.data;
+      tools.map((tool) => {
+        if (tool && tool.featured_image_url !== '') {
+          tool.fileName = getRestoredImage(tool.featured_image_url);
+          images.push(getSignedUrl(tool));
+        }
+      });
+      const getAllTransformTools = await Promise.all(images);
+      console.log('on getting day tools data', data);
       setDayTools(data.data);
     } catch (err) {
+      console.log('the error reponse', err.response);
       setDayTools([]);
     }
   };
@@ -109,7 +126,7 @@ export default function UserHomePage() {
 
   useEffect(() => {
     dispatch(getToolsData());
-    // getDayTools();
+    getDayTools();
     const user = JSON.parse(localStorage.getItem('current-user'));
     // getSessionById(user.cfg_session_id)
     getUserGroup();
@@ -249,12 +266,18 @@ export default function UserHomePage() {
         return (
           <ListItem key={index}>
             {tool.featured_image_url && (
-              <img
-                src={tool.featured_image_url}
-                width='50px'
-                height='50px'
-                alt=''
-              />
+              <Link to={`/home/cfg-tools/${tool.id}`}>
+                <img
+                  style={{
+                    width: 120,
+                    height: 100,
+                    marginRight: 10,
+                    borderRadius: 10,
+                  }}
+                  src={tool.newUrl ? tool.newUrl : ''}
+                  alt=''
+                />
+              </Link>
             )}
             {!tool.featured_image_url && (
               <ListItemIcon>
@@ -262,7 +285,14 @@ export default function UserHomePage() {
               </ListItemIcon>
             )}
             <Link to={`/home/cfg-tools/${tool.id}`}>
-              <ListItemText primary={tool.title} />q
+              <div
+                style={{
+                  textAlign: left,
+                  fontSize: 14,
+                  color: '#9d9d9d',
+                }}>
+                {tool.title}
+              </div>
             </Link>
           </ListItem>
         );
