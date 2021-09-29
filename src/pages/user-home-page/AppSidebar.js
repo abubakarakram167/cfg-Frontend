@@ -252,7 +252,7 @@ const AppSidebar = (props) => {
             </ListItem>
           </Link>
                     */}
-          {/* <ListItem>
+          <ListItem>
             <ListItemIcon>
               <Forum style={{color: 'red'}} />
             </ListItemIcon>
@@ -279,10 +279,9 @@ const AppSidebar = (props) => {
                 )}
               </div>
             </ListItemText>
-          </ListItem> */}
-          {/* {allSessions.length &&
+          </ListItem>
+          {allSessions.length > 0 &&
             allSessions.map((session) => {
-              console.log('in looping the session', session);
               return (
                 <Collapse
                   in={conversationExtended}
@@ -299,7 +298,6 @@ const AppSidebar = (props) => {
                         </div>
                         <ul className='conversation-child-list'>
                           {session?.titles.rows.map((element, index) => {
-                            console.log('the element', element);
                             if (element.status === 'published') {
                               return (
                                 <div
@@ -335,15 +333,16 @@ const AppSidebar = (props) => {
                   </List>
                 </Collapse>
               );
-            })} */}
-          <Link to='/home/user-achievements'>
+            })}
+
+          {/* <Link to='/home/user-achievements'>
             <ListItem>
               <ListItemIcon>
                 <Bookmark style={{color: 'red'}} />
               </ListItemIcon>
               <ListItemText primary='My Achievements' />
             </ListItem>
-          </Link>
+          </Link> */}
 
           <Link to='/home/user-connections'>
             <ListItem>
