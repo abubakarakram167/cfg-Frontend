@@ -32,6 +32,7 @@ import {baseUrl} from 'utils/axios';
 import Api from '../../utils/axios';
 import {getSignedUrl} from '../../redux/actions/media';
 import {transformImagesInContent} from '../../components/ReUsable';
+import JournalModal from '../../components/JournalModal';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -79,9 +80,13 @@ export default function Editor() {
   const [facilitator, setFacilitator] = useState('');
   const [facilitatorUsers, setFacilitatorUsers] = useState([]);
   const [isContentTransform, setIsContentTransform] = useState(null);
+  const [showJournalModal, setShowJournalModal] = useState(false);
+  const [journalId, setJournalId] = useState(null);
 
   const classes = useStyles();
   const history = useHistory();
+
+  console.log('the state', state);
 
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
@@ -294,7 +299,13 @@ export default function Editor() {
   const handleClose1 = () => {
     setOpen1(false);
   };
+
+  const getJouranlData = async (id) => {
+    setShowJournalModal(true);
+  };
+
   const userList = useSelector((state) => state.userList);
+
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
     const formData = new FormData();
     formData.append('media', files[0]);
@@ -311,6 +322,8 @@ export default function Editor() {
       ],
     });
   };
+
+  console.log('the content', content);
 
   return (
     <div className='editor-page-full-container'>
@@ -388,15 +401,28 @@ export default function Editor() {
         <div className='editor-container'>
           <div className='editor-side'>
             <SunEditor
-              onContentSave={(content) => {
-                setContent(content);
-                setIsContentTransform(null);
+              onClickSmartClick={(id) => {
+                getJouranlData(id);
+                setShowJournalModal(true);
               }}
-              content={isContentTransform ? isContentTransform : content}
+              onContentSave={(content) => setContent(content)}
+              content={content}
               onContentChanged={() => setContentChanged(true)}
+              onImageUploadBefore={handleImageUploadBefore}
             />
           </div>
-
+          <JournalModal
+            onOpen={() => setShowJournalModal(true)}
+            onClose={() => {
+              setContent(state.currentContent.detail);
+              setShowJournalModal(false);
+            }}
+            show={showJournalModal}
+            id={journalId}
+            getJournalData={(journalData) => {
+              console.log('the journalDtaa', journalData);
+            }}
+          />
           <div className='options-side'>
             {!['mini', 'event'].includes(params.contentType) && (
               <div>

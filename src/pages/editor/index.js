@@ -34,6 +34,7 @@ import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 import {parseXML} from 'jquery';
 import Api from '../../utils/axios';
+import JournalModal from '../../components/JournalModal';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -86,6 +87,7 @@ export default function Editor() {
   const [duration, setDuration] = useState(0);
   const [facilitator, setFacilitator] = useState('');
   const [facilitatorUsers, setFacilitatorUsers] = useState([]);
+  const [showJournalModal, setShowJournalModal] = useState(false);
 
   const classes = useStyles();
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
@@ -466,6 +468,10 @@ export default function Editor() {
   const handleClose1 = () => {
     setOpen1(false);
   };
+  const getJouranlData = async (id) => {
+    setShowJournalModal(true);
+  };
+
   const userList = useSelector((state) => state.userList);
 
   return (
@@ -546,12 +552,21 @@ export default function Editor() {
         <div className='editor-container'>
           <div className='editor-side'>
             <SunEditor
+              onClickSmartClick={(id) => {
+                getJouranlData(id);
+                setShowJournalModal(true);
+              }}
               onContentSave={(content) => setContent(content)}
               content={content}
               onContentChanged={() => setContentChanged(true)}
               onImageUploadBefore={handleImageUploadBefore}
             />
           </div>
+          <JournalModal
+            open={() => setShowJournalModal(true)}
+            close={() => setShowJournalModal(false)}
+            show={true}
+          />
 
           <div className='options-side'>
             {!['mini', 'event'].includes(params.cfgType) && (

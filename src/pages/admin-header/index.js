@@ -103,8 +103,6 @@ export default function AdminHeader() {
     const data = await Friend.sendFriendRequest({userId: id});
   };
 
-  console.log('the image...', image);
-
   return (
     <div>
       <AppHeader>
