@@ -34,6 +34,7 @@ import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 import {parseXML} from 'jquery';
 import Api from '../../utils/axios';
+import JournalModal from '../../components/JournalModal';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -86,6 +87,9 @@ export default function Editor() {
   const [duration, setDuration] = useState(0);
   const [facilitator, setFacilitator] = useState('');
   const [facilitatorUsers, setFacilitatorUsers] = useState([]);
+  const [showJournalModal, setShowJournalModal] = useState(false);
+  const [subject, setSubject] = useState(null);
+  const [journalId, setJournalId] = useState(null);
 
   const classes = useStyles();
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
@@ -466,6 +470,7 @@ export default function Editor() {
   const handleClose1 = () => {
     setOpen1(false);
   };
+
   const userList = useSelector((state) => state.userList);
 
   return (
@@ -546,12 +551,37 @@ export default function Editor() {
         <div className='editor-container'>
           <div className='editor-side'>
             <SunEditor
-              onContentSave={(content) => setContent(content)}
+              onClickSmartClick={(id) => {
+                console.log('on clicking journal id', id);
+                setJournalId(id);
+                setShowJournalModal(true);
+              }}
+              onContentSave={(content) => {
+                setContent(content);
+              }}
               content={content}
               onContentChanged={() => setContentChanged(true)}
               onImageUploadBefore={handleImageUploadBefore}
+              onGetSubject={(subject) => setSubject(subject)}
+              journalId={journalId}
+              showToolbar={true}
             />
           </div>
+          <JournalModal
+            onOpen={() => setShowJournalModal(true)}
+            onClose={() => {
+              setContent(state.currentContent.detail);
+              setShowJournalModal(false);
+              setJournalId(null);
+            }}
+            show={showJournalModal}
+            journalId={journalId}
+            getJournalData={(journalData) => {
+              setJournalId(journalData ? journalData.id : null);
+              setShowJournalModal(false);
+            }}
+            subject={subject}
+          />
 
           <div className='options-side'>
             {!['mini', 'event'].includes(params.cfgType) && (

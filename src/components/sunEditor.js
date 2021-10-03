@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
-import {Show_Message} from '../shared/constants/ActionTypes';
 import $ from 'jquery';
-import {
-  createOneMedia,
-  getUserMediaListEditor,
-  getSignedUrl,
-} from '../redux/actions/media';
+import {getUserMediaListEditor, getSignedUrl} from '../redux/actions/media';
 import baseUrl from '../utils/url';
 import {useDispatch, useSelector} from 'react-redux';
 import './sunEditor.css';
@@ -26,6 +21,7 @@ export default (props) => {
     return mediaList.mediaList;
   });
   const [render, setRender] = useState(false);
+  const journalId = props.journalId;
   allData = mediaFilesData;
   contentData = props.content;
   useEffect(() => {
@@ -67,7 +63,6 @@ export default (props) => {
           $('.upload-link-button').on('click', function (e) {
             add = false;
             var urlToDownload = $('.se-input-url').val();
-            console.log('the url to download', urlToDownload);
             addMediaUrl(urlToDownload);
           });
         }
@@ -95,10 +90,60 @@ export default (props) => {
     }, 2000);
   };
 
+  const extractAllLinks = (rawHTML) => {
+    var doc = document.createElement('html');
+    doc.innerHTML = rawHTML;
+    var links = doc.getElementsByTagName('a');
+    let subject;
+
+    for (var i = 0; i < links.length; i++) {
+      links[i].className = 'linked-click';
+      let params = new URL(links[i].href).searchParams;
+      let idInParams = params.get('id');
+      if (!idInParams) {
+        subject = links[i].innerHTML;
+      }
+    }
+    if (subject) {
+      props.onGetSubject(subject);
+      $('.sun-editor-editable').html(doc.innerHTML);
+      props.onContentSave(doc.innerHTML);
+    }
+  };
+
   const handleEditorChange = (e) => {
+    extractAllLinks(e);
     props.onContentSave(e);
     props.onContentChanged(true);
   };
+
+  const callSmartLink = (id) => {
+    props.onClickSmartClick(id);
+  };
+
+  useEffect(() => {
+    if (journalId && journalId !== 0) {
+      var doc = document.createElement('html');
+      doc.innerHTML = props.content;
+      var links = doc.getElementsByTagName('a');
+      var urls = [];
+
+      for (var i = 0; i < links.length; i++) {
+        links[i].className = 'linked-click';
+        let params = new URL(links[i].href).searchParams;
+        let idInParams = params.get('id');
+        if (!idInParams) {
+          links[i].setAttribute(
+            'href',
+            links[i].getAttribute('href') + `?id=${journalId}`,
+          );
+          links[i].id = journalId;
+        }
+      }
+      $('.sun-editor-editable').html(doc.innerHTML);
+      props.onContentSave(doc.innerHTML);
+    }
+  }, [journalId]);
 
   useEffect(() => {
     $('.se-dialog-tabs').append(
@@ -127,6 +172,10 @@ export default (props) => {
           $('._se_tab_content_library').css('display', 'none');
         }
       }
+    });
+    $(document).on('click', '.linked-click', (e) => {
+      callSmartLink(parseInt(e.target.id));
+      return false;
     });
   }, []);
 
@@ -166,6 +215,7 @@ export default (props) => {
         onImageUploadBefore={handleImageUploadBefore}
         setContents={props.content}
         defaultValue=''
+        value={props.content}
         setOptions={{
           height: !props.changeHeight ? 630 : 200,
           buttonList: [
@@ -177,7 +227,7 @@ export default (props) => {
             ['font', 'align'],
             ['video', 'image'],
             ['link', 'audio'],
-          ], // Or Array of button list, eg. [['font', 'align'], ['image']]
+          ],
           font: [
             'Arial',
             'Gotham',
@@ -194,7 +244,8 @@ export default (props) => {
           imageUrlInput: false,
         }}
         onChange={handleEditorChange}
-        // onImageUploadBefore={handleImageUploadBefore}
+        showToolbar={props.showToolbar}
+        disable={!props.showToolbar}
       />
     </div>
   );

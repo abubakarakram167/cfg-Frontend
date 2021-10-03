@@ -38,3 +38,4 @@ export const setPermissions = 'setPermissions';
 export const CREATE_Resource = 'createResource';
 export const GET_Resource_DATA = 'GET_RESOURCE_DATA';
 export const SET_SELECTED_TOOLS = 'SET_SELECTED_TOOLS';
+export const Create_journal = 'Create_journal';
