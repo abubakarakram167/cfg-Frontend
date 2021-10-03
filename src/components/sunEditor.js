@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
-import {Show_Message} from '../shared/constants/ActionTypes';
 import $ from 'jquery';
-import {
-  createOneMedia,
-  getUserMediaListEditor,
-  getSignedUrl,
-} from '../redux/actions/media';
+import {getUserMediaListEditor, getSignedUrl} from '../redux/actions/media';
 import baseUrl from '../utils/url';
 import {useDispatch, useSelector} from 'react-redux';
 import './sunEditor.css';
@@ -26,6 +21,7 @@ export default (props) => {
     return mediaList.mediaList;
   });
   const [render, setRender] = useState(false);
+  const journalId = props.journalId;
   allData = mediaFilesData;
   contentData = props.content;
   useEffect(() => {
@@ -98,24 +94,21 @@ export default (props) => {
     var doc = document.createElement('html');
     doc.innerHTML = rawHTML;
     var links = doc.getElementsByTagName('a');
-    var urls = [];
+    let subject;
 
     for (var i = 0; i < links.length; i++) {
-      links[i].id = i;
       links[i].className = 'linked-click';
       let params = new URL(links[i].href).searchParams;
       let idInParams = params.get('id');
-      // if(idInParams){
-
-      // }
-      // else{
-
-      // }
-      // urls.push(links[i].getAttribute('href'));
+      if (!idInParams) {
+        subject = links[i].innerHTML;
+      }
     }
-
-    $('.sun-editor-editable').html(doc.innerHTML);
-    props.onContentSave(doc.innerHTML);
+    if (subject) {
+      props.onGetSubject(subject);
+      $('.sun-editor-editable').html(doc.innerHTML);
+      props.onContentSave(doc.innerHTML);
+    }
   };
 
   const handleEditorChange = (e) => {
@@ -127,6 +120,30 @@ export default (props) => {
   const callSmartLink = (id) => {
     props.onClickSmartClick(id);
   };
+
+  useEffect(() => {
+    if (journalId && journalId !== 0) {
+      var doc = document.createElement('html');
+      doc.innerHTML = props.content;
+      var links = doc.getElementsByTagName('a');
+      var urls = [];
+
+      for (var i = 0; i < links.length; i++) {
+        links[i].className = 'linked-click';
+        let params = new URL(links[i].href).searchParams;
+        let idInParams = params.get('id');
+        if (!idInParams) {
+          links[i].setAttribute(
+            'href',
+            links[i].getAttribute('href') + `?id=${journalId}`,
+          );
+          links[i].id = journalId;
+        }
+      }
+      $('.sun-editor-editable').html(doc.innerHTML);
+      props.onContentSave(doc.innerHTML);
+    }
+  }, [journalId]);
 
   useEffect(() => {
     $('.se-dialog-tabs').append(
@@ -157,7 +174,8 @@ export default (props) => {
       }
     });
     $(document).on('click', '.linked-click', (e) => {
-      callSmartLink(e.target.id);
+      callSmartLink(parseInt(e.target.id));
+      return false;
     });
   }, []);
 
@@ -226,6 +244,8 @@ export default (props) => {
           imageUrlInput: false,
         }}
         onChange={handleEditorChange}
+        showToolbar={props.showToolbar}
+        disable={!props.showToolbar}
       />
     </div>
   );

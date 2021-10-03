@@ -5,8 +5,9 @@ import {getContentData} from 'redux/actions/sessionActions';
 import AdminHeader from 'pages/admin-header';
 import './style.css';
 import {Link} from 'react-router-dom';
-import SunEditor from 'suneditor-react';
+import SunEditor from '../../components/sunEditor';
 import {transformImagesInContent} from '../../components/ReUsable';
+import JournalModal from '../../components/JournalModal';
 
 export default function ContentDisplay() {
   const params = useParams();
@@ -14,6 +15,10 @@ export default function ContentDisplay() {
   const state = useSelector((state) => state.session);
   const [data, setData] = useState({detail: ''});
   const [isContentTransform, setIsContentTransform] = useState(null);
+  const [showJournalModal, setShowJournalModal] = useState(false);
+  const [journalId, setJournalId] = useState(null);
+  const [subject, setSubject] = useState(null);
+  const [isContentChange, setContentChanged] = useState(false);
 
   const history = useHistory();
   useEffect(() => {
@@ -64,17 +69,35 @@ export default function ContentDisplay() {
         <div className='display-content'>
           <div className='rich-content-user-container'>
             <SunEditor
-              disable={true}
-              height='100%'
-              setContents={
-                isContentTransform ? isContentTransform : data.detail
-              }
+              onClickSmartClick={(id) => {
+                setJournalId(id);
+                setShowJournalModal(true);
+              }}
+              onContentSave={() => {}}
+              onContentChanged={() => setContentChanged(true)}
+              content={isContentTransform ? isContentTransform : data.detail}
+              onGetSubject={(subject) => setSubject(subject)}
+              journalId={journalId}
               showToolbar={false}
             />
           </div>
         </div>
+        <JournalModal
+          onOpen={() => setShowJournalModal(true)}
+          onClose={() => {
+            // setContent(isContentTransform ? isContentTransform : data.detail);
+            setShowJournalModal(false);
+            setJournalId(null);
+          }}
+          show={showJournalModal}
+          journalId={journalId}
+          getJournalData={(journalData) => {
+            setJournalId(journalData ? journalData.id : null);
+            setShowJournalModal(false);
+          }}
+          subject={subject}
+        />
       </div>
-
       <div className='content-display-buttons-container'>
         <div className='content-display-buttons'>
           {data && isUrl(data.previous_page) && data.previous_page && (

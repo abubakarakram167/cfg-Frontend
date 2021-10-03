@@ -37,6 +37,58 @@ export const createJournal = (journalData) => {
   };
 };
 
+export const getSpecificJournal = (journalId) => {
+  return (dispatch) => {
+    return new Promise((res, rej) => {
+      dispatch({type: Create_journal});
+      Api.get(`/api/journals?id=${journalId}`)
+        .then((data) => {
+          if (data.status === 200) {
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'Added SuccessFully', success: true},
+            });
+            res(data);
+          } else {
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'SuccessFully Not Added', success: false},
+            });
+          }
+        })
+        .catch((error) => {
+          dispatch({type: FETCH_ERROR, payload: error.message});
+        });
+    });
+  };
+};
+
+export const updateJournal = (payload, journalId) => {
+  return (dispatch) => {
+    return new Promise((res, rej) => {
+      dispatch({type: Create_journal});
+      Api.put(`/api/journals/${journalId}`, payload)
+        .then((data) => {
+          if (data.status === 200) {
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'Updated SuccessFully', success: true},
+            });
+            res(data);
+          } else {
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'SuccessFully Not Updated', success: false},
+            });
+          }
+        })
+        .catch((error) => {
+          dispatch({type: FETCH_ERROR, payload: error.message});
+        });
+    });
+  };
+};
+
 export const deleteMediaData = (formData) => {
   return (dispatch) => {
     return new Promise((res, rej) => {

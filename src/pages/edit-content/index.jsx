@@ -82,7 +82,7 @@ export default function Editor() {
   const [isContentTransform, setIsContentTransform] = useState(null);
   const [showJournalModal, setShowJournalModal] = useState(false);
   const [journalId, setJournalId] = useState(null);
-
+  const [subject, setSubject] = useState(null);
   const classes = useStyles();
   const history = useHistory();
 
@@ -301,7 +301,8 @@ export default function Editor() {
   };
 
   const getJouranlData = async (id) => {
-    setShowJournalModal(true);
+    console.log('the get journal id on click', id);
+    // setShowJournalModal(true);
   };
 
   const userList = useSelector((state) => state.userList);
@@ -322,8 +323,6 @@ export default function Editor() {
       ],
     });
   };
-
-  console.log('the content', content);
 
   return (
     <div className='editor-page-full-container'>
@@ -402,13 +401,18 @@ export default function Editor() {
           <div className='editor-side'>
             <SunEditor
               onClickSmartClick={(id) => {
-                getJouranlData(id);
+                setJournalId(id);
                 setShowJournalModal(true);
               }}
-              onContentSave={(content) => setContent(content)}
+              onContentSave={(content) => {
+                setContent(content);
+              }}
               content={content}
               onContentChanged={() => setContentChanged(true)}
               onImageUploadBefore={handleImageUploadBefore}
+              onGetSubject={(subject) => setSubject(subject)}
+              journalId={journalId}
+              showToolbar={true}
             />
           </div>
           <JournalModal
@@ -416,12 +420,15 @@ export default function Editor() {
             onClose={() => {
               setContent(state.currentContent.detail);
               setShowJournalModal(false);
+              setJournalId(null);
             }}
             show={showJournalModal}
-            id={journalId}
+            journalId={journalId}
             getJournalData={(journalData) => {
-              console.log('the journalDtaa', journalData);
+              setJournalId(journalData ? journalData.id : null);
+              setShowJournalModal(false);
             }}
+            subject={subject}
           />
           <div className='options-side'>
             {!['mini', 'event'].includes(params.contentType) && (

@@ -88,6 +88,8 @@ export default function Editor() {
   const [facilitator, setFacilitator] = useState('');
   const [facilitatorUsers, setFacilitatorUsers] = useState([]);
   const [showJournalModal, setShowJournalModal] = useState(false);
+  const [subject, setSubject] = useState(null);
+  const [journalId, setJournalId] = useState(null);
 
   const classes = useStyles();
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
@@ -468,9 +470,6 @@ export default function Editor() {
   const handleClose1 = () => {
     setOpen1(false);
   };
-  const getJouranlData = async (id) => {
-    setShowJournalModal(true);
-  };
 
   const userList = useSelector((state) => state.userList);
 
@@ -553,19 +552,35 @@ export default function Editor() {
           <div className='editor-side'>
             <SunEditor
               onClickSmartClick={(id) => {
-                getJouranlData(id);
+                console.log('on clicking journal id', id);
+                setJournalId(id);
                 setShowJournalModal(true);
               }}
-              onContentSave={(content) => setContent(content)}
+              onContentSave={(content) => {
+                setContent(content);
+              }}
               content={content}
               onContentChanged={() => setContentChanged(true)}
               onImageUploadBefore={handleImageUploadBefore}
+              onGetSubject={(subject) => setSubject(subject)}
+              journalId={journalId}
+              showToolbar={true}
             />
           </div>
           <JournalModal
-            open={() => setShowJournalModal(true)}
-            close={() => setShowJournalModal(false)}
-            show={true}
+            onOpen={() => setShowJournalModal(true)}
+            onClose={() => {
+              setContent(state.currentContent.detail);
+              setShowJournalModal(false);
+              setJournalId(null);
+            }}
+            show={showJournalModal}
+            journalId={journalId}
+            getJournalData={(journalData) => {
+              setJournalId(journalData ? journalData.id : null);
+              setShowJournalModal(false);
+            }}
+            subject={subject}
           />
 
           <div className='options-side'>
