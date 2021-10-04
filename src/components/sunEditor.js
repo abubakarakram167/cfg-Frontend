@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
-import {Show_Message} from '../shared/constants/ActionTypes';
 import $ from 'jquery';
-import {
-  createOneMedia,
-  getUserMediaListEditor,
-  getSignedUrl,
-} from '../redux/actions/media';
+import {getUserMediaListEditor, getSignedUrl} from '../redux/actions/media';
 import baseUrl from '../utils/url';
 import {useDispatch, useSelector} from 'react-redux';
 import './sunEditor.css';
@@ -19,6 +14,7 @@ let allImages = [];
 let fileData = null;
 let contentData;
 let add = false;
+let smartLink = false;
 
 export default (props) => {
   const dispatch = useDispatch();
@@ -26,8 +22,10 @@ export default (props) => {
     return mediaList.mediaList;
   });
   const [render, setRender] = useState(false);
+  const journalId = props.journalId;
   allData = mediaFilesData;
   contentData = props.content;
+
   useEffect(() => {
     dispatch(getUserMediaListEditor()).then((mediaData) => {
       const allMediaGet = [];
@@ -54,12 +52,23 @@ export default (props) => {
             margin: auto;  background-color: rgb(96 179 218); padding: 10px;margin-bottom: 10px; " class = "upload-link-button" >Select Url</p>`).insertAfter(
             '._se_tab_content_url',
           );
+          $('._se_anchor_download')
+            .parent()
+            .after(
+              '<label><input id = "smart_link" style = "margin-left: 20px;" type="checkbox" class="se-dialog-btn-check _se_anchor_smart_link">&nbsp;Smart link</label>',
+            );
           $('.se-file-browser-list').append('asdasd');
           $('.select-images').on('click', function (e) {
             add = false;
             fileData = this.src;
             appendImage();
           });
+
+          $('._se_anchor_smart_link').on('click', function (e) {
+            if (smartLink) smartLink = false;
+            else smartLink = true;
+          });
+
           $('.se-tooltip').on('click', function (e) {
             $('.upload-link-button').css('display', 'none');
             $('._se_tab_content_library').css('display', 'none');
@@ -67,7 +76,6 @@ export default (props) => {
           $('.upload-link-button').on('click', function (e) {
             add = false;
             var urlToDownload = $('.se-input-url').val();
-            console.log('the url to download', urlToDownload);
             addMediaUrl(urlToDownload);
           });
         }
@@ -76,10 +84,23 @@ export default (props) => {
   }, []);
 
   const addMediaUrl = async (url) => {
-    $('.sun-editor-editable').append(`<img src='${url}' />`);
+    var getDocument, htmlToBeSave;
+    if (props.modalType === 'internal') {
+      getDocument = document.getElementById('internal-editor');
+      if (getDocument) {
+        $('#internal-editor .sun-editor-editable').append(
+          `<img src='${url}' />`,
+        );
+        htmlToBeSave = getDocument.getElementsByClassName(
+          'sun-editor-editable',
+        )[0].innerHTML;
+      }
+    } else {
+      $('.sun-editor-editable').append(`<img src='${url}' />`);
+      htmlToBeSave = document.getElementsByClassName('sun-editor-editable')[0]
+        .innerHTML;
+    }
     props.onContentChanged(true);
-    var htmlToBeSave = document.getElementsByClassName('sun-editor-editable')[0]
-      .innerHTML;
     props.onContentSave(htmlToBeSave);
   };
 
@@ -95,15 +116,72 @@ export default (props) => {
     }, 2000);
   };
 
+  const extractAllLinks = (rawHTML) => {
+    console.log('the smart link', smartLink);
+    if (smartLink) {
+      var doc = document.createElement('html');
+      doc.innerHTML = rawHTML;
+      var links = doc.getElementsByTagName('a');
+      let subject;
+      for (var i = 0; i < links.length; i++) {
+        if (window.location.host === links[i].host) {
+          links[i].className = 'linked-click';
+          let params = new URL(links[i].href).searchParams;
+          let idInParams = params.get('id');
+          if (!idInParams) {
+            subject = links[i].innerHTML;
+          }
+        }
+      }
+      if (subject) {
+        props.onGetSubject(subject);
+        $('.sun-editor-editable').html(doc.innerHTML);
+        props.onContentSave(doc.innerHTML);
+      }
+    }
+  };
+
   const handleEditorChange = (e) => {
+    extractAllLinks(e);
     props.onContentSave(e);
     props.onContentChanged(true);
   };
+
+  const callSmartLink = (id) => {
+    props.onClickSmartClick(id);
+  };
+
+  useEffect(() => {
+    if (journalId && journalId !== 0 && smartLink) {
+      var doc = document.createElement('html');
+      doc.innerHTML = props.content;
+      var links = doc.getElementsByTagName('a');
+      var urls = [];
+
+      for (var i = 0; i < links.length; i++) {
+        if (window.location.host === links[i].host) {
+          links[i].className = 'linked-click';
+          let params = new URL(links[i].href).searchParams;
+          let idInParams = params.get('id');
+          if (!idInParams) {
+            links[i].setAttribute(
+              'href',
+              links[i].getAttribute('href') + `?id=${journalId}`,
+            );
+            links[i].id = journalId;
+          }
+        }
+      }
+      $('.sun-editor-editable').html(doc.innerHTML);
+      props.onContentSave(doc.innerHTML);
+    }
+  }, [journalId]);
 
   useEffect(() => {
     $('.se-dialog-tabs').append(
       `<button type="button" class="_se_tab_link library-button"  data-tab-link="library">Library</button>`,
     );
+
     $('._se_tab_link').on('click', function (e) {
       if (e.target.innerText === 'Library') {
         $('._se_tab_content_image').css('display', 'none');
@@ -127,6 +205,10 @@ export default (props) => {
           $('._se_tab_content_library').css('display', 'none');
         }
       }
+    });
+    $(document).on('click', '.linked-click', (e) => {
+      callSmartLink(parseInt(e.target.id));
+      return false;
     });
   }, []);
 
@@ -166,6 +248,7 @@ export default (props) => {
         onImageUploadBefore={handleImageUploadBefore}
         setContents={props.content}
         defaultValue=''
+        value={props.content}
         setOptions={{
           height: !props.changeHeight ? 630 : 200,
           buttonList: [
@@ -177,7 +260,7 @@ export default (props) => {
             ['font', 'align'],
             ['video', 'image'],
             ['link', 'audio'],
-          ], // Or Array of button list, eg. [['font', 'align'], ['image']]
+          ],
           font: [
             'Arial',
             'Gotham',
@@ -194,7 +277,8 @@ export default (props) => {
           imageUrlInput: false,
         }}
         onChange={handleEditorChange}
-        // onImageUploadBefore={handleImageUploadBefore}
+        showToolbar={props.showToolbar}
+        disable={!props.showToolbar}
       />
     </div>
   );
