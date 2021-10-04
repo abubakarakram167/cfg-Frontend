@@ -30,6 +30,7 @@ import SunEditor from '../../../components/sunEditor';
 import * as actions from '../../../redux/actions/action.types';
 import {getSignedUrl} from '../../../redux/actions/media';
 import {onGetUserList} from '../../../redux/actions';
+import JournalModal from '../../../components/JournalModal';
 
 let reRender = true;
 let userList = [];
@@ -68,6 +69,9 @@ export default function RecipeReviewCard({post}) {
   const [isContentChange, setContentChanged] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
   const [userNewList, setUserNewList] = useState([]);
+  const [showJournalModal, setShowJournalModal] = useState(false);
+  const [journalId, setJournalId] = useState(null);
+  const [subject, setSubject] = useState(null);
 
   const userSpecificImage = userList.filter(
     (user) => user.id === post.user_id,
@@ -207,11 +211,11 @@ export default function RecipeReviewCard({post}) {
     }
     switch (mediaType) {
       case 'image':
-        return <img src={post.media} width='100%' />;
+        return <img src={post.newUrl} width='100%' />;
       case 'video':
         return (
           <video width='100%' controls>
-            <source src={post.media} type='video/mp4' />
+            <source src={post.newUrl} type='video/mp4' />
           </video>
         );
     }
@@ -222,11 +226,45 @@ export default function RecipeReviewCard({post}) {
       <DialogTitle>Edit Post</DialogTitle>
       <DialogContent>
         {post && (
-          <SunEditor
-            onContentSave={(content) => setEditText(content)}
-            content={editText}
-            onContentChanged={() => setContentChanged(true)}
-          />
+          <div>
+            <div className='editor-side'>
+              <SunEditor
+                onClickSmartClick={(id) => {
+                  setJournalId(id);
+                  setShowJournalModal(true);
+                }}
+                onContentSave={(content) => {
+                  setEditText(content);
+                }}
+                content={editText}
+                onContentChanged={() => setContentChanged(true)}
+                onGetSubject={(subject) => setSubject(subject)}
+                journalId={journalId}
+                showToolbar={true}
+                modalType='external'
+              />
+            </div>
+            <JournalModal
+              onOpen={() => setShowJournalModal(true)}
+              onClose={() => {
+                setContent(editText);
+                setShowJournalModal(false);
+                setJournalId(null);
+              }}
+              show={showJournalModal}
+              journalId={journalId}
+              getJournalData={(journalData) => {
+                setJournalId(journalData ? journalData.id : null);
+                setShowJournalModal(false);
+              }}
+              subject={subject}
+            />
+          </div>
+          // <SunEditor
+          //   onContentSave={(content) => setEditText(content)}
+          //   content={editText}
+          //   onContentChanged={() => setContentChanged(true)}
+          // />
         )}
 
         <DialogActions style={{width: '100%'}}>
@@ -280,9 +318,7 @@ export default function RecipeReviewCard({post}) {
           }`}
           subheader={formatDatePost(Date.parse(post.createdAt))}
         />
-        {/* {post.media &&
-          mediaJSX()
-        } */}
+        {post.media && mediaJSX()}
         <CardContent>
           <Typography variant='body2' color='textSecondary' component='p'>
             <span className='caption-text'>
