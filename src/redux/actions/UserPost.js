@@ -1,20 +1,26 @@
 import * as actions from './action.types';
 import Post from '../services/post';
 import jsCookie from 'js-cookie';
+import {getSignedUrl} from './media';
+import $ from 'jquery';
 
 export const createUserPost = (params) => {
   return async function (dispatch) {
     try {
+      if (params.media && params.media !== '')
+        params.media = getRestoredImages(params.media);
       const response = await Post.addUserPost(params);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
+
         dispatch({
           type: actions.CREATE_USER_POST,
           payload: {...data_resp, error: null},
         });
       }
     } catch (error) {
+      console.log('the error', error.response);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: actions.CREATE_USER_POST,
@@ -25,16 +31,45 @@ export const createUserPost = (params) => {
   };
 };
 
+const getRestoredImages = (featureImageUrl) => {
+  const pathname = new URL(featureImageUrl).pathname;
+  const index = pathname.lastIndexOf('/');
+  return -1 !== index ? pathname.substring(index + 1) : pathname;
+};
+
+const getRestoredImage = (featureImageUrl) => {
+  return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
+};
+
 export const getUserPost = (count) => {
   return async function (dispatch) {
     try {
       const response = await Post.getUserPosts(count);
       if (response.status === 200) {
         const data_resp = await response.data;
+        const posts = data_resp;
+
+        const images = [];
+        posts.map((post) => {
+          if (post && post.media !== '' && post.media) {
+            post.fileName = getRestoredImage(post.media);
+            images.push(getSignedUrl(post));
+          }
+        });
+        const getImages = await Promise.all(images);
+
+        let transformPosts = posts.map((post) => {
+          let specificImage = getImages.filter(
+            (image) => post && image.fileName === post.fileName,
+          )[0];
+          if (post) post.newUrl = specificImage ? specificImage.newUrl : null;
+          return post;
+        });
+
         jsCookie.set('login', 'yes');
         dispatch({
           type: actions.GET_USER_POSTS,
-          payload: {...data_resp},
+          payload: {...transformPosts},
         });
       }
     } catch (error) {
