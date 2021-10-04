@@ -14,9 +14,6 @@ export default function CfgToolsPage() {
   const params = useParams();
 
   const selectedTool = useSelector((state) => state.tool.selectedTool);
-  const statedTool = useSelector((state) =>
-    console.log('the state to be find', state),
-  );
   const dispatch = useDispatch();
   const [titles, setTitles] = useState([]);
 

@@ -79,6 +79,7 @@ export default function ContentDisplay() {
               onGetSubject={(subject) => setSubject(subject)}
               journalId={journalId}
               showToolbar={false}
+              modalType='external'
             />
           </div>
         </div>

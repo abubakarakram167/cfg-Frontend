@@ -86,8 +86,6 @@ export default function Editor() {
   const classes = useStyles();
   const history = useHistory();
 
-  console.log('the state', state);
-
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
     setKeywords([...keywords, keywordValue]);
@@ -413,6 +411,7 @@ export default function Editor() {
               onGetSubject={(subject) => setSubject(subject)}
               journalId={journalId}
               showToolbar={true}
+              modalType='external'
             />
           </div>
           <JournalModal
