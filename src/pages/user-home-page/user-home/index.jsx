@@ -68,10 +68,8 @@ export default function UserHomePage() {
         }
       });
       const getAllTransformTools = await Promise.all(images);
-      console.log('on getting day tools data', data);
       setDayTools(data.data);
     } catch (err) {
-      console.log('the error reponse', err.response);
       setDayTools([]);
     }
   };
@@ -157,6 +155,8 @@ export default function UserHomePage() {
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
       )
     : [];
+
+  console.log('the transform', transform);
 
   const left = (
     <List className={classesOther.childListPadding}>
