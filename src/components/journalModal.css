@@ -1,12 +1,26 @@
 .journal-modal-subitems {
   margin-top: 20px;
 }
-.dates {
-  background-color: transparent;
-}
 .subject-heading {
   text-align: center;
   color: #5f5b5b;
   margin-bottom: 20px;
   margin-top: 20px;
+}
+.footer-buttons {
+  width: 80px;
+  margin-right: 20px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: white;
+  background-color: #838383;
+}
+
+.footer-buttons-right {
+  width: 80px;
+  margin-right: 0px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: white;
+  background-color: red;
 }

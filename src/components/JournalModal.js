@@ -7,7 +7,7 @@ import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
-import {Select, MenuItem} from '@material-ui/core';
+import {Select, MenuItem, Chip, withStyles} from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import {
   createJournal,
@@ -17,6 +17,8 @@ import {
 import './journalModal.css';
 import _ from 'lodash';
 import {KeyboardDatePicker} from '@material-ui/pickers';
+import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -44,6 +46,16 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+const StyledChip = withStyles((theme) => ({
+  label: {
+    fontSize: 10,
+    fontWeight: 400,
+  },
+  icon: {
+    fontSize: 15,
+  },
+}))(Chip);
 
 export default function (props) {
   const classes = useStyles();
@@ -123,7 +135,7 @@ export default function (props) {
 
   useEffect(() => {
     if (journalId) {
-      dispatch(getSpecificJournal(journalId))
+      dispatch(getSpecificJournal(journalId, user.id))
         .then((res) => {
           console.log('the res', res);
           if (res.data.length) {
@@ -143,7 +155,7 @@ export default function (props) {
       open={props.show}
       aria-labelledby='simple-modal-title'
       aria-describedby='simple-modal-description'
-      style={{backgroundColor: 'rgb(8 8 8 / 90%)'}}>
+      style={{backgroundColor: 'rgb(8 8 8 / 50%)'}}>
       <div style={modalStyle} className={classes.paper}>
         <h2 className='subject-heading'>
           {!_.isEmpty(journalData) ? journalData.subject : props.subject}
@@ -161,7 +173,6 @@ export default function (props) {
           />
         </div>
         <div className='journal-modal-subitems'>
-          <span style={{marginRight: 50}}>Type:</span>
           <Select
             labelId='demo-simple-select-filled-label'
             id='demo-simple-select-filled'
@@ -172,6 +183,7 @@ export default function (props) {
               })
             }
             variant='filled'
+            fullWidth
             value={!_.isEmpty(journalData) && journalData.type}
             label='Type'
             required>
@@ -182,18 +194,20 @@ export default function (props) {
         </div>
         {!_.isEmpty(journalData) && journalData.type === 'goal' && (
           <div className='journal-modal-subitems'>
-            <span style={{marginRight: 50}}>Track My Goal:</span>
-            <Checkbox
-              checked={!_.isEmpty(journalData) && journalData.track_my_goal}
-              onChange={(e) => {
-                setjournalData({
-                  ...journalData,
-                  track_my_goal: !journalData.track_my_goal,
-                });
-              }}
-              color='primary'
-              className={classes.checkboxRoot}
-            />
+            <span style={{marginRight: 50}}>Track My Goal</span>
+            <div>
+              <Checkbox
+                checked={!_.isEmpty(journalData) && journalData.track_my_goal}
+                onChange={(e) => {
+                  setjournalData({
+                    ...journalData,
+                    track_my_goal: !journalData.track_my_goal,
+                  });
+                }}
+                color='primary'
+                className={classes.checkboxRoot}
+              />
+            </div>
           </div>
         )}
         {!_.isEmpty(journalData) &&
@@ -202,12 +216,12 @@ export default function (props) {
             <div>
               <div className='journal-modal-subitems'>
                 <span className='dates'>
-                  <span style={{marginRight: 50, paddingTop: 10}}>
-                    Start Date:
-                  </span>
                   <KeyboardDatePicker
                     disableToolbar
                     format='MM/DD/yyyy'
+                    label='Start Date'
+                    fullWidth
+                    variant='filled'
                     className={classes.datePicker}
                     value={
                       !_.isEmpty(journalData) && journalData.start_date
@@ -229,12 +243,12 @@ export default function (props) {
               </div>
               <div className='journal-modal-subitems'>
                 <span className='dates'>
-                  <span style={{marginRight: 50, paddingTop: 10}}>
-                    End Date:
-                  </span>
                   <KeyboardDatePicker
                     disableToolbar
                     format='MM/DD/yyyy'
+                    variant='filled'
+                    fullWidth
+                    label='End Date'
                     className={classes.datePicker}
                     value={
                       !_.isEmpty(journalData) && journalData.end_date
@@ -259,23 +273,21 @@ export default function (props) {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'space-evenly',
+            justifyContent: 'center',
             marginTop: 60,
           }}>
-          <Button
+          <StyledChip
+            icon={<CancelIcon style={{fill: 'white'}} />}
+            label={'Cancel'}
+            className='gray-chip'
             onClick={() => props.onClose()}
-            variant='contained'
-            color='secondary'
-            style={{width: 80}}>
-            Close
-          </Button>
-          <Button
+          />
+          <StyledChip
+            icon={<SaveIcon style={{fill: 'white'}} />}
+            label={'Save'}
+            className='chip-style'
             onClick={() => addJournal()}
-            variant='contained'
-            color='primary'
-            style={{width: 80}}>
-            Save
-          </Button>
+          />
         </div>
       </div>
     </Modal>
