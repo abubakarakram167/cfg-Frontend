@@ -19,6 +19,9 @@ import _ from 'lodash';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+import $ from 'jquery';
+
+const width = $(window).width();
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-around',
     flexDirection: 'column',
     overflowY: 'scroll',
+    width: width < 500 ? '80%' : '50%',
   },
   checkboxRoot: {
     marginTop: -8,
