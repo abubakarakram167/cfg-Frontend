@@ -16,6 +16,7 @@ let contentData;
 let add = false;
 let smartLink = false;
 let clickedLink = '';
+
 export default (props) => {
   const dispatch = useDispatch();
   const mediaFilesData = useSelector(({mediaList}) => {
@@ -136,26 +137,32 @@ export default (props) => {
   };
 
   const extractAllLinks = (rawHTML) => {
-    if (smartLink) {
-      var doc = document.createElement('html');
-      doc.innerHTML = rawHTML;
-      var links = doc.getElementsByTagName('a');
-      let subject;
-      for (var i = 0; i < links.length; i++) {
-        if (window.location.host === links[i].host) {
-          links[i].className = 'linked-click';
-          let params = new URL(links[i].href).searchParams;
-          let idInParams = params.get('id');
-          if (!idInParams) {
-            subject = links[i].innerHTML;
-          }
-        }
+    var doc = document.createElement('html');
+    doc.innerHTML = rawHTML;
+    var links = doc.getElementsByTagName('a');
+    let subject;
+    for (var i = 0; i < links.length; i++) {
+      links[i].className = 'linked-click';
+      let params = new URL(links[i].href).searchParams;
+      let isSmartLink = params.get('smart_link');
+      var parsedUrl = new URL(links[i].href);
+
+      if (!isSmartLink && window.location.host === parsedUrl.host) {
+        links[i].setAttribute(
+          'href',
+          window.location.href +
+            `?smart_link=${true}` +
+            '&' +
+            `subject=${links[i].innerHTML}`,
+        );
+        subject = links[i].innerHTML;
       }
-      if (subject) {
-        props.onGetSubject(subject);
-        $('.sun-editor-editable').html(doc.innerHTML);
-        props.onContentSave(doc.innerHTML);
-      }
+    }
+
+    if (subject) {
+      props.onGetSubject(subject);
+      $('.sun-editor-editable').html(doc.innerHTML);
+      props.onContentSave(doc.innerHTML);
     }
   };
 
@@ -165,22 +172,24 @@ export default (props) => {
     props.onContentChanged(true);
   };
 
-  const callSmartLink = (id) => {
-    props.onClickSmartClick(id);
+  const callSmartLink = (params) => {
+    props.onClickSmartClick(params);
   };
 
   useEffect(() => {
-    if (journalId && journalId !== 0 && smartLink) {
+    if (journalId && journalId !== 0) {
       var doc = document.createElement('html');
       doc.innerHTML = props.content;
       var links = doc.getElementsByTagName('a');
       var urls = [];
 
       for (var i = 0; i < links.length; i++) {
-        links[i].className = 'linked-click';
         let params = new URL(links[i].href).searchParams;
-        let idInParams = params.get('smart_link');
-        if (!idInParams) {
+        let isSmartLink = params.get('smart_link');
+        var parsedUrl = new URL(links[i].href);
+
+        if (Boolean(isSmartLink) && window.location.host === parsedUrl.host) {
+          links[i].className = 'linked-click';
           links[i].setAttribute(
             'href',
             window.location.href +
@@ -229,8 +238,16 @@ export default (props) => {
     $(document).on('click', '.linked-click', (e) => {
       clickedLink = e.target.href;
       let params = new URL(e.target.href).searchParams;
+      let subjectInParams = params.get('subject');
       let idInParams = params.get('id');
-      callSmartLink(parseInt(idInParams));
+      let smartLink = params.get('smart_link');
+
+      let getParams = {
+        subject: subjectInParams,
+        id: idInParams ? parseInt(idInParams) : null,
+        smartLink: smartLink,
+      };
+      callSmartLink(getParams);
 
       e.preventDefault();
     });
@@ -275,6 +292,7 @@ export default (props) => {
         value={props.content}
         setOptions={{
           height: !props.changeHeight ? 630 : 150,
+          width: '100%',
           buttonList: [
             ['bold', 'italic', 'underline'],
             ['indent', 'outdent'],

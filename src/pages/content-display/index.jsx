@@ -69,8 +69,9 @@ export default function ContentDisplay() {
         <div className='display-content'>
           <div className='rich-content-user-container'>
             <SunEditor
-              onClickSmartClick={(id) => {
-                setJournalId(id);
+              onClickSmartClick={(params) => {
+                if (params.id) setJournalId(params.id);
+                setSubject(params.subject);
                 setShowJournalModal(true);
               }}
               onContentSave={() => {}}
