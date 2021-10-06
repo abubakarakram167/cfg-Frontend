@@ -23,8 +23,6 @@ import CancelIcon from '@material-ui/icons/Cancel';
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    width: 600,
-    height: 500,
     backgroundColor: theme.palette.background.paper,
     border: '1px solid #000',
     boxShadow: theme.shadows[5],
@@ -63,11 +61,12 @@ export default function (props) {
   const [innerContent, setInnerContent] = useState('');
   const [isContentChange, setContentChanged] = useState(false);
   const [journalData, setjournalData] = useState({
-    type: 'goal',
+    type: 'journal',
   });
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('current-user'));
   const journalId = props.journalId;
+  const [type, setType] = useState('journal');
 
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
     const formData = new FormData();
@@ -109,8 +108,8 @@ export default function (props) {
       detail: innerContent,
       log_date: moment().format('YYYY-MM-DD'),
       status: 'nothing',
-      type: journalData.type,
-      parent: 'sample',
+      type: type,
+      parent: props.parent,
       track_my_goal: !_.isEmpty(journalData)
         ? journalData.track_my_goal
         : props.track_my_goal,
@@ -137,8 +136,8 @@ export default function (props) {
     if (journalId) {
       dispatch(getSpecificJournal(journalId, user.id))
         .then((res) => {
-          console.log('the res', res);
           if (res.data.length) {
+            setType(res.data[0].type);
             setjournalData(res.data[0]);
             setInnerContent(res.data[0].detail);
           }
@@ -146,7 +145,7 @@ export default function (props) {
         .catch((err) => console.log('the error', err));
     } else {
       setInnerContent('');
-      setjournalData(null);
+      setjournalData({});
     }
   }, [journalId]);
 
@@ -176,15 +175,11 @@ export default function (props) {
           <Select
             labelId='demo-simple-select-filled-label'
             id='demo-simple-select-filled'
-            onChange={(e) =>
-              setjournalData({
-                ...journalData,
-                type: e.target.value,
-              })
-            }
+            onChange={(e) => setType(e.target.value)}
             variant='filled'
             fullWidth
-            value={!_.isEmpty(journalData) && journalData.type}
+            defaultValue='journal'
+            value={type}
             label='Type'
             required>
             <MenuItem value={'goal'}>Goal</MenuItem>
@@ -192,7 +187,7 @@ export default function (props) {
             <MenuItem value={'journal'}>Journal</MenuItem>
           </Select>
         </div>
-        {!_.isEmpty(journalData) && journalData.type === 'goal' && (
+        {type === 'goal' && (
           <div className='journal-modal-subitems'>
             <span style={{marginRight: 50}}>Track My Goal</span>
             <div>
@@ -211,7 +206,7 @@ export default function (props) {
           </div>
         )}
         {!_.isEmpty(journalData) &&
-          journalData.type === 'goal' &&
+          type === 'goal' &&
           journalData.track_my_goal && (
             <div>
               <div className='journal-modal-subitems'>
@@ -274,7 +269,7 @@ export default function (props) {
           style={{
             display: 'flex',
             justifyContent: 'center',
-            marginTop: 60,
+            marginTop: 20,
           }}>
           <StyledChip
             icon={<CancelIcon style={{fill: 'white'}} />}

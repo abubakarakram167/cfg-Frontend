@@ -100,6 +100,7 @@ export default function ConversationContentDisplay() {
               setShowJournalModal(false);
             }}
             subject={subject}
+            parent='user-cfg-session'
           />
           <br />
           <div className='learn-content-buttons'>

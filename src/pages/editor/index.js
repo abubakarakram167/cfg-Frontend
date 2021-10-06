@@ -581,6 +581,7 @@ export default function Editor() {
               setShowJournalModal(false);
             }}
             subject={subject}
+            parent={params.cfgType}
           />
 
           <div className='options-side'>
