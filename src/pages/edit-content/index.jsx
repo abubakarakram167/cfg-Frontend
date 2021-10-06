@@ -428,6 +428,7 @@ export default function Editor() {
               setShowJournalModal(false);
             }}
             subject={subject}
+            parent={params.contentType}
           />
           <div className='options-side'>
             {!['mini', 'event'].includes(params.contentType) && (
