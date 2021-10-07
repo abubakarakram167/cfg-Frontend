@@ -20,8 +20,17 @@ import {KeyboardDatePicker} from '@material-ui/pickers';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import $ from 'jquery';
-
 const width = $(window).width();
+
+const getWidthAccordingToDevice = (width) => {
+  let percentageWidth = '50%';
+  if (width < 500) percentageWidth = '90%';
+  else if (width >= 501 && width <= 600) percentageWidth = '80%';
+  else if (width >= 601 && width <= 800) percentageWidth = '60%';
+  else percentageWidth = '50%';
+
+  return percentageWidth;
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-around',
     flexDirection: 'column',
     overflowY: 'scroll',
-    width: width < 500 ? '80%' : '50%',
+    width: getWidthAccordingToDevice(width),
   },
   checkboxRoot: {
     marginTop: -8,
@@ -70,6 +79,7 @@ export default function (props) {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('current-user'));
   const journalId = props.journalId;
+  const subject = props.subject;
   const [type, setType] = useState('journal');
 
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
@@ -123,7 +133,7 @@ export default function (props) {
       dispatch(createJournal(payload))
         .then((res) => {
           const data = res.data.result;
-          props.getJournalData(data);
+          props.onClose();
         })
         .catch((err) => console.log('the error', err));
     } else {
@@ -137,13 +147,14 @@ export default function (props) {
   };
 
   useEffect(() => {
-    if (journalId) {
-      dispatch(getSpecificJournal(journalId, user.id))
+    if (subject) {
+      dispatch(getSpecificJournal(subject, user.id))
         .then((res) => {
           if (res.data.length) {
             setType(res.data[0].type);
             setjournalData(res.data[0]);
             setInnerContent(res.data[0].detail);
+            props.getJournalData(res.data[0]);
           }
         })
         .catch((err) => console.log('the error', err));
@@ -151,7 +162,7 @@ export default function (props) {
       setInnerContent('');
       setjournalData({});
     }
-  }, [journalId]);
+  }, [subject]);
 
   return (
     <Modal

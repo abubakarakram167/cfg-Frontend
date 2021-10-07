@@ -37,12 +37,12 @@ export const createJournal = (journalData) => {
   };
 };
 
-export const getSpecificJournal = (journalId, userId) => {
-  console.log(`journal id: ${journalId}  and user id: ${userId}`);
+export const getSpecificJournal = (subject, userId) => {
+  console.log(`subject: ${subject}  and user id: ${userId}`);
   return (dispatch) => {
     return new Promise((res, rej) => {
       dispatch({type: Create_journal});
-      Api.get(`/api/journals?id=${journalId}&user_id=${userId}`)
+      Api.get(`/api/journals?subject=${subject}&user_id=${userId}`)
         .then((data) => {
           if (data.status === 200) {
             dispatch({

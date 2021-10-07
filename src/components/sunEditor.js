@@ -23,7 +23,6 @@ export default (props) => {
     return mediaList.mediaList;
   });
   const [render, setRender] = useState(false);
-  const journalId = props.journalId;
   allData = mediaFilesData;
   contentData = props.content;
 
@@ -160,7 +159,7 @@ export default (props) => {
     }
 
     if (subject) {
-      props.onGetSubject(subject);
+      // props.onGetSubject(subject);
       $('.sun-editor-editable').html(doc.innerHTML);
       props.onContentSave(doc.innerHTML);
     }
@@ -175,36 +174,6 @@ export default (props) => {
   const callSmartLink = (params) => {
     props.onClickSmartClick(params);
   };
-
-  useEffect(() => {
-    if (journalId && journalId !== 0) {
-      var doc = document.createElement('html');
-      doc.innerHTML = props.content;
-      var links = doc.getElementsByTagName('a');
-      var urls = [];
-
-      for (var i = 0; i < links.length; i++) {
-        let params = new URL(links[i].href).searchParams;
-        let isSmartLink = params.get('smart_link');
-        var parsedUrl = new URL(links[i].href);
-
-        if (Boolean(isSmartLink) && window.location.host === parsedUrl.host) {
-          links[i].className = 'linked-click';
-          links[i].setAttribute(
-            'href',
-            window.location.href +
-              `?id=${journalId}` +
-              '&' +
-              `smart_link=${true}` +
-              '&' +
-              `subject=${links[i].innerHTML}`,
-          );
-        }
-      }
-      $('.sun-editor-editable').html(doc.innerHTML);
-      props.onContentSave(doc.innerHTML);
-    }
-  }, [journalId]);
 
   useEffect(() => {
     $('.se-dialog-tabs').append(

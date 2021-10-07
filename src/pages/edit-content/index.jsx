@@ -398,18 +398,18 @@ export default function Editor() {
         <div className='editor-container'>
           <div className='editor-side'>
             <SunEditor
-              onClickSmartClick={(id) => {
-                setJournalId(id);
+              onClickSmartClick={(params) => {
+                if (params.subject) {
+                  setSubject(params.subject ? params.subject : null);
+                }
                 setShowJournalModal(true);
               }}
               onContentSave={(content) => {
                 setContent(content);
               }}
-              content={content}
               onContentChanged={() => setContentChanged(true)}
-              onImageUploadBefore={handleImageUploadBefore}
+              content={content}
               onGetSubject={(subject) => setSubject(subject)}
-              journalId={journalId}
               showToolbar={true}
               modalType='external'
             />
@@ -417,7 +417,6 @@ export default function Editor() {
           <JournalModal
             onOpen={() => setShowJournalModal(true)}
             onClose={() => {
-              setContent(state.currentContent.detail);
               setShowJournalModal(false);
               setJournalId(null);
             }}
@@ -425,7 +424,6 @@ export default function Editor() {
             journalId={journalId}
             getJournalData={(journalData) => {
               setJournalId(journalData ? journalData.id : null);
-              setShowJournalModal(false);
             }}
             subject={subject}
             parent={params.contentType}
