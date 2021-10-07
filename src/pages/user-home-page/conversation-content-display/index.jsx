@@ -3,18 +3,52 @@ import {useHistory, useParams} from 'react-router-dom';
 import './style.css';
 import CommonComponent from 'pages/user-home-page/common-component';
 import Session from 'redux/services/session';
-import SunEditor from 'suneditor-react';
+import SunEditor from '../../../components/sunEditor';
 import Banner from './banner';
 import {Button} from '@material-ui/core';
+import JournalModal from '../../../components/JournalModal';
+import {
+  transformImagesInContent,
+  getRestoredImage,
+} from '../../../components/ReUsable';
+import {getSignedUrl} from '../../../redux/actions/media';
 
 export default function ConversationContentDisplay() {
   const params = useParams();
   const [content, setContent] = useState(null);
   const history = useHistory();
+  const [showJournalModal, setShowJournalModal] = useState(false);
+  const [journalId, setJournalId] = useState(null);
+  const [subject, setSubject] = useState(null);
+  const [data, setData] = useState({detail: ''});
+  const [isContentTransform, setIsContentTransform] = useState(null);
+  const [isContentChange, setContentChanged] = useState(false);
+  const [featuredImageUrl, setFeaturedImageUrl] = useState(null);
 
   const getSessionById = async (id) => {
     const data = await Session.getContentData(id);
-    setContent(data.data);
+    console.log('the data', data);
+    const specificSession = data.data;
+    let getFileName = null;
+    if (
+      specificSession.featured_image_url &&
+      specificSession.featured_image_url !== ''
+    ) {
+      getFileName = getRestoredImage(specificSession.featured_image_url);
+    }
+    if (getFileName) {
+      getSignedUrl({fileName: getFileName}).then((res) => {
+        setFeaturedImageUrl(res.newUrl);
+      });
+    } else setFeaturedImageUrl(null);
+
+    transformImagesInContent(specificSession.detail, false, params.id).then(
+      (res) => {
+        setIsContentTransform(res.html);
+      },
+    );
+    setData(specificSession);
+    setContent(specificSession);
   };
   useEffect(() => {
     getSessionById(params.id);
@@ -28,9 +62,7 @@ export default function ConversationContentDisplay() {
   };
   return (
     <CommonComponent left={''} right={''}>
-      {content?.featured_image_url && (
-        <Banner url={content.featured_image_url} />
-      )}
+      {featuredImageUrl && <Banner url={featuredImageUrl} />}
       <br />
 
       {content && (
@@ -40,13 +72,36 @@ export default function ConversationContentDisplay() {
           <div className='learn-content'>
             <div className='rich-content-user-container'>
               <SunEditor
-                disable={true}
-                height='100%'
-                setContents={content ? content.detail : ''}
+                onClickSmartClick={(params) => {
+                  if (params.subject) {
+                    setSubject(params.subject ? params.subject : null);
+                  }
+
+                  setShowJournalModal(true);
+                }}
+                onContentSave={() => {}}
+                onContentChanged={() => setContentChanged(true)}
+                content={isContentTransform ? isContentTransform : data.detail}
+                onGetSubject={(subject) => setSubject(subject)}
                 showToolbar={false}
+                modalType='external'
               />
             </div>
           </div>
+          <JournalModal
+            onOpen={() => setShowJournalModal(true)}
+            onClose={() => {
+              setShowJournalModal(false);
+              setJournalId(null);
+            }}
+            show={showJournalModal}
+            journalId={journalId}
+            getJournalData={(journalData) => {
+              setJournalId(journalData ? journalData.id : null);
+            }}
+            subject={subject}
+            parent='user-cfg-session'
+          />
           <br />
           <div className='learn-content-buttons'>
             {content && content.previous_page && (

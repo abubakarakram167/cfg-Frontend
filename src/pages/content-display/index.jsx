@@ -69,15 +69,17 @@ export default function ContentDisplay() {
         <div className='display-content'>
           <div className='rich-content-user-container'>
             <SunEditor
-              onClickSmartClick={(id) => {
-                setJournalId(id);
+              onClickSmartClick={(params) => {
+                if (params.subject) {
+                  setSubject(params.subject ? params.subject : null);
+                }
+
                 setShowJournalModal(true);
               }}
               onContentSave={() => {}}
               onContentChanged={() => setContentChanged(true)}
               content={isContentTransform ? isContentTransform : data.detail}
               onGetSubject={(subject) => setSubject(subject)}
-              journalId={journalId}
               showToolbar={false}
               modalType='external'
             />
@@ -86,7 +88,6 @@ export default function ContentDisplay() {
         <JournalModal
           onOpen={() => setShowJournalModal(true)}
           onClose={() => {
-            // setContent(isContentTransform ? isContentTransform : data.detail);
             setShowJournalModal(false);
             setJournalId(null);
           }}
@@ -94,9 +95,9 @@ export default function ContentDisplay() {
           journalId={journalId}
           getJournalData={(journalData) => {
             setJournalId(journalData ? journalData.id : null);
-            setShowJournalModal(false);
           }}
           subject={subject}
+          parent='user-cfg-session'
         />
       </div>
       <div className='content-display-buttons-container'>

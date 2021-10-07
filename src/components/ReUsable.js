@@ -37,3 +37,7 @@ export const transformImagesInContent = async (html, change, id) => {
     id,
   };
 };
+
+export const getRestoredImage = (featureImageUrl) => {
+  return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
+};

@@ -7,7 +7,7 @@ import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
-import {Select, MenuItem} from '@material-ui/core';
+import {Select, MenuItem, Chip, withStyles} from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import {
   createJournal,
@@ -17,12 +17,24 @@ import {
 import './journalModal.css';
 import _ from 'lodash';
 import {KeyboardDatePicker} from '@material-ui/pickers';
+import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
+import $ from 'jquery';
+const width = $(window).width();
+
+const getWidthAccordingToDevice = (width) => {
+  let percentageWidth = '50%';
+  if (width < 500) percentageWidth = '90%';
+  else if (width >= 501 && width <= 600) percentageWidth = '80%';
+  else if (width >= 601 && width <= 800) percentageWidth = '60%';
+  else percentageWidth = '50%';
+
+  return percentageWidth;
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    width: 600,
-    height: 500,
     backgroundColor: theme.palette.background.paper,
     border: '1px solid #000',
     boxShadow: theme.shadows[5],
@@ -30,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-around',
     flexDirection: 'column',
     overflowY: 'scroll',
+    width: getWidthAccordingToDevice(width),
   },
   checkboxRoot: {
     marginTop: -8,
@@ -45,17 +58,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const StyledChip = withStyles((theme) => ({
+  label: {
+    fontSize: 10,
+    fontWeight: 400,
+  },
+  icon: {
+    fontSize: 15,
+  },
+}))(Chip);
+
 export default function (props) {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [innerContent, setInnerContent] = useState('');
   const [isContentChange, setContentChanged] = useState(false);
   const [journalData, setjournalData] = useState({
-    type: 'goal',
+    type: 'journal',
   });
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('current-user'));
   const journalId = props.journalId;
+  const subject = props.subject;
+  const [type, setType] = useState('journal');
 
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
     const formData = new FormData();
@@ -97,8 +122,8 @@ export default function (props) {
       detail: innerContent,
       log_date: moment().format('YYYY-MM-DD'),
       status: 'nothing',
-      type: journalData.type,
-      parent: 'sample',
+      type: type,
+      parent: props.parent,
       track_my_goal: !_.isEmpty(journalData)
         ? journalData.track_my_goal
         : props.track_my_goal,
@@ -108,7 +133,7 @@ export default function (props) {
       dispatch(createJournal(payload))
         .then((res) => {
           const data = res.data.result;
-          props.getJournalData(data);
+          props.onClose();
         })
         .catch((err) => console.log('the error', err));
     } else {
@@ -122,28 +147,29 @@ export default function (props) {
   };
 
   useEffect(() => {
-    if (journalId) {
-      dispatch(getSpecificJournal(journalId))
+    if (subject) {
+      dispatch(getSpecificJournal(subject, user.id))
         .then((res) => {
-          console.log('the res', res);
           if (res.data.length) {
+            setType(res.data[0].type);
             setjournalData(res.data[0]);
             setInnerContent(res.data[0].detail);
+            props.getJournalData(res.data[0]);
           }
         })
         .catch((err) => console.log('the error', err));
     } else {
       setInnerContent('');
-      setjournalData(null);
+      setjournalData({});
     }
-  }, [journalId]);
+  }, [subject]);
 
   return (
     <Modal
       open={props.show}
       aria-labelledby='simple-modal-title'
       aria-describedby='simple-modal-description'
-      style={{backgroundColor: 'rgb(8 8 8 / 90%)'}}>
+      style={{backgroundColor: 'rgb(8 8 8 / 50%)'}}>
       <div style={modalStyle} className={classes.paper}>
         <h2 className='subject-heading'>
           {!_.isEmpty(journalData) ? journalData.subject : props.subject}
@@ -161,18 +187,14 @@ export default function (props) {
           />
         </div>
         <div className='journal-modal-subitems'>
-          <span style={{marginRight: 50}}>Type:</span>
           <Select
             labelId='demo-simple-select-filled-label'
             id='demo-simple-select-filled'
-            onChange={(e) =>
-              setjournalData({
-                ...journalData,
-                type: e.target.value,
-              })
-            }
+            onChange={(e) => setType(e.target.value)}
             variant='filled'
-            value={!_.isEmpty(journalData) && journalData.type}
+            fullWidth
+            defaultValue='journal'
+            value={type}
             label='Type'
             required>
             <MenuItem value={'goal'}>Goal</MenuItem>
@@ -180,34 +202,36 @@ export default function (props) {
             <MenuItem value={'journal'}>Journal</MenuItem>
           </Select>
         </div>
-        {!_.isEmpty(journalData) && journalData.type === 'goal' && (
+        {type === 'goal' && (
           <div className='journal-modal-subitems'>
-            <span style={{marginRight: 50}}>Track My Goal:</span>
-            <Checkbox
-              checked={!_.isEmpty(journalData) && journalData.track_my_goal}
-              onChange={(e) => {
-                setjournalData({
-                  ...journalData,
-                  track_my_goal: !journalData.track_my_goal,
-                });
-              }}
-              color='primary'
-              className={classes.checkboxRoot}
-            />
+            <span style={{marginRight: 50}}>Track My Goal</span>
+            <div>
+              <Checkbox
+                checked={!_.isEmpty(journalData) && journalData.track_my_goal}
+                onChange={(e) => {
+                  setjournalData({
+                    ...journalData,
+                    track_my_goal: !journalData.track_my_goal,
+                  });
+                }}
+                color='primary'
+                className={classes.checkboxRoot}
+              />
+            </div>
           </div>
         )}
         {!_.isEmpty(journalData) &&
-          journalData.type === 'goal' &&
+          type === 'goal' &&
           journalData.track_my_goal && (
             <div>
               <div className='journal-modal-subitems'>
                 <span className='dates'>
-                  <span style={{marginRight: 50, paddingTop: 10}}>
-                    Start Date:
-                  </span>
                   <KeyboardDatePicker
                     disableToolbar
                     format='MM/DD/yyyy'
+                    label='Start Date'
+                    fullWidth
+                    variant='filled'
                     className={classes.datePicker}
                     value={
                       !_.isEmpty(journalData) && journalData.start_date
@@ -229,12 +253,12 @@ export default function (props) {
               </div>
               <div className='journal-modal-subitems'>
                 <span className='dates'>
-                  <span style={{marginRight: 50, paddingTop: 10}}>
-                    End Date:
-                  </span>
                   <KeyboardDatePicker
                     disableToolbar
                     format='MM/DD/yyyy'
+                    variant='filled'
+                    fullWidth
+                    label='End Date'
                     className={classes.datePicker}
                     value={
                       !_.isEmpty(journalData) && journalData.end_date
@@ -259,23 +283,21 @@ export default function (props) {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'space-evenly',
-            marginTop: 60,
+            justifyContent: 'center',
+            marginTop: 20,
           }}>
-          <Button
+          <StyledChip
+            icon={<CancelIcon style={{fill: 'white'}} />}
+            label={'Cancel'}
+            className='gray-chip'
             onClick={() => props.onClose()}
-            variant='contained'
-            color='secondary'
-            style={{width: 80}}>
-            Close
-          </Button>
-          <Button
+          />
+          <StyledChip
+            icon={<SaveIcon style={{fill: 'white'}} />}
+            label={'Save'}
+            className='chip-style'
             onClick={() => addJournal()}
-            variant='contained'
-            color='primary'
-            style={{width: 80}}>
-            Save
-          </Button>
+          />
         </div>
       </div>
     </Modal>

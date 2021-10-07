@@ -15,6 +15,7 @@ let fileData = null;
 let contentData;
 let add = false;
 let smartLink = false;
+let clickedLink = '';
 
 export default (props) => {
   const dispatch = useDispatch();
@@ -22,7 +23,6 @@ export default (props) => {
     return mediaList.mediaList;
   });
   const [render, setRender] = useState(false);
-  const journalId = props.journalId;
   allData = mediaFilesData;
   contentData = props.content;
 
@@ -52,11 +52,16 @@ export default (props) => {
             margin: auto;  background-color: rgb(96 179 218); padding: 10px;margin-bottom: 10px; " class = "upload-link-button" >Select Url</p>`).insertAfter(
             '._se_tab_content_url',
           );
-          $('._se_anchor_download')
-            .parent()
-            .after(
-              '<label><input id = "smart_link" style = "margin-left: 20px;" type="checkbox" class="se-dialog-btn-check _se_anchor_smart_link">&nbsp;Smart link</label>',
-            );
+          $('._se_input_url').val('asdads');
+
+          if (!$('._se_anchor_smart_link').length) {
+            $('._se_anchor_download')
+              .parent()
+              .after(
+                '<label><input id = "smart_link" style = "margin-left: 20px;" type="checkbox" class="se-dialog-btn-check _se_anchor_smart_link">&nbsp;Smart link</label>',
+              );
+          }
+
           $('.se-file-browser-list').append('asdasd');
           $('.select-images').on('click', function (e) {
             add = false;
@@ -65,8 +70,22 @@ export default (props) => {
           });
 
           $('._se_anchor_smart_link').on('click', function (e) {
-            if (smartLink) smartLink = false;
-            else smartLink = true;
+            $('.se-input-url').val(clickedLink).trigger('change');
+            setTimeout(() => {
+              $('._se_bookmark_button').click();
+            }, 500);
+
+            if (smartLink) {
+              smartLink = false;
+            } else {
+              smartLink = true;
+            }
+
+            if (smartLink) {
+              $('.se-input-url').parent().parent().css('display', 'none');
+            } else {
+              $('.se-input-url').parent().parent().css('display', 'block');
+            }
           });
 
           $('.se-tooltip').on('click', function (e) {
@@ -117,27 +136,32 @@ export default (props) => {
   };
 
   const extractAllLinks = (rawHTML) => {
-    console.log('the smart link', smartLink);
-    if (smartLink) {
-      var doc = document.createElement('html');
-      doc.innerHTML = rawHTML;
-      var links = doc.getElementsByTagName('a');
-      let subject;
-      for (var i = 0; i < links.length; i++) {
-        if (window.location.host === links[i].host) {
-          links[i].className = 'linked-click';
-          let params = new URL(links[i].href).searchParams;
-          let idInParams = params.get('id');
-          if (!idInParams) {
-            subject = links[i].innerHTML;
-          }
-        }
+    var doc = document.createElement('html');
+    doc.innerHTML = rawHTML;
+    var links = doc.getElementsByTagName('a');
+    let subject;
+    for (var i = 0; i < links.length; i++) {
+      links[i].className = 'linked-click';
+      let params = new URL(links[i].href).searchParams;
+      let isSmartLink = params.get('smart_link');
+      var parsedUrl = new URL(links[i].href);
+
+      if (!isSmartLink && window.location.host === parsedUrl.host) {
+        links[i].setAttribute(
+          'href',
+          window.location.href +
+            `?smart_link=${true}` +
+            '&' +
+            `subject=${links[i].innerHTML}`,
+        );
+        subject = links[i].innerHTML;
       }
-      if (subject) {
-        props.onGetSubject(subject);
-        $('.sun-editor-editable').html(doc.innerHTML);
-        props.onContentSave(doc.innerHTML);
-      }
+    }
+
+    if (subject) {
+      // props.onGetSubject(subject);
+      $('.sun-editor-editable').html(doc.innerHTML);
+      props.onContentSave(doc.innerHTML);
     }
   };
 
@@ -147,35 +171,9 @@ export default (props) => {
     props.onContentChanged(true);
   };
 
-  const callSmartLink = (id) => {
-    props.onClickSmartClick(id);
+  const callSmartLink = (params) => {
+    props.onClickSmartClick(params);
   };
-
-  useEffect(() => {
-    if (journalId && journalId !== 0 && smartLink) {
-      var doc = document.createElement('html');
-      doc.innerHTML = props.content;
-      var links = doc.getElementsByTagName('a');
-      var urls = [];
-
-      for (var i = 0; i < links.length; i++) {
-        if (window.location.host === links[i].host) {
-          links[i].className = 'linked-click';
-          let params = new URL(links[i].href).searchParams;
-          let idInParams = params.get('id');
-          if (!idInParams) {
-            links[i].setAttribute(
-              'href',
-              links[i].getAttribute('href') + `?id=${journalId}`,
-            );
-            links[i].id = journalId;
-          }
-        }
-      }
-      $('.sun-editor-editable').html(doc.innerHTML);
-      props.onContentSave(doc.innerHTML);
-    }
-  }, [journalId]);
 
   useEffect(() => {
     $('.se-dialog-tabs').append(
@@ -207,8 +205,20 @@ export default (props) => {
       }
     });
     $(document).on('click', '.linked-click', (e) => {
-      callSmartLink(parseInt(e.target.id));
-      return false;
+      clickedLink = e.target.href;
+      let params = new URL(e.target.href).searchParams;
+      let subjectInParams = params.get('subject');
+      let idInParams = params.get('id');
+      let smartLink = params.get('smart_link');
+
+      let getParams = {
+        subject: subjectInParams,
+        id: idInParams ? parseInt(idInParams) : null,
+        smartLink: smartLink,
+      };
+      callSmartLink(getParams);
+
+      e.preventDefault();
     });
   }, []);
 
@@ -250,7 +260,8 @@ export default (props) => {
         defaultValue=''
         value={props.content}
         setOptions={{
-          height: !props.changeHeight ? 630 : 200,
+          height: !props.changeHeight ? 630 : 150,
+          width: '100%',
           buttonList: [
             ['bold', 'italic', 'underline'],
             ['indent', 'outdent'],
