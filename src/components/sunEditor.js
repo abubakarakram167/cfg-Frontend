@@ -141,10 +141,11 @@ export default (props) => {
     var links = doc.getElementsByTagName('a');
     let subject;
     for (var i = 0; i < links.length; i++) {
-      links[i].className = 'linked-click';
       let params = new URL(links[i].href).searchParams;
       let isSmartLink = params.get('smart_link');
       var parsedUrl = new URL(links[i].href);
+      if (window.location.host === parsedUrl.host)
+        links[i].className = 'linked-click';
 
       if (!isSmartLink && window.location.host === parsedUrl.host) {
         links[i].setAttribute(
@@ -159,9 +160,9 @@ export default (props) => {
     }
 
     if (subject) {
-      // props.onGetSubject(subject);
       $('.sun-editor-editable').html(doc.innerHTML);
       props.onContentSave(doc.innerHTML);
+      // props.onGetSubject(subject);
     }
   };
 
