@@ -167,7 +167,9 @@ export default (props) => {
   };
 
   const handleEditorChange = (e) => {
-    extractAllLinks(e);
+    if (smartLink) {
+      extractAllLinks(e);
+    }
     props.onContentSave(e);
     props.onContentChanged(true);
   };
