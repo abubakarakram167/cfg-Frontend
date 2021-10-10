@@ -14,7 +14,6 @@ let allImages = [];
 let fileData = null;
 let contentData;
 let add = false;
-let smartLink = false;
 let clickedLink = '';
 
 export default (props) => {
@@ -54,38 +53,11 @@ export default (props) => {
           );
           $('._se_input_url').val('asdads');
 
-          if (!$('._se_anchor_smart_link').length) {
-            $('._se_anchor_download')
-              .parent()
-              .after(
-                '<label><input id = "smart_link" style = "margin-left: 20px;" type="checkbox" class="se-dialog-btn-check _se_anchor_smart_link">&nbsp;Smart link</label>',
-              );
-          }
-
           $('.se-file-browser-list').append('asdasd');
           $('.select-images').on('click', function (e) {
             add = false;
             fileData = this.src;
             appendImage();
-          });
-
-          $('._se_anchor_smart_link').on('click', function (e) {
-            $('.se-input-url').val(clickedLink).trigger('change');
-            setTimeout(() => {
-              $('._se_bookmark_button').click();
-            }, 500);
-
-            if (smartLink) {
-              smartLink = false;
-            } else {
-              smartLink = true;
-            }
-
-            if (smartLink) {
-              $('.se-input-url').parent().parent().css('display', 'none');
-            } else {
-              $('.se-input-url').parent().parent().css('display', 'block');
-            }
           });
 
           $('.se-tooltip').on('click', function (e) {
@@ -135,39 +107,102 @@ export default (props) => {
     }, 2000);
   };
 
-  const extractAllLinks = (rawHTML) => {
+  const extractAllLinks = (rawHTML, userRole) => {
     var doc = document.createElement('html');
     doc.innerHTML = rawHTML;
     var links = doc.getElementsByTagName('a');
     let subject;
-    for (var i = 0; i < links.length; i++) {
-      let params = new URL(links[i].href).searchParams;
-      let isSmartLink = params.get('smart_link');
-      var parsedUrl = new URL(links[i].href);
-      if (window.location.host === parsedUrl.host)
-        links[i].className = 'linked-click';
+    var isSmartLinkChecked = document.getElementById('smart_link').checked;
 
-      if (!isSmartLink && window.location.host === parsedUrl.host) {
-        links[i].setAttribute(
-          'href',
-          window.location.href +
-            `?smart_link=${true}` +
-            '&' +
-            `subject=${links[i].innerHTML}`,
-        );
-        subject = links[i].innerHTML;
+    if (userRole === 'admin') {
+      const functionality = window.location.pathname.split('/')[3];
+      if (functionality === 'display') {
+        console.log('in dis[play]........');
+        for (var i = 0; i < links.length; i++) {
+          let params = new URL(links[i].href).searchParams;
+          let isSmartLink = Boolean(params.get('smart_link'));
+          // var parsedUrl = new URL(links[i].href);
+          if (
+            links[i].href.includes('journal_new_create_link_smart') ||
+            isSmartLink
+          ) {
+            links[i].setAttribute(
+              'href',
+              window.location.host +
+                `?smart_link=${true}` +
+                '&' +
+                `subject=${links[i].innerHTML}`,
+            );
+            subject = links[i].innerHTML;
+            links[i].setAttribute('class', 'linked-click');
+          }
+        }
+
+        if (subject) {
+          $('.sun-editor-editable').html(doc.innerHTML);
+          props.onContentSave(doc.innerHTML);
+        }
+      } else {
+        console.log('in edit........');
+        for (var i = 0; i < links.length; i++) {
+          let params = new URL(links[i].href).searchParams;
+          let isSmartLink = Boolean(params.get('smart_link'));
+          // var parsedUrl = new URL(links[i].href);
+          if (links[i].href.includes('journal_new_create_link_smart')) {
+            links[i].setAttribute(
+              'href',
+              window.location.host +
+                `?smart_link=${true}` +
+                '&' +
+                `subject=${links[i].innerHTML}`,
+            );
+            subject = links[i].innerHTML;
+            links[i].setAttribute('class', 'linked-click');
+          }
+        }
+
+        if (subject) {
+          $('.sun-editor-editable').html(doc.innerHTML);
+          props.onContentSave(doc.innerHTML);
+        }
       }
-    }
+    } else if (userRole === 'home') {
+      console.log('in home');
+      for (var i = 0; i < links.length; i++) {
+        let params = new URL(links[i].href).searchParams;
+        let isSmartLink = Boolean(params.get('smart_link'));
+        // var parsedUrl = new URL(links[i].href);
+        if (
+          links[i].href.includes('journal_new_create_link_smart') ||
+          isSmartLink
+        ) {
+          links[i].setAttribute(
+            'href',
+            window.location.host +
+              `?smart_link=${true}` +
+              '&' +
+              `subject=${links[i].innerHTML}`,
+          );
+          subject = links[i].innerHTML;
+          links[i].setAttribute('class', 'linked-click');
+        }
+      }
 
-    if (subject) {
-      $('.sun-editor-editable').html(doc.innerHTML);
-      props.onContentSave(doc.innerHTML);
-      // props.onGetSubject(subject);
+      if (subject) {
+        $('.sun-editor-editable').html(doc.innerHTML);
+        props.onContentSave(doc.innerHTML);
+      }
     }
   };
 
   const handleEditorChange = (e) => {
-    extractAllLinks(e);
+    // var isSmartElement = document.getElementById('smart_link');
+    // var isSmartLinkChecked = false;
+    // if (isSmartElement) {
+    //   isSmartLinkChecked = document.getElementById('smart_link').checked;
+    // }
+    var userRole = window.location.pathname.split('/')[1];
+    extractAllLinks(e, userRole);
     props.onContentSave(e);
     props.onContentChanged(true);
   };
@@ -221,6 +256,58 @@ export default (props) => {
 
       e.preventDefault();
     });
+
+    if (!$('#smart_link').length) {
+      $('._se_anchor_download')
+        .parent()
+        .after(
+          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >smart link</span>`,
+        );
+    }
+
+    $("input[type='checkbox']").change(function (e) {
+      let textValue = '';
+      if (e.currentTarget.id === 'smart_link') {
+        if (e.currentTarget.checked) {
+          document.getElementById('smart_link').checked = true;
+          $('.se-input-url').parent().parent().css('display', 'none');
+          textValue = 'journal_new_create_link_smart';
+        } else {
+          document.getElementById('smart_link').checked = false;
+          $('.se-input-url').parent().parent().css('display', 'block');
+          textValue = '';
+        }
+        $('.se-input-url').val(textValue).trigger('change');
+        setTimeout(() => {
+          $('._se_bookmark_button').click();
+        }, 500);
+      }
+    });
+
+    // $(document).on('click', '#smart_link', function() {
+
+    //   $('.se-input-url').val(clickedLink).trigger('change');
+    //   setTimeout(() => {
+    //     $('._se_bookmark_button').click();
+    //   }, 500);
+
+    //   var isSmartLinkChecked = document.getElementById("smart_link").checked
+
+    //   if (isSmartLinkChecked)
+    //     document.getElementById("smart_link").checked = false
+    //   else
+    //     document.getElementById("smart_link").checked = true
+
+    //   isSmartLinkChecked = document.getElementById("smart_link").checked
+    //   debugger
+
+    //   if (isSmartLinkChecked) {
+    //     $('.se-input-url').parent().parent().css('display', 'none');
+    //   } else {
+    //     $('.se-input-url').parent().parent().css('display', 'block');
+    //   }
+
+    // });
   }, []);
 
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
