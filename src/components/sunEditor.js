@@ -112,14 +112,14 @@ export default (props) => {
     doc.innerHTML = rawHTML;
     var links = doc.getElementsByTagName('a');
     let subject;
-    for (var i = 0; i < links.length; i++) {
-      let params = new URL(links[i].href).searchParams;
-      let isSmartLink = params.get('smart_link');
-      var parsedUrl = new URL(links[i].href);
-      if (window.location.host === parsedUrl.host)
-        links[i].className = 'linked-click';
+    var isSmartLinkChecked = document.getElementById('smart_link').checked;
 
-      if (!isSmartLink && window.location.host === parsedUrl.host) {
+    for (var i = 0; i < links.length; i++) {
+      // let params = new URL(links[i].href).searchParams;
+      // let isSmartLink = Boolean(params.get('smart_link'));
+      // var parsedUrl = new URL(links[i].href);
+
+      if (links[i].href.includes('journal_new_create_link_smart')) {
         links[i].setAttribute(
           'href',
           window.location.host +
@@ -128,6 +128,7 @@ export default (props) => {
             `subject=${links[i].innerHTML}`,
         );
         subject = links[i].innerHTML;
+        links[i].className = 'linked-click';
       }
     }
 
@@ -139,15 +140,13 @@ export default (props) => {
   };
 
   const handleEditorChange = (e) => {
-    var isSmartElement = document.getElementById('smart_link');
-    var isSmartLinkChecked = false;
-    if (isSmartElement) {
-      isSmartLinkChecked = document.getElementById('smart_link').checked;
-    }
+    // var isSmartElement = document.getElementById('smart_link');
+    // var isSmartLinkChecked = false;
+    // if (isSmartElement) {
+    //   isSmartLinkChecked = document.getElementById('smart_link').checked;
+    // }
 
-    if (isSmartLinkChecked) {
-      extractAllLinks(e);
-    }
+    extractAllLinks(e);
     props.onContentSave(e);
     props.onContentChanged(true);
   };
@@ -216,7 +215,7 @@ export default (props) => {
         if (e.currentTarget.checked) {
           document.getElementById('smart_link').checked = true;
           $('.se-input-url').parent().parent().css('display', 'none');
-          textValue = clickedLink;
+          textValue = 'journal_new_create_link_smart';
         } else {
           document.getElementById('smart_link').checked = false;
           $('.se-input-url').parent().parent().css('display', 'block');
@@ -225,7 +224,7 @@ export default (props) => {
         $('.se-input-url').val(textValue).trigger('change');
         setTimeout(() => {
           $('._se_bookmark_button').click();
-        }, 300);
+        }, 500);
       }
     });
 
