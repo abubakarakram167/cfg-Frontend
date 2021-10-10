@@ -115,11 +115,13 @@ export default (props) => {
     var isSmartLinkChecked = document.getElementById('smart_link').checked;
 
     for (var i = 0; i < links.length; i++) {
-      // let params = new URL(links[i].href).searchParams;
-      // let isSmartLink = Boolean(params.get('smart_link'));
+      let params = new URL(links[i].href).searchParams;
+      let isSmartLink = Boolean(params.get('smart_link'));
       // var parsedUrl = new URL(links[i].href);
-
-      if (links[i].href.includes('journal_new_create_link_smart')) {
+      if (
+        links[i].href.includes('journal_new_create_link_smart') ||
+        isSmartLink
+      ) {
         links[i].setAttribute(
           'href',
           window.location.host +
@@ -205,7 +207,7 @@ export default (props) => {
       $('._se_anchor_download')
         .parent()
         .after(
-          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >smart link</span>`,
+          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >Smart Link</span>`,
         );
     }
 
