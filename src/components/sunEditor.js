@@ -135,10 +135,8 @@ export default (props) => {
       }
     }
 
-    if (subject) {
-      $('.sun-editor-editable').html(doc.innerHTML);
-      props.onContentSave(doc.innerHTML);
-    }
+    $('.sun-editor-editable').html(doc.innerHTML);
+    props.onContentSave(doc.innerHTML);
   };
 
   const handleEditorChange = (e, core) => {
@@ -207,7 +205,7 @@ export default (props) => {
       $('._se_anchor_download')
         .parent()
         .after(
-          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >smart link</span>`,
+          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >Smart link</span>`,
         );
     }
 
