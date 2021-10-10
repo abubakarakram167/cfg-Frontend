@@ -15,6 +15,7 @@ let fileData = null;
 let contentData;
 let add = false;
 let clickedLink = '';
+let allLinks = [];
 
 export default (props) => {
   const dispatch = useDispatch();
@@ -117,11 +118,8 @@ export default (props) => {
     for (var i = 0; i < links.length; i++) {
       let params = new URL(links[i].href).searchParams;
       let isSmartLink = Boolean(params.get('smart_link'));
-      // var parsedUrl = new URL(links[i].href);
-      if (
-        links[i].href.includes('journal_new_create_link_smart') ||
-        isSmartLink
-      ) {
+
+      if (links[i].href.includes('journal_new_create_link_smart')) {
         links[i].setAttribute(
           'href',
           window.location.host +
@@ -132,16 +130,25 @@ export default (props) => {
         subject = links[i].innerHTML;
         links[i].setAttribute('class', 'linked-click');
       }
+      if (isSmartLink) {
+        links[i].setAttribute(
+          'href',
+          window.location.host +
+            `?smart_link=${true}` +
+            '&' +
+            `subject=${links[i].innerHTML}`,
+        );
+        links[i].setAttribute('class', 'linked-click');
+      }
     }
 
     if (subject) {
       $('.sun-editor-editable').html(doc.innerHTML);
       props.onContentSave(doc.innerHTML);
-      // props.onGetSubject(subject);
     }
   };
 
-  const handleEditorChange = (e) => {
+  const handleEditorChange = (e, core) => {
     // var isSmartElement = document.getElementById('smart_link');
     // var isSmartLinkChecked = false;
     // if (isSmartElement) {
@@ -207,7 +214,7 @@ export default (props) => {
       $('._se_anchor_download')
         .parent()
         .after(
-          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >Smart Link</span>`,
+          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >Smart LINK</span>`,
         );
     }
 
