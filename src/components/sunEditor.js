@@ -130,6 +130,7 @@ export default (props) => {
         subject = links[i].innerHTML;
         links[i].setAttribute('class', 'linked-click');
       }
+
       if (isSmartLink) {
         links[i].setAttribute(
           'href',
@@ -155,7 +156,11 @@ export default (props) => {
     //   isSmartLinkChecked = document.getElementById('smart_link').checked;
     // }
 
-    extractAllLinks(e);
+    if (
+      window.location.pathname.split('/')[3] !== 'display' &&
+      window.location.pathname.split('/')[2] !== 'conversation'
+    )
+      extractAllLinks(e);
     props.onContentSave(e);
     props.onContentChanged(true);
   };
@@ -214,7 +219,7 @@ export default (props) => {
       $('._se_anchor_download')
         .parent()
         .after(
-          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >Smart LINK</span>`,
+          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >Smart Link</span>`,
         );
     }
 
