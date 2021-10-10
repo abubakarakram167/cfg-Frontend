@@ -128,7 +128,7 @@ export default (props) => {
             `subject=${links[i].innerHTML}`,
         );
         subject = links[i].innerHTML;
-        links[i].className = 'linked-click';
+        links[i].setAttribute('class', 'linked-click');
       }
     }
 
@@ -205,7 +205,7 @@ export default (props) => {
       $('._se_anchor_download')
         .parent()
         .after(
-          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >Smart links</span>`,
+          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >smart link</span>`,
         );
     }
 
