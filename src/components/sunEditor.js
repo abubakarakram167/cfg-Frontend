@@ -14,7 +14,6 @@ let allImages = [];
 let fileData = null;
 let contentData;
 let add = false;
-let smartLink = false;
 let clickedLink = '';
 
 export default (props) => {
@@ -54,38 +53,11 @@ export default (props) => {
           );
           $('._se_input_url').val('asdads');
 
-          if (!$('._se_anchor_smart_link').length) {
-            $('._se_anchor_download')
-              .parent()
-              .after(
-                '<label><input id = "smart_link" style = "margin-left: 20px;" type="checkbox" class="se-dialog-btn-check _se_anchor_smart_link">&nbsp;Smart link</label>',
-              );
-          }
-
           $('.se-file-browser-list').append('asdasd');
           $('.select-images').on('click', function (e) {
             add = false;
             fileData = this.src;
             appendImage();
-          });
-
-          $('._se_anchor_smart_link').on('click', function (e) {
-            $('.se-input-url').val(clickedLink).trigger('change');
-            setTimeout(() => {
-              $('._se_bookmark_button').click();
-            }, 500);
-
-            if (smartLink) {
-              smartLink = false;
-            } else {
-              smartLink = true;
-            }
-
-            if (smartLink) {
-              $('.se-input-url').parent().parent().css('display', 'none');
-            } else {
-              $('.se-input-url').parent().parent().css('display', 'block');
-            }
           });
 
           $('.se-tooltip').on('click', function (e) {
@@ -150,7 +122,7 @@ export default (props) => {
       if (!isSmartLink && window.location.host === parsedUrl.host) {
         links[i].setAttribute(
           'href',
-          window.location.href +
+          window.location.host +
             `?smart_link=${true}` +
             '&' +
             `subject=${links[i].innerHTML}`,
@@ -167,7 +139,13 @@ export default (props) => {
   };
 
   const handleEditorChange = (e) => {
-    if (smartLink) {
+    var isSmartElement = document.getElementById('smart_link');
+    var isSmartLinkChecked = false;
+    if (isSmartElement) {
+      isSmartLinkChecked = document.getElementById('smart_link').checked;
+    }
+
+    if (isSmartLinkChecked) {
       extractAllLinks(e);
     }
     props.onContentSave(e);
@@ -223,6 +201,58 @@ export default (props) => {
 
       e.preventDefault();
     });
+
+    if (!$('#smart_link').length) {
+      $('._se_anchor_download')
+        .parent()
+        .after(
+          `<input class = "se-dialog-btn-check _se_anchor_url" id = "smart_link" style = "margin-left: 20px;" type="checkbox" ><span style = "font-weight: 600; font-size: 14px;" for = "smart_link" >Smart link</span>`,
+        );
+    }
+
+    $("input[type='checkbox']").change(function (e) {
+      let textValue = '';
+      if (e.currentTarget.id === 'smart_link') {
+        if (e.currentTarget.checked) {
+          document.getElementById('smart_link').checked = true;
+          $('.se-input-url').parent().parent().css('display', 'none');
+          textValue = clickedLink;
+        } else {
+          document.getElementById('smart_link').checked = false;
+          $('.se-input-url').parent().parent().css('display', 'block');
+          textValue = '';
+        }
+        $('.se-input-url').val(textValue).trigger('change');
+        setTimeout(() => {
+          $('._se_bookmark_button').click();
+        }, 300);
+      }
+    });
+
+    // $(document).on('click', '#smart_link', function() {
+
+    //   $('.se-input-url').val(clickedLink).trigger('change');
+    //   setTimeout(() => {
+    //     $('._se_bookmark_button').click();
+    //   }, 500);
+
+    //   var isSmartLinkChecked = document.getElementById("smart_link").checked
+
+    //   if (isSmartLinkChecked)
+    //     document.getElementById("smart_link").checked = false
+    //   else
+    //     document.getElementById("smart_link").checked = true
+
+    //   isSmartLinkChecked = document.getElementById("smart_link").checked
+    //   debugger
+
+    //   if (isSmartLinkChecked) {
+    //     $('.se-input-url').parent().parent().css('display', 'none');
+    //   } else {
+    //     $('.se-input-url').parent().parent().css('display', 'block');
+    //   }
+
+    // });
   }, []);
 
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
