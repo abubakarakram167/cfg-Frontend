@@ -12,7 +12,7 @@ export default function UserProfile() {
       <br />
       {/* <CfgCard /> */}
       {/* <br /> */}
-      {/* <GoalCard /> */}
+      <GoalCard />
       <br />
       <DemographyCard />
     </CommonComponent>
