@@ -23,6 +23,7 @@ import MediaGroup from 'redux/services/mediagroup';
 import {transformImagesInContent} from 'components/ReUsable';
 import $ from 'jquery';
 import {getSignedUrl} from '../../../redux/actions/media';
+import {getUserJourney} from '../../../redux/actions/journal';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -38,6 +39,9 @@ const useStyling = makeStyles({
 export default function UserHomePage() {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.userPost.posts);
+  const allJournals = useSelector((state) => {
+    return state.journal.userJournals;
+  });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [conversationExtended, setConversationExtended] = useState(false);
   const [count, setCount] = useState(3);
@@ -46,15 +50,24 @@ export default function UserHomePage() {
   const permissions = useSelector((state) => state.roles.permissions);
   const history = useHistory();
   const [allTransformPosts, setAllTransformPosts] = useState(null);
-
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
   const [dayTools, setDayTools] = useState([]);
-
   const getRestoredImage = (featureImageUrl) => {
     return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
   };
+
+  const getUserJourneys = () => {
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    dispatch(getUserJourney(user.id));
+  };
+
+  console.log('all journals', allJournals);
+
+  useEffect(() => {
+    getUserJourneys();
+  }, []);
 
   const getDayTools = async () => {
     try {
@@ -308,6 +321,11 @@ export default function UserHomePage() {
       scrollAction={() => {
         setCount(count + 3);
       }}>
+      {allJournals.length > 0 && (
+        <Link to={`/home/journals/list`}>
+          <img src={require('../../../assets/journey.png')} />
+        </Link>
+      )}
       <CreatePost />
       {transform.map((element, index) => {
         return (

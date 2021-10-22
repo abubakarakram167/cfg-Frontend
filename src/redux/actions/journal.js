@@ -1,15 +1,41 @@
-// import Api from '../../@crema/services/ApiConfig';
 import Api from '../../utils/axios';
-import baseUrl from '../../utils/url';
 import {
   FETCH_ERROR,
-  Get_Preferences,
   FETCH_START,
   Show_Message,
-  FETCH_SUCCESS,
-  Get_Media,
   Create_journal,
+  Get_User_Journals,
 } from '../../shared/constants/ActionTypes';
+
+export const getUserJourney = (userId) => {
+  return (dispatch) => {
+    Api.get(`/api/journals?user_id=${userId}&type=journey&track_my_goal=true`)
+      .then((data) => {
+        const allJournals = data.data.filter((journal) => {
+          if (
+            journal.subject &&
+            journal.track_my_goal &&
+            journal.type === 'journey' &&
+            journal.start_date &&
+            journal.end_date
+          ) {
+            return true;
+          } else return false;
+        });
+        console.log('after filter', allJournals);
+        if (data.status === 200) {
+          dispatch({
+            type: Get_User_Journals,
+            payload: allJournals,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log('errorrrr', error);
+        dispatch({type: FETCH_ERROR, payload: error.message});
+      });
+  };
+};
 
 export const createJournal = (journalData) => {
   return (dispatch) => {

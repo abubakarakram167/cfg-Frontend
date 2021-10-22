@@ -1,0 +1,38 @@
+/* .outer-div{
+  width: 60%;
+  margin: auto; 
+  margin-top:20px;
+}
+
+.image{
+  height: 500px;
+} */
+
+.hilight h2 {
+  font-family: Helvetica, Verdana;
+  color: #fff;
+  z-index: 200;
+}
+
+.promo {
+  position: relative;
+  width: 60%;
+  margin: auto;
+  margin-top: 20px;
+}
+.promo img {
+  z-index: 1;
+  height: 500px;
+}
+
+.hilight {
+  background-color: #000;
+  position: absolute;
+  height: 85px;
+  width: 415px;
+  opacity: 0.65;
+  font-family: Verdana, Geneva, sans-serif;
+  color: #fff;
+  bottom: 0px;
+  z-index: 1;
+}
