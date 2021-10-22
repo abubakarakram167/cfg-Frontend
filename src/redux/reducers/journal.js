@@ -1,4 +1,7 @@
-import {Get_User_Journals} from '../../shared/constants/ActionTypes';
+import {
+  Get_User_Journals,
+  Get_User_goals,
+} from '../../shared/constants/ActionTypes';
 
 const initialState = {
   userJournals: [],
@@ -10,6 +13,11 @@ const journalReducer = (state = initialState, action) => {
       return {
         ...state,
         userJournals: action.payload,
+      };
+    case Get_User_goals:
+      return {
+        ...state,
+        userGoals: action.payload,
       };
     default:
       return state;

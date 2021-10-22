@@ -5,7 +5,38 @@ import {
   Show_Message,
   Create_journal,
   Get_User_Journals,
+  Get_User_goals,
 } from '../../shared/constants/ActionTypes';
+
+export const getUserGoals = (userId) => {
+  return (dispatch) => {
+    Api.get(`/api/journals?user_id=${userId}&type=goal&track_my_goal=true`)
+      .then((data) => {
+        const allGoals = data.data.filter((journal) => {
+          if (
+            journal.subject &&
+            journal.type === 'goal' &&
+            journal.start_date &&
+            journal.end_date &&
+            journal.status
+          ) {
+            return true;
+          } else return false;
+        });
+
+        if (data.status === 200) {
+          dispatch({
+            type: Get_User_goals,
+            payload: allGoals,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log('errorrrr', error);
+        dispatch({type: FETCH_ERROR, payload: error.message});
+      });
+  };
+};
 
 export const getUserJourney = (userId) => {
   return (dispatch) => {
@@ -14,15 +45,15 @@ export const getUserJourney = (userId) => {
         const allJournals = data.data.filter((journal) => {
           if (
             journal.subject &&
-            journal.track_my_goal &&
             journal.type === 'journey' &&
             journal.start_date &&
-            journal.end_date
+            journal.end_date &&
+            journal.status
           ) {
             return true;
           } else return false;
         });
-        console.log('after filter', allJournals);
+
         if (data.status === 200) {
           dispatch({
             type: Get_User_Journals,

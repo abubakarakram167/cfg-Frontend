@@ -63,8 +63,6 @@ export default function UserHomePage() {
     dispatch(getUserJourney(user.id));
   };
 
-  console.log('all journals', allJournals);
-
   useEffect(() => {
     getUserJourneys();
   }, []);
@@ -323,7 +321,10 @@ export default function UserHomePage() {
       }}>
       {allJournals.length > 0 && (
         <Link to={`/home/journals/list`}>
-          <img src={require('../../../assets/journey.png')} />
+          <img
+            style={{height: 300, width: '100%'}}
+            src={require('../../../assets/new_journey_image.png')}
+          />
         </Link>
       )}
       <CreatePost />

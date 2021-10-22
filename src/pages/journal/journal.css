@@ -26,13 +26,37 @@
 }
 
 .hilight {
-  background-color: #000;
+  background-color: #d5d3d3;
   position: absolute;
-  height: 85px;
-  width: 415px;
-  opacity: 0.65;
+  height: 70%;
+  width: 100%;
+  opacity: 0.7;
   font-family: Verdana, Geneva, sans-serif;
-  color: #fff;
+  color: #b9b9b9;
   bottom: 0px;
   z-index: 1;
+  top: 0;
+  overflow-y: scroll;
+}
+
+.journal-container {
+  padding-left: 10px;
+  border-bottom: 2px solid #918d8d;
+}
+
+.journal-title {
+  color: #403e3e;
+  margin: 1px;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.journal-date-interval {
+  color: #747272;
+  margin: 1px;
+}
+.journal-points {
+  font-weight: 600;
+  color: #df3434;
+  margin: 1px;
 }

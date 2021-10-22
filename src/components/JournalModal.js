@@ -75,6 +75,7 @@ export default function (props) {
   const [isContentChange, setContentChanged] = useState(false);
   const [journalData, setjournalData] = useState({
     type: 'journal',
+    status: 'Not Started',
   });
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('current-user'));
@@ -121,13 +122,14 @@ export default function (props) {
       end_date: moment(journalData.end_date).format('YYYY-MM-DD'),
       detail: innerContent,
       log_date: moment().format('YYYY-MM-DD'),
-      status: 'nothing',
+      status: journalData.status,
       type: type,
       parent: props.parent,
       track_my_goal: !_.isEmpty(journalData)
         ? journalData.track_my_goal
         : props.track_my_goal,
     };
+    if (type === 'journey') payload.track_my_goal = true;
 
     if (!journalId) {
       dispatch(createJournal(payload))
@@ -202,6 +204,27 @@ export default function (props) {
             <MenuItem value={'journal'}>Journal</MenuItem>
           </Select>
         </div>
+        <div className='journal-modal-subitems'>
+          <Select
+            labelId='demo-simple-select-filled-label'
+            id='demo-simple-select-filled'
+            onChange={(e) => {
+              let journal = Object.assign({}, journalData);
+              journal.status = e.target.value;
+              setjournalData(journal);
+            }}
+            variant='filled'
+            fullWidth
+            defaultValue='Not Started'
+            value={journalData.status}
+            label='Status'
+            required>
+            <MenuItem value={'Not Started'}>Not Started</MenuItem>
+            <MenuItem value={'In Progress'}>In Progress</MenuItem>
+            <MenuItem value={'Complete'}>Complete</MenuItem>
+            <MenuItem value={'Overdue'}>Overdue</MenuItem>
+          </Select>
+        </div>
         {type === 'goal' && (
           <div className='journal-modal-subitems'>
             <span style={{marginRight: 50}}>Track My Goal</span>
@@ -221,8 +244,8 @@ export default function (props) {
           </div>
         )}
         {!_.isEmpty(journalData) &&
-          type === 'goal' &&
-          journalData.track_my_goal && (
+          journalData.track_my_goal &&
+          type === 'goal' && (
             <div>
               <div className='journal-modal-subitems'>
                 <span className='dates'>
@@ -280,6 +303,64 @@ export default function (props) {
               </div>
             </div>
           )}
+        {type === 'journey' && (
+          <div>
+            <div className='journal-modal-subitems'>
+              <span className='dates'>
+                <KeyboardDatePicker
+                  disableToolbar
+                  format='MM/DD/yyyy'
+                  label='Start Date'
+                  fullWidth
+                  variant='filled'
+                  className={classes.datePicker}
+                  value={
+                    !_.isEmpty(journalData) && journalData.start_date
+                      ? journalData.start_date
+                      : moment().format('YYYY-MM-DD')
+                  }
+                  onChange={(e) => {
+                    console.log('on changing date', e);
+                    setjournalData({
+                      ...journalData,
+                      start_date: e,
+                    });
+                  }}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </span>
+            </div>
+            <div className='journal-modal-subitems'>
+              <span className='dates'>
+                <KeyboardDatePicker
+                  disableToolbar
+                  format='MM/DD/yyyy'
+                  variant='filled'
+                  fullWidth
+                  label='End Date'
+                  className={classes.datePicker}
+                  value={
+                    !_.isEmpty(journalData) && journalData.end_date
+                      ? journalData.end_date
+                      : moment().format('YYYY-MM-DD')
+                  }
+                  onChange={(e) => {
+                    console.log('on changing date', e);
+                    setjournalData({
+                      ...journalData,
+                      end_date: e,
+                    });
+                  }}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </span>
+            </div>
+          </div>
+        )}
         <div
           style={{
             display: 'flex',
