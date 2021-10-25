@@ -117,7 +117,7 @@ export default function (props) {
   const addJournal = async () => {
     const payload = {
       user_id: user.id,
-      subject: !_.isEmpty(journalData) ? journalData.subject : props.subject,
+      subject: props.journalId ? journalData.subject : props.subject,
       start_date: moment(journalData.start_date).format('YYYY-MM-DD'),
       end_date: moment(journalData.end_date).format('YYYY-MM-DD'),
       detail: innerContent,
@@ -154,6 +154,11 @@ export default function (props) {
         .then((res) => {
           if (res.data.length) {
             setType(res.data[0].type);
+            if (res.data[0]) {
+              if (!res.data[0].status) {
+                res.data[0].status = 'Not Started';
+              }
+            }
             setjournalData(res.data[0]);
             setInnerContent(res.data[0].detail);
             props.getJournalData(res.data[0]);
