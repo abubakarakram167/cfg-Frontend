@@ -54,9 +54,23 @@
 .journal-date-interval {
   color: #747272;
   margin: 1px;
+  font-size: 4vmin;
+  font-weight: 500;
 }
 .journal-points {
   font-weight: 600;
   color: #df3434;
   margin: 1px;
+}
+
+@media screen and (max-width: 600px) {
+  .promo {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .journal-date-interval {
+    font-size: 3vmin;
+  }
 }

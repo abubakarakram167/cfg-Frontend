@@ -42,18 +42,20 @@ export const getUserJourney = (userId) => {
   return (dispatch) => {
     Api.get(`/api/journals?user_id=${userId}&type=journey&track_my_goal=true`)
       .then((data) => {
+        console.log('before filter', data.data);
         const allJournals = data.data.filter((journal) => {
           if (
             journal.subject &&
             journal.type === 'journey' &&
             journal.start_date &&
             journal.end_date &&
-            journal.status
+            journal.status &&
+            journal.track_my_goal
           ) {
             return true;
           } else return false;
         });
-
+        console.log('after apply filter', allJournals);
         if (data.status === 200) {
           dispatch({
             type: Get_User_Journals,

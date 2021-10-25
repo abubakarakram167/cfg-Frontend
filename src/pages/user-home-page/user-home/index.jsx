@@ -167,7 +167,15 @@ export default function UserHomePage() {
       )
     : [];
 
-  console.log('the transform', transform);
+  const getColorStatus = (status) => {
+    let style = {color: 'green', fontSize: 12, margin: 1};
+    if (status === 'Complete') style.color = 'green';
+    else if (status === 'In Progress') style.color = '#787474';
+    else if (status === 'Not Started') style.color = 'grey';
+    else style.color = 'red';
+
+    return style;
+  };
 
   const left = (
     <List className={classesOther.childListPadding}>
@@ -320,11 +328,34 @@ export default function UserHomePage() {
         setCount(count + 3);
       }}>
       {allJournals.length > 0 && (
-        <Link to={`/home/journals/list`}>
+        <Link style={{position: 'relative'}} to={`/home/journals/list`}>
           <img
-            style={{height: 300, width: '100%'}}
+            style={{
+              height: 300,
+              width: '100%',
+              borderRadius: 10,
+              marginBottom: 20,
+            }}
             src={require('../../../assets/new_journey_image.png')}
           />
+          <div className='journal-text'>
+            <p className='journey-heading'>My Journey</p>
+            <div className='journal-list-container'>
+              {allJournals.length &&
+                allJournals
+                  .slice(Math.max(allJournals.length - 5, 0))
+                  .map((journal) => {
+                    return (
+                      <div className='journal-list-element'>
+                        <p className='journal-subject'>{journal.subject}</p>
+                        <p style={getColorStatus(journal.status)}>
+                          {journal.status}
+                        </p>
+                      </div>
+                    );
+                  })}
+            </div>
+          </div>
         </Link>
       )}
       <CreatePost />

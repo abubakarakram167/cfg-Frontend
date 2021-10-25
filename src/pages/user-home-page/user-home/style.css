@@ -46,3 +46,32 @@
   list-style-type: none;
   padding-left: 10px;
 }
+
+.journal-text {
+  position: absolute;
+  top: 20%;
+  left: 60%;
+  color: white;
+}
+
+.journey-heading {
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.journal-list-container {
+  overflow-y: scroll;
+  height: 80px;
+}
+
+.journal-list-container::-webkit-scrollbar {
+  /* WebKit */
+  width: 0;
+  height: 0;
+}
+
+.journal-subject {
+  margin: 0;
+  font-size: 12px;
+  color: #1c1c1c;
+}
