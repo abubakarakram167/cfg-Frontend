@@ -28,6 +28,7 @@ import {
   QuizAddScreen,
   QuizListingScreen,
 } from 'pages/Quiz/Loadable';
+import ShowMiniContent from 'pages/showContent';
 
 export default [
   <ProtectedRoute exact path='/admin' component={AdminHome} />,
@@ -35,6 +36,11 @@ export default [
     exact
     path='/admin/editor/:type/:id/:contentHeaderId'
     component={withRouter(Editor)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/mini/encrypted_id'
+    component={withRouter(ShowMiniContent)}
   />,
   <ProtectedRoute
     exact

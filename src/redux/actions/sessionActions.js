@@ -9,6 +9,7 @@ import {
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Session from '../services/session';
 import jsCookie from 'js-cookie';
+import Api from '../../utils/axios';
 
 export const createSession = (params) => {
   return async function (dispatch) {
@@ -41,6 +42,23 @@ export const createSession = (params) => {
       }
     }
   };
+};
+
+export const sendInvite = (body) => {
+  return new Promise((res, rej) => {
+    Api.post(`api/invites`, body)
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        rej(false);
+        console.log('the error', error.response);
+      });
+  });
 };
 
 export const createSessionTitle = (params, type) => {
