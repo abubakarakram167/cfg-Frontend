@@ -39,11 +39,6 @@ export default [
   />,
   <ProtectedRoute
     exact
-    path='/mini/encrypted_id'
-    component={withRouter(ShowMiniContent)}
-  />,
-  <ProtectedRoute
-    exact
     path='/admin/content/display/:id'
     component={withRouter(ContentDisplay)}
   />,

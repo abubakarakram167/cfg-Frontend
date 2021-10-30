@@ -58,3 +58,12 @@
   box-shadow: 0px 1px 2px gainsboro;
   outline: none;
 }
+
+.accept-reject-button {
+  font-size: 12px;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #dbdbdb;
+  color: black;
+  border: 1px solid gray;
+}

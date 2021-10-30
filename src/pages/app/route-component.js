@@ -10,7 +10,7 @@ import Home from './home';
 import Auth from 'pages/auth-pages';
 import ResetPassword from 'pages/auth-pages/reset-password/index';
 import CreatePassword from 'pages/auth-pages/create-password/index';
-
+import ShowMiniContent from 'pages/showContent';
 import UnAuthorizedPage from 'pages/unauthorized-page';
 
 const user = JSON.parse(localStorage.getItem('current-user'));
@@ -42,6 +42,9 @@ const RouteComponent = (props) => {
           </Route>
           <Route exact path='/reset'>
             <ResetPassword />
+          </Route>
+          <Route path='/mini/:encrypted_id'>
+            <ShowMiniContent />
           </Route>
           <Route path='/unAuthorizedPage'>
             <UnAuthorizedPage />

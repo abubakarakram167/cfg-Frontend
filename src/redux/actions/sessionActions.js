@@ -61,6 +61,40 @@ export const sendInvite = (body) => {
   });
 };
 
+export const getInvite = (body) => {
+  return new Promise((res, rej) => {
+    Api.get(`api/invites?cfg_id=${body.cfg_id}&user_id=${body.user_id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        rej(false);
+        console.log('the error', error.response);
+      });
+  });
+};
+
+export const updateInvite = (body) => {
+  return new Promise((res, rej) => {
+    Api.put(`api/invites/${body.inviteId}`, {status: body.status})
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        console.log('the error', error);
+        rej(false);
+      });
+  });
+};
+
 export const createSessionTitle = (params, type) => {
   return async function (dispatch) {
     return new Promise((res, rej) => {
