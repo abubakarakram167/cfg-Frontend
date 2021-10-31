@@ -1,4 +1,6 @@
 .host-a-conversation-container {
+  width: 70%;
+  margin: auto;
 }
 .conversation-invites {
   display: flex;
@@ -8,4 +10,25 @@
 }
 .conversation-participant-chip {
   margin-right: 5px;
+}
+
+.image {
+  width: 280px;
+  height: 220px;
+}
+
+.image-container {
+  position: relative;
+  text-align: center;
+}
+
+.whole-container {
+  border: 1px solid #c3c3c3;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.feature-image {
+  width: 300px;
+  height: 220px;
 }

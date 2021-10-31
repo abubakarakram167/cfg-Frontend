@@ -142,6 +142,7 @@ export const registerAction = (data) => {
 export const passwordResetAction = (data) => {
   return async function (dispatch) {
     try {
+      console.log('the data', data);
       const response = await Auth.reset(data);
       console.log('here');
       console.log(response);

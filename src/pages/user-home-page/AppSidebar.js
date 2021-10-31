@@ -24,6 +24,7 @@ import {
   Home,
   AccountCircle,
   Bookmark,
+  ChatBubble,
   Cancel,
 } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
@@ -369,14 +370,14 @@ const AppSidebar = (props) => {
               <ListItemText primary='CFG Tools' />
             </ListItem>
           </Link>
-          {/* <Link to='/home/host-a-conversation'>
+          <Link to='/home/host-a-conversation'>
             <ListItem>
               <ListItemIcon>
                 <ChatBubble style={{color: 'red'}} />
               </ListItemIcon>
               <ListItemText primary='Host A Conversation' />
             </ListItem>
-          </Link> */}
+          </Link>
           <ListItem onClick={handleLogout}>
             <ListItemIcon>
               <Logout style={{color: 'red'}} />

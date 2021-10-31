@@ -28,6 +28,7 @@ import {
   QuizAddScreen,
   QuizListingScreen,
 } from 'pages/Quiz/Loadable';
+import ShowMiniContent from 'pages/showContent';
 
 export default [
   <ProtectedRoute exact path='/admin' component={AdminHome} />,

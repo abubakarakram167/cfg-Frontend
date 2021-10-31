@@ -13,7 +13,14 @@ import {
   ListItem,
   Collapse,
 } from '@material-ui/core';
-import {Forum, Group, Build, ExpandMore, ExpandLess} from '@material-ui/icons';
+import {
+  Forum,
+  Group,
+  Build,
+  ExpandMore,
+  ExpandLess,
+  ChatBubble,
+} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
@@ -268,6 +275,14 @@ export default function UserHomePage() {
             <Build />
           </ListItemIcon>
           <ListItemText primary='CFG Tools' />
+        </ListItem>
+      </Link>
+      <Link to='/home/host-a-conversation'>
+        <ListItem>
+          <ListItemIcon>
+            <ChatBubble style={{color: 'red'}} />
+          </ListItemIcon>
+          <ListItemText primary='Host A Conversation' />
         </ListItem>
       </Link>
     </List>
