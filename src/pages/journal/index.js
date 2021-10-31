@@ -62,10 +62,10 @@ export default function MediaLibrary() {
             {!type && (
               <span
                 style={{
-                  color: 'black',
-                  position: 'relative',
-                  top: 40,
-                  left: 5,
+                  color: '#666666',
+                  position: 'absolute',
+                  left: 10,
+                  marginTop: 15,
                 }}>
                 Type
               </span>
@@ -79,6 +79,7 @@ export default function MediaLibrary() {
               defaultValue='journal'
               value={type}
               label='Type'
+              style={{backgroundColor: 'transparent', borderBottom: 0}}
               required>
               <MenuItem value={null}>Not any</MenuItem>
               <MenuItem value={'goal'}>Goal</MenuItem>
@@ -90,10 +91,10 @@ export default function MediaLibrary() {
             {!status && (
               <span
                 style={{
-                  color: 'black',
-                  position: 'relative',
-                  top: 40,
-                  left: 5,
+                  color: '#666666',
+                  position: 'absolute',
+                  left: 10,
+                  marginTop: 15,
                 }}>
                 Status
               </span>
@@ -107,6 +108,7 @@ export default function MediaLibrary() {
               defaultValue='journal'
               value={status}
               label='Status'
+              style={{backgroundColor: 'transparent'}}
               required>
               <MenuItem value={null}> Not any </MenuItem>
               <MenuItem value={'Not Started'}>Not Started</MenuItem>
