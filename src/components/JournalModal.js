@@ -20,6 +20,7 @@ import {KeyboardDatePicker} from '@material-ui/pickers';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import $ from 'jquery';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 const width = $(window).width();
 
 const getWidthAccordingToDevice = (width) => {
@@ -82,6 +83,7 @@ export default function (props) {
   const journalId = props.journalId;
   const subject = props.subject;
   const [type, setType] = useState('journal');
+  const [fieldSubject, setFieldSubject] = useState(null);
 
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
     const formData = new FormData();
@@ -130,11 +132,13 @@ export default function (props) {
         : props.track_my_goal,
     };
     if (type === 'journey') payload.track_my_goal = true;
+    if (fieldSubject) payload.subject = fieldSubject;
 
     if (!journalId) {
       dispatch(createJournal(payload))
         .then((res) => {
           const data = res.data.result;
+          console.log('after add journal', data);
           props.onClose();
         })
         .catch((err) => console.log('the error', err));
@@ -178,6 +182,21 @@ export default function (props) {
       aria-describedby='simple-modal-description'
       style={{backgroundColor: 'rgb(8 8 8 / 50%)'}}>
       <div style={modalStyle} className={classes.paper}>
+        {props.showTextField && (
+          <TextareaAutosize
+            onChange={(e) => setFieldSubject(e.target.value)}
+            value={fieldSubject}
+            style={{
+              fontSize: 25,
+              width: '100%',
+              border: 'none',
+              backgroundColor: '#f9f9f9',
+              color: 'gray',
+            }}
+            aria-label='empty textarea'
+            placeholder='Enter an subject'
+          />
+        )}
         <h2 className='subject-heading'>
           {!_.isEmpty(journalData) ? journalData.subject : props.subject}
         </h2>

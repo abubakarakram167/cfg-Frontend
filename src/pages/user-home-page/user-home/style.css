@@ -49,19 +49,28 @@
 
 .journal-text {
   position: absolute;
-  top: 20%;
+  top: 5%;
   left: 60%;
   color: white;
+  width: 30%;
+  height: 80%;
+  border: 1px solid #d7d0d0;
+  background-color: #dfdbdb;
+  opacity: 0.5;
+  border-radius: 10px;
 }
 
 .journey-heading {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 20px;
+  text-align: center;
+  color: red;
+  border-bottom: 1px solid gray;
 }
 
 .journal-list-container {
   overflow-y: scroll;
-  height: 80px;
+  height: 200px;
 }
 
 .journal-list-container::-webkit-scrollbar {
@@ -72,6 +81,19 @@
 
 .journal-subject {
   margin: 0;
-  font-size: 12px;
+  font-size: 16px;
   color: #1c1c1c;
+  font-weight: 500;
+}
+
+.journal-list-element {
+  border-bottom: 2px solid darkgray;
+  padding: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  .journal-text {
+    left: 8%;
+    width: 85%;
+  }
 }

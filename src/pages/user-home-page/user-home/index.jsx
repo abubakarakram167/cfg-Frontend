@@ -343,16 +343,18 @@ export default function UserHomePage() {
         setCount(count + 3);
       }}>
       {allJournals.length > 0 && (
-        <Link style={{position: 'relative'}} to={`/home/journals/list`}>
-          <img
-            style={{
-              height: 300,
-              width: '100%',
-              borderRadius: 10,
-              marginBottom: 20,
-            }}
-            src={require('../../../assets/new_journey_image.png')}
-          />
+        <div style={{position: 'relative'}}>
+          <Link to={`/home/journals/list`}>
+            <img
+              style={{
+                height: 300,
+                width: '100%',
+                borderRadius: 10,
+                marginBottom: 20,
+              }}
+              src={require('../../../assets/new_journey_image.png')}
+            />
+          </Link>
           <div className='journal-text'>
             <p className='journey-heading'>My Journey</p>
             <div className='journal-list-container'>
@@ -371,7 +373,7 @@ export default function UserHomePage() {
                   })}
             </div>
           </div>
-        </Link>
+        </div>
       )}
       <CreatePost />
       {transform.map((element, index) => {

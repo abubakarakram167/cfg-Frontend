@@ -1,6 +1,7 @@
 import {
   Get_User_Journals,
   Get_User_goals,
+  delete_journal,
 } from '../../shared/constants/ActionTypes';
 
 const initialState = {
@@ -18,6 +19,13 @@ const journalReducer = (state = initialState, action) => {
       return {
         ...state,
         userGoals: action.payload,
+      };
+    case delete_journal:
+      return {
+        ...state,
+        userJournals: state.userJournals.filter(
+          (journal) => journal.id !== action.payload,
+        ),
       };
     default:
       return state;

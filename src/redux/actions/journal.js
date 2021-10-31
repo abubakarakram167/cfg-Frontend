@@ -6,6 +6,7 @@ import {
   Create_journal,
   Get_User_Journals,
   Get_User_goals,
+  delete_journal,
 } from '../../shared/constants/ActionTypes';
 
 export const getUserGoals = (userId) => {
@@ -46,16 +47,14 @@ export const getUserJourney = (userId) => {
         const allJournals = data.data.filter((journal) => {
           if (
             journal.subject &&
-            journal.type === 'journey' &&
             journal.start_date &&
             journal.end_date &&
-            journal.status &&
-            journal.track_my_goal
+            journal.status
           ) {
             return true;
           } else return false;
         });
-        console.log('after apply filter', allJournals);
+        console.log('after filter', allJournals);
         if (data.status === 200) {
           dispatch({
             type: Get_User_Journals,
@@ -149,16 +148,20 @@ export const updateJournal = (payload, journalId) => {
   };
 };
 
-export const deleteMediaData = (formData) => {
+export const deleteJournal = (journalId) => {
   return (dispatch) => {
     return new Promise((res, rej) => {
-      dispatch({type: FETCH_START});
-      Api.delete(`/api/media/${formData.id}`)
+      Api.delete(`/api/journals/${journalId}`)
         .then((data) => {
+          console.log('after delete', data);
           if (data.status === 200) {
             dispatch({
               type: Show_Message,
               payload: {message: 'Delete SuccessFully', success: true},
+            });
+            dispatch({
+              type: delete_journal,
+              payload: journalId,
             });
             res(true);
           } else {
@@ -169,40 +172,8 @@ export const deleteMediaData = (formData) => {
           }
         })
         .catch((error) => {
+          console.log('error', error);
           rej(false);
-          console.log('error', error.response);
-          dispatch({type: FETCH_ERROR, payload: error.message});
-        });
-    });
-  };
-};
-
-export const editMediaData = (formData) => {
-  return (dispatch) => {
-    return new Promise((res, rej) => {
-      dispatch({type: FETCH_START});
-      const body = {
-        title: formData.fileName,
-        description: formData.description,
-      };
-      Api.put(`/api/media/${formData.id}`, body)
-        .then((data) => {
-          if (data.status === 200) {
-            dispatch({
-              type: Show_Message,
-              payload: {message: 'Edit SuccessFully', success: true},
-            });
-            res(true);
-          } else {
-            dispatch({
-              type: Show_Message,
-              payload: {message: 'SuccessFully Not Edit', success: false},
-            });
-          }
-        })
-        .catch((error) => {
-          rej(false);
-          console.log('error', error.response);
           dispatch({type: FETCH_ERROR, payload: error.message});
         });
     });

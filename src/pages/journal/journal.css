@@ -22,7 +22,7 @@
 }
 .promo img {
   z-index: 1;
-  height: 500px;
+  height: 600px;
 }
 
 .hilight {
@@ -62,6 +62,9 @@
   color: #df3434;
   margin: 1px;
 }
+.image {
+  width: 100%;
+}
 
 @media screen and (max-width: 600px) {
   .promo {
@@ -72,5 +75,8 @@
 @media screen and (max-width: 400px) {
   .journal-date-interval {
     font-size: 3vmin;
+  }
+  .promo {
+    width: 90%;
   }
 }
