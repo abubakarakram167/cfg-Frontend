@@ -50,13 +50,13 @@
 .journal-text {
   position: absolute;
   top: 5%;
-  left: 60%;
+  left: 55%;
   color: white;
-  width: 30%;
+  width: 43%;
   height: 80%;
-  border: 1px solid #d7d0d0;
-  background-color: #dfdbdb;
-  opacity: 0.5;
+  border: 1px solid #b9b8b8;
+  background-color: #e1d7ce;
+  opacity: 0.7;
   border-radius: 10px;
 }
 
@@ -66,11 +66,12 @@
   text-align: center;
   color: red;
   border-bottom: 1px solid gray;
+  margin-bottom: 0px;
 }
 
 .journal-list-container {
   overflow-y: scroll;
-  height: 200px;
+  height: 220px;
 }
 
 .journal-list-container::-webkit-scrollbar {
@@ -81,14 +82,18 @@
 
 .journal-subject {
   margin: 0;
-  font-size: 16px;
+  font-size: 18px;
   color: #1c1c1c;
   font-weight: 500;
 }
 
+.journal-heading {
+  margin-bottom: 0;
+}
+
 .journal-list-element {
-  border-bottom: 2px solid darkgray;
   padding: 5px;
+  border-bottom: 2px solid #858585;
 }
 
 @media screen and (max-width: 600px) {

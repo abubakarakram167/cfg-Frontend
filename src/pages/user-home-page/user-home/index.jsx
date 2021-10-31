@@ -175,7 +175,7 @@ export default function UserHomePage() {
     : [];
 
   const getColorStatus = (status) => {
-    let style = {color: 'green', fontSize: 12, margin: 1};
+    let style = {color: 'green', fontSize: 16, margin: 1};
     if (status === 'Complete') style.color = 'green';
     else if (status === 'In Progress') style.color = '#787474';
     else if (status === 'Not Started') style.color = 'grey';
