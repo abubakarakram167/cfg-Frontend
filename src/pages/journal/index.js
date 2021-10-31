@@ -3,11 +3,22 @@ import {useSelector, useDispatch} from 'react-redux';
 import AdminHeader from 'pages/admin-header';
 import './journal.css';
 import moment from 'moment';
-import {getUserJourney} from '../../redux/actions/journal';
+import {getUserJourney, deleteJournal} from '../../redux/actions/journal';
+import {Select, MenuItem} from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import JournalModal from '../../components/JournalModal';
 
 export default function MediaLibrary() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const dispatch = useDispatch();
+  const [type, setType] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [subject, setSubject] = useState(null);
+  const [showJournalModal, setShowJournalModal] = useState(false);
+  const [content, setContent] = useState('');
+  const [isContentChange, setContentChanged] = useState(false);
+  const [journalId, setJournalId] = useState(null);
 
   const allJournals = useSelector((state) => {
     return state.journal.userJournals;
@@ -32,8 +43,6 @@ export default function MediaLibrary() {
     getUserJourneys();
   }, []);
 
-  console.log('all the journals', allJournals);
-
   return (
     <div>
       <AdminHeader />
@@ -49,25 +58,134 @@ export default function MediaLibrary() {
           src={require('../../assets/new_journey_image.png')}
         />
         <div class='hilight'>
-          {allJournals.map((journal) => {
-            return (
-              <div className='journal-container'>
-                <p className='journal-title'>{journal.subject}</p>
-                <p className='journal-date-interval'>
-                  {' '}
-                  <span>
+          <div>
+            {!type && (
+              <span
+                style={{
+                  color: 'black',
+                  position: 'relative',
+                  top: 40,
+                  left: 5,
+                }}>
+                Type
+              </span>
+            )}
+            <Select
+              labelId='demo-simple-select-filled-label'
+              id='demo-simple-select-filled'
+              onChange={(e) => setType(e.target.value)}
+              variant='filled'
+              fullWidth
+              defaultValue='journal'
+              value={type}
+              label='Type'
+              required>
+              <MenuItem value={null}>Not any</MenuItem>
+              <MenuItem value={'goal'}>Goal</MenuItem>
+              <MenuItem value={'journey'}>Journey</MenuItem>
+              <MenuItem value={'journal'}>Journal</MenuItem>
+            </Select>
+          </div>
+          <div>
+            {!status && (
+              <span
+                style={{
+                  color: 'black',
+                  position: 'relative',
+                  top: 40,
+                  left: 5,
+                }}>
+                Status
+              </span>
+            )}
+            <Select
+              labelId='demo-simple-select-filled-label'
+              id='demo-simple-select-filled'
+              onChange={(e) => setStatus(e.target.value)}
+              variant='filled'
+              fullWidth
+              defaultValue='journal'
+              value={status}
+              label='Status'
+              required>
+              <MenuItem value={null}> Not any </MenuItem>
+              <MenuItem value={'Not Started'}>Not Started</MenuItem>
+              <MenuItem value={'In Progress'}>In Progress</MenuItem>
+              <MenuItem value={'Complete'}>Complete</MenuItem>
+              <MenuItem value={'Overdue'}>Overdue</MenuItem>
+            </Select>
+          </div>
+
+          {allJournals
+            .filter((journal) => {
+              if (status && type)
+                return journal.status === status && type === journal.type;
+              else if (status || type)
+                return journal.status === status || type === journal.type;
+              else return true;
+            })
+            .map((journal) => {
+              return (
+                <div className='journal-container'>
+                  <p className='journal-title'>{journal.subject}</p>
+                  <p className='journal-date-interval'>
                     {' '}
-                    {moment(journal.start_date).format(
-                      'YYYY-MM-DD HH:MM',
-                    )} - {moment(journal.end_date).format('YYYY-MM-DD HH:MM')}{' '}
-                  </span>
-                </p>
-                <p style={getColorStatus(journal.status)}> {journal.status} </p>
-                <p className='journal-points'> {journal.points + 'P'} </p>
-              </div>
-            );
-          })}
+                    <span>
+                      {' '}
+                      {moment(journal.start_date).format(
+                        'YYYY-MM-DD HH:MM',
+                      )} - {moment(journal.end_date).format('YYYY-MM-DD HH:MM')}{' '}
+                    </span>
+                  </p>
+                  <p style={getColorStatus(journal.status)}>
+                    {' '}
+                    {journal.status}{' '}
+                  </p>
+                  <div
+                    style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <span className='journal-points'>
+                      {' '}
+                      {journal.points + 'P'}{' '}
+                    </span>
+                    <DeleteIcon
+                      style={{color: '#605d5d', fontSize: 28, marginRight: 10}}
+                      onClick={() =>
+                        dispatch(deleteJournal(journal.id)).then((res) => {})
+                      }
+                    />
+                  </div>
+                </div>
+              );
+            })}
         </div>
+        <AddCircleIcon
+          onClick={() => {
+            setShowJournalModal(true);
+          }}
+          style={{
+            color: 'red',
+            fontSize: 35,
+            top: '93%',
+            right: '2%',
+            position: 'absolute',
+          }}
+        />
+        <JournalModal
+          onOpen={() => setShowJournalModal(true)}
+          onClose={() => {
+            setShowJournalModal(false);
+            setJournalId(null);
+            getUserJourneys();
+          }}
+          show={showJournalModal}
+          journalId={journalId}
+          getJournalData={(journalData) => {
+            setJournalId(journalData ? journalData.id : null);
+          }}
+          subject={subject}
+          parent='home'
+          showTextField={true}
+        />
       </div>
     </div>
   );
