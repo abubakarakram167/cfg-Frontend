@@ -61,9 +61,43 @@ export const sendInvite = (body) => {
   });
 };
 
+export const deleteInvite = (cfgId) => {
+  return new Promise((res, rej) => {
+    Api.delete(`api/invites/${cfgId}`)
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        rej(false);
+        console.log('the error', error.response);
+      });
+  });
+};
+
 export const getInvite = (body) => {
   return new Promise((res, rej) => {
     Api.get(`api/invites?cfg_id=${body.cfg_id}&user_id=${body.user_id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        rej(false);
+        console.log('the error', error.response);
+      });
+  });
+};
+
+export const getInviteOfMiniCfg = (cfgId) => {
+  return new Promise((res, rej) => {
+    Api.get(`api/invites?cfg_id=${cfgId}`)
       .then((response) => {
         if (response.status === 200) {
           const data_resp = response.data;

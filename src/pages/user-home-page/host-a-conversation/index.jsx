@@ -3,7 +3,7 @@ import CommonComponent from '../common-component';
 import {makeStyles} from '@material-ui/core/styles';
 import {Forum, Save, Cancel, CameraAlt} from '@material-ui/icons';
 import Logo from 'assets/Logo.png';
-import {TextField, Chip, withStyles, Select, MenuItem} from '@material-ui/core';
+import {TextField, Chip, withStyles, MenuItem} from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import {getSignedUrl} from '../../../redux/actions/media';
@@ -15,12 +15,20 @@ import './style.css';
 import {onGetUserList} from '../../../redux/actions';
 import userList from '@crema/services/db/userList';
 import {useDispatch, useSelector} from 'react-redux';
+import {Dropdown} from 'react-bootstrap';
 import {createSessionTitle, sendInvite} from 'redux/actions/sessionActions';
 import {Show_Message} from '../../../shared/constants/ActionTypes';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {DateTimePicker} from '@material-ui/pickers';
 import {useHistory} from 'react-router-dom';
+import Select from 'react-select';
+
+const options = [
+  {value: 'chocolate', label: 'Chocolate'},
+  {value: 'strawberry', label: 'Strawberry'},
+  {value: 'vanilla', label: 'Vanilla'},
+];
 
 const StyledChip = withStyles((theme) => ({
   label: {
@@ -68,12 +76,11 @@ export default function HostAConversation() {
   const userList = useSelector((state) => state.userList);
   const [open1, setOpen1] = useState(false);
   const history = useHistory();
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
     dispatch(onGetUserList({page: 0}));
   }, [dispatch]);
-
-  console.log('the user list..', usersList);
 
   const sendInvites = async (contentId) => {
     let allInvites = [];
@@ -84,9 +91,9 @@ export default function HostAConversation() {
     for (let user of inviteUserIds) {
       allInvites.push(sendInvite({...body, user_id: user}));
     }
+
     try {
       let allInvitesSent = await Promise.all(allInvites);
-      console.log('allInvitesSent', allInvitesSent);
       setTimeout(() => {
         history.push(`/home`);
       }, 1000);
@@ -259,7 +266,7 @@ export default function HostAConversation() {
                 fullWidth
                 label='Categories'
               /> */}
-            <Select
+            {/* <Select
               labelId='demo-simple-select-filled-label'
               id='demo-simple-select-filled'
               onChange={(e) => {
@@ -290,11 +297,48 @@ export default function HostAConversation() {
               fullWidth
               value={usersList.length ? usersList[0] : ''}
               label='Invite Users'
-              required>
-              {usersList.map((user) => {
-                return <MenuItem value={user}>{user.first_name}</MenuItem>;
+              required
+              options = {usersList.map((user) => {
+                return {
+                  label: user.first_name,
+                  value: user
+                }
               })}
-            </Select>
+              /> */}
+            <Select
+              defaultValue={usersList.length ? usersList[0] : ''}
+              placeholder={'Select users to invite'}
+              onChange={(e) => {
+                const {first_name, id} = e.value;
+                let changeInviteIds = inviteUserIds;
+                if (e.value) {
+                  setCategoryValue(first_name);
+
+                  if (!inviteUserIds.includes(id)) {
+                    changeInviteIds.push(id);
+                    setCategories([...categories, first_name]);
+                  } else {
+                    setCategories(
+                      categories.filter((category) => category !== first_name),
+                    );
+                    changeInviteIds = changeInviteIds.filter(
+                      (value) => value !== id,
+                    );
+                  }
+                  console.log('the change', changeInviteIds);
+                  setInviteUserIds(changeInviteIds);
+                  setCategoryValue('');
+                }
+                console.log('the user on change id', inviteUserIds);
+              }}
+              options={usersList.map((user) => {
+                return {
+                  label: user.first_name,
+                  value: user,
+                };
+              })}
+            />
+
             {/* <button
                 className='flex-button preview form-button-add'
                 onClick={() => {

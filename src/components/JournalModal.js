@@ -132,7 +132,6 @@ export default function (props) {
         : props.track_my_goal,
     };
     if (type === 'journey') payload.track_my_goal = true;
-    if (fieldSubject) payload.subject = fieldSubject;
 
     if (!journalId) {
       dispatch(createJournal(payload))
@@ -156,6 +155,7 @@ export default function (props) {
     if (subject) {
       dispatch(getSpecificJournal(subject, user.id))
         .then((res) => {
+          // debugger
           if (res.data.length) {
             setType(res.data[0].type);
             if (res.data[0]) {
@@ -163,9 +163,14 @@ export default function (props) {
                 res.data[0].status = 'Not Started';
               }
             }
+            // debugger
+            console.log('the response on clicking...', res.data[0]);
             setjournalData(res.data[0]);
+            // setTimeout(()=> {
+
+            // }, 2000)
             setInnerContent(res.data[0].detail);
-            props.getJournalData(res.data[0]);
+            // props.getJournalData(res.data[0]);
           }
         })
         .catch((err) => console.log('the error', err));
@@ -174,6 +179,8 @@ export default function (props) {
       setjournalData({});
     }
   }, [subject]);
+
+  console.log('the inner content', innerContent);
 
   return (
     <Modal
@@ -184,27 +191,43 @@ export default function (props) {
       <div style={modalStyle} className={classes.paper}>
         {props.showTextField && (
           <TextareaAutosize
-            onChange={(e) => setFieldSubject(e.target.value)}
-            value={fieldSubject}
+            onChange={(e) => {
+              let journal = Object.assign({}, journalData);
+              journal.subject = e.target.value;
+              setjournalData(journal);
+            }}
+            value={
+              !_.isEmpty(journalData) ? journalData.subject : props.subject
+            }
+            defaultValue={
+              !_.isEmpty(journalData) ? journalData.subject : props.subject
+            }
             style={{
               fontSize: 25,
               width: '100%',
               border: 'none',
               backgroundColor: '#f9f9f9',
               color: 'gray',
+              marginTop: 20,
+              marginBottom: 20,
+              textAlign: 'center',
+              paddingTop: 10,
+              paddingBottom: 10,
             }}
             aria-label='empty textarea'
             placeholder='Enter an subject'
           />
         )}
-        <h2 className='subject-heading'>
-          {!_.isEmpty(journalData) ? journalData.subject : props.subject}
-        </h2>
+        {!props.showTextField && (
+          <h2 className='subject-heading'>
+            {!_.isEmpty(journalData) ? journalData.subject : props.subject}
+          </h2>
+        )}
         <div id='internal-editor'>
           <SunEditor
             onClickSmartClick={(id) => {}}
             onContentSave={(content) => setInnerContent(content)}
-            content={innerContent}
+            content={journalData.detail}
             onContentChanged={() => setContentChanged(true)}
             onImageUploadBefore={handleImageUploadBefore}
             changeHeight={true}

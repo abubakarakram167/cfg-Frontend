@@ -6,7 +6,7 @@ import moment from 'moment';
 import {getUserJourney, deleteJournal} from '../../redux/actions/journal';
 import {Select, MenuItem} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddCircleIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import JournalModal from '../../components/JournalModal';
 
 export default function MediaLibrary() {
@@ -128,7 +128,13 @@ export default function MediaLibrary() {
             })
             .map((journal) => {
               return (
-                <div className='journal-container'>
+                <div
+                  onClick={() => {
+                    setShowJournalModal(true);
+                    setJournalId(journal.id);
+                    setSubject(journal.subject);
+                  }}
+                  className='journal-container'>
                   <p className='journal-title'>{journal.subject}</p>
                   <p className='journal-date-interval'>
                     {' '}
@@ -164,8 +170,9 @@ export default function MediaLibrary() {
           onClick={() => {
             setShowJournalModal(true);
           }}
+          fill='transparent'
           style={{
-            color: 'red',
+            color: '#e91010',
             fontSize: 35,
             top: '93%',
             right: '2%',

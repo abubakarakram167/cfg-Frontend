@@ -41,7 +41,7 @@ export const getUserGoals = (userId) => {
 
 export const getUserJourney = (userId) => {
   return (dispatch) => {
-    Api.get(`/api/journals?user_id=${userId}&type=journey&track_my_goal=true`)
+    Api.get(`/api/journals?_count=1000&_pageNo=1&user_id=${userId}`)
       .then((data) => {
         console.log('before filter', data.data);
         const allJournals = data.data.filter((journal) => {
