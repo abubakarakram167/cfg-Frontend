@@ -354,25 +354,25 @@ export default function UserHomePage() {
               }}
               src={require('../../../assets/new_journey_image.png')}
             />
-          </Link>
-          <div className='journal-text'>
-            <p className='journey-heading'>My Journey</p>
-            <div className='journal-list-container'>
-              {allJournals.length &&
-                allJournals
-                  .slice(Math.max(allJournals.length - 5, 0))
-                  .map((journal) => {
-                    return (
-                      <div className='journal-list-element'>
-                        <p className='journal-subject'>{journal.subject}</p>
-                        <p style={getColorStatus(journal.status)}>
-                          {journal.status}
-                        </p>
-                      </div>
-                    );
-                  })}
+            <div className='journal-text'>
+              <p className='journey-heading'>My Journey</p>
+              <div className='journal-list-container'>
+                {allJournals.length &&
+                  allJournals
+                    .slice(Math.max(allJournals.length - 5, 0))
+                    .map((journal) => {
+                      return (
+                        <div className='journal-list-element'>
+                          <p className='journal-subject'>{journal.subject}</p>
+                          <p style={getColorStatus(journal.status)}>
+                            {journal.status}
+                          </p>
+                        </div>
+                      );
+                    })}
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
       )}
       <CreatePost />

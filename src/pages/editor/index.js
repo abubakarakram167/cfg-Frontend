@@ -35,6 +35,13 @@ import {baseUrl} from 'utils/axios';
 import {parseXML} from 'jquery';
 import Api from '../../utils/axios';
 import JournalModal from '../../components/JournalModal';
+import SearchDropdown from 'react-select';
+import {onGetUserList} from '../../redux/actions';
+import {
+  getInviteOfMiniCfg,
+  deleteInvite,
+  sendInvite,
+} from 'redux/actions/sessionActions';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -90,6 +97,11 @@ export default function Editor() {
   const [showJournalModal, setShowJournalModal] = useState(false);
   const [subject, setSubject] = useState(null);
   const [journalId, setJournalId] = useState(null);
+  const [inviteUserIds, setInviteUserIds] = useState([]);
+  const usersList = useSelector(({userList}) => userList.usersList);
+  const [invites, setInvites] = useState([]);
+  const [inviteValue, setInviteValue] = useState('');
+  const [allCompleteInvites, setAllCompleteInvites] = useState([]);
 
   const classes = useStyles();
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
@@ -117,6 +129,32 @@ export default function Editor() {
     );
   };
 
+  const sendInvites = async (contentId) => {
+    let allInvites = [];
+    const body = {
+      cfg_id: contentId,
+      detail: '',
+    };
+    for (let user of inviteUserIds) {
+      allInvites.push(sendInvite({...body, user_id: user}));
+    }
+
+    try {
+      let allInvitesSent = await Promise.all(allInvites);
+      setTimeout(() => {
+        if (!isContentChange) {
+          history.push(`/admin/content/display/${contentId}`);
+        } else {
+          setTimeout(() => {
+            history.push(`/admin/content/display/${contentId}`);
+          }, 500);
+        }
+      }, 1000);
+    } catch (err) {
+      console.log('the error or recieving..', err);
+    }
+  };
+
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
     setKeywords([...keywords, keywordValue]);
@@ -142,6 +180,26 @@ export default function Editor() {
       setFacilitatorUsers(users.data.userResponse);
     });
   }, []);
+
+  useEffect(() => {
+    dispatch(onGetUserList({page: 0}));
+  }, []);
+
+  // useEffect(() => {
+  //   if(params.cfgType === 'mini'){
+  //     const miniCfgId = parseInt(params.id);
+  //     getInviteOfMiniCfg(miniCfgId).then(res => {
+  //       setAllCompleteInvites(res)
+  //       const userIds = res.map(invite => invite.user_id)
+  //       const userName = usersList.filter(user => {
+  //         if(userIds.includes(user.id)) return true
+  //         return false
+  //       }).map(user => user.first_name)
+  //       setInvites(userName)
+  //       setInviteUserIds(userIds)
+  //     })
+  //   }
+  // }, [dispatch, usersList]);
 
   useEffect(() => {
     if (['event', 'timeline', 'mini'].includes(params.cfgType))
@@ -283,20 +341,25 @@ export default function Editor() {
                 params.cfgType,
               ),
             ).then((response) => {
-              if (response) {
-                setTimeout(() => {
-                  if (!isContentChange) {
-                    history.push(
-                      `/admin/content/display/${response.data.content.id}`,
-                    );
-                  } else {
-                    setTimeout(() => {
+              if (params.cfgType === 'mini') {
+                const miniCfgId = response.data.content.id;
+                sendInvites(miniCfgId);
+              } else {
+                if (response) {
+                  setTimeout(() => {
+                    if (!isContentChange) {
                       history.push(
                         `/admin/content/display/${response.data.content.id}`,
                       );
-                    }, 500);
-                  }
-                }, 1000);
+                    } else {
+                      setTimeout(() => {
+                        history.push(
+                          `/admin/content/display/${response.data.content.id}`,
+                        );
+                      }, 500);
+                    }
+                  }, 1000);
+                }
               }
             });
           }
@@ -624,21 +687,76 @@ export default function Editor() {
                 </Select>
               </div>
             )}
+
             {params.cfgType === 'mini' && (
               <div>
-                <Select
-                  labelId='demo-simple-select-filled-label'
-                  id='demo-simple-select-filled'
-                  onChange={(e) => setFacilitator(e.target.value)}
-                  variant='filled'
-                  fullWidth
-                  value={facilitator}
-                  label='Facilitator'
-                  required>
-                  {facilitatorUsers.map((user) => (
-                    <MenuItem value={user.id}>{user.first_name}</MenuItem>
-                  ))}
-                </Select>
+                <SearchDropdown
+                  style={{marginTop: 50}}
+                  defaultValue={usersList.length ? usersList[0] : ''}
+                  placeholder={'Select users to invite'}
+                  onChange={(e) => {
+                    const {first_name, id} = e.value;
+                    let changeInviteIds = inviteUserIds;
+                    if (e.value) {
+                      setInviteValue(first_name);
+
+                      if (!inviteUserIds.includes(id)) {
+                        changeInviteIds.push(id);
+                        setInvites([...invites, first_name]);
+                      } else {
+                        setInvites(
+                          invites.filter((invite) => invite !== first_name),
+                        );
+                        changeInviteIds = changeInviteIds.filter(
+                          (value) => value !== id,
+                        );
+                      }
+                      setInviteUserIds(changeInviteIds);
+                      setCategoryValue('');
+                    }
+                  }}
+                  options={usersList.map((user) => {
+                    return {
+                      label: user.first_name,
+                      value: user,
+                    };
+                  })}
+                />
+                <div>
+                  {invites && invites.length > 0 && <span>Invite users:</span>}
+
+                  {invites && invites.length
+                    ? invites.map((element, index) => {
+                        return (
+                          <Chip
+                            label={element}
+                            key={index}
+                            className='chip-style'
+                            onDelete={() => {
+                              setInvites(
+                                invites.filter((value) => value !== element),
+                              );
+                            }}
+                          />
+                        );
+                      })
+                    : null}
+                </div>
+                <div style={{marginTop: 20}}>
+                  <Select
+                    labelId='demo-simple-select-filled-label'
+                    id='demo-simple-select-filled'
+                    onChange={(e) => setFacilitator(e.target.value)}
+                    variant='filled'
+                    fullWidth
+                    value={facilitator}
+                    label='Facilitator'
+                    required>
+                    {facilitatorUsers.map((user) => (
+                      <MenuItem value={user.id}>{user.first_name}</MenuItem>
+                    ))}
+                  </Select>
+                </div>
               </div>
             )}
 
