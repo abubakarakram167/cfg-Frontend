@@ -46,3 +46,63 @@
   list-style-type: none;
   padding-left: 10px;
 }
+
+.journal-text {
+  position: absolute;
+  top: 5%;
+  left: 55%;
+  color: white;
+  width: 43%;
+  height: 80%;
+  border: 2px solid #e7ddcb;
+  opacity: 0.8;
+  background-color: #f7f5f3;
+  border-radius: 10px;
+}
+
+.journey-heading {
+  font-weight: 600;
+  font-size: 20px;
+  text-align: center;
+  color: red;
+  border-bottom: 2px solid rgb(211 199 172 / 100%);
+  margin-bottom: 0px;
+}
+
+.journal-list-container {
+  overflow-y: scroll;
+  height: 220px;
+}
+
+.journal-list-container::-webkit-scrollbar {
+  /* WebKit */
+  width: 0;
+  height: 0;
+}
+
+.journal-subject {
+  margin: 0;
+  font-size: 18px;
+  color: #1c1c1c;
+  font-weight: 500;
+}
+
+.journal-heading {
+  margin-bottom: 0;
+}
+
+.journal-list-element {
+  padding: 5px;
+  border-bottom: 2px solid rgb(211 199 172 / 100%);
+}
+
+@media screen and (max-width: 600px) {
+  .journal-text {
+    left: 2.5%;
+    width: 95%;
+    opacity: 0.8;
+    background-color: #f9f3ed;
+    height: 85%;
+    top: 4%;
+  }
+}

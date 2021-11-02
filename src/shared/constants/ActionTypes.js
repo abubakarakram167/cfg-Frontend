@@ -154,3 +154,6 @@ export const UPDATE_CUSTOM_DATA = 'update_custom_data';
 export const GET_GALLERY_PHOTO = 'get_gallery_photo';
 
 export const Create_journal = 'Create_journal';
+export const Get_User_Journals = 'Get_User_Journals';
+export const Get_User_goals = 'Get_User_goals';
+export const delete_journal = 'delete_journal';

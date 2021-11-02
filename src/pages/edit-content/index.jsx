@@ -33,6 +33,9 @@ import Api from '../../utils/axios';
 import {getSignedUrl} from '../../redux/actions/media';
 import {transformImagesInContent} from '../../components/ReUsable';
 import JournalModal from '../../components/JournalModal';
+import SearchDropdown from 'react-select';
+import {onGetUserList} from '../../redux/actions';
+import {getInviteOfMiniCfg, deleteInvite} from 'redux/actions/sessionActions';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -85,6 +88,11 @@ export default function Editor() {
   const [subject, setSubject] = useState(null);
   const classes = useStyles();
   const history = useHistory();
+  const [inviteUserIds, setInviteUserIds] = useState([]);
+  const usersList = useSelector(({userList}) => userList.usersList);
+  const [invites, setInvites] = useState([]);
+  const [inviteValue, setInviteValue] = useState('');
+  const [allCompleteInvites, setAllCompleteInvites] = useState([]);
 
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
@@ -117,6 +125,28 @@ export default function Editor() {
       setFacilitatorUsers(users.data.userResponse);
     });
   }, []);
+
+  useEffect(() => {
+    dispatch(onGetUserList({page: 0}));
+  }, []);
+
+  useEffect(() => {
+    if (params.contentType === 'mini') {
+      const miniCfgId = parseInt(params.id);
+      getInviteOfMiniCfg(miniCfgId).then((res) => {
+        setAllCompleteInvites(res);
+        const userIds = res.map((invite) => invite.user_id);
+        const userName = usersList
+          .filter((user) => {
+            if (userIds.includes(user.id)) return true;
+            return false;
+          })
+          .map((user) => user.first_name);
+        setInvites(userName);
+        setInviteUserIds(userIds);
+      });
+    }
+  }, [dispatch, usersList]);
 
   useEffect(() => {
     if (state.editedContent) {
@@ -219,6 +249,52 @@ export default function Editor() {
     }
   }, [state]);
 
+  const editContents = (totalTags) => {
+    dispatch(
+      editContent(
+        {
+          id: params.id,
+          title,
+          sub_title,
+          detail: content,
+          start_date: start_date,
+          end_date: end_date,
+          tags: JSON.stringify(totalTags),
+          type: params.contentType,
+          assigned_group: group,
+          categories: JSON.stringify(categories),
+          status,
+          total_points,
+          next_page,
+          updated_at: moment(moment()).format('YYYY-MM-DD'),
+          previous_page,
+          featured_image_url: featuredImage ? featuredImage.fileName : '',
+          event_type: eventType,
+          duration,
+          facilitator,
+          invite_ids: [1, 3],
+        },
+        params.id,
+      ),
+    )
+      .then((response) => {
+        if (response) {
+          setTimeout(() => {
+            if (!isContentChange) {
+              history.push(`/admin/content/display/${params.id}`);
+            } else {
+              setTimeout(() => {
+                history.push(`/admin/content/display/${params.id}`);
+              }, 500);
+            }
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        console.log('the error', err);
+      });
+  };
+
   const publish = () => {
     let totalTags = [];
     setContentChanged(false);
@@ -249,48 +325,21 @@ export default function Editor() {
         });
       }, 5000);
     } else {
-      dispatch(
-        editContent(
-          {
-            id: params.id,
-            title,
-            sub_title,
-            detail: content,
-            start_date: start_date,
-            end_date: end_date,
-            tags: JSON.stringify(totalTags),
-            type: params.contentType,
-            assigned_group: group,
-            categories: JSON.stringify(categories),
-            status,
-            total_points,
-            next_page,
-            updated_at: moment(moment()).format('YYYY-MM-DD'),
-            previous_page,
-            featured_image_url: featuredImage ? featuredImage.fileName : '',
-            event_type: eventType,
-            duration,
-            facilitator,
-          },
-          params.id,
-        ),
-      )
-        .then((response) => {
-          if (response) {
-            setTimeout(() => {
-              if (!isContentChange) {
-                history.push(`/admin/content/display/${params.id}`);
-              } else {
-                setTimeout(() => {
-                  history.push(`/admin/content/display/${params.id}`);
-                }, 500);
-              }
-            }, 1000);
-          }
-        })
-        .catch((err) => {
-          console.log('the error', err);
+      if (params.contentType === 'mini') {
+        const currentInviteIds = allCompleteInvites
+          .filter((invite) => {
+            if (inviteUserIds.includes(invite.user_id)) return true;
+            return false;
+          })
+          .map((invite) => invite.id);
+        let allInvitesToBeDelete = [];
+        for (let invite of currentInviteIds) {
+          allInvitesToBeDelete.push(deleteInvite(invite));
+        }
+        Promise.all(allInvitesToBeDelete).then((res) => {
+          editContents(totalTags);
         });
+      } else editContents(totalTags);
     }
   };
   const [open1, setOpen1] = useState(false);
@@ -472,19 +521,73 @@ export default function Editor() {
             )}
             {params.contentType === 'mini' && (
               <div>
-                <Select
-                  labelId='demo-simple-select-filled-label'
-                  id='demo-simple-select-filled'
-                  onChange={(e) => setFacilitator(e.target.value)}
-                  variant='filled'
-                  fullWidth
-                  value={facilitator}
-                  label='Facilitator'
-                  required>
-                  {facilitatorUsers.map((user) => (
-                    <MenuItem value={user.id}>{user.first_name}</MenuItem>
-                  ))}
-                </Select>
+                <SearchDropdown
+                  style={{marginTop: 50}}
+                  defaultValue={usersList.length ? usersList[0] : ''}
+                  placeholder={'Select users to invite'}
+                  onChange={(e) => {
+                    const {first_name, id} = e.value;
+                    let changeInviteIds = inviteUserIds;
+                    if (e.value) {
+                      setInviteValue(first_name);
+
+                      if (!inviteUserIds.includes(id)) {
+                        changeInviteIds.push(id);
+                        setInvites([...invites, first_name]);
+                      } else {
+                        setInvites(
+                          invites.filter((invite) => invite !== first_name),
+                        );
+                        changeInviteIds = changeInviteIds.filter(
+                          (value) => value !== id,
+                        );
+                      }
+                      setInviteUserIds(changeInviteIds);
+                      setCategoryValue('');
+                    }
+                  }}
+                  options={usersList.map((user) => {
+                    return {
+                      label: user.first_name,
+                      value: user,
+                    };
+                  })}
+                />
+                <div>
+                  {invites && invites.length > 0 && <span>Invite users:</span>}
+
+                  {invites && invites.length
+                    ? invites.map((element, index) => {
+                        return (
+                          <Chip
+                            label={element}
+                            key={index}
+                            className='chip-style'
+                            onDelete={() => {
+                              setInvites(
+                                invites.filter((value) => value !== element),
+                              );
+                            }}
+                          />
+                        );
+                      })
+                    : null}
+                </div>
+                <div style={{marginTop: 20}}>
+                  <Select
+                    labelId='demo-simple-select-filled-label'
+                    id='demo-simple-select-filled'
+                    onChange={(e) => setFacilitator(e.target.value)}
+                    variant='filled'
+                    fullWidth
+                    value={facilitator}
+                    label='Facilitator'
+                    required>
+                    {facilitatorUsers.map((user) => (
+                      <MenuItem value={user.id}>{user.first_name}</MenuItem>
+                    ))}
+                  </Select>
+                </div>
               </div>
             )}
 

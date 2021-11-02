@@ -23,6 +23,7 @@ import Comment from './Comments';
 import Quiz from './Quiz';
 import Roles from './Roles';
 import Cfg from './cfg';
+import journal from './journal';
 
 const reducers = (history) =>
   combineReducers({
@@ -50,5 +51,6 @@ const reducers = (history) =>
     quiz: Quiz,
     roles: Roles,
     cfg: Cfg,
+    journal,
   });
 export default reducers;

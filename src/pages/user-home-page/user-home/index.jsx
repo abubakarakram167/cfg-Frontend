@@ -13,7 +13,14 @@ import {
   ListItem,
   Collapse,
 } from '@material-ui/core';
-import {Forum, Group, Build, ExpandMore, ExpandLess} from '@material-ui/icons';
+import {
+  Forum,
+  Group,
+  Build,
+  ExpandMore,
+  ExpandLess,
+  ChatBubble,
+} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
@@ -23,6 +30,7 @@ import MediaGroup from 'redux/services/mediagroup';
 import {transformImagesInContent} from 'components/ReUsable';
 import $ from 'jquery';
 import {getSignedUrl} from '../../../redux/actions/media';
+import {getUserJourney} from '../../../redux/actions/journal';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -38,6 +46,9 @@ const useStyling = makeStyles({
 export default function UserHomePage() {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.userPost.posts);
+  const allJournals = useSelector((state) => {
+    return state.journal.userJournals;
+  });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [conversationExtended, setConversationExtended] = useState(false);
   const [count, setCount] = useState(3);
@@ -46,15 +57,22 @@ export default function UserHomePage() {
   const permissions = useSelector((state) => state.roles.permissions);
   const history = useHistory();
   const [allTransformPosts, setAllTransformPosts] = useState(null);
-
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
   const [dayTools, setDayTools] = useState([]);
-
   const getRestoredImage = (featureImageUrl) => {
     return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
   };
+
+  const getUserJourneys = () => {
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    dispatch(getUserJourney(user.id));
+  };
+
+  useEffect(() => {
+    getUserJourneys();
+  }, []);
 
   const getDayTools = async () => {
     try {
@@ -156,7 +174,15 @@ export default function UserHomePage() {
       )
     : [];
 
-  console.log('the transform', transform);
+  const getColorStatus = (status) => {
+    let style = {color: 'green', fontSize: 16, margin: 1};
+    if (status === 'Complete') style.color = 'green';
+    else if (status === 'In Progress') style.color = '#787474';
+    else if (status === 'Not Started') style.color = 'grey';
+    else style.color = 'red';
+
+    return style;
+  };
 
   const left = (
     <List className={classesOther.childListPadding}>
@@ -251,6 +277,14 @@ export default function UserHomePage() {
           <ListItemText primary='CFG Tools' />
         </ListItem>
       </Link>
+      <Link to='/home/host-a-conversation'>
+        <ListItem>
+          <ListItemIcon>
+            <ChatBubble style={{color: 'red'}} />
+          </ListItemIcon>
+          <ListItemText primary='Host A Conversation' />
+        </ListItem>
+      </Link>
     </List>
   );
 
@@ -308,6 +342,39 @@ export default function UserHomePage() {
       scrollAction={() => {
         setCount(count + 3);
       }}>
+      {allJournals.length > 0 && (
+        <div style={{position: 'relative'}}>
+          <Link to={`/home/journals/list`}>
+            <img
+              style={{
+                height: 300,
+                width: '100%',
+                borderRadius: 10,
+                marginBottom: 20,
+              }}
+              src={require('../../../assets/new_journey_image.png')}
+            />
+            <div className='journal-text'>
+              <p className='journey-heading'>My Journey</p>
+              <div className='journal-list-container'>
+                {allJournals.length &&
+                  allJournals
+                    .slice(Math.max(allJournals.length - 5, 0))
+                    .map((journal) => {
+                      return (
+                        <div className='journal-list-element'>
+                          <p className='journal-subject'>{journal.subject}</p>
+                          <p style={getColorStatus(journal.status)}>
+                            {journal.status}
+                          </p>
+                        </div>
+                      );
+                    })}
+              </div>
+            </div>
+          </Link>
+        </div>
+      )}
       <CreatePost />
       {transform.map((element, index) => {
         return (

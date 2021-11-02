@@ -9,6 +9,7 @@ import {
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Session from '../services/session';
 import jsCookie from 'js-cookie';
+import Api from '../../utils/axios';
 
 export const createSession = (params) => {
   return async function (dispatch) {
@@ -41,6 +42,91 @@ export const createSession = (params) => {
       }
     }
   };
+};
+
+export const sendInvite = (body) => {
+  return new Promise((res, rej) => {
+    Api.post(`api/invites`, body)
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        rej(false);
+        console.log('the error', error.response);
+      });
+  });
+};
+
+export const deleteInvite = (cfgId) => {
+  return new Promise((res, rej) => {
+    Api.delete(`api/invites/${cfgId}`)
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        rej(false);
+        console.log('the error', error.response);
+      });
+  });
+};
+
+export const getInvite = (body) => {
+  return new Promise((res, rej) => {
+    Api.get(`api/invites?cfg_id=${body.cfg_id}&user_id=${body.user_id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        rej(false);
+        console.log('the error', error.response);
+      });
+  });
+};
+
+export const getInviteOfMiniCfg = (cfgId) => {
+  return new Promise((res, rej) => {
+    Api.get(`api/invites?cfg_id=${cfgId}`)
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        rej(false);
+        console.log('the error', error.response);
+      });
+  });
+};
+
+export const updateInvite = (body) => {
+  return new Promise((res, rej) => {
+    Api.put(`api/invites/${body.inviteId}`, {status: body.status})
+      .then((response) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          jsCookie.set('login', 'yes');
+          res(data_resp);
+        }
+      })
+      .catch((error) => {
+        console.log('the error', error);
+        rej(false);
+      });
+  });
 };
 
 export const createSessionTitle = (params, type) => {

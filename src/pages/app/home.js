@@ -19,6 +19,7 @@ import CfgToolsPage from 'pages/user-home-page/cfg-tools-page';
 import Learn from 'pages/user-home-page/learn';
 import AllInboxPage from 'pages/user-home-page/all-in-box';
 import ConversationContentDisplay from 'pages/user-home-page/conversation-content-display';
+import userJournals from 'pages/journal';
 
 export default [
   <ProtectedRoute exact path='/home' component={withRouter(UserHome)} />,
@@ -46,6 +47,11 @@ export default [
     exact
     path='/home/user-profile'
     component={withRouter(UserProfile)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/journals/list'
+    component={withRouter(userJournals)}
   />,
   <ProtectedRoute
     exact

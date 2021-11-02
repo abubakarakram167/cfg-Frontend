@@ -1,15 +1,73 @@
-// import Api from '../../@crema/services/ApiConfig';
 import Api from '../../utils/axios';
-import baseUrl from '../../utils/url';
 import {
   FETCH_ERROR,
-  Get_Preferences,
   FETCH_START,
   Show_Message,
-  FETCH_SUCCESS,
-  Get_Media,
   Create_journal,
+  Get_User_Journals,
+  Get_User_goals,
+  delete_journal,
 } from '../../shared/constants/ActionTypes';
+
+export const getUserGoals = (userId) => {
+  return (dispatch) => {
+    Api.get(`/api/journals?user_id=${userId}&type=goal&track_my_goal=true`)
+      .then((data) => {
+        const allGoals = data.data.filter((journal) => {
+          if (
+            journal.subject &&
+            journal.type === 'goal' &&
+            journal.start_date &&
+            journal.end_date &&
+            journal.status
+          ) {
+            return true;
+          } else return false;
+        });
+
+        if (data.status === 200) {
+          dispatch({
+            type: Get_User_goals,
+            payload: allGoals,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log('errorrrr', error);
+        dispatch({type: FETCH_ERROR, payload: error.message});
+      });
+  };
+};
+
+export const getUserJourney = (userId) => {
+  return (dispatch) => {
+    Api.get(`/api/journals?_count=1000&_pageNo=1&user_id=${userId}`)
+      .then((data) => {
+        console.log('before filter', data.data);
+        const allJournals = data.data.filter((journal) => {
+          if (
+            journal.subject &&
+            journal.start_date &&
+            journal.end_date &&
+            journal.status
+          ) {
+            return true;
+          } else return false;
+        });
+        console.log('after filter', allJournals);
+        if (data.status === 200) {
+          dispatch({
+            type: Get_User_Journals,
+            payload: allJournals,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log('errorrrr', error);
+        dispatch({type: FETCH_ERROR, payload: error.message});
+      });
+  };
+};
 
 export const createJournal = (journalData) => {
   return (dispatch) => {
@@ -90,16 +148,20 @@ export const updateJournal = (payload, journalId) => {
   };
 };
 
-export const deleteMediaData = (formData) => {
+export const deleteJournal = (journalId) => {
   return (dispatch) => {
     return new Promise((res, rej) => {
-      dispatch({type: FETCH_START});
-      Api.delete(`/api/media/${formData.id}`)
+      Api.delete(`/api/journals/${journalId}`)
         .then((data) => {
+          console.log('after delete', data);
           if (data.status === 200) {
             dispatch({
               type: Show_Message,
               payload: {message: 'Delete SuccessFully', success: true},
+            });
+            dispatch({
+              type: delete_journal,
+              payload: journalId,
             });
             res(true);
           } else {
@@ -110,40 +172,8 @@ export const deleteMediaData = (formData) => {
           }
         })
         .catch((error) => {
+          console.log('error', error);
           rej(false);
-          console.log('error', error.response);
-          dispatch({type: FETCH_ERROR, payload: error.message});
-        });
-    });
-  };
-};
-
-export const editMediaData = (formData) => {
-  return (dispatch) => {
-    return new Promise((res, rej) => {
-      dispatch({type: FETCH_START});
-      const body = {
-        title: formData.fileName,
-        description: formData.description,
-      };
-      Api.put(`/api/media/${formData.id}`, body)
-        .then((data) => {
-          if (data.status === 200) {
-            dispatch({
-              type: Show_Message,
-              payload: {message: 'Edit SuccessFully', success: true},
-            });
-            res(true);
-          } else {
-            dispatch({
-              type: Show_Message,
-              payload: {message: 'SuccessFully Not Edit', success: false},
-            });
-          }
-        })
-        .catch((error) => {
-          rej(false);
-          console.log('error', error.response);
           dispatch({type: FETCH_ERROR, payload: error.message});
         });
     });

@@ -124,7 +124,9 @@ export default function RecipeReviewCard({post}) {
   }, []);
 
   const getRestoredImage = (featureImageUrl) => {
-    return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
+    return featureImageUrl
+      ? featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1)
+      : '';
   };
 
   const getUserRestoredImages = async (userListData) => {

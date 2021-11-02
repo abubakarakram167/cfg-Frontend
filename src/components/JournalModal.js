@@ -20,6 +20,7 @@ import {KeyboardDatePicker} from '@material-ui/pickers';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import $ from 'jquery';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 const width = $(window).width();
 
 const getWidthAccordingToDevice = (width) => {
@@ -75,12 +76,14 @@ export default function (props) {
   const [isContentChange, setContentChanged] = useState(false);
   const [journalData, setjournalData] = useState({
     type: 'journal',
+    status: 'Not Started',
   });
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('current-user'));
   const journalId = props.journalId;
   const subject = props.subject;
   const [type, setType] = useState('journal');
+  const [fieldSubject, setFieldSubject] = useState(null);
 
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
     const formData = new FormData();
@@ -116,23 +119,25 @@ export default function (props) {
   const addJournal = async () => {
     const payload = {
       user_id: user.id,
-      subject: !_.isEmpty(journalData) ? journalData.subject : props.subject,
+      subject: props.journalId ? journalData.subject : props.subject,
       start_date: moment(journalData.start_date).format('YYYY-MM-DD'),
       end_date: moment(journalData.end_date).format('YYYY-MM-DD'),
       detail: innerContent,
       log_date: moment().format('YYYY-MM-DD'),
-      status: 'nothing',
+      status: journalData.status,
       type: type,
       parent: props.parent,
       track_my_goal: !_.isEmpty(journalData)
         ? journalData.track_my_goal
         : props.track_my_goal,
     };
+    if (type === 'journey') payload.track_my_goal = true;
 
     if (!journalId) {
       dispatch(createJournal(payload))
         .then((res) => {
           const data = res.data.result;
+          console.log('after add journal', data);
           props.onClose();
         })
         .catch((err) => console.log('the error', err));
@@ -150,11 +155,22 @@ export default function (props) {
     if (subject) {
       dispatch(getSpecificJournal(subject, user.id))
         .then((res) => {
+          // debugger
           if (res.data.length) {
             setType(res.data[0].type);
+            if (res.data[0]) {
+              if (!res.data[0].status) {
+                res.data[0].status = 'Not Started';
+              }
+            }
+            // debugger
+            console.log('the response on clicking...', res.data[0]);
             setjournalData(res.data[0]);
+            // setTimeout(()=> {
+
+            // }, 2000)
             setInnerContent(res.data[0].detail);
-            props.getJournalData(res.data[0]);
+            // props.getJournalData(res.data[0]);
           }
         })
         .catch((err) => console.log('the error', err));
@@ -164,6 +180,8 @@ export default function (props) {
     }
   }, [subject]);
 
+  console.log('the inner content', innerContent);
+
   return (
     <Modal
       open={props.show}
@@ -171,14 +189,45 @@ export default function (props) {
       aria-describedby='simple-modal-description'
       style={{backgroundColor: 'rgb(8 8 8 / 50%)'}}>
       <div style={modalStyle} className={classes.paper}>
-        <h2 className='subject-heading'>
-          {!_.isEmpty(journalData) ? journalData.subject : props.subject}
-        </h2>
+        {props.showTextField && (
+          <TextareaAutosize
+            onChange={(e) => {
+              let journal = Object.assign({}, journalData);
+              journal.subject = e.target.value;
+              setjournalData(journal);
+            }}
+            value={
+              !_.isEmpty(journalData) ? journalData.subject : props.subject
+            }
+            defaultValue={
+              !_.isEmpty(journalData) ? journalData.subject : props.subject
+            }
+            style={{
+              fontSize: 25,
+              width: '100%',
+              border: 'none',
+              backgroundColor: '#f9f9f9',
+              color: 'gray',
+              marginTop: 20,
+              marginBottom: 20,
+              textAlign: 'center',
+              paddingTop: 10,
+              paddingBottom: 10,
+            }}
+            aria-label='empty textarea'
+            placeholder='Enter an subject'
+          />
+        )}
+        {!props.showTextField && (
+          <h2 className='subject-heading'>
+            {!_.isEmpty(journalData) ? journalData.subject : props.subject}
+          </h2>
+        )}
         <div id='internal-editor'>
           <SunEditor
             onClickSmartClick={(id) => {}}
             onContentSave={(content) => setInnerContent(content)}
-            content={innerContent}
+            content={journalData.detail}
             onContentChanged={() => setContentChanged(true)}
             onImageUploadBefore={handleImageUploadBefore}
             changeHeight={true}
@@ -202,6 +251,27 @@ export default function (props) {
             <MenuItem value={'journal'}>Journal</MenuItem>
           </Select>
         </div>
+        <div className='journal-modal-subitems'>
+          <Select
+            labelId='demo-simple-select-filled-label'
+            id='demo-simple-select-filled'
+            onChange={(e) => {
+              let journal = Object.assign({}, journalData);
+              journal.status = e.target.value;
+              setjournalData(journal);
+            }}
+            variant='filled'
+            fullWidth
+            defaultValue='Not Started'
+            value={journalData.status}
+            label='Status'
+            required>
+            <MenuItem value={'Not Started'}>Not Started</MenuItem>
+            <MenuItem value={'In Progress'}>In Progress</MenuItem>
+            <MenuItem value={'Complete'}>Complete</MenuItem>
+            <MenuItem value={'Overdue'}>Overdue</MenuItem>
+          </Select>
+        </div>
         {type === 'goal' && (
           <div className='journal-modal-subitems'>
             <span style={{marginRight: 50}}>Track My Goal</span>
@@ -221,8 +291,8 @@ export default function (props) {
           </div>
         )}
         {!_.isEmpty(journalData) &&
-          type === 'goal' &&
-          journalData.track_my_goal && (
+          journalData.track_my_goal &&
+          type === 'goal' && (
             <div>
               <div className='journal-modal-subitems'>
                 <span className='dates'>
@@ -280,6 +350,64 @@ export default function (props) {
               </div>
             </div>
           )}
+        {type === 'journey' && (
+          <div>
+            <div className='journal-modal-subitems'>
+              <span className='dates'>
+                <KeyboardDatePicker
+                  disableToolbar
+                  format='MM/DD/yyyy'
+                  label='Start Date'
+                  fullWidth
+                  variant='filled'
+                  className={classes.datePicker}
+                  value={
+                    !_.isEmpty(journalData) && journalData.start_date
+                      ? journalData.start_date
+                      : moment().format('YYYY-MM-DD')
+                  }
+                  onChange={(e) => {
+                    console.log('on changing date', e);
+                    setjournalData({
+                      ...journalData,
+                      start_date: e,
+                    });
+                  }}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </span>
+            </div>
+            <div className='journal-modal-subitems'>
+              <span className='dates'>
+                <KeyboardDatePicker
+                  disableToolbar
+                  format='MM/DD/yyyy'
+                  variant='filled'
+                  fullWidth
+                  label='End Date'
+                  className={classes.datePicker}
+                  value={
+                    !_.isEmpty(journalData) && journalData.end_date
+                      ? journalData.end_date
+                      : moment().format('YYYY-MM-DD')
+                  }
+                  onChange={(e) => {
+                    console.log('on changing date', e);
+                    setjournalData({
+                      ...journalData,
+                      end_date: e,
+                    });
+                  }}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </span>
+            </div>
+          </div>
+        )}
         <div
           style={{
             display: 'flex',
