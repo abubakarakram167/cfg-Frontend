@@ -94,6 +94,8 @@ export default function Editor() {
   const [inviteValue, setInviteValue] = useState('');
   const [allCompleteInvites, setAllCompleteInvites] = useState([]);
 
+  console.log('params', params.contentType);
+
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
     setKeywords([...keywords, keywordValue]);
@@ -305,11 +307,10 @@ export default function Editor() {
         text: element,
       });
     });
-
     if (
       parseInt(total_points) + parseInt(accumulativeTitlePoints) >
         parseInt(originalTotalPoints) &&
-      params.contentType !== 'timeline'
+      !['timeline', 'mini'].includes(params.contentType)
     ) {
       dispatch({
         type: Show_Message,
@@ -328,8 +329,8 @@ export default function Editor() {
       if (params.contentType === 'mini') {
         const currentInviteIds = allCompleteInvites
           .filter((invite) => {
-            if (inviteUserIds.includes(invite.user_id)) return true;
-            return false;
+            if (inviteUserIds.includes(invite.user_id)) return false;
+            return true;
           })
           .map((invite) => invite.id);
         let allInvitesToBeDelete = [];

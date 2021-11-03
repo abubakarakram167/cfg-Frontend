@@ -8,6 +8,7 @@ import {Select, MenuItem} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import JournalModal from '../../components/JournalModal';
+import UserHomeHeader from '../user-home-page/user-page-header';
 
 export default function MediaLibrary() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -45,7 +46,7 @@ export default function MediaLibrary() {
 
   return (
     <div>
-      <AdminHeader />
+      <UserHomeHeader />
       {/* <div className = "outer-div" >
         <img 
           className = "image"
@@ -156,10 +157,16 @@ export default function MediaLibrary() {
                       {journal.points + 'P'}{' '}
                     </span>
                     <DeleteIcon
-                      style={{color: '#605d5d', fontSize: 28, marginRight: 10}}
-                      onClick={() =>
-                        dispatch(deleteJournal(journal.id)).then((res) => {})
-                      }
+                      style={{
+                        zIndex: 2,
+                        color: '#605d5d',
+                        fontSize: 28,
+                        marginRight: 10,
+                      }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        dispatch(deleteJournal(journal.id)).then((res) => {});
+                      }}
                     />
                   </div>
                 </div>
