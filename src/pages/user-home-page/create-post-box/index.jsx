@@ -135,6 +135,7 @@ export default function CreatePostBox() {
           <MediaUpload
             showDialogue={showDialogue}
             onClose={() => setShowDialogue(false)}
+            mediaType={mediaType}
             onImageSave={(file) => {
               getSignedUrl(file[0]).then((res) => {
                 setMediaAsset(res.newUrl);

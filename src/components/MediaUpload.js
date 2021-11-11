@@ -7,6 +7,8 @@ import {createOneMedia} from '../redux/actions/media';
 export default (props) => {
   const dispatch = useDispatch();
 
+  console.log('the props', props);
+
   const handleSave = (files) => {
     const data = new FormData();
     for (const file of files) {
@@ -27,11 +29,18 @@ export default (props) => {
     });
   };
 
+  const getAcceptedFiles = () => {
+    if (props.mediaType && props.mediaType !== '') {
+      if (props.mediaType === 'image') return ['image/*'];
+      else return ['video/*'];
+    } else return ['image/*', 'video/*'];
+  };
+
   return (
     <DropzoneDialog
       open={props.showDialogue}
       onSave={handleSave}
-      acceptedFiles={['image/jpeg', 'image/png', 'video/mkv', 'video/mp4']}
+      acceptedFiles={getAcceptedFiles()}
       showPreviews={true}
       maxFileSize={15000000}
       filesLimit={4}
