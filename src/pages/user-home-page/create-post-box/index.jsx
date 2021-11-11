@@ -69,6 +69,8 @@ export default function CreatePostBox() {
   };
 
   const mediaJSX = () => {
+    console.log('the media type::', mediaType);
+    console.log('the media', media);
     switch (mediaType) {
       case 'image':
         return <img src={media} width='100%' />;
@@ -133,6 +135,7 @@ export default function CreatePostBox() {
           <MediaUpload
             showDialogue={showDialogue}
             onClose={() => setShowDialogue(false)}
+            mediaType={mediaType}
             onImageSave={(file) => {
               getSignedUrl(file[0]).then((res) => {
                 setMediaAsset(res.newUrl);
@@ -144,7 +147,12 @@ export default function CreatePostBox() {
               <button className='create-post-button' onClick={handleSave}>
                 <Save /> <span className='app-card-bottom-text'>Save</span>
               </button>
-              <div className='create-post-action-icons'>
+              <div
+                className='create-post-action-icons'
+                onClick={() => {
+                  setShowDialogue(true);
+                  setMediaType('video');
+                }}>
                 <Videocam style={{color: 'red'}} />
               </div>
               <div
@@ -154,10 +162,10 @@ export default function CreatePostBox() {
                 }}
                 className='create-post-action-icons'>
                 <PermMedia
-                  onClick={() => {
-                    setShowDialogue(true);
-                    setMediaType('video');
-                  }}
+                  // onClick={() => {
+                  //   setShowDialogue(true);
+                  //   setMediaType('video');
+                  // }}
                   style={{color: 'red'}}
                 />
               </div>
