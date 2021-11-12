@@ -62,7 +62,15 @@ export default function CreatePostBox() {
 
   const handleSave = () => {
     setOpen(false);
-    dispatch(createUserPost({content, status: 'published', media}));
+    const userPost = {
+      content,
+      status: 'published',
+      media,
+    };
+    if (currentUser.role === 'content-manager')
+      userPost.assigned_group = 'content-manager';
+    console.log('the userPost', userPost);
+    dispatch(createUserPost(userPost));
     // dispatch(getUserPost());
     setContent('');
     setMedia(null);
