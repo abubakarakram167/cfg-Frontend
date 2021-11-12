@@ -94,8 +94,6 @@ export default function Editor() {
   const [inviteValue, setInviteValue] = useState('');
   const [allCompleteInvites, setAllCompleteInvites] = useState([]);
 
-  console.log('params', params.contentType);
-
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
     setKeywords([...keywords, keywordValue]);
@@ -456,9 +454,10 @@ export default function Editor() {
               }}
               onContentSave={(content) => {
                 setContent(content);
+                setIsContentTransform(content);
               }}
               onContentChanged={() => setContentChanged(true)}
-              content={content}
+              content={isContentTransform ? isContentTransform : content}
               onGetSubject={(subject) => setSubject(subject)}
               showToolbar={true}
               modalType='external'
