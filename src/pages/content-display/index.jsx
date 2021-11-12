@@ -31,7 +31,7 @@ export default function ContentDisplay() {
         false,
         params.id,
       ).then((res) => {
-        // setIsContentTransform(res.html);
+        setIsContentTransform(res.html);
       });
       setData(state.currentContent);
     }

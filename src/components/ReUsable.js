@@ -3,6 +3,13 @@ import {getSignedUrl} from '../redux/actions/media';
 import $ from 'jquery';
 
 export const transformImagesInContent = async (html, change, id) => {
+  const getFileName = (url) => {
+    let changeUrl = new URL(url).pathname.split('/');
+    if (changeUrl[1] === 'static') changeUrl = changeUrl[2];
+    else changeUrl = changeUrl[1];
+    return changeUrl;
+  };
+
   const el = Object.assign(document.createElement('div'), {
     className: 'temporary-image-container',
   });
@@ -14,18 +21,22 @@ export const transformImagesInContent = async (html, change, id) => {
   ele.innerHTML = html;
 
   var imgs = ele.querySelectorAll('img');
+
   imgs.forEach(function (img) {
-    allMedia.push(getSignedUrl({fileName: img.getAttribute('data-file-name')}));
+    allMedia.push(
+      getSignedUrl({fileName: getFileName(img.getAttribute('src'))}),
+    );
   });
 
   const res = await Promise.all(allMedia);
+  console.log('after getting image res', res);
 
   res.map((mediaData) => {
     imgs.forEach(function (img) {
-      allMedia.push(
-        getSignedUrl({fileName: img.getAttribute('data-file-name')}),
-      );
-      if (mediaData.fileName === img.getAttribute('data-file-name')) {
+      // allMedia.push(
+      //   getSignedUrl({fileName: getFileName(img.getAttribute('src'))}),
+      // );
+      if (mediaData.fileName === getFileName(img.getAttribute('src'))) {
         img.setAttribute('src', mediaData.newUrl);
       }
     });
