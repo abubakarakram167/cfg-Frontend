@@ -54,11 +54,15 @@ export default function ConversationContentDisplay() {
     getSessionById(params.id);
   }, []);
 
-  const setPrevious = (id) => {
-    history.push(`/home/conversation/${id}`);
+  const setPrevious = (link) => {
+    var url = new URL(link);
+    if (window.location.host === url.host) history.push(url.pathname);
+    else window.open(link, '_blank');
   };
-  const setNext = (id) => {
-    history.push(`/home/conversation/${id}`);
+  const setNext = (link) => {
+    var url = new URL(link);
+    if (window.location.host === url.host) history.push(url.pathname);
+    else window.open(link, '_blank');
   };
   return (
     <CommonComponent left={''} right={''}>
