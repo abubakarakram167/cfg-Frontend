@@ -116,6 +116,7 @@ export default function HostAConversation() {
       assigned_group: 'candidate',
       total_points: 0,
       facilitator: user.id,
+      meeting_start_time: new Date(date),
     };
     console.log('the payload before', payload);
     dispatch(createSessionTitle(payload, 'mini')).then((response) => {
