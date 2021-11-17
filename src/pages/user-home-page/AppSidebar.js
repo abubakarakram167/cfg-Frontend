@@ -26,6 +26,7 @@ import {
   Bookmark,
   ChatBubble,
   Cancel,
+  Event,
 } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import Logout from '@material-ui/icons/ExitToApp';
@@ -353,15 +354,14 @@ const AppSidebar = (props) => {
               <ListItemText primary='My CFG Family' />
             </ListItem>
           </Link>
-
-          {/* <Link to='/home/user-events'>
+          <Link to='/home/user-events'>
             <ListItem>
               <ListItemIcon>
                 <Event style={{color: 'red'}} />
               </ListItemIcon>
               <ListItemText primary='Events' />
             </ListItem>
-          </Link> */}
+          </Link>
           <Link to='/home/cfg-tools'>
             <ListItem>
               <ListItemIcon>
