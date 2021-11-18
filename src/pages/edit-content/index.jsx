@@ -36,6 +36,7 @@ import JournalModal from '../../components/JournalModal';
 import SearchDropdown from 'react-select';
 import {onGetUserList} from '../../redux/actions';
 import {getInviteOfMiniCfg, deleteInvite} from 'redux/actions/sessionActions';
+import {DateTimePicker} from '@material-ui/pickers';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -189,9 +190,7 @@ export default function Editor() {
         moment(state.currentContent.start_date).format('MM/DD/yyyy'),
       );
       setend_date(moment(state.currentContent.end_date).format('MM/DD/yyyy'));
-      setPublishDate(
-        moment(state.currentContent.created_at).format('MM/DD/yyyy'),
-      );
+      setPublishDate(moment(state.currentContent.start_date));
       setStatus(state.currentContent.status || 'draft');
       setEventType(state.currentContent.eventType || 'live-video');
       setDuration(state.currentContent.duration || 0);
@@ -257,7 +256,7 @@ export default function Editor() {
           title,
           sub_title,
           detail: content,
-          start_date: start_date,
+          start_date: publishDate,
           end_date: end_date,
           tags: JSON.stringify(totalTags),
           type: params.contentType,
@@ -308,7 +307,7 @@ export default function Editor() {
     if (
       parseInt(total_points) + parseInt(accumulativeTitlePoints) >
         parseInt(originalTotalPoints) &&
-      !['timeline', 'mini'].includes(params.contentType)
+      !['timeline', 'mini', 'event'].includes(params.contentType)
     ) {
       dispatch({
         type: Show_Message,
@@ -683,21 +682,37 @@ export default function Editor() {
               <p className='showErrorMessage'>Keywords is required</p>
             )}
             <br />
-            <div className='dates'>
-              <KeyboardDatePicker
-                disableToolbar
-                variant='filled'
-                format='MM/DD/yyyy'
-                className={classes.datePicker}
-                fullWidth={true}
-                label='Publish Date'
-                value={publishDate}
-                onChange={(e) => setPublishDate(e)}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
+            {params.contentType === 'event' ? (
+              <DateTimePicker
+                style={{
+                  backgroundColor: '#e7e7e7',
+                  marginTop: 10,
+                  marginBottom: 10,
+                  paddingLeft: 10,
+                  paddingTop: 10,
                 }}
+                onChange={(e) => setPublishDate(e)}
+                value={publishDate}
+                fullWidth
+                label='Event Date and Time'
               />
-            </div>
+            ) : (
+              <div className='dates'>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant='filled'
+                  format='MM/DD/yyyy'
+                  className={classes.datePicker}
+                  fullWidth={true}
+                  label='Publish Date'
+                  value={publishDate}
+                  onChange={(e) => setPublishDate(e)}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </div>
+            )}
             <br />
             {['mini', 'event'].includes(params.contentType) && (
               <div>

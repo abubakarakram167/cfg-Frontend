@@ -37,6 +37,7 @@ import Api from '../../utils/axios';
 import JournalModal from '../../components/JournalModal';
 import SearchDropdown from 'react-select';
 import {onGetUserList} from '../../redux/actions';
+import {DateTimePicker} from '@material-ui/pickers';
 import {
   getInviteOfMiniCfg,
   deleteInvite,
@@ -848,21 +849,37 @@ export default function Editor() {
               <p className='showErrorMessage'>Keywords are required</p>
             )}
             <br />
-            <div className='dates'>
-              <KeyboardDatePicker
-                disableToolbar
-                variant='filled'
-                className={classes.datePicker}
-                format='MM/DD/yyyy'
-                fullWidth={true}
-                label='Publish Date'
-                value={publishDate}
-                onChange={(e) => setPublishDate(e)}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
+            {params.cfgType === 'event' ? (
+              <DateTimePicker
+                style={{
+                  backgroundColor: '#e7e7e7',
+                  marginTop: 10,
+                  marginBottom: 10,
+                  paddingLeft: 10,
+                  paddingTop: 10,
                 }}
+                onChange={(e) => setPublishDate(e)}
+                value={publishDate}
+                fullWidth
+                label='Event Date and Time'
               />
-            </div>
+            ) : (
+              <div className='dates'>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant='filled'
+                  format='MM/DD/yyyy'
+                  className={classes.datePicker}
+                  fullWidth={true}
+                  label='Publish Date'
+                  value={publishDate}
+                  onChange={(e) => setPublishDate(e)}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </div>
+            )}
             <br />
             {['mini', 'event'].includes(params.cfgType) && (
               <div>
