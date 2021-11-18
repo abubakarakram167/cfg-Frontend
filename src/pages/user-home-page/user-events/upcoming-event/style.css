@@ -1,0 +1,17 @@
+.remind-button {
+  border: 0px !important;
+}
+.event-start-date {
+  font-size: 20px !important;
+  color: #ddb934 !important;
+}
+.event-points {
+  font-size: 18px;
+  color: red;
+  font-weight: 600;
+}
+.event-duration {
+  margin-left: 10px;
+  color: gray;
+  font-size: 13px;
+}

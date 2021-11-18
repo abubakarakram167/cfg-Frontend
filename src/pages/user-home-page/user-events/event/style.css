@@ -15,3 +15,17 @@
   text-align: center;
   padding: 10px;
 }
+
+.youtube-button {
+  -webkit-appearance: button;
+  appearance: button;
+  text-decoration: none;
+  color: initial;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #e93f3f;
+  color: white;
+  font-size: 12px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}

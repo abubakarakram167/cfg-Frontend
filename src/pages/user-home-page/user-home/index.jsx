@@ -20,6 +20,7 @@ import {
   ExpandMore,
   ExpandLess,
   ChatBubble,
+  Event,
 } from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
@@ -267,6 +268,14 @@ export default function UserHomePage() {
             <Group style={{color: 'brown'}} />
           </ListItemIcon>
           <ListItemText primary='My CFG Family' />
+        </ListItem>
+      </Link>
+      <Link to='/home/user-events'>
+        <ListItem>
+          <ListItemIcon>
+            <Event style={{color: 'red'}} />
+          </ListItemIcon>
+          <ListItemText primary='Events' />
         </ListItem>
       </Link>
       <Link to='/home/cfg-tools'>
