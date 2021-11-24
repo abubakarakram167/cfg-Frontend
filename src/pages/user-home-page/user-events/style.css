@@ -1,6 +1,7 @@
 .upcoming-events {
   overflow: auto;
   white-space: nowrap;
+  margin-bottom: 20px;
 }
 .upcoming-event {
   width: 32%;

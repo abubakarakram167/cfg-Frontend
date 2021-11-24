@@ -14,16 +14,22 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import {Select, MenuItem, Chip, withStyles} from '@material-ui/core';
 import AddToCalendar from 'react-add-to-calendar';
+import $ from 'jquery';
 
+const width = $(window).width();
 let icon = {textOnly: 'none'};
 
 const StyledChip = withStyles((theme) => ({
   label: {
-    fontSize: 10,
+    fontSize: 15,
     fontWeight: 400,
   },
   icon: {
     fontSize: 15,
+  },
+  root: {
+    position: 'relative',
+    top: 2,
   },
 }))(Chip);
 
@@ -31,14 +37,14 @@ const eventStyle = {
   fill: 'white',
   position: 'relative',
   left: 22,
-  top: 18,
+  top: 23,
   fontSize: 14,
 };
 const arrowStyle = {
   fill: 'white',
   position: 'relative',
   right: 22,
-  top: 18,
+  top: 23,
   fontSize: 14,
 };
 
@@ -55,6 +61,16 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
 }));
+
+const getWidthAccordingToDevice = (width) => {
+  let percentageWidth = '50%';
+  if (width < 500) percentageWidth = '90%';
+  else if (width >= 501 && width <= 600) percentageWidth = '80%';
+  else if (width >= 601 && width <= 800) percentageWidth = '70%';
+  else percentageWidth = '30%';
+
+  return percentageWidth;
+};
 
 export default (props) => {
   const classes = useStyles();
@@ -105,7 +121,7 @@ export default (props) => {
                 borderRadius: 50,
                 backgroundColor: 'red',
                 position: 'relative',
-                left: 140,
+                left: 120,
               }}
             />{' '}
           </span>

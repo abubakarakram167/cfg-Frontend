@@ -10,11 +10,16 @@ const Event = ({element}) => {
     <div className='event-card-container'>
       <Card>
         <div className='event-card-container-video'>
-          <ReactPlayer url={element.url} />
+          <ReactPlayer
+            height='450px'
+            width='100%'
+            style={{width: '100%', height: '100%'}}
+            url={element.url}
+          />
         </div>
-        <br />
+        {/* <br /> */}
 
-        <div className='event-card-container-text'>
+        {/* <div className='event-card-container-text'>
           <strong>{element.title}</strong>
           <br />
 
@@ -70,7 +75,7 @@ const Event = ({element}) => {
             {' '}
             <PlayArrowOutlined style={{fill: 'white', fontSize: 18}} /> Watch it{' '}
           </a>
-        </div>
+        </div> */}
       </Card>
     </div>
   );
