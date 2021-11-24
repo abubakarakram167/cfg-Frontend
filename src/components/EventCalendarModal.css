@@ -20,8 +20,8 @@
 }
 
 .react-calendar {
-  background-color: #7e7e7e;
-  height: 34px;
+  background-color: #bdbcbc;
+  height: 78%;
   padding: 9px;
   padding-left: 24px;
   padding-right: 24px;
@@ -29,4 +29,5 @@
   font-size: 11px;
   color: white;
   margin-top: 9px;
+  padding-top: 15px;
 }

@@ -67,7 +67,7 @@ export default function UpcomingEvent({element}) {
                     </span>
                   </div>
                 )}
-                {element.event_type === 'zoom' && (
+                {element.event_type === 'zoom-video' && (
                   <div>
                     <Videocam style={{fill: '#5a5ae5', fontSize: 28}} />
                     <span

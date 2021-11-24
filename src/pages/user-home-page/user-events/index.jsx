@@ -56,7 +56,7 @@ export default function UserEvents() {
           return <Event element={element} key={index} />;
         })}
 
-      <h1 style={{marginBottom: '4px'}}>Upcoming Events</h1>
+      <h1 style={{marginTop: 20}}>Upcoming Events</h1>
       <div className='upcoming-events'>
         {content
           .filter((contentElement) => contentElement.status === 'published')
@@ -69,7 +69,7 @@ export default function UserEvents() {
           })}
       </div>
       <br />
-      <h1 style={{marginBottom: '4px'}}>Previous Events</h1>
+      {/* <h1 style={{marginBottom: '4px'}}>Previous Events</h1> */}
       {/* <div style = {{ width: '80%', margin: 'auto', marginBottom: 50 }} >
         <iframe  
           src="https://www.youtube.com/embed/Xru8N1vmrAI" 
@@ -83,11 +83,11 @@ export default function UserEvents() {
         >
         </iframe>
       </div> */}
-      {hardCodedUrl
+      {/* {hardCodedUrl
         .filter((element) => element.past)
         .map((element, index) => {
           return <Event element={element} key={index} />;
-        })}
+        })} */}
     </CommonComponent>
   );
 }
