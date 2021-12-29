@@ -25,17 +25,16 @@ axiosInstance.interceptors.response.use(
     console.log('the error', error);
     if (error.response && error.response.status === 401) {
       jsCookie.remove('login');
-
-      if (
-        !(
-          ~window.location.href.indexOf('login') ||
-          ~window.location.href.indexOf('register') ||
-          ~window.location.href.indexOf('forget') ||
-          ~window.location.href.indexOf('reset')
-        )
-      ) {
-        history.push('/');
-      }
+      // if (
+      //   !(
+      //     ~window.location.href.indexOf('login') ||
+      //     ~window.location.href.indexOf('register') ||
+      //     ~window.location.href.indexOf('forget') ||
+      //     ~window.location.href.indexOf('reset')
+      //   )
+      // ) {
+      //   history.push('/');
+      // }
     }
     return Promise.reject(error);
     // return error
