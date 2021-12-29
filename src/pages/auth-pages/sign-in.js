@@ -92,11 +92,17 @@ export default function SignIn({setView}) {
           Email has been sent to the associated email address.
         </Alert>
       </Snackbar>
-      <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
-        <Alert variant='filled' onClose={handleClose2}>
+      {errorMessage && (
+        <div
+          style={{
+            color: 'red',
+            marginBottom: 10,
+            fontWeight: '600',
+            fontSize: 14,
+          }}>
           {errorMessage}
-        </Alert>
-      </Snackbar>
+        </div>
+      )}
       <form className='forms' onSubmit={handleSubmit}>
         <TextField
           required

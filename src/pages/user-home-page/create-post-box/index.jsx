@@ -135,7 +135,7 @@ export default function CreatePostBox() {
               fullwidth
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder='How are you feeling in the moment?'
+              placeholder="Whats's on your mind?"
             />
           </DialogContentText>
         </DialogContent>
@@ -192,7 +192,7 @@ export default function CreatePostBox() {
               onClick={handleClickOpen}
               type='text'
               className='create-post-input-trigger'
-              placeholder='How are you feeling in the moment?'
+              placeholder="Whats's on your mind?"
             />
           </div>
           <div className='create-post-app-card-bottom'>

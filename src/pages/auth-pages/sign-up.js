@@ -45,16 +45,29 @@ export default function SignUp({setView}) {
 
   return (
     <div>
-      <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert variant='filled' onClose={handleClose1} severity='success'>
+      {open1 && (
+        <div
+          style={{
+            color: 'green',
+            marginBottom: 10,
+            fontWeight: '600',
+            fontSize: 14,
+          }}>
           Email has been sent to the associated email address.
-        </Alert>
-      </Snackbar>
-      <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
-        <Alert variant='filled' onClose={handleClose2} severity='error'>
-          Email is already in use.
-        </Alert>
-      </Snackbar>
+        </div>
+      )}
+
+      {open2 && (
+        <div
+          style={{
+            color: 'red',
+            marginBottom: 10,
+            fontWeight: '600',
+            fontSize: 14,
+          }}>
+          Email is already in use.Please use another one.
+        </div>
+      )}
 
       <form className='forms' onSubmit={handleSubmit}>
         <TextField

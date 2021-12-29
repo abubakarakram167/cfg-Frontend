@@ -223,9 +223,9 @@ export default function UserHomePage() {
                 <div className='conversation-container'>
                   <div className='conversation-lists'>
                     <div className='conversationHeader'>
-                      <Link to={`/home/conversation/${session?.rows[0].id}`}>
-                        {session?.rows[0].title}
-                      </Link>
+                      {/* <Link to={`/home/conversation/${session?.rows[0].id}`}> */}
+                      {session?.rows[0].title}
+                      {/* </Link> */}
                     </div>
                     <ul className='conversation-child-list'>
                       {session?.titles.rows.map((element, index) => {
