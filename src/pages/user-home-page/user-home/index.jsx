@@ -200,7 +200,7 @@ export default function UserHomePage() {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <div>My Conversationss</div>
+            <div>My Conversations</div>
             {conversationExtended ? (
               <ExpandLess
                 onClick={toggleExpansion}
