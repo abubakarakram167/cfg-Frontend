@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useSelector} from 'react-redux';
+
 export default function SignUp({setView}) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -43,20 +44,10 @@ export default function SignUp({setView}) {
     }
   }, [state]);
 
+  console.log('the state', state.auth);
+
   return (
     <div>
-      {open1 && (
-        <div
-          style={{
-            color: 'green',
-            marginBottom: 10,
-            fontWeight: '600',
-            fontSize: 14,
-          }}>
-          Email has been sent to the associated email address.
-        </div>
-      )}
-
       {open2 && (
         <div
           style={{
@@ -65,7 +56,12 @@ export default function SignUp({setView}) {
             fontWeight: '600',
             fontSize: 14,
           }}>
-          Email is already in use.Please use another one.
+          <Alert
+            severity='error'
+            variant='filled'
+            onClose={() => setOpen2(null)}>
+            {state.auth.error}
+          </Alert>
         </div>
       )}
 

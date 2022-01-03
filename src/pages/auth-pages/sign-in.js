@@ -87,11 +87,6 @@ export default function SignIn({setView}) {
 
   return (
     <div className='sign-in-box'>
-      <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert variant='filled' onClose={handleClose1} severity='success'>
-          Email has been sent to the associated email address.
-        </Alert>
-      </Snackbar>
       {errorMessage && (
         <div
           style={{
@@ -100,7 +95,12 @@ export default function SignIn({setView}) {
             fontWeight: '600',
             fontSize: 14,
           }}>
-          {errorMessage}
+          <Alert
+            severity='error'
+            variant='filled'
+            onClose={() => setErrorMessage(null)}>
+            {errorMessage}
+          </Alert>
         </div>
       )}
       <form className='forms' onSubmit={handleSubmit}>
