@@ -16,6 +16,9 @@
   height: 100vh;
   padding-top: 20px;
 }
+.user-home-center::-webkit-scrollbar {
+  display: none;
+}
 .user-home-right {
   width: 21%;
   height: 100vh;

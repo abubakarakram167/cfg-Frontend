@@ -10,6 +10,7 @@ import {
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Resource from '../services/cfg';
 import jsCookie from 'js-cookie';
+import {getSignedUrl} from './media';
 
 export const createResource = (params, cfgType) => {
   return (dispatch) => {
@@ -114,16 +115,43 @@ export const createResourceTitle = (params, type) => {
   };
 };
 
+const getRestoredImage = (featureImageUrl) => {
+  return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
+};
+
 export const getResourceData = (cfgType) => {
   return async function (dispatch) {
     try {
       const response = await Resource.resourceData(cfgType);
       if (response.status === 200) {
         const data_resp = await response.data;
+        const posts = data_resp.data;
+        const images = [];
+
+        posts.map((post) => {
+          if (
+            post &&
+            post.featured_image_url !== '' &&
+            post.featured_image_url
+          ) {
+            post.fileName = getRestoredImage(post.featured_image_url);
+            images.push(getSignedUrl(post));
+          }
+        });
+
+        const getImages = await Promise.all(images);
+
+        let transformPosts = posts.map((post) => {
+          let specificImage = getImages.filter(
+            (image) => post && image.fileName === post.fileName,
+          )[0];
+          if (post) post.newUrl = specificImage ? specificImage.newUrl : null;
+          return post;
+        });
         jsCookie.set('login', 'yes');
         dispatch({
           type: GET_Resource_DATA,
-          payload: {...data_resp, error: null},
+          payload: {data: transformPosts, error: null},
         });
       }
     } catch (error) {

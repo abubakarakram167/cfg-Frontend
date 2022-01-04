@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useSelector} from 'react-redux';
+
 export default function SignUp({setView}) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -43,18 +44,26 @@ export default function SignUp({setView}) {
     }
   }, [state]);
 
+  console.log('the state', state.auth);
+
   return (
     <div>
-      <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert variant='filled' onClose={handleClose1} severity='success'>
-          Email has been sent to the associated email address.
-        </Alert>
-      </Snackbar>
-      <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
-        <Alert variant='filled' onClose={handleClose2} severity='error'>
-          Email is already in use.
-        </Alert>
-      </Snackbar>
+      {open2 && (
+        <div
+          style={{
+            color: 'red',
+            marginBottom: 10,
+            fontWeight: '600',
+            fontSize: 14,
+          }}>
+          <Alert
+            severity='error'
+            variant='filled'
+            onClose={() => setOpen2(null)}>
+            {state.auth.error}
+          </Alert>
+        </div>
+      )}
 
       <form className='forms' onSubmit={handleSubmit}>
         <TextField

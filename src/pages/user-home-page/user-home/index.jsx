@@ -20,6 +20,7 @@ import {
   ExpandMore,
   ExpandLess,
   ChatBubble,
+  Event,
 } from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
@@ -222,9 +223,9 @@ export default function UserHomePage() {
                 <div className='conversation-container'>
                   <div className='conversation-lists'>
                     <div className='conversationHeader'>
-                      <Link to={`/home/conversation/${session?.rows[0].id}`}>
-                        {session?.rows[0].title}
-                      </Link>
+                      {/* <Link to={`/home/conversation/${session?.rows[0].id}`}> */}
+                      {session?.rows[0].title}
+                      {/* </Link> */}
                     </div>
                     <ul className='conversation-child-list'>
                       {session?.titles.rows.map((element, index) => {
@@ -267,6 +268,14 @@ export default function UserHomePage() {
             <Group style={{color: 'brown'}} />
           </ListItemIcon>
           <ListItemText primary='My CFG Family' />
+        </ListItem>
+      </Link>
+      <Link to='/home/user-events'>
+        <ListItem>
+          <ListItemIcon>
+            <Event style={{color: 'red'}} />
+          </ListItemIcon>
+          <ListItemText primary='Events' />
         </ListItem>
       </Link>
       <Link to='/home/cfg-tools'>

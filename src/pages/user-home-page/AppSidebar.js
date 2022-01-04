@@ -26,6 +26,7 @@ import {
   Bookmark,
   ChatBubble,
   Cancel,
+  Event,
 } from '@material-ui/icons';
 import SearchIcon from '@material-ui/icons/Search';
 import Logout from '@material-ui/icons/ExitToApp';
@@ -292,10 +293,10 @@ const AppSidebar = (props) => {
                     <div className='conversation-container'>
                       <div className='conversation-lists'>
                         <div className='conversationHeader'>
-                          <Link
-                            to={`/home/conversation/${session?.rows[0].id}`}>
-                            {session?.rows[0].title}
-                          </Link>
+                          {/* <Link
+                            to={`/home/conversation/${session?.rows[0].id}`}> */}
+                          {session?.rows[0].title}
+                          {/* </Link> */}
                         </div>
                         <ul className='conversation-child-list'>
                           {session?.titles.rows.map((element, index) => {
@@ -353,15 +354,14 @@ const AppSidebar = (props) => {
               <ListItemText primary='My CFG Family' />
             </ListItem>
           </Link>
-
-          {/* <Link to='/home/user-events'>
+          <Link to='/home/user-events'>
             <ListItem>
               <ListItemIcon>
                 <Event style={{color: 'red'}} />
               </ListItemIcon>
               <ListItemText primary='Events' />
             </ListItem>
-          </Link> */}
+          </Link>
           <Link to='/home/cfg-tools'>
             <ListItem>
               <ListItemIcon>

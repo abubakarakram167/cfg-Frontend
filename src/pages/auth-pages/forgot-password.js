@@ -31,18 +31,15 @@ function ForgotPassword({setView}) {
     setOpen1(true);
     setEmail('');
   };
+
   return (
     <div>
-      <Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
-        <Alert variant='filled' onClose={handleClose1} severity='success'>
+      {open1 && (
+        <Alert severity='error' variant='filled' onClose={() => setOpen1(null)}>
           Email has been sent to the associated email address.
         </Alert>
-      </Snackbar>
-      <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose2}>
-        <Alert variant='filled' onClose={handleClose2} severity='error'>
-          No email addresses found matching the one you entered.
-        </Alert>
-      </Snackbar>
+      )}
+
       <span
         style={{
           fontWeight: 600,
