@@ -74,8 +74,8 @@ export default function Editor() {
   const [total_points, settotal_points] = useState(0);
   const [imageData, setImageData] = useState([]);
   const [createdContentId, setCreatedContentId] = useState(0);
-  const [previous_page, setprevious_page] = useState('');
-  const [next_page, setnext_page] = useState('');
+  const [previous_page, setprevious_page] = useState('custom');
+  const [next_page, setnext_page] = useState('custom');
   const [contentType, setContentType] = useState('');
   const [groupValue, setGroupValue] = useState('');
   const [accumulativeTitlePoints, setAccumulativeTitlePoints] = useState(0);
@@ -103,6 +103,10 @@ export default function Editor() {
   const [invites, setInvites] = useState([]);
   const [inviteValue, setInviteValue] = useState('');
   const [allCompleteInvites, setAllCompleteInvites] = useState([]);
+
+  const [allSessionTitles, setAllSessionTitles] = useState([]);
+  const [previousInput, setPreviousInput] = useState(null);
+  const [nextInput, setNextInput] = useState(null);
 
   const classes = useStyles();
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
@@ -167,6 +171,18 @@ export default function Editor() {
     setCategories([...categories, categoryValue]);
     setCategoryValue('');
   };
+
+  const fetchingAllSubtitles = async (sessionTitles) => {
+    setAllSessionTitles(sessionTitles);
+  };
+
+  useEffect(() => {
+    Api.get('/api/content/getAllTitles/session?_count=1000&_pageNo=1').then(
+      (response) => {
+        fetchingAllSubtitles(response.data);
+      },
+    );
+  }, []);
 
   useEffect(() => {
     if (params.id !== 'null') dispatch(getContentData(params.id));
@@ -261,6 +277,20 @@ export default function Editor() {
       setnext_page(state.currentContent.next_page || '');
       setPublishDate(moment().format('MM/DD/yyyy'));
       setprevious_page(state.currentContent.previous_page || '');
+      if (state.currentContent.next_page) {
+        if (
+          new URL(state.currentContent.next_page).hostname !==
+          window.location.hostname
+        )
+          setNextInput(true);
+      }
+      if (state.currentContent.previous_page) {
+        if (
+          new URL(state.currentContent.previous_page).hostname !==
+          window.location.hostname
+        )
+          setPreviousInput(true);
+      }
       setContentType(state.currentContent.type || '');
     }
 
@@ -941,33 +971,99 @@ export default function Editor() {
               <p className='showErrorMessage'>Total Points are required </p>
             )}
             <br />
-            {!['event', 'mini'].includes(params.cfgType) && (
-              <div>
-                <TextField
-                  type='url'
+            {!['event', 'mini'].includes(params.contentType) &&
+              (previousInput ? (
+                <div>
+                  <TextField
+                    type='url'
+                    variant='filled'
+                    value={previous_page}
+                    onChange={(e) => setprevious_page(e.target.value)}
+                    fullWidth
+                    label='previous page url'
+                    required
+                  />
+                  <button
+                    className='go-to-dropdown'
+                    onClick={() => setPreviousInput(null)}>
+                    Go to dropdown
+                  </button>
+                </div>
+              ) : (
+                <Select
+                  style={{marginBottom: 15}}
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => {
+                    console.log('on change', e.target.value);
+                    if (e.target.value === 'custom') {
+                      setPreviousInput(true);
+                      setprevious_page('Enter external Url..');
+                    } else setprevious_page(e.target.value);
+                  }}
                   variant='filled'
+                  fullWidth
                   value={previous_page}
-                  onChange={(e) => setprevious_page(e.target.value)}
-                  fullWidth
-                  label='previous page url'
-                  required
-                />
-              </div>
-            )}
+                  label='Event Type'
+                  required>
+                  <MenuItem value={'custom'}>Enter External Url</MenuItem>
+                  {allSessionTitles.map((session) => {
+                    return (
+                      <MenuItem
+                        value={baseUrl + 'admin/content/display/' + session.id}>
+                        {session.title}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              ))}
             <br />
-            {!['event', 'mini'].includes(params.cfgType) && (
-              <div>
-                <TextField
-                  type='url'
+            {!['event', 'mini'].includes(params.contentType) &&
+              (nextInput ? (
+                <div>
+                  <TextField
+                    type='url'
+                    variant='filled'
+                    value={next_page}
+                    onChange={(e) => setnext_page(e.target.value)}
+                    fullWidth
+                    label='next page url'
+                    required
+                  />
+                  <button
+                    className='go-to-dropdown'
+                    onClick={() => setNextInput(null)}>
+                    Go to dropdown
+                  </button>
+                </div>
+              ) : (
+                <Select
+                  style={{marginBottom: 15}}
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => {
+                    console.log('on change', e.target.value);
+                    if (e.target.value === 'custom') {
+                      setNextInput(true);
+                      setnext_page('Enter External Url..');
+                    } else setnext_page(e.target.value);
+                  }}
                   variant='filled'
-                  value={next_page}
-                  onChange={(e) => setnext_page(e.target.value)}
                   fullWidth
-                  label='next page url'
-                  required
-                />
-              </div>
-            )}
+                  value={next_page}
+                  label='Event Type'
+                  required>
+                  <MenuItem value={'custom'}>Enter Custom Url</MenuItem>
+                  {allSessionTitles.map((session) => {
+                    return (
+                      <MenuItem
+                        value={baseUrl + 'admin/content/display/' + session.id}>
+                        {session.title}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              ))}
             <br />
             <div>
               <div style={{display: 'flex'}}>

@@ -109,3 +109,9 @@
   background-color: white !important;
   overflow-y: scroll;
 }
+
+.go-to-dropdown {
+  border: 0;
+  background-color: transparent;
+  color: #33a6e9;
+}

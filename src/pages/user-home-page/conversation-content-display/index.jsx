@@ -56,12 +56,12 @@ export default function ConversationContentDisplay() {
 
   const setPrevious = (link) => {
     var url = new URL(link);
-    if (window.location.host === url.host) history.push(url.pathname);
+    if (window.location.host === url.host) window.open(url.pathname, '_blank');
     else window.open(link, '_blank');
   };
   const setNext = (link) => {
     var url = new URL(link);
-    if (window.location.host === url.host) history.push(url.pathname);
+    if (window.location.host === url.host) window.open(url.pathname, '_blank');
     else window.open(link, '_blank');
   };
   return (
