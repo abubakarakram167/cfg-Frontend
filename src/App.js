@@ -6,7 +6,7 @@ import CremaStyleProvider from '@crema/utility/CremaStyleProvider';
 import ContextProvider from '@crema/utility/ContextProvider';
 import configureStore from './redux/store';
 import MainApp from 'pages/app';
-import axios from 'axios';
+
 import {ConnectedRouter} from 'connected-react-router';
 import AppLayout from '@crema/core/AppLayout';
 import AuthRoutes from '@crema/utility/AuthRoutes';
@@ -21,19 +21,6 @@ import 'semantic-ui-css/semantic.min.css';
 const store = configureStore();
 
 export default function App() {
-  const MINUTE_MS = 10000;
-
-  useEffect(() => {
-    // const interval = setInterval(() => {
-    //   axios({
-    //     method: 'get',
-    //     url: 'http://localhost:3690/api/health-check',
-    //   }).then((res) => {console.log("minute resp" , res);})
-    //   .catch(err => console.error("minute err" ,err))
-    //   console.log('Logs every minute');
-    // }, MINUTE_MS);
-    // return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-  }, []);
   return (
     <ContextProvider>
       <Provider store={store}>
