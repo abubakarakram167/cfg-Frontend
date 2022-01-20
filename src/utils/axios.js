@@ -2,7 +2,7 @@ import axios from 'axios';
 import jsCookie from 'js-cookie';
 import history from './history';
 import baseURL from './url';
-
+import Toastify from 'toastify-js';
 // Set config defaults when creating the instance
 console.log('baseURL:', baseURL);
 export const baseUrl = baseURL;
@@ -23,9 +23,31 @@ axiosInstance.interceptors.response.use(
   },
   function (error) {
     console.log('the error', error);
+
     if (error.response && error.response.status === 401) {
+      // console.log();
+      // console.log("log from axios",~window.location.href.indexOf('/'))
+      // console.log("location from axios",~window.location)
       jsCookie.remove('login');
-      history.push('/sessionexpired');
+      if (
+        error.response.data.message !==
+        'Your login details could not be verified. Please try again.'
+      ) {
+        history.push('/sessionexpired');
+      }
+    } else {
+      Toastify({
+        text: 'Something Went wrong',
+        duration: 3000,
+        newWindow: true,
+        close: true,
+        gravity: 'bottom', // `top` or `bottom`
+        position: 'right', // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: 'linear-gradient(to right, #EE4742, #EB1B29)',
+        }, // Callback after click
+      }).showToast();
     }
     return Promise.reject(error);
     // return error
