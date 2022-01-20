@@ -14,6 +14,7 @@ import SessionExpired from 'pages/auth-pages/session-expired/index';
 import ShowMiniContent from 'pages/showContent';
 import UnAuthorizedPage from 'pages/unauthorized-page';
 import {ToastContainer, toast} from 'react-toastify';
+import {Offline, Online} from 'react-detect-offline';
 
 const user = JSON.parse(localStorage.getItem('current-user'));
 const RouteComponent = (props) => {
@@ -37,6 +38,18 @@ const RouteComponent = (props) => {
 
   return (
     <div>
+      <Offline>
+        <div
+          style={{
+            height: '20px',
+            backgroundColor: 'black',
+            color: 'white',
+            textAlign: 'center',
+          }}>
+          <h4 style={{color: 'white', textAlign: 'center'}}>You're Offline</h4>
+        </div>
+      </Offline>
+
       <Router>
         <Switch>
           <Route exact path='/createPassword'>
