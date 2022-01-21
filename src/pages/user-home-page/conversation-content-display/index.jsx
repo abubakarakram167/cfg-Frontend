@@ -57,14 +57,16 @@ export default function ConversationContentDisplay() {
 
   const setPrevious = (link) => {
     var url = new URL(link);
-    if (window.location.host === url.host) window.open(url.pathname);
-    else window.open(link, '_blank');
+
+    window.location = url.href;
   };
+
   const setNext = (link) => {
     var url = new URL(link);
-    if (window.location.host === url.host) window.open(url.pathname);
-    else window.open(link, '_blank');
+
+    window.location = url.href;
   };
+
   return (
     <CommonComponent left={''} right={''}>
       {featuredImageUrl && <Banner url={featuredImageUrl} />}
