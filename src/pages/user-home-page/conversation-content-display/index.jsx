@@ -47,6 +47,7 @@ export default function ConversationContentDisplay() {
         setIsContentTransform(res.html);
       },
     );
+    console.log('the specific session', specificSession);
     setData(specificSession);
     setContent(specificSession);
   };
@@ -56,12 +57,12 @@ export default function ConversationContentDisplay() {
 
   const setPrevious = (link) => {
     var url = new URL(link);
-    if (window.location.host === url.host) window.open(url.pathname, '_blank');
+    if (window.location.host === url.host) window.open(url.pathname);
     else window.open(link, '_blank');
   };
   const setNext = (link) => {
     var url = new URL(link);
-    if (window.location.host === url.host) window.open(url.pathname, '_blank');
+    if (window.location.host === url.host) window.open(url.pathname);
     else window.open(link, '_blank');
   };
   return (

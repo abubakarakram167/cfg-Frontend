@@ -107,6 +107,7 @@ export default function Editor() {
   const [allSessionTitles, setAllSessionTitles] = useState([]);
   const [previousInput, setPreviousInput] = useState(null);
   const [nextInput, setNextInput] = useState(null);
+  const [showPrompt, setShowPrompt] = useState(null);
 
   const classes = useStyles();
   const handleImageUploadBefore = async (files, info, uploadHandler) => {
@@ -572,11 +573,27 @@ export default function Editor() {
       <div className='toolbar-container'>
         <AdminHeader />
       </div>
-      <NavigationPrompt when={isContentChange ? true : false}>
+      {/* <NavigationPrompt when={isContentChange ? true : false}>
         {({onConfirm, onCancel}) => (
           <PromptModal when={true} onCancel={onCancel} onConfirm={onConfirm} />
         )}
-      </NavigationPrompt>
+      </NavigationPrompt> */}
+      <PromptModal
+        when={showPrompt}
+        onConfirm={() => {
+          window.open(
+            window.location.protocol +
+              '//' +
+              window.location.host +
+              `/home/conversation/${params.id}`,
+            '_blank',
+          );
+          setShowPrompt(null);
+        }}
+        onCancel={() => {
+          setShowPrompt(null);
+        }}
+      />
       {userList.message && (
         <Snackbar
           variant='filled'
@@ -620,14 +637,13 @@ export default function Editor() {
           </div>
           <div className='flex-buttons-publish'>
             <button
-              className='flex-button preview'
-              onClick={() => publish('preview')}>
+              onClick={() => setShowPrompt(true)}
+              className='flex-button preview'>
+              {' '}
               <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
               <span className='button-text'>Preview</span>
             </button>
-            <button
-              className='flex-button publish'
-              onClick={() => publish('publish')}>
+            <button className='flex-button publish' onClick={publish}>
               <PublishIcon style={{fill: '#ffffff'}} />{' '}
               <span className='button-text'>Publish</span>
             </button>
@@ -990,32 +1006,41 @@ export default function Editor() {
                   </button>
                 </div>
               ) : (
-                <Select
+                <SearchDropdown
                   style={{marginBottom: 15}}
                   labelId='demo-simple-select-filled-label'
                   id='demo-simple-select-filled'
                   onChange={(e) => {
-                    console.log('on change', e.target.value);
-                    if (e.target.value === 'custom') {
+                    console.log('on change', e.value);
+                    if (e.value === 'custom') {
                       setPreviousInput(true);
                       setprevious_page('Enter external Url..');
-                    } else setprevious_page(e.target.value);
+                    } else setprevious_page(e.value);
                   }}
                   variant='filled'
                   fullWidth
-                  value={previous_page}
+                  // value={previous_page}
+                  defaultValue={previous_page}
                   label='Event Type'
-                  required>
-                  <MenuItem value={'custom'}>Enter External Url</MenuItem>
-                  {allSessionTitles.map((session) => {
-                    return (
-                      <MenuItem
-                        value={baseUrl + 'admin/content/display/' + session.id}>
-                        {session.title}
-                      </MenuItem>
-                    );
+                  required
+                  options={allSessionTitles.map((session, index) => {
+                    if (index === 0) {
+                      return {
+                        label: 'Enter External Url',
+                        value: 'custom',
+                      };
+                    }
+                    return {
+                      label: session.title,
+                      value:
+                        window.location.protocol +
+                        '//' +
+                        window.location.host +
+                        '/home/conversation/' +
+                        session.id,
+                    };
                   })}
-                </Select>
+                />
               ))}
             <br />
             {!['event', 'mini'].includes(params.contentType) &&
@@ -1037,32 +1062,40 @@ export default function Editor() {
                   </button>
                 </div>
               ) : (
-                <Select
+                <SearchDropdown
                   style={{marginBottom: 15}}
                   labelId='demo-simple-select-filled-label'
                   id='demo-simple-select-filled'
                   onChange={(e) => {
-                    console.log('on change', e.target.value);
-                    if (e.target.value === 'custom') {
+                    console.log('on change', e.value);
+                    if (e.value === 'custom') {
                       setNextInput(true);
                       setnext_page('Enter External Url..');
-                    } else setnext_page(e.target.value);
+                    } else setnext_page(e.value);
                   }}
                   variant='filled'
                   fullWidth
-                  value={next_page}
+                  defaultValue={next_page}
                   label='Event Type'
-                  required>
-                  <MenuItem value={'custom'}>Enter Custom Url</MenuItem>
-                  {allSessionTitles.map((session) => {
-                    return (
-                      <MenuItem
-                        value={baseUrl + 'admin/content/display/' + session.id}>
-                        {session.title}
-                      </MenuItem>
-                    );
+                  required
+                  options={allSessionTitles.map((session, index) => {
+                    if (index === 0) {
+                      return {
+                        label: 'Enter External Url',
+                        value: 'custom',
+                      };
+                    }
+                    return {
+                      label: session.title,
+                      value:
+                        window.location.protocol +
+                        '//' +
+                        window.location.host +
+                        '/home/conversation/' +
+                        session.id,
+                    };
                   })}
-                </Select>
+                />
               ))}
             <br />
             <div>
