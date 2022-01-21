@@ -106,12 +106,12 @@ export default function ContentDisplay() {
           <div className='content-display-buttons-container'>
             <div className='content-display-buttons'>
               {data && isUrl(data.previous_page) && data.previous_page && (
-                <Link target='_blank' to={getUrlFormat(data.previous_page)}>
+                <Link to={getUrlFormat(data.previous_page)}>
                   <button className='next-prev-button'>Previous</button>
                 </Link>
               )}
               {data && isUrl(data.next_page) && data.next_page && (
-                <Link target='_blank' to={getUrlFormat(data.next_page)}>
+                <Link to={getUrlFormat(data.next_page)}>
                   <button className='next-prev-button'>Next</button>
                 </Link>
               )}
