@@ -76,15 +76,6 @@ export default function UserConnections() {
     getSentRequests();
   }, [reloadData]);
 
-  function HandleErrorClick() {
-    setErrorCount((prevValue) => {
-      return prevValue + 1;
-    });
-  }
-  function Bomb() {
-    throw new Error('💥 CABOOM 💥');
-  }
-
   const left = (
     <div>
       <div className='requests-section'>
@@ -178,7 +169,6 @@ export default function UserConnections() {
       {/* <Button color='secondary' variant='contained' fullWidth>
         Add Friend
       </Button> */}
-      <h1 onClick={HandleErrorClick}>{errorCount}</h1>;
     </div>
   );
 
@@ -186,7 +176,6 @@ export default function UserConnections() {
     <CommonComponent left={left} right={right}>
       {currentlySelected && <UserDetails element={currentlySelected} />}
 
-      {errorCount === 5 ? <Bomb /> : null}
       <div className='mobile-connections-view'>
         {left}
         {right}
