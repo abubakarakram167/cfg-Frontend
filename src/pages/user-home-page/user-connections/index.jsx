@@ -14,6 +14,7 @@ import CommonComponent from '../common-component';
 import Friend from 'redux/services/friends';
 
 import './style.css';
+import {render} from 'react-dom';
 export default function UserConnections() {
   const [requestsExpanded, setRequestsExpanded] = useState(true);
   const [requestSent, setRequestsSent] = useState(true);
@@ -23,6 +24,7 @@ export default function UserConnections() {
   const [sentFriendRequests, setSentFriendRequests] = useState([]);
   const [friends, setFriends] = useState([]);
   const [reloadData, setReloadData] = useState(true);
+  const [errorCount, setErrorCount] = useState(0);
 
   const toggleReloadData = () => {
     setReloadData(!reloadData);
@@ -73,6 +75,15 @@ export default function UserConnections() {
     getRequests();
     getSentRequests();
   }, [reloadData]);
+
+  function HandleErrorClick() {
+    setErrorCount((prevValue) => {
+      return prevValue + 1;
+    });
+  }
+  function Bomb() {
+    throw new Error('💥 CABOOM 💥');
+  }
 
   const left = (
     <div>
@@ -167,12 +178,15 @@ export default function UserConnections() {
       {/* <Button color='secondary' variant='contained' fullWidth>
         Add Friend
       </Button> */}
+      <h1 onClick={HandleErrorClick}>{errorCount}</h1>;
     </div>
   );
+
   return (
     <CommonComponent left={left} right={right}>
       {currentlySelected && <UserDetails element={currentlySelected} />}
 
+      {errorCount === 5 ? <Bomb /> : null}
       <div className='mobile-connections-view'>
         {left}
         {right}

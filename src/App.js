@@ -6,6 +6,7 @@ import CremaStyleProvider from '@crema/utility/CremaStyleProvider';
 import ContextProvider from '@crema/utility/ContextProvider';
 import configureStore from './redux/store';
 import MainApp from 'pages/app';
+import AppWithErr from './appWithErr';
 
 import {ConnectedRouter} from 'connected-react-router';
 import AppLayout from '@crema/core/AppLayout';
@@ -34,7 +35,7 @@ export default function App() {
               </AuthRoutes>
             </ConnectedRouter> */}
               {/* <UserHome /> */}
-              <MainApp />
+              <AppWithErr />
             </LocaleProvider>
           </CremaStyleProvider>
         </CremaThemeProvider>

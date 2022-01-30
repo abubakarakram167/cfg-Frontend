@@ -11,6 +11,7 @@ import Auth from 'pages/auth-pages';
 import ResetPassword from 'pages/auth-pages/reset-password/index';
 import CreatePassword from 'pages/auth-pages/create-password/index';
 import SessionExpired from 'pages/auth-pages/session-expired/index';
+import ErrorPage from 'pages/auth-pages/error-page/index';
 import ShowMiniContent from 'pages/showContent';
 import UnAuthorizedPage from 'pages/unauthorized-page';
 import {ToastContainer, toast} from 'react-toastify';
@@ -60,6 +61,9 @@ const RouteComponent = (props) => {
           </Route>
           <Route exact path='/sessionexpired'>
             <SessionExpired />
+          </Route>
+          <Route exact path='/error'>
+            <ErrorPage />
           </Route>
           <Route path='/mini/:encrypted_id'>
             <ShowMiniContent />
