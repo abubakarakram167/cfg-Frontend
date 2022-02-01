@@ -30,6 +30,7 @@
     "aws-amplify": "^2.2.7",
     "axios": "^0.21.0",
     "axios-mock-adapter": "^1.19.0",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "bootstrap": "^4.6.0",
     "btoa": "^1.2.1",
@@ -155,6 +156,9 @@
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   },
   "eslintConfig": {
     "extends": [

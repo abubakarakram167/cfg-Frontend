@@ -20,6 +20,7 @@ import Learn from 'pages/user-home-page/learn';
 import AllInboxPage from 'pages/user-home-page/all-in-box';
 import ConversationContentDisplay from 'pages/user-home-page/conversation-content-display';
 import userJournals from 'pages/journal';
+import Homedashicon from 'pages/user-home-page/home-dash-icon';
 
 export default [
   <ProtectedRoute exact path='/home' component={withRouter(UserHome)} />,
@@ -87,5 +88,10 @@ export default [
     exact
     path='/home/conversation/:id'
     component={withRouter(ConversationContentDisplay)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/homedashicon'
+    component={withRouter(Homedashicon)}
   />,
 ];

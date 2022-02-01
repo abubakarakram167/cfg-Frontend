@@ -15,6 +15,10 @@ import './fonts/rissa/Rissa.ttf';
 import './fonts/angelina/angelina.ttf';
 import {SnackbarProvider} from 'notistack';
 
+if (module.hot) {
+  module.hot.accept();
+}
+
 ReactDOM.render(
   <SnackbarProvider maxSnack={3}>
     <App />
