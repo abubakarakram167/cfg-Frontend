@@ -3,6 +3,9 @@ import {Card, Avatar} from '@material-ui/core';
 import './style.css';
 import Friend from 'redux/services/friends';
 import {baseUrl} from 'utils/axios';
+import {IconButton} from '@material-ui/core';
+import {Delete} from '@material-ui/icons';
+
 const Reply = ({reply}) => {
   const [user, setUser] = useState({
     first_name: '',
@@ -19,6 +22,8 @@ const Reply = ({reply}) => {
       }
     }
   }
+
+  const deleteCommentReply = (replyId) => {};
 
   useEffect(() => {
     getUserData();
@@ -42,7 +47,16 @@ const Reply = ({reply}) => {
               }}>
               {user.first_name + ' ' + user.last_name}
             </div>
-            <span className='comment-text'>{reply.content}</span>
+            <span className='comment-text'>
+              {reply.content}{' '}
+              <IconButton aria-label='delete'>
+                <Delete
+                  onClick={() => {
+                    deleteCommentReply(reply.id);
+                  }}
+                />
+              </IconButton>
+            </span>
           </div>
         </div>
       </div>

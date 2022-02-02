@@ -28,6 +28,7 @@ import Friend from 'redux/services/friends';
 import LogoImage from 'assets/cfgWhiteLogo.png';
 import {getPostById} from 'redux/actions/UserPost';
 import {getSignedUrl} from '../../../redux/actions/media';
+import whiteCfgLogo from 'assets/white_header_logo.png';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -140,10 +141,13 @@ export default function AdminHeader() {
         <div className='user-heder-container-header'>
           <div className='left'>
             <div className='left-user-info'>
-              <Avatar alt='User Avatar' src={Logo} className='logo-style' />
-              {/* <Link to='/admin'> */}
-
-              {/* </Link> */}
+              <Link to='/home'>
+                <Avatar
+                  alt='User Avatar'
+                  src={whiteCfgLogo}
+                  className='logo-style'
+                />
+              </Link>
             </div>
             <div className='search-bar'>
               <SearchBar onChange={searchUser} />

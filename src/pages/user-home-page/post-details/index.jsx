@@ -183,10 +183,9 @@ export default function RecipeReviewCard({post, getUserPost}) {
   };
 
   const likeAction = async () => {
-    const data = await Posts.updatePost(post.id, {love_count: loveCount + 1});
-
+    const data = await Posts.addLike(post.id);
     if (data.status === 200) {
-      setLoveCount(loveCount + 1);
+      setLoveCount(data.data.love_count);
     }
   };
 
@@ -371,6 +370,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
         <Collapse in={expanded} timeout='auto' unmountOnExit>
           <CardContent>
             {comments.map((comment, index) => {
+              console.log('the replies', comment);
               const addReplyDataAction = async (replyText) => {
                 await Comments.addComment({
                   post_id: post.id,
