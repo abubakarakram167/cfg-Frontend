@@ -14,10 +14,20 @@ import {Delete} from '@material-ui/icons';
 import Reply from './reply';
 import './style.css';
 import Friend from 'redux/services/friends';
-import {baseUrl} from 'utils/axios';
 import {useSelector} from 'react-redux';
+import {getSignedUrl} from '../../../../redux/actions/media';
+import CommentService from 'redux/services/comment';
+import * as actions from '../../../../redux/actions/action.types';
+import {useDispatch} from 'react-redux';
 
-export default function Comment({comment, addReplyAction, replies}) {
+export default function Comment({
+  comment,
+  addReplyAction,
+  replies,
+  afterDeleteCommentGetPost,
+  postId,
+}) {
+  console.log('the post id', postId);
   const [reply, setReply] = useState('');
   const [user, setUser] = useState({
     first_name: '',
@@ -29,12 +39,22 @@ export default function Comment({comment, addReplyAction, replies}) {
   const [editText, setEditText] = useState(comment.content);
   const [editedText, setEditedText] = useState('');
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [userAvatarImage, setUserAvatarImage] = useState(null);
+  const dispatch = useDispatch();
 
   async function getUserData() {
     const data = await Friend.getUserDetails(comment.created_by);
     if (data) {
       if (data.data) {
         setUser(data.data);
+        if (data.data) {
+          getSignedUrl({fileName: data.data.photo_url}).then((res) => {
+            console.log('..............................');
+            console.log('after response', res);
+            setUserAvatarImage(res.newUrl);
+          });
+          console.log('the data.data', data.data);
+        }
       }
     }
   }
@@ -44,6 +64,13 @@ export default function Comment({comment, addReplyAction, replies}) {
       addReplyAction(reply);
       setReply('');
     }
+  };
+
+  const deletePostComment = async (comment) => {
+    console.log('the comment', comment);
+    const response = await CommentService.deleteComment(comment);
+    const data_resp = response.data;
+    afterDeleteCommentGetPost(postId);
   };
 
   useEffect(() => {
@@ -89,6 +116,7 @@ export default function Comment({comment, addReplyAction, replies}) {
       </DialogContent>
     </Dialog>
   );
+  console.log('the user', user);
 
   return (
     <div>
@@ -96,7 +124,7 @@ export default function Comment({comment, addReplyAction, replies}) {
       <Card className='comment-card'>
         <div className='comment-card-content'>
           <div className='comment-card-content-left'>
-            <Avatar alt='user-avatar' src={user.photo_url} />
+            <Avatar alt='user-avatar' src={userAvatarImage} />
             <div style={{display: 'flex', flexDirection: 'column'}}>
               <div
                 style={{
@@ -118,7 +146,7 @@ export default function Comment({comment, addReplyAction, replies}) {
               <IconButton aria-label='delete'>
                 <Delete
                   onClick={() => {
-                    console.log('it is calling...');
+                    deletePostComment(comment.id);
                   }}
                 />
               </IconButton>
