@@ -18,5 +18,8 @@ class UserPost {
   static getPostById(id) {
     return axiosInstance.get('/api/userPosts/' + id);
   }
+  static addLike(id) {
+    return axiosInstance.get('/api/userPosts/love/' + id);
+  }
 }
 export default UserPost;

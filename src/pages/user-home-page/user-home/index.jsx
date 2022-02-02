@@ -133,8 +133,12 @@ export default function UserHomePage() {
     setAllTransformPosts(newContentPosts);
   };
 
-  useEffect(() => {
+  const getAllUserPost = () => {
     dispatch(getUserPost(count));
+  };
+
+  useEffect(() => {
+    getAllUserPost();
   }, [count]);
 
   useEffect(() => {
@@ -388,7 +392,12 @@ export default function UserHomePage() {
       {transform.map((element, index) => {
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>
-            <PostDetails post={element} />
+            <PostDetails
+              getUserPost={() => {
+                getAllUserPost();
+              }}
+              post={element}
+            />
           </div>
         );
       })}

@@ -31,6 +31,8 @@ import * as actions from '../../../redux/actions/action.types';
 import {getSignedUrl} from '../../../redux/actions/media';
 import {onGetUserList} from '../../../redux/actions';
 import JournalModal from '../../../components/JournalModal';
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 
 let reRender = true;
 let userList = [];
@@ -58,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard({post}) {
+export default function RecipeReviewCard({post, getUserPost}) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [comment, setComment] = React.useState('');
@@ -72,6 +74,7 @@ export default function RecipeReviewCard({post}) {
   const [showJournalModal, setShowJournalModal] = useState(false);
   const [journalId, setJournalId] = useState(null);
   const [subject, setSubject] = useState(null);
+  const [showMessage, setShowMessage] = useState(null);
 
   const userSpecificImage = userList.filter(
     (user) => user.id === post.user_id,
@@ -113,6 +116,15 @@ export default function RecipeReviewCard({post}) {
       }
     }
   }
+
+  // const afterDeleteCommentGetPost = async(postId) => {
+  //   const data = await Comments.getPostComments(postId);
+  //   if (data) {
+  //     if (data.data) {
+  //       setComments(data.data);
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
@@ -171,10 +183,9 @@ export default function RecipeReviewCard({post}) {
   };
 
   const likeAction = async () => {
-    const data = await Posts.updatePost(post.id, {love_count: loveCount + 1});
-
+    const data = await Posts.addLike(post.id);
     if (data.status === 200) {
-      setLoveCount(loveCount + 1);
+      setLoveCount(data.data.love_count);
     }
   };
 
@@ -294,12 +305,25 @@ export default function RecipeReviewCard({post}) {
     <>
       {editDialogJSX}
       <Card className={classes.root}>
+        {showMessage && (
+          <div>
+            <Snackbar
+              open={true}
+              autoHideDuration={2000}
+              onClose={() => setShowMessage(false)}>
+              <Alert variant='filled' severity='success'>
+                comment deleted Successfully
+              </Alert>
+            </Snackbar>
+          </div>
+        )}
+
         <CardHeader
           avatar={
             <Avatar
               aria-label='recipe'
               className={classes.avatar}
-              src={userSpecificImage}
+              src={avatarImage}
             />
           }
           action={
@@ -346,6 +370,7 @@ export default function RecipeReviewCard({post}) {
         <Collapse in={expanded} timeout='auto' unmountOnExit>
           <CardContent>
             {comments.map((comment, index) => {
+              console.log('the replies', comment);
               const addReplyDataAction = async (replyText) => {
                 await Comments.addComment({
                   post_id: post.id,
@@ -361,6 +386,11 @@ export default function RecipeReviewCard({post}) {
                     comment={comment}
                     addReplyAction={addReplyDataAction}
                     replies={comment.replies}
+                    postId={post.id}
+                    afterDeleteCommentGetPost={() => {
+                      setShowMessage(true);
+                      getPostComments();
+                    }}
                   />
                 );
               }
