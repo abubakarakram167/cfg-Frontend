@@ -16,11 +16,13 @@ import ShowMiniContent from 'pages/showContent';
 import UnAuthorizedPage from 'pages/unauthorized-page';
 import {ToastContainer, toast} from 'react-toastify';
 import {Offline, Online} from 'react-detect-offline';
+import LoadingBar from 'react-top-loading-bar';
 
 const user = JSON.parse(localStorage.getItem('current-user'));
 const RouteComponent = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
   let history = useHistory();
+  const [progress, setProgress] = useState(0);
 
   const isAdminUrl = () => {
     if (window.location.href.indexOf('admin') > -1) {
@@ -37,8 +39,22 @@ const RouteComponent = (props) => {
     }
   }, [localStorage.getItem('auth-token')]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setProgress(40);
+    }, 2000);
+    setTimeout(() => {
+      setProgress(100);
+    }, 4000);
+  }, []);
+
   return (
     <div>
+      <LoadingBar
+        color='#f11946'
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Offline>
         <div
           style={{
