@@ -352,7 +352,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
             <span className='caption-text'>
               <ShowMoreText
                 /* Default options */
-                lines={3}
+                lines={2}
                 more='Show more'
                 less='Show less'
                 className='content-css'
