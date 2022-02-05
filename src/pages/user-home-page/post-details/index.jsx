@@ -33,6 +33,8 @@ import {onGetUserList} from '../../../redux/actions';
 import JournalModal from '../../../components/JournalModal';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
+import ShowMoreText from 'react-show-more-text';
+import parse from 'html-react-parser';
 
 let reRender = true;
 let userList = [];
@@ -348,7 +350,17 @@ export default function RecipeReviewCard({post, getUserPost}) {
         <CardContent>
           <Typography variant='body2' color='textSecondary' component='p'>
             <span className='caption-text'>
-              <div dangerouslySetInnerHTML={{__html: editText}} />
+              <ShowMoreText
+                /* Default options */
+                lines={3}
+                more='Show more'
+                less='Show less'
+                className='content-css'
+                onClick={() => {}}
+                expanded={false}
+                truncatedEndingComponent={'... '}>
+                <div dangerouslySetInnerHTML={{__html: editText}} />
+              </ShowMoreText>
             </span>
           </Typography>
         </CardContent>
@@ -370,7 +382,6 @@ export default function RecipeReviewCard({post, getUserPost}) {
         <Collapse in={expanded} timeout='auto' unmountOnExit>
           <CardContent>
             {comments.map((comment, index) => {
-              console.log('the replies', comment);
               const addReplyDataAction = async (replyText) => {
                 await Comments.addComment({
                   post_id: post.id,
