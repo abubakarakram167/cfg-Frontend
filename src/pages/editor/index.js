@@ -278,14 +278,20 @@ export default function Editor() {
       setnext_page(state.currentContent.next_page || '');
       setPublishDate(moment().format('MM/DD/yyyy'));
       setprevious_page(state.currentContent.previous_page || '');
-      if (state.currentContent.next_page) {
+      if (
+        state.currentContent.next_page ||
+        state.currentContent.next_page !== ''
+      ) {
         if (
           new URL(state.currentContent.next_page).hostname !==
           window.location.hostname
         )
           setNextInput(true);
       }
-      if (state.currentContent.previous_page) {
+      if (
+        state.currentContent.previous_page ||
+        state.currentContent.previous_page !== ''
+      ) {
         if (
           new URL(state.currentContent.previous_page).hostname !==
           window.location.hostname

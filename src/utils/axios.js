@@ -22,8 +22,6 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   function (error) {
-    console.log('the error', error);
-
     if (error.response && error.response.status === 401) {
       // console.log();
       // console.log("log from axios",~window.location.href.indexOf('/'))

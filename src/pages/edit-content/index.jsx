@@ -100,8 +100,6 @@ export default function Editor() {
   const [nextInput, setNextInput] = useState(null);
   const [showPrompt, setShowPrompt] = useState(null);
 
-  console.log('the all session titles', allSessionTitles);
-
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
     setKeywords([...keywords, keywordValue]);
@@ -263,14 +261,20 @@ export default function Editor() {
       setGroup(state.currentContent.assigned_group);
       setnext_page(state.currentContent.next_page || '');
       setprevious_page(state.currentContent.previous_page || '');
-      if (state.currentContent.next_page) {
+      if (
+        state.currentContent.previous_page !== '' ||
+        state.currentContent.previous_page
+      ) {
         if (
           new URL(state.currentContent.next_page).hostname !==
           window.location.hostname
         )
           setNextInput(true);
       }
-      if (state.currentContent.previous_page) {
+      if (
+        state.currentContent.previous_page !== '' ||
+        state.currentContent.previous_page
+      ) {
         if (
           new URL(state.currentContent.previous_page).hostname !==
           window.location.hostname
@@ -401,8 +405,6 @@ export default function Editor() {
       ],
     });
   };
-
-  console.log('the previous page', previous_page);
 
   return (
     <div className='editor-page-full-container'>
