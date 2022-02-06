@@ -48,6 +48,8 @@
   border: none;
   border-radius: 20px;
   padding: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,5 +71,38 @@
   display: flex;
   align-items: center;
   font-weight: 500;
-  margin-bottom: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.react-input-emoji--button {
+  position: relative;
+  right: 10px;
+  z-index: 100;
+}
+.react-input-emoji--container {
+  background-color: #e5e5e5 !important;
+  border: 1px solid darkgray !important;
+  border-radius: 40px !important;
+  border-color: rgb(234, 234, 234) !important;
+  font-size: 15px !important;
+  font-family: sans-serif !important;
+  padding-top: 5px !important;
+}
+.react-input-emoji--wrapper {
+  padding-right: 25px !important;
+}
+
+.bottom-section {
+  margin-left: 25px;
+}
+
+.CircularProgressbar {
+  width: 6% !important;
+  position: absolute;
+  left: 84%;
+}
+
+.react-input-emoji--wrapper {
+  padding-right: 25px;
 }
