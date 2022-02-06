@@ -85,6 +85,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
   const [journalId, setJournalId] = useState(null);
   const [subject, setSubject] = useState(null);
   const [showMessage, setShowMessage] = useState(null);
+  const [postCreatorImage, setPostCreatorImage] = useState(null);
 
   const userSpecificImage = userList.filter(
     (user) => user.id === post.user_id,
@@ -108,6 +109,9 @@ export default function RecipeReviewCard({post, getUserPost}) {
     if (data) {
       if (data.data) {
         setUser(data.data);
+        getSignedUrl({fileName: data.data.photo_url}).then((res) => {
+          setPostCreatorImage(res.newUrl);
+        });
       }
     }
   }
@@ -136,6 +140,8 @@ export default function RecipeReviewCard({post, getUserPost}) {
   //     }
   //   }
   // }
+
+  console.log('the post', post);
 
   useEffect(() => {
     getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
@@ -334,7 +340,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
             <Avatar
               aria-label='recipe'
               className={classes.avatar}
-              src={avatarImage}
+              src={postCreatorImage}
             />
           }
           action={
