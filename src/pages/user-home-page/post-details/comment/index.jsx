@@ -20,6 +20,7 @@ import CommentService from 'redux/services/comment';
 import * as actions from '../../../../redux/actions/action.types';
 import {useDispatch} from 'react-redux';
 import moment from 'moment';
+import InputEmoji from 'react-input-emoji';
 
 export default function Comment({
   comment,
@@ -149,8 +150,12 @@ export default function Comment({
           </span>
         </div>
         <div className='bottom-text-actions'>
-          <span>Give Love | </span>
-          <span onClick={() => setShowReplyInput(true)}>Reply |</span>
+          <span className='cursor-pointer'>Give Love | </span>
+          <span
+            className='cursor-pointer'
+            onClick={() => setShowReplyInput(true)}>
+            Reply |
+          </span>
           <span>{moment(comment.createdAt).fromNow()}</span>
         </div>
       </div>
@@ -162,35 +167,25 @@ export default function Comment({
           <div className='parent-reply-container'>
             <div
               style={{
-                flex: 1,
-                width: '10%',
+                width: 50,
                 margin: 0,
                 marginTop: 5,
                 paddingBottom: 30,
               }}>
               <img
                 src={userAvatarImage}
-                style={{width: 60, height: 60, borderRadius: 40}}
+                style={{width: 45, height: 45, borderRadius: 40}}
               />
             </div>
             <div style={{flex: 8}}>
-              <input
-                style={{
-                  width: '60%',
-                  border: '1px solid gray',
-                  borderRadius: 20,
-                  backgroundColor: '#efeded',
-                  padding: 15,
-                  marginTop: 5,
-                }}
-                type='text'
-                placeholder='Write a reply...'
-                label='reply'
-                variant='filled'
+              <InputEmoji
                 value={reply}
-                onChange={(e) => setReply(e.target.value)}
+                onChange={(e) => setReply(e)}
+                cleanOnEnter
+                onEnter={addReply}
                 onKeyDown={addReply}
-                fullWidth
+                placeholder='Write a reply ...'
+                height={60}
               />
             </div>
           </div>

@@ -424,10 +424,17 @@ export default function RecipeReviewCard({post, getUserPost}) {
             })}
             <div style={{display: 'flex', flexDirection: 'row'}}>
               <div
-                style={{flex: 1, margin: 0, marginTop: 5, paddingBottom: 30}}>
+                style={{
+                  width: 45,
+                  height: 45,
+                  borderRadius: 40,
+                  margin: 0,
+                  marginTop: 5,
+                  paddingBottom: 30,
+                }}>
                 <img
                   src={avatarImage}
-                  style={{width: 60, height: 60, borderRadius: 40}}
+                  style={{width: 45, height: 45, borderRadius: 40}}
                 />
               </div>
               <div style={{flex: 8}}>
