@@ -37,6 +37,7 @@ import SearchDropdown from 'react-select';
 import {onGetUserList} from '../../redux/actions';
 import {getInviteOfMiniCfg, deleteInvite} from 'redux/actions/sessionActions';
 import {DateTimePicker} from '@material-ui/pickers';
+import validator from 'validator';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -48,6 +49,16 @@ const useStyles = makeStyles({
     },
   },
 });
+
+const isUrlValid = (url) => {
+  try {
+    new URL(url);
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+  return true;
+};
 
 export default function Editor() {
   const myRef = useRef(null);
@@ -65,8 +76,8 @@ export default function Editor() {
   const [status, setStatus] = useState('draft');
   const [total_points, settotal_points] = useState(0);
   const [imageData, setImageData] = useState([]);
-  const [previous_page, setprevious_page] = useState('');
-  const [next_page, setnext_page] = useState('');
+  const [previous_page, setprevious_page] = useState('custom');
+  const [next_page, setnext_page] = useState('custom');
   const [accumulativeTitlePoints, setAccumulativeTitlePoints] = useState(0);
   const [originalTotalPoints, setOriginalTotalPoints] = useState(0);
   const [categoryValue, setCategoryValue] = useState('');
@@ -95,6 +106,11 @@ export default function Editor() {
   const [inviteValue, setInviteValue] = useState('');
   const [allCompleteInvites, setAllCompleteInvites] = useState([]);
 
+  const [allSessionTitles, setAllSessionTitles] = useState([]);
+  const [previousInput, setPreviousInput] = useState(null);
+  const [nextInput, setNextInput] = useState(null);
+  const [showPrompt, setShowPrompt] = useState(null);
+
   const handleKeywordSubmit = (e) => {
     e.preventDefault();
     setKeywords([...keywords, keywordValue]);
@@ -115,6 +131,18 @@ export default function Editor() {
     setCategories([...categories, categoryValue]);
     setCategoryValue('');
   };
+
+  const fetchingAllSubtitles = async (sessionTitles) => {
+    setAllSessionTitles(sessionTitles);
+  };
+
+  useEffect(() => {
+    Api.get('/api/content/getAllTitles/session?_count=1000&_pageNo=1').then(
+      (response) => {
+        fetchingAllSubtitles(response.data);
+      },
+    );
+  }, []);
 
   useEffect(() => {
     dispatch(getContentData(params.id));
@@ -244,6 +272,21 @@ export default function Editor() {
       setGroup(state.currentContent.assigned_group);
       setnext_page(state.currentContent.next_page || '');
       setprevious_page(state.currentContent.previous_page || '');
+
+      if (isUrlValid(state.currentContent.next_page)) {
+        if (
+          new URL(state.currentContent.next_page).hostname !==
+          window.location.hostname
+        )
+          setNextInput(true);
+      }
+      if (isUrlValid(state.currentContent.previous_page)) {
+        if (
+          new URL(state.currentContent.previous_page).hostname !==
+          window.location.hostname
+        )
+          setPreviousInput(true);
+      }
       setContentType(state.currentContent.type || '');
     }
   }, [state]);
@@ -392,11 +435,26 @@ export default function Editor() {
           Record updated successfully.
         </Alert>
       </Snackbar>
-      <NavigationPrompt when={isContentChange ? true : false}>
-        {({onConfirm, onCancel}) => (
-          <PromptModal when={true} onCancel={onCancel} onConfirm={onConfirm} />
-        )}
-      </NavigationPrompt>
+      {/* <NavigationPrompt when={isContentChange ? true : false}> */}
+      {/* {({onConfirm, onCancel}) => ( */}
+      <PromptModal
+        when={showPrompt}
+        onConfirm={() => {
+          window.open(
+            window.location.protocol +
+              '//' +
+              window.location.host +
+              `/home/conversation/${params.id}`,
+            '_blank',
+          );
+          setShowPrompt(null);
+        }}
+        onCancel={() => {
+          setShowPrompt(null);
+        }}
+      />
+      {/* )} */}
+      {/* </NavigationPrompt> */}
       <Container>
         <div className='top-section'>
           <div style={{width: '100%'}}>
@@ -420,13 +478,13 @@ export default function Editor() {
             </div>
           </div>
           <div className='flex-buttons-publish'>
-            <Link to={`/admin/content/display/${params.id}`}>
-              <button className='flex-button preview'>
-                {' '}
-                <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
-                <span className='button-text'>Preview</span>
-              </button>
-            </Link>
+            <button
+              onClick={() => setShowPrompt(true)}
+              className='flex-button preview'>
+              {' '}
+              <VisibilityIcon style={{fill: '#ffffff'}} />{' '}
+              <span className='button-text'>Preview</span>
+            </button>
             <button className='flex-button publish' onClick={publish}>
               <PublishIcon style={{fill: '#ffffff'}} />{' '}
               <span className='button-text'>Publish</span>
@@ -774,33 +832,116 @@ export default function Editor() {
               <p className='showErrorMessage'>Total Points are required </p>
             )}
             <br />
-            {!['event', 'mini'].includes(params.contentType) && (
-              <div>
-                <TextField
-                  type='url'
+            {!['event', 'mini'].includes(params.contentType) &&
+              (previousInput ? (
+                <div>
+                  <TextField
+                    type='url'
+                    variant='filled'
+                    value={previous_page}
+                    onChange={(e) => setprevious_page(e.target.value)}
+                    fullWidth
+                    label='previous page url'
+                    required
+                  />
+                  <button
+                    className='go-to-dropdown'
+                    onClick={() => setPreviousInput(null)}>
+                    Go to dropdown
+                  </button>
+                </div>
+              ) : (
+                <SearchDropdown
+                  style={{marginBottom: 15}}
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => {
+                    console.log('on change', e.value);
+                    if (e.value === 'custom') {
+                      setPreviousInput(true);
+                      setprevious_page('Enter external Url..');
+                    } else setprevious_page(e.value);
+                  }}
                   variant='filled'
-                  value={previous_page}
-                  onChange={(e) => setprevious_page(e.target.value)}
                   fullWidth
-                  label='previous page url'
+                  // value={previous_page}
+                  defaultValue={previous_page}
+                  label='Event Type'
                   required
+                  options={allSessionTitles.map((session, index) => {
+                    if (index === 0) {
+                      return {
+                        label: 'Enter External Url',
+                        value: 'custom',
+                      };
+                    }
+                    return {
+                      label: session.title,
+                      value:
+                        window.location.protocol +
+                        '//' +
+                        window.location.host +
+                        '/home/conversation/' +
+                        session.id,
+                    };
+                  })}
                 />
-              </div>
-            )}
+              ))}
             <br />
-            {!['event', 'mini'].includes(params.contentType) && (
-              <div>
-                <TextField
-                  type='url'
+            {!['event', 'mini'].includes(params.contentType) &&
+              (nextInput ? (
+                <div>
+                  <TextField
+                    type='url'
+                    variant='filled'
+                    value={next_page}
+                    onChange={(e) => setnext_page(e.target.value)}
+                    fullWidth
+                    label='next page url'
+                    required
+                  />
+                  <button
+                    className='go-to-dropdown'
+                    onClick={() => setNextInput(null)}>
+                    Go to dropdown
+                  </button>
+                </div>
+              ) : (
+                <SearchDropdown
+                  style={{marginBottom: 15}}
+                  labelId='demo-simple-select-filled-label'
+                  id='demo-simple-select-filled'
+                  onChange={(e) => {
+                    console.log('on change', e.value);
+                    if (e.value === 'custom') {
+                      setNextInput(true);
+                      setnext_page('Enter External Url..');
+                    } else setnext_page(e.value);
+                  }}
                   variant='filled'
-                  value={next_page}
-                  onChange={(e) => setnext_page(e.target.value)}
                   fullWidth
-                  label='next page url'
+                  defaultValue={next_page}
+                  label='Event Type'
                   required
+                  options={allSessionTitles.map((session, index) => {
+                    if (index === 0) {
+                      return {
+                        label: 'Enter External Url',
+                        value: 'custom',
+                      };
+                    }
+                    return {
+                      label: session.title,
+                      value:
+                        window.location.protocol +
+                        '//' +
+                        window.location.host +
+                        '/home/conversation/' +
+                        session.id,
+                    };
+                  })}
                 />
-              </div>
-            )}
+              ))}
             <br />
             <div>
               <div style={{display: 'flex'}}>

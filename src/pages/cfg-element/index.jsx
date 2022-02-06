@@ -73,7 +73,7 @@ export default function CfgElement() {
     setDialogOpen(!dialogOpen);
   };
 
-  console.log('the data', data);
+  console.log('the data', state);
 
   const parentTotalPoints =
     data && data.data && data.data.rows.length

@@ -10,13 +10,19 @@ import Home from './home';
 import Auth from 'pages/auth-pages';
 import ResetPassword from 'pages/auth-pages/reset-password/index';
 import CreatePassword from 'pages/auth-pages/create-password/index';
+import SessionExpired from 'pages/auth-pages/session-expired/index';
+import ErrorPage from 'pages/auth-pages/error-page/index';
 import ShowMiniContent from 'pages/showContent';
 import UnAuthorizedPage from 'pages/unauthorized-page';
+import {ToastContainer, toast} from 'react-toastify';
+import {Offline, Online} from 'react-detect-offline';
+import LoadingBar from 'react-top-loading-bar';
 
 const user = JSON.parse(localStorage.getItem('current-user'));
 const RouteComponent = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
   let history = useHistory();
+  const [progress, setProgress] = useState(0);
 
   const isAdminUrl = () => {
     if (window.location.href.indexOf('admin') > -1) {
@@ -33,8 +39,35 @@ const RouteComponent = (props) => {
     }
   }, [localStorage.getItem('auth-token')]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setProgress(40);
+    }, 2000);
+    setTimeout(() => {
+      setProgress(100);
+    }, 4000);
+  }, []);
+
   return (
     <div>
+      <LoadingBar
+        color='#f7b21e'
+        progress={progress}
+        height={6}
+        onLoaderFinished={() => setProgress(0)}
+      />
+      <Offline>
+        <div
+          style={{
+            height: '20px',
+            backgroundColor: 'black',
+            color: 'white',
+            textAlign: 'center',
+          }}>
+          <h4 style={{color: 'white', textAlign: 'center'}}>You're Offline</h4>
+        </div>
+      </Offline>
+
       <Router>
         <Switch>
           <Route exact path='/createPassword'>
@@ -42,6 +75,12 @@ const RouteComponent = (props) => {
           </Route>
           <Route exact path='/reset'>
             <ResetPassword />
+          </Route>
+          <Route exact path='/sessionexpired'>
+            <SessionExpired />
+          </Route>
+          <Route exact path='/error'>
+            <ErrorPage />
           </Route>
           <Route path='/mini/:encrypted_id'>
             <ShowMiniContent />
@@ -62,6 +101,7 @@ const RouteComponent = (props) => {
           </Route> */}
         </Switch>
       </Router>
+      <ToastContainer />
     </div>
   );
 };
