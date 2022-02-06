@@ -17,6 +17,7 @@
 .comment-text {
   font-size: 15px;
   color: #6e6d6d;
+  word-break: break-all;
 }
 .comment-card-reply-section {
   margin-left: 60px;
@@ -33,7 +34,6 @@
   text-transform: capitalize;
   display: flex;
   flex-direction: column;
-  border: 1px solid gray;
   padding: 20px;
   padding: 10px;
   padding-left: 20px;
@@ -41,8 +41,9 @@
   border-radius: 20px;
   padding-top: 5px;
   padding-bottom: 5px;
-  background-color: #e8eaed;
+  background-color: #eeeff1;
   border-radius: 40px;
+  width: 80%;
 }
 .bottom-text-actions {
   padding-left: 80px;
