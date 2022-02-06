@@ -87,10 +87,22 @@
   border-color: rgb(234, 234, 234) !important;
   font-size: 15px !important;
   font-family: sans-serif !important;
-  height: 55px !important;
   padding-top: 5px !important;
+}
+.react-input-emoji--wrapper {
+  padding-right: 25px !important;
 }
 
 .bottom-section {
   margin-left: 25px;
+}
+
+.CircularProgressbar {
+  width: 6% !important;
+  position: absolute;
+  left: 84%;
+}
+
+.react-input-emoji--wrapper {
+  padding-right: 25px;
 }

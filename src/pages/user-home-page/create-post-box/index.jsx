@@ -25,6 +25,8 @@ import {baseUrl} from 'utils/axios';
 import {getSignedUrl} from '../../../redux/actions/media';
 import MediaUpload from 'components/MediaUpload';
 import InputEmoji from 'react-input-emoji';
+import {CircularProgressbar} from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 export default function CreatePostBox() {
   const [open, setOpen] = useState(false);
@@ -96,6 +98,12 @@ export default function CreatePostBox() {
     setMedia(url);
   };
 
+  const getPostPercentage = (content) => {
+    console.log('the content..', content);
+    console.log('the content.length', content.length);
+    return parseInt(content.length / 3);
+  };
+
   return (
     <div>
       <Dialog
@@ -141,9 +149,12 @@ export default function CreatePostBox() {
             <InputEmoji
               value={content}
               onChange={(e) => setContent(e)}
-              cleanOnEnter
               placeholder="What's on your mind?"
-              height={60}
+              maxLength={300}
+            />
+            <CircularProgressbar
+              value={getPostPercentage(content)}
+              text={`${getPostPercentage(content)} %`}
             />
           </DialogContentText>
         </DialogContent>

@@ -51,8 +51,9 @@ const RouteComponent = (props) => {
   return (
     <div>
       <LoadingBar
-        color='#f11946'
+        color='#f7b21e'
         progress={progress}
+        height={6}
         onLoaderFinished={() => setProgress(0)}
       />
       <Offline>
