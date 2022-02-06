@@ -101,6 +101,7 @@
     "react-html-parser": "^2.0.2",
     "react-image-timeline": "^3.2.13",
     "react-images": "^1.1.7",
+    "react-input-emoji": "^4.0.9",
     "react-intl": "^5.8.8",
     "react-lazyload": "^3.2.0",
     "react-notifications-component": "^2.4.1",

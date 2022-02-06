@@ -24,6 +24,7 @@ import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 import {getSignedUrl} from '../../../redux/actions/media';
 import MediaUpload from 'components/MediaUpload';
+import InputEmoji from 'react-input-emoji';
 
 export default function CreatePostBox() {
   const [open, setOpen] = useState(false);
@@ -126,7 +127,7 @@ export default function CreatePostBox() {
               </span>
             </div>
             {media && mediaJSX()}
-            <TextField
+            {/* <TextField
               style={{width: '100%'}}
               id='standard-multiline-static'
               multiline
@@ -136,6 +137,13 @@ export default function CreatePostBox() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Whats's on your mind?"
+            /> */}
+            <InputEmoji
+              value={content}
+              onChange={(e) => setContent(e)}
+              cleanOnEnter
+              placeholder="What's on your mind?"
+              height={60}
             />
           </DialogContentText>
         </DialogContent>
@@ -150,7 +158,7 @@ export default function CreatePostBox() {
               });
             }}
           />
-          <label htmlFor='media-upload'>
+          <label className='bottom-section' htmlFor='media-upload'>
             <div className='create-post-dialog-action-content'>
               <button className='create-post-button' onClick={handleSave}>
                 <Save /> <span className='app-card-bottom-text'>Save</span>
@@ -177,9 +185,9 @@ export default function CreatePostBox() {
                   style={{color: 'red'}}
                 />
               </div>
-              <div className='create-post-action-icons'>
+              {/* <div className='create-post-action-icons'>
                 <EmojiEmotions style={{color: 'red'}} />
-              </div>
+              </div> */}
             </div>
           </label>
         </DialogActions>

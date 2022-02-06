@@ -19,6 +19,7 @@ import {getSignedUrl} from '../../../../redux/actions/media';
 import CommentService from 'redux/services/comment';
 import * as actions from '../../../../redux/actions/action.types';
 import {useDispatch} from 'react-redux';
+import moment from 'moment';
 
 export default function Comment({
   comment,
@@ -27,7 +28,7 @@ export default function Comment({
   afterDeleteCommentGetPost,
   postId,
 }) {
-  console.log('the post id', postId);
+  console.log('the comment', comment);
   const [reply, setReply] = useState('');
   const [user, setUser] = useState({
     first_name: '',
@@ -40,6 +41,8 @@ export default function Comment({
   const [editedText, setEditedText] = useState('');
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [userAvatarImage, setUserAvatarImage] = useState(null);
+  const [showReplyInput, setShowReplyInput] = useState(false);
+
   const dispatch = useDispatch();
 
   async function getUserData() {
@@ -121,52 +124,86 @@ export default function Comment({
   return (
     <div>
       {editDialogJSX}
-      <Card className='comment-card'>
-        <div className='comment-card-content'>
-          <div className='comment-card-content-left'>
-            <Avatar alt='user-avatar' src={userAvatarImage} />
-            <div style={{display: 'flex', flexDirection: 'column'}}>
-              <div
-                style={{
-                  marginLeft: '20px',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  textTransform: 'capitalize',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}>
-                <span style={{marginRight: '10px'}}>
-                  {user.first_name + ' ' + user.last_name}
-                </span>
-                {/* {currentUser && currentUser.user_name === user.user_name && <Edit fontSize="small" onClick={() => setEditDialogOpen(true)} style={{ cursor: 'pointer' }} />} */}
-              </div>
-              <span className='comment-text'>{comment.content}</span>
+      <div>
+        <div style={{display: 'flex', flexDirection: 'row'}}>
+          <img
+            alt='user-avatar'
+            className='user-image-comment'
+            src={userAvatarImage}
+          />
+          <div className='comment-author-container'>
+            <div style={{marginRight: '10px', color: '#afadad'}}>
+              {user.first_name + ' ' + user.last_name}
             </div>
-            <span>
-              <IconButton aria-label='delete'>
-                <Delete
-                  onClick={() => {
-                    deletePostComment(comment.id);
-                  }}
-                />
-              </IconButton>
-            </span>
+            {/* {currentUser && currentUser.user_name === user.user_name && <Edit fontSize="small" onClick={() => setEditDialogOpen(true)} style={{ cursor: 'pointer' }} />} */}
+            <div className='comment-text'>{comment.content}</div>
           </div>
+          <span>
+            <IconButton aria-label='delete'>
+              <Delete
+                onClick={() => {
+                  deletePostComment(comment.id);
+                }}
+              />
+            </IconButton>
+          </span>
         </div>
-        <div className='comment-card-reply-section'>
-          {replies.map((reply, index) => {
-            return <Reply reply={reply} key={index} />;
-          })}
-          <TextField
+        <div className='bottom-text-actions'>
+          <span>Give Love | </span>
+          <span onClick={() => setShowReplyInput(true)}>Reply |</span>
+          <span>{moment(comment.createdAt).fromNow()}</span>
+        </div>
+      </div>
+      <div className='comment-card-reply-section'>
+        {replies.map((reply, index) => {
+          return <Reply reply={reply} key={index} />;
+        })}
+        {showReplyInput && (
+          <div className='parent-reply-container'>
+            <div
+              style={{
+                flex: 1,
+                width: '10%',
+                margin: 0,
+                marginTop: 5,
+                paddingBottom: 30,
+              }}>
+              <img
+                src={userAvatarImage}
+                style={{width: 60, height: 60, borderRadius: 40}}
+              />
+            </div>
+            <div style={{flex: 8}}>
+              <input
+                style={{
+                  width: '60%',
+                  border: '1px solid gray',
+                  borderRadius: 20,
+                  backgroundColor: '#efeded',
+                  padding: 15,
+                  marginTop: 5,
+                }}
+                type='text'
+                placeholder='Write a reply...'
+                label='reply'
+                variant='filled'
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+                onKeyDown={addReply}
+                fullWidth
+              />
+            </div>
+          </div>
+        )}
+        {/* <TextField
             value={reply}
             label='reply'
             fullWidth
             variant='filled'
             onChange={(e) => setReply(e.target.value)}
             onKeyDown={addReply}
-          />
-        </div>
-      </Card>
+          /> */}
+      </div>
     </div>
   );
 }

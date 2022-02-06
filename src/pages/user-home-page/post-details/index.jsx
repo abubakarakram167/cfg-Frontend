@@ -18,7 +18,14 @@ import {
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import {red} from '@material-ui/core/colors';
-import {ExpandMore, Favorite, Edit, Delete} from '@material-ui/icons';
+import {
+  ExpandMore,
+  Favorite,
+  Edit,
+  Delete,
+  Comment as CommentIcon,
+  Share,
+} from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
 import Friend from 'redux/services/friends';
@@ -35,6 +42,7 @@ import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import ShowMoreText from 'react-show-more-text';
 import parse from 'html-react-parser';
+import InputEmoji from 'react-input-emoji';
 
 let reRender = true;
 let userList = [];
@@ -114,6 +122,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
     const data = await Comments.getPostComments(post.id);
     if (data) {
       if (data.data) {
+        console.log('the comments::', data.data);
         setComments(data.data);
       }
     }
@@ -366,8 +375,15 @@ export default function RecipeReviewCard({post, getUserPost}) {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label='add to favorites' onClick={likeAction}>
-            <Favorite style={{color: 'red'}} />
+            <Favorite style={{color: 'red', fontSize: 15}} />
             <div style={{marginLeft: '10px'}}>{loveCount}</div>
+          </IconButton>
+          <IconButton aria-label='add a comment' onClick={handleExpandClick}>
+            <CommentIcon style={{color: 'black', fontSize: 15}} />
+            <div style={{marginLeft: '10px'}}>{comments.length}</div>
+          </IconButton>
+          <IconButton aria-label='add to reply' onClick={() => {}}>
+            <Share style={{color: 'gray', fontSize: 20}} />
           </IconButton>
           <IconButton
             className={clsx(classes.expand, {
@@ -406,14 +422,45 @@ export default function RecipeReviewCard({post, getUserPost}) {
                 );
               }
             })}
-            <TextField
-              label='comment'
-              variant='filled'
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              onKeyDown={addComment}
-              fullWidth
-            />
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+              <div
+                style={{flex: 1, margin: 0, marginTop: 5, paddingBottom: 30}}>
+                <img
+                  src={avatarImage}
+                  style={{width: 60, height: 60, borderRadius: 40}}
+                />
+              </div>
+              <div style={{flex: 8}}>
+                {/* <input
+                  style = {{ 
+                    width: '75%',
+                    border: '1px solid gray',
+                    borderRadius: 20,
+                    backgroundColor: '#efeded',
+                    padding: 15,
+                    marginTop: 5
+                  }}
+                  type = 'text'
+                  placeholder = "Write a comment..."
+                  label='comment'
+                  variant='filled'
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  onKeyDown={addComment}
+                  fullWidth
+                  autoFocus
+                /> */}
+                <InputEmoji
+                  value={comment}
+                  onChange={(e) => setComment(e)}
+                  cleanOnEnter
+                  onEnter={addComment}
+                  onKeyDown={addComment}
+                  placeholder='Write a Comment...'
+                  height={60}
+                />
+              </div>
+            </div>
           </CardContent>
         </Collapse>
       </Card>
