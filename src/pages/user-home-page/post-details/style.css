@@ -31,3 +31,6 @@
 .react-input-emoji--wrapper {
   padding-right: 25px !important;
 }
+.react-emoji {
+  word-break: break-all;
+}

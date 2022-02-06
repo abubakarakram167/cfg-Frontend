@@ -37,6 +37,7 @@ import SearchDropdown from 'react-select';
 import {onGetUserList} from '../../redux/actions';
 import {getInviteOfMiniCfg, deleteInvite} from 'redux/actions/sessionActions';
 import {DateTimePicker} from '@material-ui/pickers';
+import validator from 'validator';
 
 const useStyles = makeStyles({
   datePicker: {
@@ -48,6 +49,16 @@ const useStyles = makeStyles({
     },
   },
 });
+
+const isUrlValid = (url) => {
+  try {
+    new URL(url);
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+  return true;
+};
 
 export default function Editor() {
   const myRef = useRef(null);
@@ -261,20 +272,15 @@ export default function Editor() {
       setGroup(state.currentContent.assigned_group);
       setnext_page(state.currentContent.next_page || '');
       setprevious_page(state.currentContent.previous_page || '');
-      if (
-        state.currentContent.previous_page !== '' ||
-        state.currentContent.previous_page
-      ) {
+
+      if (isUrlValid(state.currentContent.next_page)) {
         if (
           new URL(state.currentContent.next_page).hostname !==
           window.location.hostname
         )
           setNextInput(true);
       }
-      if (
-        state.currentContent.previous_page !== '' ||
-        state.currentContent.previous_page
-      ) {
+      if (isUrlValid(state.currentContent.previous_page)) {
         if (
           new URL(state.currentContent.previous_page).hostname !==
           window.location.hostname

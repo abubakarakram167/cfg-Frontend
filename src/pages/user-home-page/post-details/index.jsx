@@ -460,11 +460,10 @@ export default function RecipeReviewCard({post, getUserPost}) {
                 <InputEmoji
                   value={comment}
                   onChange={(e) => setComment(e)}
-                  cleanOnEnter
+                  maxLength={300}
                   onEnter={addComment}
                   onKeyDown={addComment}
                   placeholder='Write a Comment...'
-                  height={60}
                 />
               </div>
             </div>
