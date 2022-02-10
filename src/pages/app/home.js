@@ -91,7 +91,7 @@ export default [
   />,
   <ProtectedRoute
     exact
-    path='/home/homedashicon'
+    path='/icon-dashboard'
     component={withRouter(Homedashicon)}
   />,
 ];

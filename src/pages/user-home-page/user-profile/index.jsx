@@ -4,6 +4,7 @@ import BioCard from './bio';
 import CfgCard from './cfg';
 import DemographyCard from './demography';
 import GoalCard from './goals';
+import DefaultView from './default-homepage-view';
 
 export default function UserProfile() {
   return (
@@ -15,6 +16,8 @@ export default function UserProfile() {
       <GoalCard />
       <br />
       <DemographyCard />
+      <br />
+      <DefaultView />
     </CommonComponent>
   );
 }

@@ -78,7 +78,11 @@ export default function SignIn({setView}) {
     }
     if (state.auth.user) {
       if (state.auth.user.role === 'candidate') {
-        history.push('/home');
+        if (state.auth?.user?.default_home_page_view == 'icon') {
+          history.push('/icon-dashboard');
+        } else {
+          history.push('/home');
+        }
       } else {
         history.push('/admin');
       }

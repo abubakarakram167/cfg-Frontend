@@ -13,6 +13,7 @@ const INIT_STATE = {
   message: null,
   error: null,
   newUser: {},
+  loading: false,
 };
 let payload = null;
 const authReducer = (state = INIT_STATE, action) => {
@@ -80,18 +81,22 @@ const authReducer = (state = INIT_STATE, action) => {
       }
       return {...state, user: payload};
 
+    case 'SET_LOADING':
+      return {...state, loading: true};
+
     case actions.UPDATE_USER:
       payload = action.payload;
       console.log(payload);
       if (payload.error) {
         return {
           ...state,
+          loading: false,
           error: 'There was an error updating the user',
         };
       }
       const user = {...state.user, ...payload.newData};
       localStorage.setItem('current-user', JSON.stringify(user));
-      return {...state, user};
+      return {...state, user, loading: false};
     default:
       return state;
   }
