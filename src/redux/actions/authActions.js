@@ -167,6 +167,14 @@ export const passwordResetAction = (data) => {
   };
 };
 
+export const setLoader = () => {
+  return async function (dispatch) {
+    dispatch({
+      type: 'SET_LOADING',
+    });
+  };
+};
+
 export const updateUser = (data) => {
   return async function (dispatch) {
     try {
