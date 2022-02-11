@@ -25,6 +25,7 @@ import {
   Delete,
   Comment as CommentIcon,
   Share,
+  EmojiEmotions,
 } from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
@@ -43,6 +44,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import ShowMoreText from 'react-show-more-text';
 import parse from 'html-react-parser';
 import InputEmoji from 'react-input-emoji';
+import Picker from 'components/emojiComponent';
 
 let reRender = true;
 let userList = [];
@@ -86,6 +88,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
   const [subject, setSubject] = useState(null);
   const [showMessage, setShowMessage] = useState(null);
   const [postCreatorImage, setPostCreatorImage] = useState(null);
+  const [showPicker, setShowPicker] = useState(null);
 
   const userSpecificImage = userList.filter(
     (user) => user.id === post.user_id,
@@ -428,6 +431,12 @@ export default function RecipeReviewCard({post, getUserPost}) {
                 );
               }
             })}
+            <Picker
+              show={showPicker}
+              onGetEmoji={(emoji) => {
+                setComment(comment + emoji);
+              }}
+            />
             <div style={{display: 'flex', flexDirection: 'row'}}>
               <div
                 style={{
@@ -443,18 +452,11 @@ export default function RecipeReviewCard({post, getUserPost}) {
                   style={{width: 45, height: 45, borderRadius: 40}}
                 />
               </div>
-              <div style={{flex: 8}}>
-                {/* <input
-                  style = {{ 
-                    width: '75%',
-                    border: '1px solid gray',
-                    borderRadius: 20,
-                    backgroundColor: '#efeded',
-                    padding: 15,
-                    marginTop: 5
-                  }}
-                  type = 'text'
-                  placeholder = "Write a comment..."
+              <div style={{flex: 9}}>
+                <input
+                  className='comment-input'
+                  type='text'
+                  placeholder='Write a comment...'
                   label='comment'
                   variant='filled'
                   value={comment}
@@ -462,15 +464,22 @@ export default function RecipeReviewCard({post, getUserPost}) {
                   onKeyDown={addComment}
                   fullWidth
                   autoFocus
-                /> */}
-                <InputEmoji
+                />
+                <span
+                  className='emoji-container'
+                  onClick={() => {
+                    setShowPicker(!showPicker);
+                  }}>
+                  <EmojiEmotions style={{color: 'black'}} />
+                </span>
+                {/* <InputEmoji
                   value={comment}
                   onChange={(e) => setComment(e)}
                   maxLength={300}
                   onEnter={addComment}
                   onKeyDown={addComment}
                   placeholder='Write a Comment...'
-                />
+                /> */}
               </div>
             </div>
           </CardContent>
