@@ -71,8 +71,8 @@
   display: flex;
   align-items: center;
   font-weight: 500;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .react-input-emoji--button {
@@ -94,15 +94,57 @@
 }
 
 .bottom-section {
-  margin-left: 25px;
+  margin-left: 19px;
+}
+.react-input-emoji--wrapper {
+  padding-right: 25px;
 }
 
+.create-post-box-input {
+  width: 100%;
+  padding: 10px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-radius: 20px;
+  border: none;
+  background-color: #e7e7e7;
+}
+
+.emoji-container-post {
+  position: relative;
+  left: 95%;
+  top: -30px;
+}
 .CircularProgressbar {
   width: 6% !important;
   position: absolute;
-  left: 84%;
+  left: 90%;
+  top: 170px;
 }
 
-.react-input-emoji--wrapper {
-  padding-right: 25px;
+.picker-emoji {
+  width: 50%;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 600px) {
+  .emoji-container-post {
+    left: 93%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .emoji-container-post {
+    left: 90%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .CircularProgressbar {
+    width: 6% !important;
+    position: absolute;
+    left: 85%;
+    top: 190px;
+  }
 }
