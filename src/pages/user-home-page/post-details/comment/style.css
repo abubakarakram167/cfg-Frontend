@@ -60,3 +60,13 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+.reply-more {
+  width: 90% !important;
+}
+
+@media screen and (max-width: 520px) {
+  .reply-more {
+    width: 86% !important;
+  }
+}

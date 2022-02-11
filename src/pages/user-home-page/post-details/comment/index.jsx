@@ -10,7 +10,7 @@ import {
   Button,
   IconButton,
 } from '@material-ui/core';
-import {Delete} from '@material-ui/icons';
+import {Delete, EmojiEmotionsOutlined} from '@material-ui/icons';
 import Reply from './reply';
 import './style.css';
 import Friend from 'redux/services/friends';
@@ -21,6 +21,7 @@ import * as actions from '../../../../redux/actions/action.types';
 import {useDispatch} from 'react-redux';
 import moment from 'moment';
 import InputEmoji from 'react-input-emoji';
+import Picker from 'components/emojiComponent';
 
 export default function Comment({
   comment,
@@ -43,6 +44,7 @@ export default function Comment({
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [userAvatarImage, setUserAvatarImage] = useState(null);
   const [showReplyInput, setShowReplyInput] = useState(false);
+  const [showPicker, setShowPicker] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -165,6 +167,12 @@ export default function Comment({
         })}
         {showReplyInput && (
           <div className='parent-reply-container'>
+            <Picker
+              show={showPicker}
+              onGetEmoji={(emoji) => {
+                setReply(reply + emoji);
+              }}
+            />
             <div
               style={{
                 width: 50,
@@ -177,16 +185,26 @@ export default function Comment({
                 style={{width: 45, height: 45, borderRadius: 40}}
               />
             </div>
-            <div style={{flex: 8}}>
-              <InputEmoji
+            <div style={{flex: 9}}>
+              <input
+                className='comment-input reply-more'
+                type='text'
+                placeholder='Write a reply...'
+                label='comment'
+                variant='filled'
                 value={reply}
-                onChange={(e) => setReply(e)}
-                cleanOnEnter
-                onEnter={addReply}
+                onChange={(e) => setReply(e.target.value)}
                 onKeyDown={addReply}
-                placeholder='Write a reply ...'
-                height={60}
+                fullWidth
+                autoFocus
               />
+              <span
+                className='emoji-container'
+                onClick={() => {
+                  setShowPicker(!showPicker);
+                }}>
+                <EmojiEmotionsOutlined />
+              </span>
             </div>
           </div>
         )}
