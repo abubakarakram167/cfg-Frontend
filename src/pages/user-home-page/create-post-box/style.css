@@ -124,8 +124,8 @@
 
 .picker-emoji {
   width: 50%;
-  margin: auto;
-  margin-bottom: 20px;
+  margin-left: auto !important;
+  margin-bottom: 5px;
 }
 
 @media screen and (max-width: 600px) {

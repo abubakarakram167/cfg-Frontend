@@ -25,7 +25,7 @@ import {
   Delete,
   Comment as CommentIcon,
   Share,
-  EmojiEmotions,
+  EmojiEmotionsOutlined,
 } from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
@@ -470,7 +470,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
                   onClick={() => {
                     setShowPicker(!showPicker);
                   }}>
-                  <EmojiEmotions style={{color: 'black'}} />
+                  <EmojiEmotionsOutlined />
                 </span>
                 {/* <InputEmoji
                   value={comment}
