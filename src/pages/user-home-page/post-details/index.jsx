@@ -129,7 +129,6 @@ export default function RecipeReviewCard({post, getUserPost}) {
     const data = await Comments.getPostComments(post.id);
     if (data) {
       if (data.data) {
-        console.log('the comments::', data.data);
         setComments(data.data);
       }
     }
@@ -143,8 +142,6 @@ export default function RecipeReviewCard({post, getUserPost}) {
   //     }
   //   }
   // }
-
-  console.log('the post', post);
 
   useEffect(() => {
     getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
@@ -388,12 +385,12 @@ export default function RecipeReviewCard({post, getUserPost}) {
             <div style={{marginLeft: '10px'}}>{loveCount}</div>
           </IconButton>
           <IconButton aria-label='add a comment' onClick={handleExpandClick}>
-            <CommentIcon style={{color: 'black', fontSize: 15}} />
+            <CommentIcon style={{color: '#2991d6', fontSize: 15}} />
             <div style={{marginLeft: '10px'}}>{comments.length}</div>
           </IconButton>
-          <IconButton aria-label='add to reply' onClick={() => {}}>
+          {/* <IconButton aria-label='add to reply' onClick={() => {}}>
             <Share style={{color: 'gray', fontSize: 20}} />
-          </IconButton>
+          </IconButton> */}
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
@@ -453,7 +450,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
                 />
               </div>
               <div style={{flex: 9}}>
-                <input
+                <textarea
                   className='comment-input'
                   type='text'
                   placeholder='Write a comment...'
@@ -464,9 +461,11 @@ export default function RecipeReviewCard({post, getUserPost}) {
                   onKeyDown={addComment}
                   fullWidth
                   autoFocus
+                  onFocus={() => setShowPicker(false)}
+                  rows={1}
                 />
                 <span
-                  className='emoji-container'
+                  className='emoji-container input-specific'
                   onClick={() => {
                     setShowPicker(!showPicker);
                   }}>

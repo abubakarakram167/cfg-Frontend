@@ -133,6 +133,7 @@
     "react-table": "6.10.3",
     "react-text-collapse": "^0.6.1",
     "react-text-mask": "^5.4.3",
+    "react-textarea-autosize": "^8.3.3",
     "react-toastify": "^6.0.9",
     "react-tooltip": "^4.2.7",
     "react-top-loading-bar": "^2.1.0",

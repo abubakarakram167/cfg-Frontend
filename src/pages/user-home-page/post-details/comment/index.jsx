@@ -165,14 +165,17 @@ export default function Comment({
         {replies.map((reply, index) => {
           return <Reply reply={reply} key={index} />;
         })}
+        {showPicker && (
+          <Picker
+            show={showPicker}
+            onGetEmoji={(emoji) => {
+              setReply(reply + emoji);
+            }}
+          />
+        )}
+
         {showReplyInput && (
           <div className='parent-reply-container'>
-            <Picker
-              show={showPicker}
-              onGetEmoji={(emoji) => {
-                setReply(reply + emoji);
-              }}
-            />
             <div
               style={{
                 width: 50,
@@ -186,7 +189,7 @@ export default function Comment({
               />
             </div>
             <div style={{flex: 9}}>
-              <input
+              <textarea
                 className='comment-input reply-more'
                 type='text'
                 placeholder='Write a reply...'
@@ -197,9 +200,11 @@ export default function Comment({
                 onKeyDown={addReply}
                 fullWidth
                 autoFocus
+                onFocus={() => setShowPicker(false)}
+                rows={1}
               />
               <span
-                className='emoji-container'
+                className='emoji-container reply-specific'
                 onClick={() => {
                   setShowPicker(!showPicker);
                 }}>

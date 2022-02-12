@@ -10,6 +10,7 @@ import {useParams} from 'react-router';
 import {Link} from 'react-router-dom';
 import {getContentData} from '../../../../redux/actions/toolActions';
 import {useDispatch, useSelector} from 'react-redux';
+
 const useStyles = makeStyles({
   root: {
     minWidth: '100%',
@@ -32,20 +33,21 @@ export default function LearnCard({element}) {
   const classes = useStyles();
   const params = useParams();
 
+  const getTruncatedText = (str) => {
+    return str.length > 15 ? str.substring(0, 15) + '...' : str;
+  };
+
   return (
     <Card className={classes.root} variant='outlined'>
       <CardContent>
-        <Typography
-          className={classes.title}
-          color='textSecondary'
-          gutterBottom>
-          {element.title}
+        <Typography gutterBottom variant='h5' component='h2'>
+          {getTruncatedText(element.title)}
         </Typography>
 
-        <Typography className={classes.pos} color='textSecondary'>
+        <Typography variant='body2' color='textSecondary' component='p'>
           <div
             dangerouslySetInnerHTML={{
-              __html: element.detail.substr(0, 60),
+              __html: getTruncatedText(element.detail),
             }}></div>
         </Typography>
 

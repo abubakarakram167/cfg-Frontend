@@ -56,7 +56,11 @@
   right: 30px;
 }
 
-@media screen and (max-width: 1200px) {
+.input-specific {
+  top: -20px !important;
+}
+
+@media screen and (max-width: 1233px) {
   .comment-input {
     width: 92%;
   }

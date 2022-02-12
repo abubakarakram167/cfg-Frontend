@@ -163,6 +163,7 @@ export const getContentData = (id) => {
   return async function (dispatch) {
     try {
       const response = await Tool.getContentData(id);
+      console.log('the response on content', response);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
@@ -172,6 +173,7 @@ export const getContentData = (id) => {
         });
       }
     } catch (error) {
+      console.log('the error on content', error);
       dispatch({
         type: GET_CONTENT_DATA,
         payload: {error: 'There was an error fetching the data.'},
@@ -203,7 +205,6 @@ export const getToolsData = (id) => {
           }
         });
         const getImages = await Promise.all(images);
-        console.log('the getimages', getImages);
 
         let transformTools = tools.map((tool) => {
           let specificImage = getImages.filter(

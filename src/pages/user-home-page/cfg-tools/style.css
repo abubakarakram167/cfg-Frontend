@@ -12,6 +12,13 @@
 
 @media only screen and (max-width: 900px) {
   .cfg-details-box {
+    width: 45%;
+    margin: 5px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .cfg-details-box {
     width: 100%;
     margin: 5px;
   }

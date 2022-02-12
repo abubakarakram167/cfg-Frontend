@@ -5,12 +5,12 @@
   justify-content: space-between;
 }
 .learn-data-box {
-  width: 30%;
+  width: 45%;
   margin: 5px;
 }
 @media only screen and (max-width: 900px) {
   .learn-data-box {
-    width: 45%;
+    width: 100%;
     margin: 5px;
   }
 }
