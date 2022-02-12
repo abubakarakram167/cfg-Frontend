@@ -25,6 +25,7 @@ import {
   Delete,
   Comment as CommentIcon,
   Share,
+  EmojiEmotionsOutlined,
 } from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
@@ -43,6 +44,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import ShowMoreText from 'react-show-more-text';
 import parse from 'html-react-parser';
 import InputEmoji from 'react-input-emoji';
+import Picker from 'components/emojiComponent';
 
 let reRender = true;
 let userList = [];
@@ -86,6 +88,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
   const [subject, setSubject] = useState(null);
   const [showMessage, setShowMessage] = useState(null);
   const [postCreatorImage, setPostCreatorImage] = useState(null);
+  const [showPicker, setShowPicker] = useState(null);
 
   const userSpecificImage = userList.filter(
     (user) => user.id === post.user_id,
@@ -126,7 +129,6 @@ export default function RecipeReviewCard({post, getUserPost}) {
     const data = await Comments.getPostComments(post.id);
     if (data) {
       if (data.data) {
-        console.log('the comments::', data.data);
         setComments(data.data);
       }
     }
@@ -140,8 +142,6 @@ export default function RecipeReviewCard({post, getUserPost}) {
   //     }
   //   }
   // }
-
-  console.log('the post', post);
 
   useEffect(() => {
     getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
@@ -385,12 +385,12 @@ export default function RecipeReviewCard({post, getUserPost}) {
             <div style={{marginLeft: '10px'}}>{loveCount}</div>
           </IconButton>
           <IconButton aria-label='add a comment' onClick={handleExpandClick}>
-            <CommentIcon style={{color: 'black', fontSize: 15}} />
+            <CommentIcon style={{color: '#2991d6', fontSize: 15}} />
             <div style={{marginLeft: '10px'}}>{comments.length}</div>
           </IconButton>
-          <IconButton aria-label='add to reply' onClick={() => {}}>
+          {/* <IconButton aria-label='add to reply' onClick={() => {}}>
             <Share style={{color: 'gray', fontSize: 20}} />
-          </IconButton>
+          </IconButton> */}
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
@@ -428,6 +428,12 @@ export default function RecipeReviewCard({post, getUserPost}) {
                 );
               }
             })}
+            <Picker
+              show={showPicker}
+              onGetEmoji={(emoji) => {
+                setComment(comment + emoji);
+              }}
+            />
             <div style={{display: 'flex', flexDirection: 'row'}}>
               <div
                 style={{
@@ -443,18 +449,11 @@ export default function RecipeReviewCard({post, getUserPost}) {
                   style={{width: 45, height: 45, borderRadius: 40}}
                 />
               </div>
-              <div style={{flex: 8}}>
-                {/* <input
-                  style = {{ 
-                    width: '75%',
-                    border: '1px solid gray',
-                    borderRadius: 20,
-                    backgroundColor: '#efeded',
-                    padding: 15,
-                    marginTop: 5
-                  }}
-                  type = 'text'
-                  placeholder = "Write a comment..."
+              <div style={{flex: 9}}>
+                <textarea
+                  className='comment-input'
+                  type='text'
+                  placeholder='Write a comment...'
                   label='comment'
                   variant='filled'
                   value={comment}
@@ -462,15 +461,24 @@ export default function RecipeReviewCard({post, getUserPost}) {
                   onKeyDown={addComment}
                   fullWidth
                   autoFocus
-                /> */}
-                <InputEmoji
+                  onFocus={() => setShowPicker(false)}
+                  rows={1}
+                />
+                <span
+                  className='emoji-container input-specific'
+                  onClick={() => {
+                    setShowPicker(!showPicker);
+                  }}>
+                  <EmojiEmotionsOutlined />
+                </span>
+                {/* <InputEmoji
                   value={comment}
                   onChange={(e) => setComment(e)}
                   maxLength={300}
                   onEnter={addComment}
                   onKeyDown={addComment}
                   placeholder='Write a Comment...'
-                />
+                /> */}
               </div>
             </div>
           </CardContent>

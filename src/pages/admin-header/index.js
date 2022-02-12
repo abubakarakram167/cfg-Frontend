@@ -103,6 +103,14 @@ export default function AdminHeader() {
     const data = await Friend.sendFriendRequest({userId: id});
   };
 
+  const returnUrl = () => {
+    if (state?.user?.default_home_page_view == 'icon') {
+      return '/icon-dashboard';
+    } else {
+      return '/home';
+    }
+  };
+
   return (
     <div>
       <AppHeader>
@@ -229,7 +237,7 @@ export default function AdminHeader() {
                       <VisibilityIcon style={{fill: 'black'}} />
                     </div>
                     <div className='user-name-text'>
-                      <Link to='/home'>Preview as User</Link>
+                      <Link to={returnUrl()}>Preview as User</Link>
                     </div>
                   </div>
                 </MenuItem>
@@ -285,7 +293,7 @@ export default function AdminHeader() {
                       <VisibilityIcon style={{fill: 'black'}} />
                     </div>
                     <div className='user-name-text'>
-                      <Link to='/home'>Preview as User</Link>
+                      <Link to={returnUrl()}>Preview as User</Link>
                     </div>
                   </div>
                 </MenuItem>

@@ -28,6 +28,8 @@ import InputEmoji from 'react-input-emoji';
 import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
+import Picker from 'components/emojiComponent';
+
 export default function CreatePostBox() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -43,6 +45,9 @@ export default function CreatePostBox() {
   const currentUser = useSelector((state) => state.auth.user);
   const [showDialogue, setShowDialogue] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
+  const [showPicker, setShowPicker] = useState(null);
+  const [showUpperPicker, setShowUpperPicker] = useState(null);
+  const [showimagePicker, setShowImagePicker] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -99,10 +104,10 @@ export default function CreatePostBox() {
   };
 
   const getPostPercentage = (content) => {
-    console.log('the content..', content);
-    console.log('the content.length', content.length);
     return parseInt(content.length / 3);
   };
+
+  console.log('the show dialogue', showDialogue);
 
   return (
     <div>
@@ -112,7 +117,7 @@ export default function CreatePostBox() {
         onClose={handleClose}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'>
-        <DialogTitle id='alert-dialog-title'>
+        <DialogTitle style={{paddingBottom: 0}} id='alert-dialog-title'>
           <div
             style={{
               display: 'flex',
@@ -126,7 +131,7 @@ export default function CreatePostBox() {
             />
           </div>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent style={{paddingTop: 0}}>
           <DialogContentText id='alert-dialog-description'>
             <div className='create-post-dialog-user-info'>
               <Avatar alt='user-avatar' src={avatarImage} />
@@ -134,28 +139,47 @@ export default function CreatePostBox() {
                 {user.first_name} {user.last_name}
               </span>
             </div>
-            {media && mediaJSX()}
-            {/* <TextField
+            {media && <div style={{width: 300, height: 300}}>{mediaJSX()}</div>}
+            <Picker
+              show={showPicker}
+              onGetEmoji={(emoji) => {
+                setContent(content + emoji);
+              }}
+            />
+            <textarea
               style={{width: '100%'}}
               id='standard-multiline-static'
-              multiline
               variant='filled'
-              rows={4}
+              rows={1}
               fullwidth
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Whats's on your mind?"
-            /> */}
-            <InputEmoji
+              placeholder="What's on your mind?"
+              className='create-post-box-input'
+              onFocus={() => {
+                setShowPicker(false);
+                setShowUpperPicker(false);
+              }}
+            />
+            <span
+              className='emoji-container-post'
+              onClick={() => {
+                setShowPicker(!showPicker);
+              }}>
+              <EmojiEmotions style={{color: '#ababab'}} />
+            </span>
+            {/* <InputEmoji
               value={content}
               onChange={(e) => setContent(e)}
               placeholder="What's on your mind?"
               maxLength={300}
-            />
-            <CircularProgressbar
-              value={getPostPercentage(content)}
-              text={`${getPostPercentage(content)} %`}
-            />
+            /> */}
+            {!showPicker && (
+              <CircularProgressbar
+                value={getPostPercentage(content)}
+                text={`${getPostPercentage(content)} %`}
+              />
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{width: '100%'}}>
@@ -166,6 +190,12 @@ export default function CreatePostBox() {
             onImageSave={(file) => {
               getSignedUrl(file[0]).then((res) => {
                 setMediaAsset(res.newUrl);
+                if (showimagePicker) {
+                  setOpen(true);
+                  setTimeout(() => {
+                    setShowImagePicker(false);
+                  }, 2000);
+                }
               });
             }}
           />
@@ -204,6 +234,16 @@ export default function CreatePostBox() {
         </DialogActions>
       </Dialog>
       <AppCard>
+        {showUpperPicker && (
+          <Picker
+            show={showUpperPicker}
+            onGetEmoji={(emoji) => {
+              setContent(content + emoji);
+              setShowUpperPicker(false);
+              setOpen(true);
+            }}
+          />
+        )}
         <div className='create-post-app-card-container'>
           <div className='create-post-app-card-top'>
             <Avatar alt='user-avatar' src={avatarImage} />
@@ -211,7 +251,7 @@ export default function CreatePostBox() {
               onClick={handleClickOpen}
               type='text'
               className='create-post-input-trigger'
-              placeholder="Whats's on your mind?"
+              placeholder="What's on your mind?"
             />
           </div>
           <div className='create-post-app-card-bottom'>
@@ -219,11 +259,21 @@ export default function CreatePostBox() {
               <Videocam style={{color: 'red'}} />{' '}
               <span className='app-card-bottom-text'>Live Video</span>
             </div>
-            <div className='create-post-app-card-bottom-box'>
+            <div
+              onClick={() => {
+                setShowDialogue(true);
+                setOpen(true);
+                setMediaType('image');
+              }}
+              className='create-post-app-card-bottom-box'>
               <PermMedia style={{color: 'red'}} />{' '}
-              <span className='app-card-bottom-text'>Photo/Video</span>
+              <span className='app-card-bottom-text'>Photo/Videos</span>
             </div>
-            <div className='create-post-app-card-bottom-box'>
+            <div
+              onClick={() => {
+                setShowUpperPicker(!showUpperPicker);
+              }}
+              className='create-post-app-card-bottom-box'>
               <EmojiEmotions style={{color: 'red'}} />{' '}
               <span className='app-card-bottom-text'>Feeling</span>
             </div>
