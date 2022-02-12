@@ -47,6 +47,7 @@ export default function CreatePostBox() {
   const [avatarImage, setAvatarImage] = useState(null);
   const [showPicker, setShowPicker] = useState(null);
   const [showUpperPicker, setShowUpperPicker] = useState(null);
+  const [showimagePicker, setShowImagePicker] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -106,6 +107,8 @@ export default function CreatePostBox() {
     return parseInt(content.length / 3);
   };
 
+  console.log('the show dialogue', showDialogue);
+
   return (
     <div>
       <Dialog
@@ -136,24 +139,27 @@ export default function CreatePostBox() {
                 {user.first_name} {user.last_name}
               </span>
             </div>
-            {media && mediaJSX()}
+            {media && <div style={{width: 300, height: 300}}>{mediaJSX()}</div>}
             <Picker
               show={showPicker}
               onGetEmoji={(emoji) => {
                 setContent(content + emoji);
               }}
             />
-            <input
+            <textarea
               style={{width: '100%'}}
               id='standard-multiline-static'
-              multiline
               variant='filled'
-              rows={4}
+              rows={1}
               fullwidth
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Whats's on your mind?"
+              placeholder="What's on your mind?"
               className='create-post-box-input'
+              onFocus={() => {
+                setShowPicker(false);
+                setShowUpperPicker(false);
+              }}
             />
             <span
               className='emoji-container-post'
@@ -184,6 +190,12 @@ export default function CreatePostBox() {
             onImageSave={(file) => {
               getSignedUrl(file[0]).then((res) => {
                 setMediaAsset(res.newUrl);
+                if (showimagePicker) {
+                  setOpen(true);
+                  setTimeout(() => {
+                    setShowImagePicker(false);
+                  }, 2000);
+                }
               });
             }}
           />
@@ -247,7 +259,13 @@ export default function CreatePostBox() {
               <Videocam style={{color: 'red'}} />{' '}
               <span className='app-card-bottom-text'>Live Video</span>
             </div>
-            <div className='create-post-app-card-bottom-box'>
+            <div
+              onClick={() => {
+                setShowDialogue(true);
+                setOpen(true);
+                setMediaType('image');
+              }}
+              className='create-post-app-card-bottom-box'>
               <PermMedia style={{color: 'red'}} />{' '}
               <span className='app-card-bottom-text'>Photo/Videos</span>
             </div>

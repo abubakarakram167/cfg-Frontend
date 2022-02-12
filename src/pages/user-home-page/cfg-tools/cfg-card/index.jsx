@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {TrendingUp} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
+import './style.css';
 
 const useStyles = makeStyles({
   root: {
@@ -33,18 +34,20 @@ export default function CfgCard({element}) {
         </Link>
         <CardContent>
           <Typography gutterBottom variant='h5' component='h2'>
-            {element.title}
+            {element.title.length > 10
+              ? element.title.substr(0, 15) + '....'
+              : element.title}
           </Typography>
           <Typography variant='body2' color='textSecondary' component='p'>
             <div
               style={{textAlign: 'center'}}
               dangerouslySetInnerHTML={{
-                __html: element.detail.substr(0, 50) + '....',
+                __html: element.detail.substr(0, 20) + '....',
               }}></div>
           </Typography>
         </CardContent>
       </CardActionArea>
-      {element.subTitles.count > 0 && (
+      {/* {element.subTitles.count > 0 && (
         <CardActions>
           <div style={{margin: 'auto'}}>
             <Link to={`/home/cfg-tools/${element.id}`}>
@@ -55,7 +58,7 @@ export default function CfgCard({element}) {
             </Link>
           </div>
         </CardActions>
-      )}
+      )} */}
     </Card>
   );
 }

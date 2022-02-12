@@ -360,12 +360,19 @@ export default function Editor() {
               },
             });
           } else {
+            const publishDates = moment(publishDate).format(
+              'YYYY-MM-DD HH:mm:ss',
+            );
+
             dispatch(
               createResource(
                 {
                   title,
                   author: author,
-                  start_date: formatDate(start_date),
+                  start_date:
+                    params.cfgType !== 'event'
+                      ? formatDate(start_date)
+                      : publishDates,
                   end_date: formatDate(end_date),
                   total_points,
                   status: publishStatus === 'publish' ? status : 'draft',

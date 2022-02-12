@@ -106,3 +106,14 @@
     top: 4%;
   }
 }
+
+.MuiListItemIcon-root {
+  min-width: 30px !important;
+}
+.upcoming-event-text {
+  padding-left: 20px;
+  color: #949494;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}

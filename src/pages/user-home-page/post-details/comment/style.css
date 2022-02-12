@@ -65,8 +65,29 @@
   width: 90% !important;
 }
 
-@media screen and (max-width: 520px) {
+.reply-specific {
+  top: -20px !important;
+}
+
+@media screen and (max-width: 535px) {
   .reply-more {
     width: 86% !important;
+  }
+}
+
+@media screen and (max-width: 433px) {
+  .reply-more {
+    width: 84% !important;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .reply-more {
+    width: 80% !important;
+  }
+}
+@media screen and (max-width: 352px) {
+  .reply-more {
+    width: 77% !important;
   }
 }

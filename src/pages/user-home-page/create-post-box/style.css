@@ -113,19 +113,23 @@
 .emoji-container-post {
   position: relative;
   left: 95%;
-  top: -30px;
+  top: -40px;
 }
 .CircularProgressbar {
   width: 6% !important;
-  position: absolute;
-  left: 90%;
-  top: 170px;
+  left: 93%;
+  position: sticky !important;
+  top: 210px;
 }
 
 .picker-emoji {
   width: 50%;
   margin-left: auto !important;
   margin-bottom: 5px;
+}
+
+.MuiDialog-paperFullWidth {
+  height: 260px;
 }
 
 @media screen and (max-width: 600px) {
