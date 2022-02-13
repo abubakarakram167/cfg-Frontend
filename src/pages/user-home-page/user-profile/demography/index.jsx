@@ -12,10 +12,15 @@ import {
   DialogActions,
   List,
   ListItem,
+  Chip,
+  withStyles,
 } from '@material-ui/core';
 import './style.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {updateUser} from 'redux/actions/authActions';
+import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
+
 const useStyles = makeStyles({
   root: {
     minWidth: '100%',
@@ -33,6 +38,16 @@ const useStyles = makeStyles({
     marginBottom: 12,
   },
 });
+
+const StyledChip = withStyles((theme) => ({
+  label: {
+    fontSize: 10,
+    fontWeight: 400,
+  },
+  icon: {
+    fontSize: 15,
+  },
+}))(Chip);
 
 export default function DemographyCard() {
   const classes = useStyles();
@@ -187,19 +202,27 @@ export default function DemographyCard() {
             <div className='demographics-value'>{institution}</div>
           </div>
         </CardContent>
-        <CardActions>
-          <div style={{margin: 'auto'}}>
-            <Button variant='contained' onClick={() => setDialogOpen(true)}>
-              Edit
-            </Button>
-            <Button
-              variant='contained'
-              color='secondary'
-              style={{marginLeft: '5px'}}>
-              Save
-            </Button>
-          </div>
-        </CardActions>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: 20,
+          }}>
+          <StyledChip
+            icon={<EditIcon style={{fill: 'white'}} />}
+            label={'edit'}
+            className='gray-chip'
+            onClick={() => {
+              setDialogOpen(true);
+            }}
+          />
+          <StyledChip
+            icon={<SaveIcon style={{fill: 'white'}} />}
+            label={'Save'}
+            className='chip-style'
+            onClick={() => {}}
+          />
+        </div>
       </Card>
     </>
   );
