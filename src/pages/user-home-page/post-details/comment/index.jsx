@@ -22,6 +22,7 @@ import {useDispatch} from 'react-redux';
 import moment from 'moment';
 import InputEmoji from 'react-input-emoji';
 import Picker from 'components/emojiComponent';
+import TextareaAutosize from 'react-textarea-autosize';
 
 export default function Comment({
   comment,
@@ -152,7 +153,7 @@ export default function Comment({
           </span>
         </div>
         <div className='bottom-text-actions'>
-          <span className='cursor-pointer'>Give Love | </span>
+          {/* <span className='cursor-pointer'>Give Love | </span> */}
           <span
             className='cursor-pointer'
             onClick={() => setShowReplyInput(true)}>
@@ -189,7 +190,7 @@ export default function Comment({
               />
             </div>
             <div style={{flex: 9}}>
-              <textarea
+              <TextareaAutosize
                 className='comment-input reply-more'
                 type='text'
                 placeholder='Write a reply...'
@@ -197,7 +198,7 @@ export default function Comment({
                 variant='filled'
                 value={reply}
                 onChange={(e) => setReply(e.target.value)}
-                onKeyDown={addReply}
+                onKeyPress={addReply}
                 fullWidth
                 autoFocus
                 onFocus={() => setShowPicker(false)}

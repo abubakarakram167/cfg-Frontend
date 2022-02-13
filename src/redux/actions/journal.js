@@ -43,7 +43,6 @@ export const getUserJourney = (userId) => {
   return (dispatch) => {
     Api.get(`/api/journals?_count=1000&_pageNo=1&user_id=${userId}`)
       .then((data) => {
-        console.log('before filter', data.data);
         const allJournals = data.data.filter((journal) => {
           if (
             journal.subject &&
@@ -54,7 +53,6 @@ export const getUserJourney = (userId) => {
             return true;
           } else return false;
         });
-        console.log('after filter', allJournals);
         if (data.status === 200) {
           dispatch({
             type: Get_User_Journals,
