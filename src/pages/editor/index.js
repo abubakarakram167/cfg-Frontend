@@ -375,7 +375,7 @@ export default function Editor() {
                       : publishDates,
                   end_date: formatDate(end_date),
                   total_points,
-                  status: publishStatus === 'publish' ? status : 'draft',
+                  status: status,
                   tags: totalTags,
                   detail: content,
                   assigned_group: group,
