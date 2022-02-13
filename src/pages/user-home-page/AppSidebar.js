@@ -42,6 +42,7 @@ import jsCookie from 'js-cookie';
 import MediaGroup from 'redux/services/mediagroup';
 import Session from 'redux/services/session';
 import './sidestyle.css';
+import {getSignedUrl} from '../../redux/actions/media';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -57,6 +58,11 @@ const AppSidebar = (props) => {
   const [navCollapsed, setnavCollapsed] = useState(true);
   const [allSessions, setAllSessions] = useState([]);
   const classesOther = useStyling();
+  const [avatarImage, setAvatarImage] = useState(null);
+
+  const user = useSelector((state) => {
+    return state.auth.user;
+  });
 
   const searchUser = async (e) => {
     e.persist();
@@ -91,6 +97,14 @@ const AppSidebar = (props) => {
     getUserGroup();
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      getSignedUrl({fileName: user.photo_url}).then((res) => {
+        setAvatarImage(res.newUrl);
+      });
+    }
+  }, [user]);
+
   const handleLogout = () => {
     const user = JSON.parse(localStorage.getItem('current-user'));
     socket.logoutAction(user.id);
@@ -110,9 +124,6 @@ const AppSidebar = (props) => {
   };
 
   const classes = useStyles({});
-  const user = useSelector((state) => {
-    return state.auth.user;
-  });
 
   return (
     <Drawer
@@ -155,7 +166,7 @@ const AppSidebar = (props) => {
               height: '250px',
               border: '1px solid gainsboro',
             }}
-            src={user && baseUrl + 'static/' + user.photo_url}
+            src={avatarImage}
             alt={user && user.first_name + ' ' + user.last_name}
           />
           <div
