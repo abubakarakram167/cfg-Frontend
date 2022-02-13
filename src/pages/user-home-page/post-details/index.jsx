@@ -45,6 +45,7 @@ import ShowMoreText from 'react-show-more-text';
 import parse from 'html-react-parser';
 import InputEmoji from 'react-input-emoji';
 import Picker from 'components/emojiComponent';
+import TextareaAutosize from 'react-textarea-autosize';
 
 let reRender = true;
 let userList = [];
@@ -251,6 +252,29 @@ export default function RecipeReviewCard({post, getUserPost}) {
     }
   };
 
+  const getChangeVideoThumbnail = (editText) => {
+    console.log('the edit text...', editText);
+    var el = document.createElement('html');
+    el.innerHTML = editText;
+    var iframe = el.getElementsByTagName('iframe');
+    var figure = el.getElementsByTagName('figure');
+
+    if (figure.length) {
+      figure[0].setAttribute(
+        'style',
+        'height: 56.25%; width: 100%; padding-bottom: 0px; margin: 0px;',
+      );
+    }
+
+    if (iframe.length) {
+      iframe[0].setAttribute('style', 'height: 400px; width: 100%;');
+    }
+
+    // console.log("the selected db..", selectedB)
+
+    return el.innerHTML;
+  };
+
   const editDialogJSX = (
     <Dialog open={editDialogOpen} fullWidth>
       <DialogTitle>Edit Post</DialogTitle>
@@ -363,10 +387,14 @@ export default function RecipeReviewCard({post, getUserPost}) {
         />
         {post.media && mediaJSX()}
         <CardContent>
-          <Typography variant='body2' color='textSecondary' component='p'>
-            <span className='caption-text'>
-              <ShowMoreText
-                /* Default options */
+          <div
+            dangerouslySetInnerHTML={{
+              __html: getChangeVideoThumbnail(editText),
+            }}
+          />
+          {/* <Typography variant='body2' color='textSecondary' component='p'> */}
+          <span className='caption-text'>
+            {/* <ShowMoreText
                 lines={2}
                 more='Show more'
                 less='Show less'
@@ -374,10 +402,11 @@ export default function RecipeReviewCard({post, getUserPost}) {
                 onClick={() => {}}
                 expanded={false}
                 truncatedEndingComponent={'... '}>
+
                 <div dangerouslySetInnerHTML={{__html: editText}} />
-              </ShowMoreText>
-            </span>
-          </Typography>
+              </ShowMoreText> */}
+          </span>
+          {/* </Typography> */}
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label='add to favorites' onClick={likeAction}>
@@ -450,7 +479,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
                 />
               </div>
               <div style={{flex: 9}}>
-                <textarea
+                <TextareaAutosize
                   className='comment-input'
                   type='text'
                   placeholder='Write a comment...'
@@ -458,7 +487,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
                   variant='filled'
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  onKeyDown={addComment}
+                  onKeyPress={addComment}
                   fullWidth
                   autoFocus
                   onFocus={() => setShowPicker(false)}

@@ -27,8 +27,18 @@ import MediaUpload from 'components/MediaUpload';
 import InputEmoji from 'react-input-emoji';
 import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-
 import Picker from 'components/emojiComponent';
+import TextareaAutosize from 'react-textarea-autosize';
+
+const defaultHeight = {
+  height: 180,
+  paddingTop: 0,
+};
+
+const changeHeight = {
+  height: 450,
+  paddingTop: 0,
+};
 
 export default function CreatePostBox() {
   const [open, setOpen] = useState(false);
@@ -64,6 +74,7 @@ export default function CreatePostBox() {
 
   const handleClose = () => {
     setOpen(false);
+    setShowPicker(false);
     setContent('');
     setMedia(null);
   };
@@ -117,7 +128,7 @@ export default function CreatePostBox() {
         onClose={handleClose}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'>
-        <DialogTitle style={{paddingBottom: 0}} id='alert-dialog-title'>
+        <DialogTitle id='alert-dialog-title'>
           <div
             style={{
               display: 'flex',
@@ -131,7 +142,8 @@ export default function CreatePostBox() {
             />
           </div>
         </DialogTitle>
-        <DialogContent style={{paddingTop: 0}}>
+        <DialogContent
+          style={showPicker || media ? changeHeight : defaultHeight}>
           <DialogContentText id='alert-dialog-description'>
             <div className='create-post-dialog-user-info'>
               <Avatar alt='user-avatar' src={avatarImage} />
@@ -146,7 +158,7 @@ export default function CreatePostBox() {
                 setContent(content + emoji);
               }}
             />
-            <textarea
+            <TextareaAutosize
               style={{width: '100%'}}
               id='standard-multiline-static'
               variant='filled'
@@ -209,6 +221,7 @@ export default function CreatePostBox() {
                 onClick={() => {
                   setShowDialogue(true);
                   setMediaType('video');
+                  setShowPicker(false);
                 }}>
                 <Videocam style={{color: 'red'}} />
               </div>
@@ -216,6 +229,7 @@ export default function CreatePostBox() {
                 onClick={() => {
                   setShowDialogue(true);
                   setMediaType('image');
+                  setShowPicker(false);
                 }}
                 className='create-post-action-icons'>
                 <PermMedia
@@ -264,6 +278,7 @@ export default function CreatePostBox() {
                 setShowDialogue(true);
                 setOpen(true);
                 setMediaType('image');
+                setShowPicker(false);
               }}
               className='create-post-app-card-bottom-box'>
               <PermMedia style={{color: 'red'}} />{' '}

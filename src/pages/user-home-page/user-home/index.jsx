@@ -80,6 +80,8 @@ export default function UserHomePage() {
     getUserJourneys();
   }, []);
 
+  console.log('the posts', posts);
+
   const getDayTools = async () => {
     try {
       let images = [];
@@ -92,7 +94,6 @@ export default function UserHomePage() {
         }
       });
       const getAllTransformTools = await Promise.all(images);
-      console.log('data', data);
       setDayTools(data.data);
     } catch (err) {
       console.log('the err', err);
@@ -204,8 +205,6 @@ export default function UserHomePage() {
 
     return style;
   };
-
-  console.log('the events...', events);
 
   const left = (
     <List className={classesOther.childListPadding}>
@@ -383,7 +382,7 @@ export default function UserHomePage() {
           <div style={{display: 'flex', flexDirection: 'row'}}>
             <span style={{flex: 1}}>
               <ListItemIcon>
-                <Event style={{color: '#2991d6', minWidth: 30}} />
+                <Event style={{color: 'red', minWidth: 30}} />
               </ListItemIcon>
             </span>
             <span style={{flex: 1}}>Events</span>

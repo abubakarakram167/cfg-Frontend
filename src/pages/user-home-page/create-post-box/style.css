@@ -112,7 +112,7 @@
 
 .emoji-container-post {
   position: relative;
-  left: 95%;
+  left: 94%;
   top: -40px;
 }
 .CircularProgressbar {
@@ -128,9 +128,15 @@
   margin-bottom: 5px;
 }
 
-.MuiDialog-paperFullWidth {
+/* .MuiDialog-paperFullWidth {
   height: 260px;
-}
+} */
+
+/* @media screen and (max-width: 600px) {
+  .MuiDialog-paperFullWidth {
+    height: 360px;
+  }
+} */
 
 @media screen and (max-width: 600px) {
   .emoji-container-post {
@@ -144,11 +150,26 @@
   }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 800px) {
   .CircularProgressbar {
     width: 6% !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .CircularProgressbar {
+    width: 9% !important;
     position: absolute;
-    left: 85%;
+    left: 90%;
     top: 190px;
+  }
+  .emoji-container-post {
+    left: 91%;
+  }
+}
+
+@media only screen and (max-width: 600px) and (min-width: 580px) {
+  .CircularProgressbar {
+    width: 8% !important;
   }
 }

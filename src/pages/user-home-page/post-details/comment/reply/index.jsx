@@ -65,7 +65,7 @@ const Reply = ({reply}) => {
         </span>
       </div>
       <div className='bottom-text-actions'>
-        <span className='cursor-pointer'>Give Love | </span>
+        {/* <span className='cursor-pointer'>Give Love | </span> */}
         <span className='cursor-pointer'>Reply |</span>
         <span>{moment(reply.createdAt).fromNow()}</span>
       </div>
