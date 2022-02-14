@@ -24,7 +24,11 @@ export default function CfgCard({element}) {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea
+        style={{
+          height: 350,
+          overflowY: 'auto',
+        }}>
         <Link to={`/home/cfg-tools/${element.id}`}>
           <CardMedia
             className={classes.media}
@@ -34,15 +38,16 @@ export default function CfgCard({element}) {
         </Link>
         <CardContent>
           <Typography gutterBottom variant='h5' component='h2'>
-            {element.title.length > 10
-              ? element.title.substr(0, 15) + '....'
-              : element.title}
+            {element.title}
           </Typography>
           <Typography variant='body2' color='textSecondary' component='p'>
             <div
               style={{textAlign: 'center'}}
               dangerouslySetInnerHTML={{
-                __html: element.detail.substr(0, 20) + '....',
+                __html:
+                  element.detail.length > 100
+                    ? element.detail.substr(0, 100) + '....'
+                    : element.detail,
               }}></div>
           </Typography>
         </CardContent>
