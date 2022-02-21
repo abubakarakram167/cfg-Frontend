@@ -34,14 +34,18 @@ export default function LearnCard({element}) {
   const params = useParams();
 
   const getTruncatedText = (str) => {
-    return str.length > 15 ? str.substring(0, 15) + '...' : str;
+    return str.length > 100 ? str.substring(0, 100) + '...' : str;
   };
 
   return (
     <Card className={classes.root} variant='outlined'>
-      <CardContent>
+      <CardContent
+        style={{
+          height: 180,
+          overflowY: 'auto',
+        }}>
         <Typography gutterBottom variant='h5' component='h2'>
-          {getTruncatedText(element.title)}
+          {element.title}
         </Typography>
 
         <Typography variant='body2' color='textSecondary' component='p'>

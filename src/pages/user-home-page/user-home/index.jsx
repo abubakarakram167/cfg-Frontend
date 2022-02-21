@@ -339,6 +339,7 @@ export default function UserHomePage() {
                       height: 100,
                       marginRight: 10,
                       borderRadius: 10,
+                      maxWidth: 120,
                     }}
                     src={tool.newUrl ? tool.newUrl : ''}
                     alt=''
