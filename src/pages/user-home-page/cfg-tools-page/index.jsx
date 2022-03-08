@@ -12,7 +12,6 @@ import {
 
 export default function CfgToolsPage() {
   const params = useParams();
-
   const selectedTool = useSelector((state) => state.tool.selectedTool);
   const dispatch = useDispatch();
   const [titles, setTitles] = useState([]);
@@ -27,6 +26,9 @@ export default function CfgToolsPage() {
       setTitles(selectedTool.subTitles.rows);
     }
   }, [selectedTool]);
+
+  console.log('the selected Tool....', selectedTool);
+  console.log('the titles....', titles);
 
   return (
     <CommonComponent left={''} right={''}>

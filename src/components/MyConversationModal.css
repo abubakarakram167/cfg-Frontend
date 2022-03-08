@@ -1,0 +1,7 @@
+.parent-conversation-container {
+  height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

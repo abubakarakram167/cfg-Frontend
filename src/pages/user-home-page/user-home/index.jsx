@@ -80,8 +80,6 @@ export default function UserHomePage() {
     getUserJourneys();
   }, []);
 
-  console.log('the posts', posts);
-
   const getDayTools = async () => {
     try {
       let images = [];
@@ -117,9 +115,13 @@ export default function UserHomePage() {
   };
 
   const getUserGroup = async () => {
-    const data = await MediaGroup.getUserGroup();
+    try {
+      const data = await MediaGroup.getUserGroup();
 
-    getSessionByGroupId(data.data.group_id);
+      getSessionByGroupId(data.data.group_id);
+    } catch (err) {
+      console.log('the err', err);
+    }
   };
 
   const transformPosts = async (posts) => {
@@ -205,6 +207,8 @@ export default function UserHomePage() {
 
     return style;
   };
+
+  console.log('all sessions', allSessions);
 
   const left = (
     <List className={classesOther.childListPadding}>

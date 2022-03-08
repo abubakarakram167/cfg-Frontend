@@ -253,7 +253,6 @@ export default function RecipeReviewCard({post, getUserPost}) {
   };
 
   const getChangeVideoThumbnail = (editText) => {
-    console.log('the edit text...', editText);
     var el = document.createElement('html');
     el.innerHTML = editText;
     var iframe = el.getElementsByTagName('iframe');

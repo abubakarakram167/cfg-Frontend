@@ -42,6 +42,10 @@ export default function AdminHeader() {
     return state.auth;
   });
 
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
   useEffect(() => {
     const socketObj = socket.getSocket();
     socketObj.on('notification', (data) => {
@@ -58,8 +62,10 @@ export default function AdminHeader() {
       // console.log('hello hakuna', user.id);
       // socket.windowAction(user.id);
     }
+    console.log('asdajsbndjkadbna............');
+    console.log('the user', user);
     dispatch(setCurrentUser(user));
-    console.log('hello hakuna', user.id);
+    console.log('hello hakuna', user);
     socket.windowAction(user.id);
   }, []);
 
@@ -126,6 +132,23 @@ export default function AdminHeader() {
     const data = await Search.userSearch(searchTerm);
     setSearchResults(data.data.users);
     setResultVisibility(true);
+  };
+
+  console.log('the userrr', user);
+
+  // const userData = JSON.parse(localStorage.getItem('current-user'));
+  // useEffect(() => {
+  //   dispatch(setCurrentUser(userData));
+  // }, []);
+
+  const returnUrl = () => {
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    console.log('the usertriple', user);
+    if (user?.default_home_page_view == 'icon') {
+      return '/icon-dashboard';
+    } else {
+      return '/home';
+    }
   };
 
   const sendFriendRequest = async (id) => {
@@ -262,7 +285,7 @@ export default function AdminHeader() {
           </div>
           <div className='center-user-page'>
             <div className='user-page-icon-container'>
-              <Link to='/home'>
+              <Link to={returnUrl()}>
                 <Home style={{fontSize: 35}} />
               </Link>
             </div>
