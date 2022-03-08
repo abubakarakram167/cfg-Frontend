@@ -136,10 +136,11 @@ export const getToolData = () => {
 };
 
 export const getToolListData = (id) => {
-  console.log(typeof id);
   return async function (dispatch) {
     try {
       const response = await Tool.getListData(id);
+      console.log('...................');
+      console.log('the responseessss....', response);
       if (response.status === 200) {
         const data_resp = await response.data;
         jsCookie.set('login', 'yes');
@@ -149,6 +150,7 @@ export const getToolListData = (id) => {
         });
       }
     } catch (error) {
+      console.log('thew error::', error);
       if (error.response && error.response.status === 401) {
         dispatch({
           type: GET_LIST_DATA,

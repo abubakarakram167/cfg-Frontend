@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from 'react-redux';
 export default function HomeCFGTools() {
   const dispatch = useDispatch();
   const tools = useSelector((state) => state.tool.tools);
-
+  console.log('the tools', tools);
   useEffect(() => {
     dispatch(getToolsData());
   }, []);
@@ -21,7 +21,10 @@ export default function HomeCFGTools() {
             if (element) {
               return (
                 <div className='cfg-details-box' key={index}>
-                  <CfgCard element={element} />
+                  <CfgCard
+                    parentToolId={element.content_header_id}
+                    element={element}
+                  />
                 </div>
               );
             }
