@@ -6,12 +6,16 @@ import './style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {getResourceData} from 'redux/actions/cfg';
 import jsCookie from 'js-cookie';
+import moment from 'moment';
+import EventModal from 'components/EventModal';
 
 export default function UserEvents() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.cfg);
   const [content, setContent] = useState([]);
   const [author, setAuthor] = useState('');
+  const [showPrompt, setShowPrompt] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     setContent(state.content);
@@ -60,14 +64,31 @@ export default function UserEvents() {
       <div className='upcoming-events'>
         {content
           .filter((contentElement) => contentElement.status === 'published')
+          .filter((elements) => moment(elements.start_date) >= moment())
           .map((element, index) => {
             return (
-              <div className='upcoming-event' key={index}>
+              <div
+                onClick={() => {
+                  setSelectedEvent(element);
+                  setShowPrompt(true);
+                }}
+                className='upcoming-event'
+                key={index}>
                 <UpcomingEvent element={element} />
               </div>
             );
           })}
       </div>
+      <EventModal
+        event={selectedEvent}
+        when={showPrompt}
+        onConfirm={() => {
+          setShowPrompt(null);
+        }}
+        onCancel={() => {
+          setShowPrompt(null);
+        }}
+      />
       <br />
       {/* <h1 style={{marginBottom: '4px'}}>Previous Events</h1> */}
       {/* <div style = {{ width: '80%', margin: 'auto', marginBottom: 50 }} >

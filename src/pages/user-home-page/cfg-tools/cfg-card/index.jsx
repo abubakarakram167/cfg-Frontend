@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CfgCard({element}) {
+export default function CfgCard({element, parentToolId}) {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
@@ -29,7 +29,7 @@ export default function CfgCard({element}) {
           height: 350,
           overflowY: 'auto',
         }}>
-        <Link to={`/home/cfg-tools/${element.id}`}>
+        <Link to={`/home/cfg-tools/${parentToolId}`}>
           <CardMedia
             className={classes.media}
             image={element.newUrl ? element.newUrl : ''}
