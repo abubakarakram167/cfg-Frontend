@@ -208,8 +208,6 @@ export default function UserHomePage() {
     return style;
   };
 
-  console.log('all sessions', allSessions);
-
   const left = (
     <List className={classesOther.childListPadding}>
       <ListItem>

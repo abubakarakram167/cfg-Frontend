@@ -95,7 +95,6 @@ export default function Homedashicon() {
 
   const getSessionByGroupId = async (id) => {
     const data = await MediaGroup.getSessionsByGroupId(id);
-    console.log('the dataaa...', data);
     let allSessionData = [];
     if (data && data.data.length) {
       for (let getSession of data.data)

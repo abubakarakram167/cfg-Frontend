@@ -109,14 +109,20 @@ const ToolReducer = (state = INIT_STATE, action) => {
         currentContent: payload.content,
       };
     case actions.SET_SELECTED_TOOLS:
-      const selected = state.tools.filter((tool) => {
-        if (tool) {
-          return tool.id === action.payload;
-        }
-      });
+      let allTitles = [];
+      // debugger
+      if (
+        state.contentData &&
+        state.contentData.data &&
+        state.contentData.data.titles &&
+        state.contentData.data.titles.rows.length
+      ) {
+        allTitles = state.contentData.data.titles.rows;
+      }
+      // debugger
       return {
         ...state,
-        selectedTool: selected[0],
+        selectedTool: allTitles,
       };
     default:
       return state;

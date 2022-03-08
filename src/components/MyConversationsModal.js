@@ -102,15 +102,8 @@ export default (props) => {
             onClick={props.onConfirm}
             variant='contained'
             color='secondary'
-            style={{width: 100}}>
+            style={{width: 100, borderRadius: 20}}>
             Exit
-          </Button>
-          <Button
-            onClick={props.onCancel}
-            variant='contained'
-            color='primary'
-            style={{width: 100}}>
-            Continue
           </Button>
         </div>
       </div>
