@@ -393,12 +393,13 @@ export default function UserHomePage() {
         </ListItem>
         {events
           .filter((contentElement) => contentElement.status === 'published')
+          .filter((elements) => moment(elements.start_date) >= moment())
           .map((element, index) => {
             return (
               <div className='upcoming-event-text' key={index}>
                 {element.title}
                 <div style={{fontSize: 13, fontWeight: '500'}}>
-                  {moment(element.start_date).format('MMMM Do')}
+                  {moment(element.start_date).format('YYYY MMMM Do')}
                 </div>
               </div>
             );
