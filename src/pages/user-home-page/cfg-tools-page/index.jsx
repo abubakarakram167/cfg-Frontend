@@ -8,25 +8,35 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   getToolListData,
   setSelectedToolData,
+  getToolsData,
 } from '../../../redux/actions/toolActions';
 
 export default function CfgToolsPage() {
   const params = useParams();
-
   const selectedTool = useSelector((state) => state.tool.selectedTool);
   const dispatch = useDispatch();
   const [titles, setTitles] = useState([]);
+  const tools = useSelector((state) => state.tool.tools);
 
   useEffect(() => {
-    dispatch(getToolListData(parseInt(params.id)));
-    dispatch(setSelectedToolData(parseInt(params.id)));
+    dispatch(getToolsData());
   }, []);
 
   useEffect(() => {
-    if (selectedTool) {
-      setTitles(selectedTool.subTitles.rows);
+    dispatch(getToolListData(parseInt(params.id)));
+    setTimeout(() => {
+      dispatch(setSelectedToolData(parseInt(params.id)));
+    }, 1500);
+  }, []);
+
+  useEffect(() => {
+    if (selectedTool && selectedTool.length) {
+      setTitles(selectedTool);
     }
   }, [selectedTool]);
+
+  console.log('the selected Tool....', selectedTool);
+  console.log('the titles....', titles);
 
   return (
     <CommonComponent left={''} right={''}>

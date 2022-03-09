@@ -22,8 +22,6 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   function (error) {
-    console.log('the error', error);
-
     if (error.response && error.response.status === 401) {
       // console.log();
       // console.log("log from axios",~window.location.href.indexOf('/'))
@@ -36,18 +34,24 @@ axiosInstance.interceptors.response.use(
         history.push('/sessionexpired');
       }
     } else {
-      Toastify({
-        text: 'Something Went wrong',
-        duration: 3000,
-        newWindow: true,
-        close: true,
-        gravity: 'bottom', // `top` or `bottom`
-        position: 'right', // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-          background: 'linear-gradient(to right, #EE4742, #EB1B29)',
-        }, // Callback after click
-      }).showToast();
+      if (error.response && error.response.status >= 400) {
+        //         Toastify({
+        //           text: `Something Went wrong \n "${
+        //             error.response && error.response.data && error.response.data.message
+        //               ? error.response.data.message
+        //               : null
+        //           } "`,
+        //           duration: 3000,
+        //           newWindow: true,
+        //           close: true,
+        //           gravity: 'bottom', // `top` or `bottom`
+        //           position: 'right', // `left`, `center` or `right`
+        //           stopOnFocus: true, // Prevents dismissing of toast on hover
+        //           style: {
+        //             background: 'linear-gradient(to right, #EE4742, #EB1B29)',
+        //           }, // Callback after click
+        //         }).showToast();
+      }
     }
     return Promise.reject(error);
     // return error

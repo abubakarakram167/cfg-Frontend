@@ -5,3 +5,87 @@
   font-weight: 600;
   font-size: 20px;
 }
+.current-user-comment {
+  float: left;
+  width: 50%;
+  border: 1px solid gray;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+.react-input-emoji--button {
+  position: relative;
+  right: 50px;
+  z-index: 100;
+}
+.react-input-emoji--container {
+  background-color: #e5e5e5 !important;
+  border: 1px solid darkgray !important;
+  border-radius: 40px !important;
+  border-color: rgb(234, 234, 234) !important;
+  font-size: 15px !important;
+  font-family: sans-serif !important;
+  padding-top: 5px !important;
+}
+.react-input-emoji--wrapper {
+  padding-right: 25px !important;
+}
+.react-emoji {
+  word-break: break-all;
+}
+
+.comment-input {
+  /* width: 75%;
+  border: 1px solid gray;
+  border-radius: 20;
+  background-color: #efeded;
+  padding: 15px;
+  margin-top: 5px; */
+
+  width: 94%;
+  padding: 15px;
+  border-radius: 25px;
+  border: none;
+  background-color: #e7e7e7;
+  margin-left: 15px;
+  overflow: hidden;
+}
+
+.emoji-container {
+  position: relative;
+  right: 30px;
+}
+
+.input-specific {
+  top: -20px !important;
+}
+
+@media screen and (max-width: 1233px) {
+  .comment-input {
+    width: 92%;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .comment-input {
+    width: 92%;
+  }
+}
+
+@media screen and (max-width: 630px) {
+  .comment-input {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .comment-input {
+    width: 85%;
+  }
+}
+@media screen and (max-width: 400px) {
+  .comment-input {
+    width: 80%;
+  }
+}

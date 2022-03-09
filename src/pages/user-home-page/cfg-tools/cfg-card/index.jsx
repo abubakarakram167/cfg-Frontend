@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {TrendingUp} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
+import './style.css';
 
 const useStyles = makeStyles({
   root: {
@@ -19,12 +20,16 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CfgCard({element}) {
+export default function CfgCard({element, parentToolId}) {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
-      <CardActionArea>
-        <Link to={`/home/cfg-tools/${element.id}`}>
+      <CardActionArea
+        style={{
+          height: 350,
+          overflowY: 'auto',
+        }}>
+        <Link to={`/home/cfg-tools/${parentToolId}`}>
           <CardMedia
             className={classes.media}
             image={element.newUrl ? element.newUrl : ''}
@@ -39,12 +44,15 @@ export default function CfgCard({element}) {
             <div
               style={{textAlign: 'center'}}
               dangerouslySetInnerHTML={{
-                __html: element.detail.substr(0, 50) + '....',
+                __html:
+                  element.detail.length > 100
+                    ? element.detail.substr(0, 100) + '....'
+                    : element.detail,
               }}></div>
           </Typography>
         </CardContent>
       </CardActionArea>
-      {element.subTitles.count > 0 && (
+      {/* {element.subTitles.count > 0 && (
         <CardActions>
           <div style={{margin: 'auto'}}>
             <Link to={`/home/cfg-tools/${element.id}`}>
@@ -55,7 +63,7 @@ export default function CfgCard({element}) {
             </Link>
           </div>
         </CardActions>
-      )}
+      )} */}
     </Card>
   );
 }

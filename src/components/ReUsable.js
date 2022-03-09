@@ -29,7 +29,6 @@ export const transformImagesInContent = async (html, change, id) => {
   });
 
   const res = await Promise.all(allMedia);
-  console.log('after getting image res', res);
 
   res.map((mediaData) => {
     imgs.forEach(function (img) {

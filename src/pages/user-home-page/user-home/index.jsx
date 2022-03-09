@@ -32,6 +32,8 @@ import {transformImagesInContent} from 'components/ReUsable';
 import $ from 'jquery';
 import {getSignedUrl} from '../../../redux/actions/media';
 import {getUserJourney} from '../../../redux/actions/journal';
+import {getResourceData} from 'redux/actions/cfg';
+import moment from 'moment';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -45,6 +47,7 @@ const useStyling = makeStyles({
 });
 
 export default function UserHomePage() {
+  const state = useSelector((state) => state.cfg);
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.userPost.posts);
   const allJournals = useSelector((state) => {
@@ -62,6 +65,8 @@ export default function UserHomePage() {
     setConversationExtended(!conversationExtended);
   };
   const [dayTools, setDayTools] = useState([]);
+  const [events, setEvents] = useState([]);
+
   const getRestoredImage = (featureImageUrl) => {
     return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
   };
@@ -81,7 +86,7 @@ export default function UserHomePage() {
       const data = await Tool.getDayTools();
       const tools = data.data;
       tools.map((tool) => {
-        if (tool && tool.featured_image_url !== '') {
+        if (tool && tool.featured_image_url && tool.featured_image_url !== '') {
           tool.fileName = getRestoredImage(tool.featured_image_url);
           images.push(getSignedUrl(tool));
         }
@@ -89,6 +94,7 @@ export default function UserHomePage() {
       const getAllTransformTools = await Promise.all(images);
       setDayTools(data.data);
     } catch (err) {
+      console.log('the err', err);
       setDayTools([]);
     }
   };
@@ -109,9 +115,13 @@ export default function UserHomePage() {
   };
 
   const getUserGroup = async () => {
-    const data = await MediaGroup.getUserGroup();
+    try {
+      const data = await MediaGroup.getUserGroup();
 
-    getSessionByGroupId(data.data.group_id);
+      getSessionByGroupId(data.data.group_id);
+    } catch (err) {
+      console.log('the err', err);
+    }
   };
 
   const transformPosts = async (posts) => {
@@ -133,9 +143,21 @@ export default function UserHomePage() {
     setAllTransformPosts(newContentPosts);
   };
 
-  useEffect(() => {
+  const getAllUserPost = () => {
     dispatch(getUserPost(count));
+  };
+
+  useEffect(() => {
+    getAllUserPost();
   }, [count]);
+
+  useEffect(() => {
+    dispatch(getResourceData('event'));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setEvents(state.content);
+  }, [state]);
 
   useEffect(() => {
     transformPosts(posts);
@@ -144,6 +166,7 @@ export default function UserHomePage() {
   useEffect(() => {
     dispatch(getToolsData());
     getDayTools();
+
     const user = JSON.parse(localStorage.getItem('current-user'));
     // getSessionById(user.cfg_session_id)
     getUserGroup();
@@ -298,50 +321,90 @@ export default function UserHomePage() {
   );
 
   const right = (
-    <List>
-      <ListItem>
-        <ListItemIcon>
-          <Build />
-        </ListItemIcon>
-        <ListItemText primary='CFG Tools of the Day' />
-      </ListItem>
-      {dayTools.map((tool, index) => {
-        return (
-          <ListItem key={index}>
-            {tool.featured_image_url && (
-              <Link to={`/home/cfg-tools/${tool.id}`}>
-                <img
+    <div>
+      <List>
+        <ListItem>
+          <ListItemIcon>
+            <Build />
+          </ListItemIcon>
+          {/* <ListItemText primary='CFG Tools of the Day' /> */}
+          <span>CFG Tools of the Day</span>
+        </ListItem>
+        {dayTools.map((tool, index) => {
+          return (
+            <ListItem key={index}>
+              {tool.featured_image_url && (
+                <Link to={`/home/cfg-tools/${tool.id}`}>
+                  <img
+                    style={{
+                      width: 120,
+                      height: 100,
+                      marginRight: 10,
+                      borderRadius: 10,
+                      maxWidth: 120,
+                    }}
+                    src={tool.newUrl ? tool.newUrl : ''}
+                    alt=''
+                  />
+                </Link>
+              )}
+              {!tool.featured_image_url && (
+                <div
                   style={{
-                    width: 120,
-                    height: 100,
+                    width: 80,
+                    height: 50,
                     marginRight: 10,
                     borderRadius: 10,
-                  }}
-                  src={tool.newUrl ? tool.newUrl : ''}
-                  alt=''
-                />
+                    paddingLeft: 40,
+                    paddingTop: 15,
+                  }}>
+                  <ListItemIcon>
+                    <Build />
+                  </ListItemIcon>
+                </div>
+              )}
+              <Link to={`/home/cfg-tools/${tool.id}`}>
+                <div
+                  style={{
+                    textAlign: left,
+                    fontSize: 14,
+                    color: '#9d9d9d',
+                    fontWeight: '600',
+                    paddingLeft: 5,
+                  }}>
+                  {tool.title}
+                </div>
               </Link>
-            )}
-            {!tool.featured_image_url && (
+            </ListItem>
+          );
+        })}
+        <hr />
+      </List>
+      <List>
+        <ListItem>
+          <div style={{display: 'flex', flexDirection: 'row'}}>
+            <span style={{flex: 1}}>
               <ListItemIcon>
-                <Build />
+                <Event style={{color: 'red', minWidth: 30}} />
               </ListItemIcon>
-            )}
-            <Link to={`/home/cfg-tools/${tool.id}`}>
-              <div
-                style={{
-                  textAlign: left,
-                  fontSize: 14,
-                  color: '#9d9d9d',
-                }}>
-                {tool.title}
+            </span>
+            <span style={{flex: 1}}>Events</span>
+          </div>
+        </ListItem>
+        {events
+          .filter((contentElement) => contentElement.status === 'published')
+          .map((element, index) => {
+            return (
+              <div className='upcoming-event-text' key={index}>
+                {element.title}
+                <div style={{fontSize: 13, fontWeight: '500'}}>
+                  {moment(element.start_date).format('MMMM Do')}
+                </div>
               </div>
-            </Link>
-          </ListItem>
-        );
-      })}
-      <hr />
-    </List>
+            );
+          })}
+      </List>
+    </div>
   );
   return (
     <CommonComponent
@@ -388,7 +451,12 @@ export default function UserHomePage() {
       {transform.map((element, index) => {
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>
-            <PostDetails post={element} />
+            <PostDetails
+              getUserPost={() => {
+                getAllUserPost();
+              }}
+              post={element}
+            />
           </div>
         );
       })}

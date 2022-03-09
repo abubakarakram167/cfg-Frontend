@@ -15,8 +15,79 @@
   align-items: center;
 }
 .comment-text {
-  margin-left: 20px;
+  font-size: 15px;
+  color: #6e6d6d;
+  word-break: break-all;
 }
 .comment-card-reply-section {
   margin-left: 60px;
+}
+.user-image-comment {
+  width: 45px;
+  height: 45px;
+  border-radius: 40px;
+}
+.comment-author-container {
+  margin-left: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: #eeeff1;
+  border-radius: 40px;
+  width: 80%;
+}
+.bottom-text-actions {
+  padding-left: 80px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.parent-reply-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.reply-more {
+  width: 90% !important;
+}
+
+.reply-specific {
+  top: -20px !important;
+}
+
+@media screen and (max-width: 535px) {
+  .reply-more {
+    width: 86% !important;
+  }
+}
+
+@media screen and (max-width: 433px) {
+  .reply-more {
+    width: 84% !important;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .reply-more {
+    width: 80% !important;
+  }
+}
+@media screen and (max-width: 352px) {
+  .reply-more {
+    width: 77% !important;
+  }
 }

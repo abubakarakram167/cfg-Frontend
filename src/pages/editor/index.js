@@ -55,6 +55,16 @@ const useStyles = makeStyles({
   },
 });
 
+const isUrlValid = (url) => {
+  try {
+    new URL(url);
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+  return true;
+};
+
 export default function Editor() {
   const params = useParams();
   const dispatch = useDispatch();
@@ -278,14 +288,14 @@ export default function Editor() {
       setnext_page(state.currentContent.next_page || '');
       setPublishDate(moment().format('MM/DD/yyyy'));
       setprevious_page(state.currentContent.previous_page || '');
-      if (state.currentContent.next_page) {
+      if (isUrlValid(state.currentContent.next_page)) {
         if (
           new URL(state.currentContent.next_page).hostname !==
           window.location.hostname
         )
           setNextInput(true);
       }
-      if (state.currentContent.previous_page) {
+      if (isUrlValid(state.currentContent.previous_page)) {
         if (
           new URL(state.currentContent.previous_page).hostname !==
           window.location.hostname
@@ -350,15 +360,22 @@ export default function Editor() {
               },
             });
           } else {
+            const publishDates = moment(publishDate).format(
+              'YYYY-MM-DD HH:mm:ss',
+            );
+
             dispatch(
               createResource(
                 {
                   title,
                   author: author,
-                  start_date: formatDate(start_date),
+                  start_date:
+                    params.cfgType !== 'event'
+                      ? formatDate(start_date)
+                      : publishDates,
                   end_date: formatDate(end_date),
                   total_points,
-                  status: publishStatus === 'publish' ? status : 'draft',
+                  status: status,
                   tags: totalTags,
                   detail: content,
                   assigned_group: group,

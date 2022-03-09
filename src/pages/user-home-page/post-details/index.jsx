@@ -18,7 +18,15 @@ import {
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import {red} from '@material-ui/core/colors';
-import {ExpandMore, Favorite, Edit, Delete} from '@material-ui/icons';
+import {
+  ExpandMore,
+  Favorite,
+  Edit,
+  Delete,
+  Comment as CommentIcon,
+  Share,
+  EmojiEmotionsOutlined,
+} from '@material-ui/icons';
 import Comment from './comment';
 import './style.css';
 import Friend from 'redux/services/friends';
@@ -31,6 +39,13 @@ import * as actions from '../../../redux/actions/action.types';
 import {getSignedUrl} from '../../../redux/actions/media';
 import {onGetUserList} from '../../../redux/actions';
 import JournalModal from '../../../components/JournalModal';
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import ShowMoreText from 'react-show-more-text';
+import parse from 'html-react-parser';
+import InputEmoji from 'react-input-emoji';
+import Picker from 'components/emojiComponent';
+import TextareaAutosize from 'react-textarea-autosize';
 
 let reRender = true;
 let userList = [];
@@ -58,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard({post}) {
+export default function RecipeReviewCard({post, getUserPost}) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [comment, setComment] = React.useState('');
@@ -72,6 +87,9 @@ export default function RecipeReviewCard({post}) {
   const [showJournalModal, setShowJournalModal] = useState(false);
   const [journalId, setJournalId] = useState(null);
   const [subject, setSubject] = useState(null);
+  const [showMessage, setShowMessage] = useState(null);
+  const [postCreatorImage, setPostCreatorImage] = useState(null);
+  const [showPicker, setShowPicker] = useState(null);
 
   const userSpecificImage = userList.filter(
     (user) => user.id === post.user_id,
@@ -95,6 +113,9 @@ export default function RecipeReviewCard({post}) {
     if (data) {
       if (data.data) {
         setUser(data.data);
+        getSignedUrl({fileName: data.data.photo_url}).then((res) => {
+          setPostCreatorImage(res.newUrl);
+        });
       }
     }
   }
@@ -113,6 +134,15 @@ export default function RecipeReviewCard({post}) {
       }
     }
   }
+
+  // const afterDeleteCommentGetPost = async(postId) => {
+  //   const data = await Comments.getPostComments(postId);
+  //   if (data) {
+  //     if (data.data) {
+  //       setComments(data.data);
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     getSignedUrl({fileName: currentUser.photo_url}).then((res) => {
@@ -171,10 +201,9 @@ export default function RecipeReviewCard({post}) {
   };
 
   const likeAction = async () => {
-    const data = await Posts.updatePost(post.id, {love_count: loveCount + 1});
-
+    const data = await Posts.addLike(post.id);
     if (data.status === 200) {
-      setLoveCount(loveCount + 1);
+      setLoveCount(data.data.love_count);
     }
   };
 
@@ -221,6 +250,28 @@ export default function RecipeReviewCard({post}) {
           </video>
         );
     }
+  };
+
+  const getChangeVideoThumbnail = (editText) => {
+    var el = document.createElement('html');
+    el.innerHTML = editText;
+    var iframe = el.getElementsByTagName('iframe');
+    var figure = el.getElementsByTagName('figure');
+
+    if (figure.length) {
+      figure[0].setAttribute(
+        'style',
+        'height: 56.25%; width: 100%; padding-bottom: 0px; margin: 0px;',
+      );
+    }
+
+    if (iframe.length) {
+      iframe[0].setAttribute('style', 'height: 400px; width: 100%;');
+    }
+
+    // console.log("the selected db..", selectedB)
+
+    return el.innerHTML;
   };
 
   const editDialogJSX = (
@@ -294,12 +345,25 @@ export default function RecipeReviewCard({post}) {
     <>
       {editDialogJSX}
       <Card className={classes.root}>
+        {showMessage && (
+          <div>
+            <Snackbar
+              open={true}
+              autoHideDuration={2000}
+              onClose={() => setShowMessage(false)}>
+              <Alert variant='filled' severity='success'>
+                comment deleted Successfully
+              </Alert>
+            </Snackbar>
+          </div>
+        )}
+
         <CardHeader
           avatar={
             <Avatar
               aria-label='recipe'
               className={classes.avatar}
-              src={userSpecificImage}
+              src={postCreatorImage}
             />
           }
           action={
@@ -322,17 +386,39 @@ export default function RecipeReviewCard({post}) {
         />
         {post.media && mediaJSX()}
         <CardContent>
-          <Typography variant='body2' color='textSecondary' component='p'>
-            <span className='caption-text'>
-              <div dangerouslySetInnerHTML={{__html: editText}} />
-            </span>
-          </Typography>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: getChangeVideoThumbnail(editText),
+            }}
+          />
+          {/* <Typography variant='body2' color='textSecondary' component='p'> */}
+          <span className='caption-text'>
+            {/* <ShowMoreText
+                lines={2}
+                more='Show more'
+                less='Show less'
+                className='content-css'
+                onClick={() => {}}
+                expanded={false}
+                truncatedEndingComponent={'... '}>
+
+                <div dangerouslySetInnerHTML={{__html: editText}} />
+              </ShowMoreText> */}
+          </span>
+          {/* </Typography> */}
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label='add to favorites' onClick={likeAction}>
-            <Favorite style={{color: 'red'}} />
+            <Favorite style={{color: 'red', fontSize: 15}} />
             <div style={{marginLeft: '10px'}}>{loveCount}</div>
           </IconButton>
+          <IconButton aria-label='add a comment' onClick={handleExpandClick}>
+            <CommentIcon style={{color: '#2991d6', fontSize: 15}} />
+            <div style={{marginLeft: '10px'}}>{comments.length}</div>
+          </IconButton>
+          {/* <IconButton aria-label='add to reply' onClick={() => {}}>
+            <Share style={{color: 'gray', fontSize: 20}} />
+          </IconButton> */}
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
@@ -361,18 +447,68 @@ export default function RecipeReviewCard({post}) {
                     comment={comment}
                     addReplyAction={addReplyDataAction}
                     replies={comment.replies}
+                    postId={post.id}
+                    afterDeleteCommentGetPost={() => {
+                      setShowMessage(true);
+                      getPostComments();
+                    }}
                   />
                 );
               }
             })}
-            <TextField
-              label='comment'
-              variant='filled'
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              onKeyDown={addComment}
-              fullWidth
+            <Picker
+              show={showPicker}
+              onGetEmoji={(emoji) => {
+                setComment(comment + emoji);
+              }}
             />
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+              <div
+                style={{
+                  width: 45,
+                  height: 45,
+                  borderRadius: 40,
+                  margin: 0,
+                  marginTop: 5,
+                  paddingBottom: 30,
+                }}>
+                <img
+                  src={avatarImage}
+                  style={{width: 45, height: 45, borderRadius: 40}}
+                />
+              </div>
+              <div style={{flex: 9}}>
+                <TextareaAutosize
+                  className='comment-input'
+                  type='text'
+                  placeholder='Write a comment...'
+                  label='comment'
+                  variant='filled'
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  onKeyPress={addComment}
+                  fullWidth
+                  autoFocus
+                  onFocus={() => setShowPicker(false)}
+                  rows={1}
+                />
+                <span
+                  className='emoji-container input-specific'
+                  onClick={() => {
+                    setShowPicker(!showPicker);
+                  }}>
+                  <EmojiEmotionsOutlined />
+                </span>
+                {/* <InputEmoji
+                  value={comment}
+                  onChange={(e) => setComment(e)}
+                  maxLength={300}
+                  onEnter={addComment}
+                  onKeyDown={addComment}
+                  placeholder='Write a Comment...'
+                /> */}
+              </div>
+            </div>
           </CardContent>
         </Collapse>
       </Card>

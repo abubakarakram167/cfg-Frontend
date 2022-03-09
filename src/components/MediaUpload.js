@@ -14,19 +14,24 @@ export default (props) => {
     for (const file of files) {
       data.append('media', file);
     }
-    dispatch(createOneMedia(data)).then((res) => {
-      const data = res.data.map((file) => {
-        return {
-          url: baseUrl + 'static/' + file.file_name,
-          fileName: file.file_name,
-          description: file.description,
-          uploadedOn: file.created_at,
-          id: file.id,
-        };
+    dispatch(createOneMedia(data))
+      .then((res) => {
+        const data = res.data.map((file) => {
+          return {
+            url: baseUrl + 'static/' + file.file_name,
+            fileName: file.file_name,
+            description: file.description,
+            uploadedOn: file.created_at,
+            id: file.id,
+          };
+        });
+        console.log('the data', data);
+        props.onImageSave(data);
+        props.onClose();
+      })
+      .catch((err) => {
+        console.log('the error', err);
       });
-      props.onImageSave(data);
-      props.onClose();
-    });
   };
 
   const getAcceptedFiles = () => {

@@ -28,6 +28,7 @@ import Friend from 'redux/services/friends';
 import LogoImage from 'assets/cfgWhiteLogo.png';
 import {getPostById} from 'redux/actions/UserPost';
 import {getSignedUrl} from '../../../redux/actions/media';
+import whiteCfgLogo from 'assets/white_header_logo.png';
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -39,6 +40,10 @@ export default function AdminHeader() {
   const history = useHistory();
   const state = useSelector((state) => {
     return state.auth;
+  });
+
+  const user = useSelector((state) => {
+    return state.user;
   });
 
   useEffect(() => {
@@ -57,8 +62,10 @@ export default function AdminHeader() {
       // console.log('hello hakuna', user.id);
       // socket.windowAction(user.id);
     }
+    console.log('asdajsbndjkadbna............');
+    console.log('the user', user);
     dispatch(setCurrentUser(user));
-    console.log('hello hakuna', user.id);
+    console.log('hello hakuna', user);
     socket.windowAction(user.id);
   }, []);
 
@@ -127,6 +134,23 @@ export default function AdminHeader() {
     setResultVisibility(true);
   };
 
+  console.log('the userrr', user);
+
+  // const userData = JSON.parse(localStorage.getItem('current-user'));
+  // useEffect(() => {
+  //   dispatch(setCurrentUser(userData));
+  // }, []);
+
+  const returnUrl = () => {
+    const user = JSON.parse(localStorage.getItem('current-user'));
+    console.log('the usertriple', user);
+    if (user?.default_home_page_view == 'icon') {
+      return '/icon-dashboard';
+    } else {
+      return '/home';
+    }
+  };
+
   const sendFriendRequest = async (id) => {
     const data = await Friend.sendFriendRequest({userId: id});
   };
@@ -140,10 +164,13 @@ export default function AdminHeader() {
         <div className='user-heder-container-header'>
           <div className='left'>
             <div className='left-user-info'>
-              <Avatar alt='User Avatar' src={Logo} className='logo-style' />
-              {/* <Link to='/admin'> */}
-
-              {/* </Link> */}
+              <Link to='/home'>
+                <Avatar
+                  alt='User Avatar'
+                  src={whiteCfgLogo}
+                  className='logo-style'
+                />
+              </Link>
             </div>
             <div className='search-bar'>
               <SearchBar onChange={searchUser} />
@@ -258,7 +285,7 @@ export default function AdminHeader() {
           </div>
           <div className='center-user-page'>
             <div className='user-page-icon-container'>
-              <Link to='/home'>
+              <Link to={returnUrl()}>
                 <Home style={{fontSize: 35}} />
               </Link>
             </div>
