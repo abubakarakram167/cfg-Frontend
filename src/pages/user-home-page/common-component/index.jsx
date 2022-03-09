@@ -15,13 +15,22 @@ export default function CommonComponent(props) {
     console.log(socket.onAction(socketEnums.post));
   }, []);
   const [scroll, setScroll] = useState(0);
+
+  const returnCenterClass = () => {
+    if (props.left == 'noMenu') {
+      return 'fullscreen-user-home-center';
+    }
+    return 'user-home-center';
+  };
   return (
     <div>
       <UserHomeHeader />
       <div className='user-home-page-content'>
-        <div className='user-home-left'>{props.left}</div>
+        {props.left != 'noMenu' && (
+          <div className='user-home-left'>{props.left}</div>
+        )}
         <div
-          className='user-home-center'
+          className={returnCenterClass()}
           onScroll={() => {
             if (props.scroll) {
               console.log(scroll);
@@ -36,7 +45,11 @@ export default function CommonComponent(props) {
           }}>
           {props.children}
         </div>
-        <div className='user-home-right'>{props.right}</div>
+        {props.right != 'noMenu' && (
+          <div div className='user-home-right'>
+            {props.right}
+          </div>
+        )}
       </div>
     </div>
   );

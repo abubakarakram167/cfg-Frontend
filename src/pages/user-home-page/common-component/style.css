@@ -16,7 +16,16 @@
   height: 100vh;
   padding-top: 20px;
 }
+.fullscreen-user-home-center {
+  width: 100%;
+  overflow-y: auto;
+  height: 100vh;
+  padding-top: 20px;
+}
 .user-home-center::-webkit-scrollbar {
+  display: none;
+}
+.fullscreen-user-home-center::-webkit-scrollbar {
   display: none;
 }
 .user-home-right {
@@ -37,6 +46,10 @@
   }
   .user-home-left {
     display: none;
+  }
+  .fullscreen-user-home-center {
+    width: 100%;
+    padding: 10px;
   }
   .user-home-center {
     width: 100%;

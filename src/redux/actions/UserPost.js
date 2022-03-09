@@ -41,23 +41,31 @@ const getRestoredImage = (featureImageUrl) => {
   return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
 };
 
-export const getUserPost = (count) => {
+export const CommonLoaderForAll = (payload) => {
+  return async function (dispatch) {
+    dispatch({
+      type: actions.SET_COMMON_LOADING,
+      payload,
+    });
+  };
+};
+
+export const getUserPost = (count, isNew) => {
   return async function (dispatch) {
     try {
+      if (!isNew) dispatch(CommonLoaderForAll(true));
       const response = await Post.getUserPosts(count);
       if (response.status === 200) {
         const data_resp = await response.data;
         const posts = data_resp;
-
         const images = [];
-        posts.map((post) => {
+        posts.map(async (post) => {
           if (post && post.media !== '' && post.media) {
-            post.fileName = getRestoredImage(post.media);
+            post.fileName = await getRestoredImage(post.media);
             images.push(getSignedUrl(post));
           }
         });
         const getImages = await Promise.all(images);
-
         let transformPosts = posts.map((post) => {
           let specificImage = getImages.filter(
             (image) => post && image.fileName === post.fileName,
@@ -67,10 +75,17 @@ export const getUserPost = (count) => {
         });
 
         jsCookie.set('login', 'yes');
-        dispatch({
-          type: actions.GET_USER_POSTS,
-          payload: {...transformPosts},
-        });
+        if (isNew) {
+          dispatch({
+            type: actions.NEW_GET_USER_POSTS,
+            payload: {...transformPosts},
+          });
+        } else {
+          dispatch({
+            type: actions.GET_USER_POSTS,
+            payload: {...transformPosts},
+          });
+        }
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -80,6 +95,15 @@ export const getUserPost = (count) => {
         });
       }
     }
+    dispatch(CommonLoaderForAll(false));
+  };
+};
+
+export const setLoader = () => {
+  return async function (dispatch) {
+    dispatch({
+      type: actions.SET_LOADING,
+    });
   };
 };
 
