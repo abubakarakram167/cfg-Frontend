@@ -63,7 +63,15 @@ const Confirmation = ({open, setDelete, submit}) => {
   );
 };
 
-const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
+const Posts = ({
+  post,
+  index,
+  classes,
+  userSpecificImage,
+  getPostCount,
+  posts,
+  setPosts,
+}) => {
   const dispatch = useDispatch();
 
   const [count, setcounter] = useState(1);
@@ -159,6 +167,20 @@ const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
       if (data) {
         if (data.data) {
           allPosts = data.data;
+          let newPosts;
+          if (allPosts?.length > 0) {
+            const fId = allPosts[0]?.post_id;
+            newPosts = posts?.map((el) => {
+              if (el.id == fId) {
+                return {
+                  ...el,
+                  messageCount: allPosts?.length,
+                };
+              }
+              return {...el};
+            });
+            setPosts(newPosts);
+          }
           sliceData(data.data);
         }
       }
@@ -283,7 +305,7 @@ const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
                   className={classes.fontPointer}
                   style={{color: '#2D83D5'}}
                 />
-                <Box className={classes.iconTxt}>{allPosts?.length || 0}</Box>
+                <Box className={classes.iconTxt}>{post?.messageCount}</Box>
               </IconButton>
               <IconButton
                 className={classes.btnContainer}

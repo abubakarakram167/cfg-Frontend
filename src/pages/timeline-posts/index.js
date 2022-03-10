@@ -97,7 +97,16 @@ const TimeLinePosts = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    setPosts([...getposts]);
+    let modifiedArr = [];
+    if (getposts?.length) {
+      modifiedArr = getposts?.map((el) => {
+        return {
+          ...el,
+          messageCount: 0,
+        };
+      });
+    }
+    setPosts([...modifiedArr]);
   }, [getposts]);
 
   useEffect(() => {
@@ -112,6 +121,8 @@ const TimeLinePosts = () => {
       return (
         <Fragment key={index}>
           <Posts
+            setPosts={setPosts}
+            posts={posts}
             post={post}
             index={index}
             classes={classes}
