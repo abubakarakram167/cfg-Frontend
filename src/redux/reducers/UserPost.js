@@ -4,6 +4,8 @@ const INIT_STATE = {
   posts: [],
   message: null,
   error: null,
+  loading: false,
+  getPostLoader: false,
 };
 
 const userPostReducer = (state = INIT_STATE, action) => {
@@ -13,6 +15,10 @@ const userPostReducer = (state = INIT_STATE, action) => {
       payload = action.payload;
       return {...state, posts: [payload, ...state.posts]};
 
+    case actions.SET_COMMON_LOADING:
+      payload = action.payload;
+      return {...state, getPostLoader: payload};
+
     case actions.CREATE_USER_POST:
       payload = action.payload;
       if (payload.error) {
@@ -21,9 +27,12 @@ const userPostReducer = (state = INIT_STATE, action) => {
       return state;
     case actions.GET_USER_POSTS:
       payload = action.payload;
-
       if (payload.error) {
-        return {...state, error: 'There was an error fetching the posts.'};
+        return {
+          ...state,
+          getPostLoader: false,
+          error: 'There was an error fetching the posts.',
+        };
       }
       let posts_array = Object.values(action.payload);
       posts_array = posts_array.filter((element) => {
@@ -31,8 +40,38 @@ const userPostReducer = (state = INIT_STATE, action) => {
           return element;
         }
       });
+      return {
+        ...state,
+        posts: [...state.posts, ...posts_array],
+        error: null,
+        getPostLoader: false,
+      };
 
-      return {...state, posts: [...state.posts, ...posts_array], error: null};
+    case actions.SET_LOADING:
+      return {...state, loading: true};
+
+    case actions.NEW_GET_USER_POSTS:
+      payload = action.payload;
+      if (payload.error) {
+        return {
+          ...state,
+          loading: false,
+          error: 'There was an error fetching the posts.',
+        };
+      }
+      let new_posts_array = Object.values(action.payload);
+      state.posts.find((el) => {
+        new_posts_array.find((po) => {
+          if (el.id == po.id) return el;
+        });
+      });
+
+      return {
+        ...state,
+        loading: false,
+        posts: [...new_posts_array],
+        error: null,
+      };
     case actions.DELETE_USER_POST:
       payload = action.payload;
       if (payload.error) {
@@ -40,6 +79,7 @@ const userPostReducer = (state = INIT_STATE, action) => {
       } else {
         return {
           ...state,
+          loading: false,
           posts: state.posts.filter((post) => post.id !== payload.id),
         };
       }

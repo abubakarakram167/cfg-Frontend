@@ -125,6 +125,16 @@ const AppSidebar = (props) => {
 
   const classes = useStyles({});
 
+  const returnUrl = () => {
+    const user = JSON.parse(localStorage.getItem('current-user'));
+
+    if (user?.default_home_page_view == 'icon') {
+      return '/icon-dashboard';
+    } else {
+      return '/home';
+    }
+  };
+
   return (
     <Drawer
       anchor={props.position}
@@ -231,7 +241,7 @@ const AppSidebar = (props) => {
               )}
             </div>
           </ListItem>
-          <Link to='/home'>
+          <Link to={returnUrl()}>
             <ListItem>
               <ListItemIcon>
                 <Home style={{color: 'red'}} />

@@ -12,6 +12,7 @@ import UserManagement from 'pages/user-management';
 import CfgSession from 'pages/cfg-session';
 import CfgTool from 'pages/cfg-tools';
 import Timeline from 'pages/timeline';
+import TimeLinePosts from 'pages/timeline-posts';
 import Preferences from 'pages/preferences';
 import MediaLibrary from 'pages/media-library';
 import MiniCfg from 'pages/mini-cfg';
@@ -125,5 +126,10 @@ export default [
     exact
     path='/admin/rewards'
     component={withRouter(Rewards)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/admin/timeline-posts'
+    component={withRouter(TimeLinePosts)}
   />,
 ];
