@@ -1,0 +1,41 @@
+.user-card-container {
+  border: 1px solid black;
+  padding-bottom: 15px;
+  margin-left: 20px;
+  border-radius: 20px;
+  border: 1px solid #d6d6d6;
+  box-shadow: 0px 4px #e5e5e5;
+}
+
+.button-container {
+  width: 90%;
+  margin: auto;
+}
+
+.confirm-buttton {
+  padding: 12px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #419ee4;
+  color: white;
+  font-size: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  margin: auto;
+}
+
+.user-image {
+  border-radius: 20px;
+}
+
+.avatar-name {
+  margin-left: 10px;
+  padding-left: 10px;
+}
+
+@media only screen and (max-width: 992px) {
+  .user-card-container {
+    margin-top: 10px;
+  }
+}

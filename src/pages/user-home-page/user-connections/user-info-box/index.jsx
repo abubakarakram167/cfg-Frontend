@@ -14,6 +14,8 @@ import GroupIcon from '@material-ui/icons/Group';
 import {fromPairs} from 'lodash';
 import Friend from 'redux/services/friends';
 import {baseUrl} from 'utils/axios';
+import {getSignedUrl} from '../../../../redux/actions/media';
+
 const useStyles = makeStyles({
   root: {
     maxWidth: '100%',
@@ -38,6 +40,7 @@ export default function UserInfo({
     last_name: '',
     photo_url: '',
   });
+  const [avatarImage, setAvatarImage] = useState(null);
 
   const approveRequest = async () => {
     const data = await Friend.approveFriendRequest({userId});
@@ -55,6 +58,12 @@ export default function UserInfo({
       if (data) {
         if (data.data) {
           setUserData(data.data);
+
+          getSignedUrl({fileName: data.data.photo_url}).then((res) => {
+            console.log('the user id', userId);
+            console.log('the data of image getting', res);
+            setAvatarImage(res.newUrl);
+          });
         }
       }
     }
@@ -63,18 +72,16 @@ export default function UserInfo({
   }, []);
 
   return (
-    <div style={{boxShadow: '0px 1px 2px gainsboro', margin: '20px 0px'}}>
+    <div className='user-profile-container'>
       <Card className={classes.root}>
         <CardActionArea
           onClick={() => {
-            setSelected(userData);
+            setSelected({userData, avatarImage});
           }}>
           <CardContent>
             <div className='user-info-card-content'>
               <Avatar
-                src={
-                  userData.photo_url && baseUrl + 'static/' + userData.photo_url
-                }
+                src={avatarImage}
                 alt={userData.first_name}
                 className={classes.large}
               />
@@ -84,7 +91,7 @@ export default function UserInfo({
                     {userData.first_name} {userData.last_name}
                   </strong>
                 </Typography>
-                <Typography
+                {/* <Typography
                   variant='body2'
                   color='textSecondary'
                   component='p'
@@ -93,7 +100,7 @@ export default function UserInfo({
                     style={{color: 'green', fontSize: 25, marginRight: '5px'}}
                   />
                   <strong> Coming mutual connections</strong>
-                </Typography>
+                </Typography> */}
               </div>
             </div>
           </CardContent>
@@ -134,7 +141,7 @@ export default function UserInfo({
                 </div>
               </>
             )}
-            {type === 'connection' && (
+            {/* {type === 'connection' && (
               <>
                 <div className={{margin: 'auto'}}>
                   <Button variant='contained' color='secondary'>
@@ -146,7 +153,7 @@ export default function UserInfo({
                   </Button>
                 </div>
               </>
-            )}
+            )} */}
           </div>
         </CardActions>
       </Card>
