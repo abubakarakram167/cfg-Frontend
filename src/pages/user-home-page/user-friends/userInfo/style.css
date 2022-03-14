@@ -2,9 +2,10 @@
   border: 1px solid black;
   padding-bottom: 15px;
   margin-left: 20px;
-  border-radius: 20px;
+  border-radius: 10px;
   border: 1px solid #d6d6d6;
   box-shadow: 0px 4px #e5e5e5;
+  margin-top: 15px;
 }
 
 .button-container {
@@ -26,16 +27,48 @@
 }
 
 .user-image {
-  border-radius: 20px;
+  border-radius: 10px;
+  height: 300px;
 }
 
 .avatar-name {
   margin-left: 10px;
   padding-left: 10px;
+  font-size: 1vw;
 }
 
 @media only screen and (max-width: 992px) {
   .user-card-container {
     margin-top: 10px;
+  }
+}
+
+@media only screen and (max-width: 1600px) {
+  .user-image {
+    height: 220px;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .user-image {
+    height: 150px;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .user-image {
+    height: 120px;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .user-card-container {
+    width: 60%;
+    margin: auto;
+    margin-top: 15px;
+  }
+
+  .avatar-name {
+    font-size: 2vw;
   }
 }
