@@ -34,6 +34,24 @@
   margin-top: 10px;
 }
 
+.people-button {
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 40px;
+  color: white;
+  background-color: #d43251;
+  border: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.people-button-container {
+  width: 150px;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 @media only screen and (max-width: 970px) {
   .mobile-connections-view {
     display: block;

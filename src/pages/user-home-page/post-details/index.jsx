@@ -130,7 +130,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
     const data = await Comments.getPostComments(post.id);
     if (data) {
       if (data.data) {
-        setComments(data.data);
+        setComments([]);
       }
     }
   }
