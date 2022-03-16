@@ -76,7 +76,6 @@ const Comment = ({
   subIndex,
   idx,
   postId,
-  getPostComments,
   deleteComment,
 }) => {
   const classes = useStyles(hasPaddingLeft);

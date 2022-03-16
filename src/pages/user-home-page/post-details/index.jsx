@@ -392,7 +392,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
             }}
           />
           {/* <Typography variant='body2' color='textSecondary' component='p'> */}
-          <span className='caption-text'>
+          <span className='caption-text12'>
             {/* <ShowMoreText
                 lines={2}
                 more='Show more'

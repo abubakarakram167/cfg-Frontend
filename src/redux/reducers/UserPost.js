@@ -6,6 +6,7 @@ const INIT_STATE = {
   error: null,
   loading: false,
   getPostLoader: false,
+  isEditFetch: false,
 };
 
 const userPostReducer = (state = INIT_STATE, action) => {
@@ -57,6 +58,7 @@ const userPostReducer = (state = INIT_STATE, action) => {
           ...state,
           loading: false,
           error: 'There was an error fetching the posts.',
+          isEditFetch: true,
         };
       }
       let new_posts_array = Object.values(action.payload);
@@ -71,6 +73,7 @@ const userPostReducer = (state = INIT_STATE, action) => {
         loading: false,
         posts: [...new_posts_array],
         error: null,
+        isEditFetch: true,
       };
     case actions.DELETE_USER_POST:
       payload = action.payload;

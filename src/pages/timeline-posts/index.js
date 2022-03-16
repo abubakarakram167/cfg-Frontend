@@ -88,26 +88,72 @@ const useStyles = makeStyles((theme) => ({
 
 const TimeLinePosts = () => {
   const classes = useStyles();
-  const getposts = useSelector((state) => state.userPost.posts);
-  const loading = useSelector((state) => state.userPost.getPostLoader);
+  const {
+    posts: getposts,
+    getPostLoader: loading,
+    isEditFetch,
+  } = useSelector((state) => state.userPost);
 
   const dispatch = useDispatch();
 
-  const [count] = useState(3);
+  const [count] = useState(9);
   const [posts, setPosts] = useState([]);
+  const [showUp, setShowUp] = useState([]);
+
+  // const transformPosts = async (posts) => {
+  //   let allContent = [];
+  //   for (let post of posts) {
+  //     let con;
+  //     try {
+  //       con = await transformImagesInContent(post.content, false, post.id)
+  //     } catch (err) {
+  //       console.log("Promise===>", err)
+  //     }
+  //     allContent.push(con);
+  //   }
+
+  //   console.log("allContent==>", allContent)
+  //   let allTransformPosts;
+  //   try {
+  //     allTransformPosts = await Promise.all(allContent)
+  //   } catch (err) {
+  //     console.log("err=>", err)
+  //   }
+  //   console.log("allTransformPosts==>", allTransformPosts)
+  //   const newContentPosts = posts.map((post) => {
+  //     return {
+  //       ...post,
+  //       counter: 1,
+  //       content: allTransformPosts.filter(
+  //         (newPost) => newPost.id === post.id,
+  //       )[0].html,
+  //     };
+  //   });
+
+  //   return newContentPosts
+
+  //   // setAllTransformPosts(newContentPosts);
+  //   // setPosts([...newContentPosts])
+  // };
 
   useEffect(() => {
     let modifiedArr = [];
     if (getposts?.length) {
+      // transformPosts(getposts)
+      //   .then(res => {
+      //     console.log("Res==>", res)
+      //   }).catch(err => console.log("err==>", err))
+
       modifiedArr = getposts?.map((el) => {
         return {
           ...el,
-          messageCount: 0,
+          counter: 1,
         };
       });
+      // }
+      setPosts([...modifiedArr]);
     }
-    setPosts([...modifiedArr]);
-  }, [getposts]);
+  }, [getposts, isEditFetch]);
 
   useEffect(() => {
     dispatch(getUserPost(count));
@@ -127,6 +173,8 @@ const TimeLinePosts = () => {
             index={index}
             classes={classes}
             getPostCount={count}
+            showUp={showUp}
+            setShowUp={setShowUp}
           />
         </Fragment>
       );
