@@ -32,6 +32,7 @@ export default function UserEvents() {
   const getFriends = async () => {
     const data = await Friend.getFriends();
     const sentFriendRequests = await Friend.getSentFriendRequests();
+    setSentFriendRequests(sentFriendRequests.data);
     if (data) {
       if (data.data) {
         const allFriendsIds = data.data.map((friend) => friend.friend);
@@ -51,8 +52,6 @@ export default function UserEvents() {
     }
   };
 
-  console.log('all filters userss', filteredUsers);
-
   const toggleReloadData = () => {
     setReloadData(!reloadData);
   };
@@ -67,7 +66,7 @@ export default function UserEvents() {
           console.log('the data of sending request', friendRequest);
           if (friendRequest) {
             if (friendRequest.data) {
-              setSentFriendRequests(friendRequest.data);
+              // setSentFriendRequests(friendRequest.data);
             }
           }
         }
@@ -77,6 +76,9 @@ export default function UserEvents() {
     }
   };
 
+  console.log('the sent friend resuqess', sentFriendRequests);
+  console.log('all filtered users', filteredUsers);
+
   return (
     <CommonComponent>
       <div>
@@ -84,6 +86,23 @@ export default function UserEvents() {
           <h1>Friend Requests</h1>
           <div className='row'>
             {friendRequests.map((request) => {
+              return (
+                <UserInfo
+                  user={
+                    allUsers.filter((user) => user.id === request.userId)[0]
+                  }
+                  addFriend={false}
+                  toggleReloadData={toggleReloadData}
+                />
+              );
+            })}
+            <UserInfo />
+          </div>
+        </div>
+        <div>
+          <h1>Pending Requests</h1>
+          <div className='row'>
+            {sentFriendRequests.map((request) => {
               return (
                 <UserInfo
                   user={
