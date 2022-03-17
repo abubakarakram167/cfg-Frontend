@@ -86,36 +86,60 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+let loadFirst = true;
+
 const TimeLinePosts = () => {
   const classes = useStyles();
-  const getposts = useSelector((state) => state.userPost.posts);
-  const loading = useSelector((state) => state.userPost.getPostLoader);
+  const {
+    posts: getposts,
+    getPostLoader: loading,
+    isEditFetch,
+    postCount = 0,
+  } = useSelector((state) => state.userPost);
 
   const dispatch = useDispatch();
 
-  const [count] = useState(3);
+  const [count, setCount] = useState(3);
   const [posts, setPosts] = useState([]);
+  const [showUp, setShowUp] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    setPosts([...getposts]);
-  }, [getposts]);
+    let modifiedArr = [];
+    if (getposts?.length) {
+      modifiedArr = getposts?.map((el) => {
+        return {
+          ...el,
+          counter: 1,
+        };
+      });
+      // debugger
+      setPosts([...modifiedArr]);
+      loadFirst = false;
+    }
+  }, [getposts, isEditFetch]);
 
   useEffect(() => {
-    dispatch(getUserPost(count));
-  }, []);
+    dispatch(getUserPost(count, null, page));
+  }, [page]);
 
   const returnPosts = () => {
-    if (loading) {
+    if (loadFirst) {
       return <Loader />;
     }
     return posts.map((post, index) => {
       return (
         <Fragment key={index}>
           <Posts
+            setPosts={setPosts}
+            posts={posts}
             post={post}
             index={index}
             classes={classes}
             getPostCount={count}
+            showUp={showUp}
+            setShowUp={setShowUp}
+            page={page}
           />
         </Fragment>
       );
@@ -129,6 +153,19 @@ const TimeLinePosts = () => {
           Timeline Posts
         </Typography>
         {returnPosts()}
+        {(posts?.length != postCount || !loadFirst) && (
+          <Typography
+            style={{
+              padding: 24,
+              color: '#0A8FDC',
+              cursor: 'pointer',
+              width: 145,
+              float: 'right',
+            }}
+            onClick={() => setPage((page) => page + 1)}>
+            {loading ? 'Loading...' : 'Load More...'}
+          </Typography>
+        )}
       </Box>
     </CommonComponent>
   );

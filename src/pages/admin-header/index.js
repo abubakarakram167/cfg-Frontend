@@ -117,7 +117,7 @@ export default function AdminHeader() {
         <div className='container-header'>
           <div className='left'>
             <div className='left-user-info'>
-              <Avatar alt='User Avatar' src={Logo} className='logo-style' />
+              <Avatar alt='User Avatar abc' src={Logo} className='logo-style' />
               {user && user.role !== 'candidate' && (
                 <Link to='/admin'>
                   <Home
@@ -190,7 +190,7 @@ export default function AdminHeader() {
                 <MenuItem onClick={handleClose}>
                   <div className='mobile-menu-item'>
                     <Avatar
-                      alt='User Avatar'
+                      alt='User Avatar 123er'
                       src={image && baseUrl + 'static/' + image}
                     />
                     <div className='user-name-text'>

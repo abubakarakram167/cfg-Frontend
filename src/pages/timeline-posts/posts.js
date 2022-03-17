@@ -28,15 +28,15 @@ import Comments from './comments';
 import {DELETE_USER_POST} from '../../redux/actions/action.types';
 // import Confirmation from './deleteConfirmation'
 
+import {Loader} from '../../@crema';
 import Comment from 'redux/services/comment';
 import {setLoader, getUserPost} from 'redux/actions/UserPost';
 import Post from 'redux/services/post';
+import {getSignedUrl} from 'redux/actions/media';
 import moment from 'moment';
 import {TextFieldMui} from './comments';
 
-let allPosts = [];
-
-const Confirmation = ({open, setDelete, submit}) => {
+const Confirmation = ({open, setDelete, submit, loading}) => {
   const handleClose = () => setDelete(null);
   return (
     <Dialog
@@ -51,56 +51,42 @@ const Confirmation = ({open, setDelete, submit}) => {
         <Button
           style={{outline: 'none'}}
           autoFocus
-          onClick={handleClose}
+          onClick={() => {
+            handleClose();
+          }}
           color='primary'>
           Cancel
         </Button>
         <Button style={{outline: 'none'}} onClick={submit} color='primary'>
-          Delete
+          {loading ? 'deleting...' : 'delete'}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
+const Posts = ({
+  post,
+  index,
+  classes,
+  userSpecificImage,
+  getPostCount,
+  posts,
+  setPosts,
+  showUp,
+  setShowUp,
+}) => {
   const dispatch = useDispatch();
-
-  const [count, setcounter] = useState(1);
-  const [disable, setDisable] = useState(false);
-  const [expanded, setExpanded] = React.useState([]);
   const [commentValue, setCommentValue] = useState('');
-  const [commentList, setCommentList] = useState([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [loveCount, setLoveCount] = useState(post.love_count || 0);
   const [loveLoading, setLoveLoading] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
   const [deleted, setDelete] = useState(null);
   const [textFieldDisable, setTextFieldDisable] = useState(false);
+  const [avatarImage, setAvatarImage] = useState(null);
 
-  const currentUser = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.userPost.loading);
-  const [user] = useState(currentUser);
-
-  useEffect(() => {
-    getPostComments();
-  }, []);
-
-  const setCounter = () => {
-    if (count <= commentList?.length) {
-      setcounter((prevState) => prevState + 1);
-    }
-  };
-
-  const handleExpand = (panel) => {
-    let ele = [...expanded];
-    const idx = ele?.findIndex((el) => el?.id == panel);
-    if (idx > -1) {
-      ele = ele.filter((el) => el?.id != panel);
-    } else {
-      ele.push(...expanded, {id: panel, status: true});
-    }
-    setExpanded(ele);
-  };
 
   const onBlur = () => setEditDialogOpen(false);
 
@@ -133,43 +119,100 @@ const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
   };
 
   useEffect(() => {
+    getSignedUrl({fileName: post.photo_url})
+      .then((res) => {
+        console.log('getSignedUrl===>', res, res.newUrl);
+        setAvatarImage(res.newUrl);
+      })
+      .catch((err) => console.log('Err==>', err));
+  }, []);
+
+  useEffect(() => {
     if (editDialogOpen) setCommentValue(post?.content);
   }, [editDialogOpen]);
 
-  const sliceData = (data) => {
-    const datas = [...data];
-    const size = 1;
-    const dataLength = size * count;
-    if (count <= allPosts?.length) {
-      const newData = allPosts?.slice(0, dataLength);
-      setCommentList(newData);
-    }
-    if (count == allPosts?.length) {
-      setDisable(true);
+  const upDatePost = (data = []) => {
+    let newPosts = [];
+    if (data?.length > 0) {
+      const fId = data[0]?.post_id;
+      newPosts = posts?.map((el) => {
+        if (el.id == fId) {
+          return {
+            ...el,
+            comments: data,
+          };
+        }
+        return {...el};
+      });
+      setPosts(newPosts);
     }
   };
 
-  useEffect(() => {
-    sliceData(commentList);
-  }, [count]);
+  const btnShow = (remove) => {
+    let arr = [...showUp];
+    if (remove) arr = arr.filter((a) => a != post.id);
+    else arr.push(post.id);
+    setShowUp(arr);
+  };
 
-  async function getPostComments() {
+  const setMyCounter = (isDefault) => {
+    let newPosts = [];
+    if (post?.comments?.length > 0) {
+      const fId = post?.comments[0]?.post_id;
+      newPosts = posts?.map((el) => {
+        if (el.id == fId) {
+          if (isDefault == 'delete') {
+            return {
+              ...el,
+              counter: el?.counter - 1,
+            };
+          } else {
+            return {
+              ...el,
+              counter: isDefault == 'default' ? 1 : el?.counter + 1,
+            };
+          }
+        }
+        return {...el};
+      });
+      setPosts([...newPosts]);
+    }
+  };
+
+  async function getPostComments(id) {
+    if (post?.comments?.length > 0) return;
+    setCommentLoading(true);
     try {
-      const data = await Comment.getPostComments(post.id);
+      const data = await Comment.getPostComments(id);
       if (data) {
         if (data.data) {
-          allPosts = data.data;
-          sliceData(data.data);
+          upDatePost(data.data.comments, 'close');
         }
       }
     } catch (err) {
       console.log(err);
     }
+    setCommentLoading(false);
   }
 
   const delete_Comment = async (comment) => {
-    // const comments = await Comment.deleteComment(comment?.id)
-    // console.log("comment===>", comments)
+    const po = post?.comments?.filter((c) => c?.id != comment.id);
+    post.comments = [...po];
+    const idx = posts?.findIndex((p) => p.id == post.id);
+    posts[idx] = {...post};
+    setMyCounter('delete');
+    // try {
+    //   const resp = await Comment.deleteComment(comment?.id);
+    //   if (resp?.status == 200) {
+    //     const po = post?.comments?.filter((c) => c?.id != comment.id);
+    //     post.comments = [...po];
+    //     const idx = posts?.findIndex((p) => p.id == post.id);
+    //     posts[idx] = {...post};
+    //     setMyCounter('delete');
+    //   }
+    // } catch (err) {
+    //   console.log('err===>', err);
+    // }
   };
 
   const editPostAction = async (e) => {
@@ -180,7 +223,8 @@ const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
         if (data.status !== 200) {
           setCommentValue(post.content);
         }
-        dispatch(getUserPost(getPostCount, 'isNewUser'));
+        btnShow(true);
+        dispatch(getUserPost(getPostCount, 'isNewUser', 1));
         dispatch(setLoader());
       } catch (err) {
         console.log(err);
@@ -218,18 +262,16 @@ const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
   };
 
   const deletePost = async () => {
+    setLoveLoading(true);
     try {
       const data = await Post.deleteUserPost(deleted);
       if (data.status === 200) {
-        dispatch(setLoader());
-        dispatch({
-          type: DELETE_USER_POST,
-          payload: {id: deleted},
-        });
+        setPosts(posts.filter((post) => post.id !== deleted));
       }
     } catch (err) {
       console.log(err);
     }
+    setLoveLoading(false);
     setDelete(null);
   };
 
@@ -241,13 +283,13 @@ const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
             <Avatar
               aria-label='recipe'
               className={classes.avatar}
-              src={userSpecificImage}
+              src={avatarImage}
               alt='avtar'
             />
           }
           title={
             <Typography component='strong' className={classes.title}>
-              {user?.first_name} {user?.last_name}
+              {post?.first_name} {post?.last_name}
             </Typography>
           }
           subheader={
@@ -283,7 +325,7 @@ const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
                   className={classes.fontPointer}
                   style={{color: '#2D83D5'}}
                 />
-                <Box className={classes.iconTxt}>{allPosts?.length || 0}</Box>
+                <Box className={classes.iconTxt}>{post?.comment_count}</Box>
               </IconButton>
               <IconButton
                 className={classes.btnContainer}
@@ -307,78 +349,82 @@ const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
               </IconButton>
             </Box>
             <Box>
-              {!!commentList?.length &&
-                expanded.findIndex((el) => el?.id == post.id) <= -1 && (
-                  <IconButton
-                    className={classes.btnDown}
-                    style={{outline: 'none !important'}}
-                    aria-label='add to favorites'>
-                    <ArrowDropDown
-                      style={{fontSize: 30}}
-                      onClick={() => handleExpand(post?.id)}
-                    />
-                  </IconButton>
-                )}
+              {!showUp?.includes(post.id) && (
+                <IconButton
+                  className={classes.btnDown}
+                  style={{outline: 'none !important'}}
+                  aria-label='add to favorites'>
+                  <ArrowDropDown
+                    style={{fontSize: 30}}
+                    onClick={() => {
+                      btnShow(false);
+                      getPostComments(post?.id);
+                    }}
+                  />
+                </IconButton>
+              )}
             </Box>
           </Box>
         </CardContent>
-        <Box
-          className={`${
-            expanded.findIndex((el) => el?.id == post.id) > -1
-              ? classes.block
-              : classes.hide
-          } ${classes.relative}`}>
-          <Collapse in={expanded.findIndex((el) => el?.id == post.id) > -1}>
+        <Box className={`${classes.relative}`}>
+          <Collapse in={showUp?.includes(post.id)}>
             <Box>
-              {commentList?.length > 0 &&
-                commentList?.map((el, subIndex) => {
+              {commentLoading && <div style={{padding: 24}}>...Loading</div>}
+              {!commentLoading && post?.comments?.length == 0 && (
+                <div style={{padding: 24}}>There are no comments!</div>
+              )}
+              {console.log('console===>', post?.comments, post)}
+              {post?.comments?.length !== 0 &&
+                post?.comments?.slice(0, post?.counter)?.map((el, subIndex) => {
                   return (
                     <Fragment key={subIndex}>
                       <Comments
                         deleteComment={delete_Comment}
                         index={index}
-                        getPostComments={getPostComments}
                         postId={post?.id}
                         subIndex={subIndex}
                         comments={el}
                       />
-                      {el?.replies?.map((item, idx) => (
-                        <Comments
-                          key={idx}
-                          deleteComment={delete_Comment}
-                          getPostComments={getPostComments}
-                          postId={post?.id}
-                          idx={idx}
-                          index={index}
-                          subIndex={subIndex}
-                          comments={item}
-                          hasPaddingLeft={true}
-                        />
-                      ))}
+                      {el?.replies?.length > 0 &&
+                        el?.replies?.map((item, idx) => {
+                          return (
+                            <Comments
+                              key={idx}
+                              deleteComment={delete_Comment}
+                              postId={post?.id}
+                              idx={idx}
+                              index={index}
+                              subIndex={subIndex}
+                              comments={item}
+                              hasPaddingLeft={true}
+                            />
+                          );
+                        })}
                     </Fragment>
                   );
                 })}
-              {!!commentList?.length && !disable && (
-                <Typography
-                  style={{
-                    padding: 24,
-                    color: '#0A8FDC',
-                    cursor: 'pointer',
-                    width: 145,
-                  }}
-                  onClick={setCounter}>
-                  Load More...
-                </Typography>
-              )}
+              {!commentLoading &&
+                post?.comments?.length > 0 &&
+                !(post?.comments?.length == post?.counter) && (
+                  <Typography
+                    style={{
+                      padding: 24,
+                      color: '#0A8FDC',
+                      cursor: 'pointer',
+                      width: 145,
+                    }}
+                    onClick={() => setMyCounter('idefault')}>
+                    Load More...
+                  </Typography>
+                )}
               <IconButton
                 className={classes.arrowUp}
                 aria-label='add to favorites'>
                 <ArrowDropUp
                   style={{fontSize: 30}}
                   onClick={() => {
-                    setcounter(1);
-                    setDisable(false);
-                    handleExpand(post?.id);
+                    btnShow(true);
+                    setMyCounter('default');
                   }}
                 />
               </IconButton>
@@ -391,6 +437,7 @@ const Posts = ({post, index, classes, userSpecificImage, getPostCount}) => {
           submit={deletePost}
           open={deleted}
           setDelete={setDelete}
+          loading={loveLoading}
         />
       )}
     </Fragment>

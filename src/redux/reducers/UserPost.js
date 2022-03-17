@@ -6,6 +6,8 @@ const INIT_STATE = {
   error: null,
   loading: false,
   getPostLoader: false,
+  isEditFetch: false,
+  postCounts: 0,
 };
 
 const userPostReducer = (state = INIT_STATE, action) => {
@@ -34,7 +36,7 @@ const userPostReducer = (state = INIT_STATE, action) => {
           error: 'There was an error fetching the posts.',
         };
       }
-      let posts_array = Object.values(action.payload);
+      let posts_array = Object.values(action.payload.posts);
       posts_array = posts_array.filter((element) => {
         if (!state.posts.find((post) => element.id == post.id)) {
           return element;
@@ -45,6 +47,7 @@ const userPostReducer = (state = INIT_STATE, action) => {
         posts: [...state.posts, ...posts_array],
         error: null,
         getPostLoader: false,
+        postCount: payload.postCount,
       };
 
     case actions.SET_LOADING:
@@ -57,20 +60,23 @@ const userPostReducer = (state = INIT_STATE, action) => {
           ...state,
           loading: false,
           error: 'There was an error fetching the posts.',
+          isEditFetch: true,
         };
       }
-      let new_posts_array = Object.values(action.payload);
+      let new_posts_array = Object.values(action.payload.posts);
       state.posts.find((el) => {
         new_posts_array.find((po) => {
           if (el.id == po.id) return el;
         });
       });
-
+      console.log('new_posts_array===>', new_posts_array);
       return {
         ...state,
         loading: false,
         posts: [...new_posts_array],
         error: null,
+        isEditFetch: true,
+        postCount: payload.postCount,
       };
     case actions.DELETE_USER_POST:
       payload = action.payload;
