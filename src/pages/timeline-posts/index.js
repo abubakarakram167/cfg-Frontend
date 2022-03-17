@@ -6,7 +6,6 @@ import {transformImagesInContent} from 'components/ReUsable';
 import {red} from '@material-ui/core/colors';
 import Posts from './posts';
 import {getUserPost} from 'redux/actions/UserPost';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import {Loader} from '../../@crema';
 
 const useStyles = makeStyles((theme) => ({
