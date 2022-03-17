@@ -96,7 +96,7 @@ const TimeLinePosts = () => {
 
   const dispatch = useDispatch();
 
-  const [count] = useState(9);
+  const [count] = useState(10);
   const [posts, setPosts] = useState([]);
   const [showUp, setShowUp] = useState([]);
 
@@ -143,7 +143,7 @@ const TimeLinePosts = () => {
       //   .then(res => {
       //     console.log("Res==>", res)
       //   }).catch(err => console.log("err==>", err))
-
+      console.log('getposts==>', getposts);
       modifiedArr = getposts?.map((el) => {
         return {
           ...el,
@@ -156,7 +156,7 @@ const TimeLinePosts = () => {
   }, [getposts, isEditFetch]);
 
   useEffect(() => {
-    dispatch(getUserPost(count));
+    dispatch(getUserPost(count, null, 1));
   }, []);
 
   const returnPosts = () => {

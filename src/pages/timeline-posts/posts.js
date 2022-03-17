@@ -32,6 +32,7 @@ import {Loader} from '../../@crema';
 import Comment from 'redux/services/comment';
 import {setLoader, getUserPost} from 'redux/actions/UserPost';
 import Post from 'redux/services/post';
+import {getSignedUrl} from 'redux/actions/media';
 import moment from 'moment';
 import {TextFieldMui} from './comments';
 
@@ -84,6 +85,7 @@ const Posts = ({
   const [commentLoading, setCommentLoading] = useState(false);
   const [deleted, setDelete] = useState(null);
   const [textFieldDisable, setTextFieldDisable] = useState(false);
+  const [avatarImage, setAvatarImage] = useState(null);
 
   const currentUser = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.userPost.loading);
@@ -131,8 +133,20 @@ const Posts = ({
   };
 
   useEffect(() => {
+    // console.log("user.photo_url==>",post, post["user.photo_url"])
+    getSignedUrl({fileName: post['user.photo_url']})
+      .then((res) => {
+        // console.log("getSignedUrl===>", res, res.newUrl )
+        setAvatarImage(res.newUrl);
+      })
+      .catch((err) => console.log('Err==>', err));
+  }, []);
+
+  useEffect(() => {
     if (editDialogOpen) setCommentValue(post?.content);
   }, [editDialogOpen]);
+
+  console.log('avata==>', avatarImage);
 
   const upDatePost = (data = []) => {
     let newPosts = [];
@@ -182,7 +196,7 @@ const Posts = ({
       const data = await Comment.getPostComments(id);
       if (data) {
         if (data.data) {
-          upDatePost(data.data, 'close');
+          upDatePost(data.data.comments, 'close');
         }
       }
     } catch (err) {
@@ -199,13 +213,14 @@ const Posts = ({
   const editPostAction = async (e) => {
     if (e.key === 'Enter' && commentValue.length > 0) {
       setTextFieldDisable(true);
-      handleExpand(post?.id);
+      // handleExpand(post?.id);
       try {
         const data = await Post.updatePost(post.id, {content: commentValue});
         if (data.status !== 200) {
           setCommentValue(post.content);
         }
-        dispatch(getUserPost(getPostCount, 'isNewUser'));
+        btnShow(true);
+        dispatch(getUserPost(getPostCount, 'isNewUser', 1));
         dispatch(setLoader());
       } catch (err) {
         console.log(err);
@@ -246,7 +261,7 @@ const Posts = ({
     setLoveLoading(true);
     try {
       const data = await Post.deleteUserPost(deleted);
-      if (Object.keys(data?.error)?.length == 0) {
+      if (data.status === 200) {
         setPosts(posts.filter((post) => post.id !== deleted));
       }
     } catch (err) {
@@ -340,7 +355,7 @@ const Posts = ({
                     onClick={() => {
                       btnShow(false);
                       getPostComments(post?.id);
-                      handleExpand(post?.id);
+                      // handleExpand(post?.id);
                     }}
                   />
                 </IconButton>
@@ -348,13 +363,8 @@ const Posts = ({
             </Box>
           </Box>
         </CardContent>
-        <Box
-          className={`${
-            expanded.findIndex((el) => el?.id == post.id) > -1
-              ? classes.block
-              : classes.hide
-          } ${classes.relative}`}>
-          <Collapse in={expanded.findIndex((el) => el?.id == post.id) > -1}>
+        <Box className={`${classes.relative}`}>
+          <Collapse in={showUp?.includes(post.id)}>
             <Box>
               {commentLoading && <div style={{padding: 24}}>...Loading</div>}
               {!commentLoading && !post?.comments && (
@@ -411,7 +421,7 @@ const Posts = ({
                   onClick={() => {
                     btnShow(true);
                     setMyCounter('default');
-                    handleExpand(post?.id);
+                    // handleExpand(post?.id);
                   }}
                 />
               </IconButton>

@@ -50,11 +50,11 @@ export const CommonLoaderForAll = (payload) => {
   };
 };
 
-export const getUserPost = (count, isNew) => {
+export const getUserPost = (count, isNew, page) => {
   return async function (dispatch) {
     try {
       if (!isNew) dispatch(CommonLoaderForAll(true));
-      const response = await Post.getUserPosts(count);
+      const response = await Post.getUserPosts(count, page);
       if (response.status === 200) {
         const data_resp = await response.data;
         const posts = data_resp;

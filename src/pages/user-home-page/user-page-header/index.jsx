@@ -166,7 +166,7 @@ export default function AdminHeader() {
             <div className='left-user-info'>
               <Link to='/home'>
                 <Avatar
-                  alt='User Avatar'
+                  alt='User Avatar pager'
                   src={whiteCfgLogo}
                   className='logo-style'
                 />
@@ -231,7 +231,7 @@ export default function AdminHeader() {
                 <MenuItem onClick={handleClose}>
                   <div className='mobile-menu-item'>
                     <Avatar
-                      alt='User Avatar'
+                      alt='User Avatar left'
                       src={state && state.user && image}
                     />
                     <div className='user-name-text'>
@@ -307,7 +307,10 @@ export default function AdminHeader() {
           </div>
           <div className='right'>
             <div className='right-user-info'>
-              <Avatar alt='User Avatar' src={state && state.user && image} />
+              <Avatar
+                alt='User Avatar right'
+                src={state && state.user && image}
+              />
               <div className='user-name-text'>
                 <Link to='/home/user-profile'>
                   <Typography style={{color: 'white'}}>{username}</Typography>

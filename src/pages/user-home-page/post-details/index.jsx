@@ -130,7 +130,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
     const data = await Comments.getPostComments(post.id);
     if (data) {
       if (data.data) {
-        setComments(data.data);
+        setComments(data.data || []);
       }
     }
   }
@@ -431,31 +431,33 @@ export default function RecipeReviewCard({post, getUserPost}) {
         </CardActions>
         <Collapse in={expanded} timeout='auto' unmountOnExit>
           <CardContent>
-            {comments.map((comment, index) => {
-              const addReplyDataAction = async (replyText) => {
-                await Comments.addComment({
-                  post_id: post.id,
-                  content: replyText,
-                  parent_id: comment.id,
-                });
-                getPostComments();
-              };
-              if (comment.parent_id === null) {
-                return (
-                  <Comment
-                    key={index}
-                    comment={comment}
-                    addReplyAction={addReplyDataAction}
-                    replies={comment.replies}
-                    postId={post.id}
-                    afterDeleteCommentGetPost={() => {
-                      setShowMessage(true);
-                      getPostComments();
-                    }}
-                  />
-                );
-              }
-            })}
+            {console.log('comments==>', comments)}
+            {comments?.length &&
+              comments.map((comment, index) => {
+                const addReplyDataAction = async (replyText) => {
+                  await Comments.addComment({
+                    post_id: post.id,
+                    content: replyText,
+                    parent_id: comment.id,
+                  });
+                  getPostComments();
+                };
+                if (comment.parent_id === null) {
+                  return (
+                    <Comment
+                      key={index}
+                      comment={comment}
+                      addReplyAction={addReplyDataAction}
+                      replies={comment.replies}
+                      postId={post.id}
+                      afterDeleteCommentGetPost={() => {
+                        setShowMessage(true);
+                        getPostComments();
+                      }}
+                    />
+                  );
+                }
+              })}
             <Picker
               show={showPicker}
               onGetEmoji={(emoji) => {

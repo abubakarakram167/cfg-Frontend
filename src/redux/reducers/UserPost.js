@@ -67,7 +67,7 @@ const userPostReducer = (state = INIT_STATE, action) => {
           if (el.id == po.id) return el;
         });
       });
-
+      console.log('new_posts_array===>', new_posts_array);
       return {
         ...state,
         loading: false,
