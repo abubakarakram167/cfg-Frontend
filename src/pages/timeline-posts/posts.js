@@ -196,18 +196,23 @@ const Posts = ({
   }
 
   const delete_Comment = async (comment) => {
-    try {
-      const resp = await Comment.deleteComment(comment?.id);
-      if (resp?.status == 200) {
-        const po = post?.comments?.filter((c) => c?.id != comment.id);
-        post.comments = [...po];
-        const idx = posts?.findIndex((p) => p.id == post.id);
-        posts[idx] = {...post};
-        setMyCounter('delete');
-      }
-    } catch (err) {
-      console.log('err===>', err);
-    }
+    const po = post?.comments?.filter((c) => c?.id != comment.id);
+    post.comments = [...po];
+    const idx = posts?.findIndex((p) => p.id == post.id);
+    posts[idx] = {...post};
+    setMyCounter('delete');
+    // try {
+    //   const resp = await Comment.deleteComment(comment?.id);
+    //   if (resp?.status == 200) {
+    //     const po = post?.comments?.filter((c) => c?.id != comment.id);
+    //     post.comments = [...po];
+    //     const idx = posts?.findIndex((p) => p.id == post.id);
+    //     posts[idx] = {...post};
+    //     setMyCounter('delete');
+    //   }
+    // } catch (err) {
+    //   console.log('err===>', err);
+    // }
   };
 
   const editPostAction = async (e) => {

@@ -13,6 +13,7 @@ import UserAchievements from 'pages/user-home-page/user-achievement';
 import UserGroup from 'pages/user-home-page/groups';
 import UserProfile from 'pages/user-home-page/user-profile';
 import UserEvents from 'pages/user-home-page/user-events';
+import UserFriends from 'pages/user-home-page/user-friends';
 import HostAConversation from 'pages/user-home-page/host-a-conversation';
 import HomeCFGTools from 'pages/user-home-page/cfg-tools';
 import CfgToolsPage from 'pages/user-home-page/cfg-tools-page';
@@ -58,6 +59,11 @@ export default [
     exact
     path='/home/user-events'
     component={withRouter(UserEvents)}
+  />,
+  <ProtectedRoute
+    exact
+    path='/home/friends'
+    component={withRouter(UserFriends)}
   />,
   <ProtectedRoute
     exact

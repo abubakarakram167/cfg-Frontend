@@ -1,10 +1,198 @@
 .user-info-card-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   width: 100%;
 }
 
 .user-info-card-action-button {
   margin: 0px 4px;
+}
+
+.requests-section-list {
+  /* height: 1000px; */
+  /* overflow-y: auto; */
+}
+
+.user-profile-container {
+  box-shadow: '0px 1px 2px gainsboro';
+  margin: '20px 0px';
+}
+
+@media screen and (max-width: 1100px) {
+  .user-profile-container {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 970px) {
+  .user-profile-container {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .user-profile-container {
+    width: 70%;
+  }
+}
+
+.new-container .user-card-container {
+  border: 1px solid black;
+  padding-bottom: 15px;
+  margin-left: 20px;
+  border-radius: 10px;
+  border: 1px solid #d6d6d6;
+  box-shadow: 0px 4px #e5e5e5;
+  margin-top: 15px;
+}
+
+.new-container .button-container {
+  width: 90%;
+  margin: auto;
+}
+
+.new-container .confirm-buttton {
+  padding: 12px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #c70442;
+  color: white;
+  font-size: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  margin: auto;
+}
+
+.new-container .user-image {
+  border-radius: 10px;
+  height: 300px;
+}
+
+.new-container .avatar-name {
+  margin-left: 10px;
+  padding-left: 10px;
+  font-size: 1vw;
+}
+
+.new-container {
+  margin: auto;
+  width: 70%;
+}
+
+@media only screen and (max-width: 972px) {
+  .new-container {
+    width: 30%;
+  }
+}
+
+@media only screen and (max-width: 630px) {
+  .new-container {
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+  .new-container {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .new-container .user-card-container {
+    margin-top: 10px;
+  }
+}
+
+@media only screen and (max-width: 1600px) {
+  .new-container .user-image {
+    height: 220px;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .new-container .user-image {
+    height: 150px;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .new-container .user-image {
+    height: 120px;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .new-container .user-card-container {
+    width: 60%;
+    margin: auto;
+    margin-top: 15px;
+  }
+
+  .new-container .avatar-name {
+    font-size: 1.5vw;
+  }
+}
+
+.circle-outlined {
+  font-size: 170px !important;
+  color: red !important;
+}
+
+@media only screen and (max-width: 2200px) {
+  .circle-outlined {
+    font-size: 140px !important;
+  }
+}
+
+@media only screen and (max-width: 1800px) {
+  .circle-outlined {
+    font-size: 110px !important;
+  }
+}
+
+@media only screen and (max-width: 1500px) {
+  .circle-outlined {
+    font-size: 90px !important;
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  .circle-outlined {
+    font-size: 70px !important;
+    margin-top: 40px;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  .circle-outlined {
+    font-size: 50px !important;
+    margin-top: 40px;
+  }
+}
+
+@media only screen and (max-width: 970px) {
+  .circle-outlined {
+    font-size: 120px !important;
+    margin-top: 40px;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  .circle-outlined {
+    font-size: 100px !important;
+  }
+}
+
+@media only screen and (max-width: 750px) {
+  .circle-outlined {
+    font-size: 90px !important;
+  }
+}
+
+@media only screen and (max-width: 630px) {
+  .circle-outlined {
+    font-size: 90px !important;
+  }
 }
