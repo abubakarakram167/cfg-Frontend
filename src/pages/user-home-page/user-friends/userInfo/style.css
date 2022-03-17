@@ -17,7 +17,7 @@
   padding: 12px;
   padding-left: 15px;
   padding-right: 15px;
-  background-color: #419ee4;
+  background-color: #c70442;
   color: white;
   font-size: 10px;
   width: 100%;
@@ -34,7 +34,7 @@
 .avatar-name {
   margin-left: 10px;
   padding-left: 10px;
-  font-size: 1vw;
+  font-size: 0.8vw;
 }
 
 @media only screen and (max-width: 992px) {
@@ -58,6 +58,27 @@
 @media only screen and (max-width: 992px) {
   .user-image {
     height: 120px;
+  }
+}
+
+@media only screen and (max-width: 1500px) {
+  .user-friend .circle-outlined {
+    font-size: 90px !important;
+    margin-top: 40px;
+  }
+}
+
+@media only screen and (max-width: 580px) {
+  .user-friend .circle-outlined {
+    font-size: 130px !important;
+    margin: 0px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .user-friend .circle-outlined {
+    font-size: 110px !important;
+    margin: 0px;
   }
 }
 

@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import './style.css';
 import {getSignedUrl} from 'redux/actions/media';
-import NoUserProfile from 'assets/accountProfile.png';
+import NoUserProfile from 'assets/profile.png';
 import Friend from 'redux/services/friends';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
+import {AccountCircleRounded} from '@material-ui/icons';
 
 const UserInfo = ({user, addFriend, toggleReloadData}) => {
   const [avatarImage, setAvatarImage] = useState(null);
@@ -52,10 +53,16 @@ const UserInfo = ({user, addFriend, toggleReloadData}) => {
     <div className='col-12 col-sm-6 col-md-4 col-lg-3'>
       <div className='user-card-container'>
         <div className='user-image'>
-          <img
-            style={{borderRadius: 20, width: '100%', height: '100%'}}
-            src={user && user.photo_url ? avatarImage : NoUserProfile}
-          />
+          {user && user.photo_url ? (
+            <img
+              style={{borderRadius: 20, width: '100%', height: '100%'}}
+              src={user && user.photo_url && avatarImage}
+            />
+          ) : (
+            <div className='user-friend' style={{width: '50%', margin: 'auto'}}>
+              <AccountCircleRounded className='circle-outlined ' />
+            </div>
+          )}
         </div>
         <h3 className='avatar-name'>
           {user ? user.first_name + user.last_name : 'not Available'}
@@ -66,9 +73,7 @@ const UserInfo = ({user, addFriend, toggleReloadData}) => {
               AddFriend
             </button>
           ) : (
-            <button onClick={acceptFriendRequest} className='confirm-buttton'>
-              Confirm
-            </button>
+            <button className='confirm-buttton'>Confirm</button>
           )}
         </div>
       </div>

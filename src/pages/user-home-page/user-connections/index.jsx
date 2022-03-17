@@ -162,9 +162,9 @@ export default function UserConnections() {
   const right = (
     <div>
       <div className='people-button-container'>
-        <Link to='/home/friends' className='people-button'>
+        <Link to='/home/friends'>
           <GroupIcon
-            style={{color: 'green', fontSize: 12, marginRight: '5px'}}
+            style={{color: 'green', fontSize: 13, marginRight: '5px'}}
           />
           Peoples
         </Link>
