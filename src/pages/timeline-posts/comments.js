@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Avatar,
   Typography,
@@ -6,6 +6,7 @@ import {
   Box,
   makeStyles,
 } from '@material-ui/core';
+import {getSignedUrl} from 'redux/actions/media';
 import moment from 'moment';
 //
 const useStyles = makeStyles(() => {
@@ -70,21 +71,25 @@ export const TextFieldMui = ({
   );
 };
 
-const Comment = ({
-  comments,
-  hasPaddingLeft,
-  subIndex,
-  idx,
-  postId,
-  deleteComment,
-}) => {
+const Comment = ({comments, hasPaddingLeft, deleteComment}) => {
   const classes = useStyles(hasPaddingLeft);
 
   const [commentValue, setCommentValue] = useState('');
+  const [avatarImage, setAvatarImage] = useState(null);
 
   const onBlur = () => setCommentValue('');
 
   const onChange = ({target: {value = ''} = {}}) => setCommentValue(value);
+
+  useEffect(() => {
+    // console.log("user.photo_url==>",post, post["user.photo_url"])
+    getSignedUrl({fileName: comments.photo_url})
+      .then((res) => {
+        console.log('getSignedUrl===>', res, res.newUrl);
+        setAvatarImage(res.newUrl);
+      })
+      .catch((err) => console.log('Err==>', err));
+  }, []);
 
   const renderTxtOrInput = ({content}) => {
     if (commentValue) {
@@ -120,11 +125,7 @@ const Comment = ({
     <Box
       className={`${classes?.root} ${hasPaddingLeft ? classes.padLeft : ''}`}>
       <Box className={classes.wrapper}>
-        <Avatar
-          className={classes.avatar}
-          alt='Remy Sharp'
-          src='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg'
-        />
+        <Avatar className={classes.avatar} alt='Remy Sharp' src={avatarImage} />
         <Box className={classes.contentWrapper}>
           <Box className={classes.headWrapper}>
             <Typography className={classes.headContent}>

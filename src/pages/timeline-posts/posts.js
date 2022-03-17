@@ -77,7 +77,6 @@ const Posts = ({
   setShowUp,
 }) => {
   const dispatch = useDispatch();
-  const [expanded, setExpanded] = React.useState([]);
   const [commentValue, setCommentValue] = useState('');
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [loveCount, setLoveCount] = useState(post.love_count || 0);
@@ -87,20 +86,7 @@ const Posts = ({
   const [textFieldDisable, setTextFieldDisable] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
 
-  const currentUser = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.userPost.loading);
-  const [user] = useState(currentUser);
-
-  const handleExpand = (panel) => {
-    let ele = [...expanded];
-    const idx = ele?.findIndex((el) => el?.id == panel);
-    if (idx > -1) {
-      ele = ele.filter((el) => el?.id != panel);
-    } else {
-      ele.push(...expanded, {id: panel, status: true});
-    }
-    setExpanded(ele);
-  };
 
   const onBlur = () => setEditDialogOpen(false);
 
@@ -133,10 +119,9 @@ const Posts = ({
   };
 
   useEffect(() => {
-    // console.log("user.photo_url==>",post, post["user.photo_url"])
-    getSignedUrl({fileName: post['user.photo_url']})
+    getSignedUrl({fileName: post.photo_url})
       .then((res) => {
-        // console.log("getSignedUrl===>", res, res.newUrl )
+        console.log('getSignedUrl===>', res, res.newUrl);
         setAvatarImage(res.newUrl);
       })
       .catch((err) => console.log('Err==>', err));
@@ -145,8 +130,6 @@ const Posts = ({
   useEffect(() => {
     if (editDialogOpen) setCommentValue(post?.content);
   }, [editDialogOpen]);
-
-  console.log('avata==>', avatarImage);
 
   const upDatePost = (data = []) => {
     let newPosts = [];
@@ -178,10 +161,17 @@ const Posts = ({
       const fId = post?.comments[0]?.post_id;
       newPosts = posts?.map((el) => {
         if (el.id == fId) {
-          return {
-            ...el,
-            counter: isDefault == 'default' ? 1 : el?.counter + 1,
-          };
+          if (isDefault == 'delete') {
+            return {
+              ...el,
+              counter: el?.counter - 1,
+            };
+          } else {
+            return {
+              ...el,
+              counter: isDefault == 'default' ? 1 : el?.counter + 1,
+            };
+          }
         }
         return {...el};
       });
@@ -204,16 +194,35 @@ const Posts = ({
     }
     setCommentLoading(false);
   }
-
+  console.log('Outer==>', posts);
   const delete_Comment = async (comment) => {
-    // const comments = await Comment.deleteComment(comment?.id)
+    const po = posts
+      .filter((p) => p.id == post?.id)[0]
+      ?.comments?.filter((c) => c?.id != comment.id);
+    post.comments = [...po];
+    const idx = posts?.findIndex((p) => p.id == post.id);
+    posts[idx] = {...post};
+    console.log('postss==>', posts);
+    setMyCounter('delete');
+    // setPosts([...posts])
+    // try {
+    //   const resp = await Comment.deleteComment(comment?.id)
+    //   if(resp?.status == 200) {
+    //     const po =  posts.filter((p) => p.id == post?.id)[0]?.comments?.filter(c =>  c?.id != comment.id)
+    //     post.comments =  [...po]
+    //     const idx = posts?.findIndex(p => p.id == post.id )
+    //     posts[idx] = {...post}
+    //     setPosts([...posts])
+    //   }
+    // } catch(err){
+    //   console.log("err===>", err)
+    // }
     // console.log("comment===>", comments)
   };
 
   const editPostAction = async (e) => {
     if (e.key === 'Enter' && commentValue.length > 0) {
       setTextFieldDisable(true);
-      // handleExpand(post?.id);
       try {
         const data = await Post.updatePost(post.id, {content: commentValue});
         if (data.status !== 200) {
@@ -279,13 +288,13 @@ const Posts = ({
             <Avatar
               aria-label='recipe'
               className={classes.avatar}
-              src={userSpecificImage}
+              src={avatarImage}
               alt='avtar'
             />
           }
           title={
             <Typography component='strong' className={classes.title}>
-              {user?.first_name} {user?.last_name}
+              {post?.first_name} {post?.last_name}
             </Typography>
           }
           subheader={
@@ -355,7 +364,6 @@ const Posts = ({
                     onClick={() => {
                       btnShow(false);
                       getPostComments(post?.id);
-                      // handleExpand(post?.id);
                     }}
                   />
                 </IconButton>
@@ -367,10 +375,11 @@ const Posts = ({
           <Collapse in={showUp?.includes(post.id)}>
             <Box>
               {commentLoading && <div style={{padding: 24}}>...Loading</div>}
-              {!commentLoading && !post?.comments && (
+              {!commentLoading && post?.comments?.length == 0 && (
                 <div style={{padding: 24}}>There are no comments!</div>
               )}
-              {post?.comments?.length > 0 &&
+              {console.log('console===>', post?.comments, post)}
+              {post?.comments?.length !== 0 &&
                 post?.comments?.slice(0, post?.counter)?.map((el, subIndex) => {
                   return (
                     <Fragment key={subIndex}>
@@ -421,7 +430,6 @@ const Posts = ({
                   onClick={() => {
                     btnShow(true);
                     setMyCounter('default');
-                    // handleExpand(post?.id);
                   }}
                 />
               </IconButton>

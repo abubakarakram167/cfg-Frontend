@@ -55,9 +55,11 @@ export const getUserPost = (count, isNew, page) => {
     try {
       if (!isNew) dispatch(CommonLoaderForAll(true));
       const response = await Post.getUserPosts(count, page);
+      let postCount = 0;
       if (response.status === 200) {
         const data_resp = await response.data;
-        const posts = data_resp;
+        postCount = data_resp.count;
+        const posts = data_resp.rows;
         const images = [];
         posts.map(async (post) => {
           if (post && post.media !== '' && post.media) {
@@ -78,16 +80,17 @@ export const getUserPost = (count, isNew, page) => {
         if (isNew) {
           dispatch({
             type: actions.NEW_GET_USER_POSTS,
-            payload: {...transformPosts},
+            payload: {postCount, posts: {...transformPosts}},
           });
         } else {
           dispatch({
             type: actions.GET_USER_POSTS,
-            payload: {...transformPosts},
+            payload: {postCount, posts: {...transformPosts}},
           });
         }
       }
     } catch (error) {
+      console.log('YES HAS ERROR');
       if (error.response && error.response.status === 401) {
         dispatch({
           type: actions.GET_USER_POSTS,

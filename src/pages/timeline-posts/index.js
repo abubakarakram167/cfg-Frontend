@@ -6,6 +6,7 @@ import {transformImagesInContent} from 'components/ReUsable';
 import {red} from '@material-ui/core/colors';
 import Posts from './posts';
 import {getUserPost} from 'redux/actions/UserPost';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import {Loader} from '../../@crema';
 
 const useStyles = makeStyles((theme) => ({
@@ -86,81 +87,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+let loadFirst = true;
+
 const TimeLinePosts = () => {
   const classes = useStyles();
   const {
     posts: getposts,
     getPostLoader: loading,
     isEditFetch,
+    postCount = 0,
   } = useSelector((state) => state.userPost);
 
   const dispatch = useDispatch();
 
-  const [count] = useState(10);
+  const [count, setCount] = useState(3);
   const [posts, setPosts] = useState([]);
   const [showUp, setShowUp] = useState([]);
-
-  // const transformPosts = async (posts) => {
-  //   let allContent = [];
-  //   for (let post of posts) {
-  //     let con;
-  //     try {
-  //       con = await transformImagesInContent(post.content, false, post.id)
-  //     } catch (err) {
-  //       console.log("Promise===>", err)
-  //     }
-  //     allContent.push(con);
-  //   }
-
-  //   console.log("allContent==>", allContent)
-  //   let allTransformPosts;
-  //   try {
-  //     allTransformPosts = await Promise.all(allContent)
-  //   } catch (err) {
-  //     console.log("err=>", err)
-  //   }
-  //   console.log("allTransformPosts==>", allTransformPosts)
-  //   const newContentPosts = posts.map((post) => {
-  //     return {
-  //       ...post,
-  //       counter: 1,
-  //       content: allTransformPosts.filter(
-  //         (newPost) => newPost.id === post.id,
-  //       )[0].html,
-  //     };
-  //   });
-
-  //   return newContentPosts
-
-  //   // setAllTransformPosts(newContentPosts);
-  //   // setPosts([...newContentPosts])
-  // };
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     let modifiedArr = [];
     if (getposts?.length) {
-      // transformPosts(getposts)
-      //   .then(res => {
-      //     console.log("Res==>", res)
-      //   }).catch(err => console.log("err==>", err))
-      console.log('getposts==>', getposts);
       modifiedArr = getposts?.map((el) => {
         return {
           ...el,
           counter: 1,
         };
       });
-      // }
+      // debugger
       setPosts([...modifiedArr]);
+      loadFirst = false;
     }
   }, [getposts, isEditFetch]);
 
   useEffect(() => {
-    dispatch(getUserPost(count, null, 1));
-  }, []);
+    dispatch(getUserPost(count, null, page));
+  }, [page]);
 
   const returnPosts = () => {
-    if (loading) {
+    if (loadFirst) {
       return <Loader />;
     }
     return posts.map((post, index) => {
@@ -175,6 +140,7 @@ const TimeLinePosts = () => {
             getPostCount={count}
             showUp={showUp}
             setShowUp={setShowUp}
+            page={page}
           />
         </Fragment>
       );
@@ -188,6 +154,19 @@ const TimeLinePosts = () => {
           Timeline Posts
         </Typography>
         {returnPosts()}
+        {(posts?.length != postCount || !loadFirst) && (
+          <Typography
+            style={{
+              padding: 24,
+              color: '#0A8FDC',
+              cursor: 'pointer',
+              width: 145,
+              float: 'right',
+            }}
+            onClick={() => setPage((page) => page + 1)}>
+            {loading ? 'Loading...' : 'Load More...'}
+          </Typography>
+        )}
       </Box>
     </CommonComponent>
   );
