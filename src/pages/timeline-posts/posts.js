@@ -194,30 +194,20 @@ const Posts = ({
     }
     setCommentLoading(false);
   }
-  console.log('Outer==>', posts);
+
   const delete_Comment = async (comment) => {
-    const po = posts
-      .filter((p) => p.id == post?.id)[0]
-      ?.comments?.filter((c) => c?.id != comment.id);
-    post.comments = [...po];
-    const idx = posts?.findIndex((p) => p.id == post.id);
-    posts[idx] = {...post};
-    console.log('postss==>', posts);
-    setMyCounter('delete');
-    // setPosts([...posts])
-    // try {
-    //   const resp = await Comment.deleteComment(comment?.id)
-    //   if(resp?.status == 200) {
-    //     const po =  posts.filter((p) => p.id == post?.id)[0]?.comments?.filter(c =>  c?.id != comment.id)
-    //     post.comments =  [...po]
-    //     const idx = posts?.findIndex(p => p.id == post.id )
-    //     posts[idx] = {...post}
-    //     setPosts([...posts])
-    //   }
-    // } catch(err){
-    //   console.log("err===>", err)
-    // }
-    // console.log("comment===>", comments)
+    try {
+      const resp = await Comment.deleteComment(comment?.id);
+      if (resp?.status == 200) {
+        const po = post?.comments?.filter((c) => c?.id != comment.id);
+        post.comments = [...po];
+        const idx = posts?.findIndex((p) => p.id == post.id);
+        posts[idx] = {...post};
+        setMyCounter('delete');
+      }
+    } catch (err) {
+      console.log('err===>', err);
+    }
   };
 
   const editPostAction = async (e) => {
