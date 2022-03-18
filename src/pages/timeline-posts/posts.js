@@ -85,6 +85,7 @@ const Posts = ({
   const [deleted, setDelete] = useState(null);
   const [textFieldDisable, setTextFieldDisable] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
+  const [messageCount, setMessageCount] = useState(0);
 
   const loading = useSelector((state) => state.userPost.loading);
 
@@ -119,6 +120,7 @@ const Posts = ({
   };
 
   useEffect(() => {
+    setMessageCount(post?.comment_count);
     getSignedUrl({fileName: post.photo_url})
       .then((res) => {
         console.log('getSignedUrl===>', res, res.newUrl);
@@ -196,23 +198,18 @@ const Posts = ({
   }
 
   const delete_Comment = async (comment) => {
-    const po = post?.comments?.filter((c) => c?.id != comment.id);
-    post.comments = [...po];
-    const idx = posts?.findIndex((p) => p.id == post.id);
-    posts[idx] = {...post};
-    setMyCounter('delete');
-    // try {
-    //   const resp = await Comment.deleteComment(comment?.id);
-    //   if (resp?.status == 200) {
-    //     const po = post?.comments?.filter((c) => c?.id != comment.id);
-    //     post.comments = [...po];
-    //     const idx = posts?.findIndex((p) => p.id == post.id);
-    //     posts[idx] = {...post};
-    //     setMyCounter('delete');
-    //   }
-    // } catch (err) {
-    //   console.log('err===>', err);
-    // }
+    try {
+      const resp = await Comment.deleteComment(comment?.id);
+      if (resp?.status == 200) {
+        const po = post?.comments?.filter((c) => c?.id != comment.id);
+        post.comments = [...po];
+        const idx = posts?.findIndex((p) => p.id == post.id);
+        posts[idx] = {...post};
+        setMessageCount((prevState) => prevState - 1);
+      }
+    } catch (err) {
+      console.log('err===>', err);
+    }
   };
 
   const editPostAction = async (e) => {
@@ -325,7 +322,7 @@ const Posts = ({
                   className={classes.fontPointer}
                   style={{color: '#2D83D5'}}
                 />
-                <Box className={classes.iconTxt}>{post?.comment_count}</Box>
+                <Box className={classes.iconTxt}>{messageCount}</Box>
               </IconButton>
               <IconButton
                 className={classes.btnContainer}
