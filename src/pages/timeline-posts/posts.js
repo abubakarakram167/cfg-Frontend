@@ -86,6 +86,7 @@ const Posts = ({
   const [textFieldDisable, setTextFieldDisable] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
   const [messageCount, setMessageCount] = useState(0);
+  const [lMore, setLmore] = useState(false);
 
   const loading = useSelector((state) => state.userPost.loading);
 
@@ -151,6 +152,7 @@ const Posts = ({
   };
 
   const btnShow = (remove) => {
+    setLmore(false);
     let arr = [...showUp];
     if (remove) arr = arr.filter((a) => a != post.id);
     else arr.push(post.id);
@@ -163,17 +165,10 @@ const Posts = ({
       const fId = post?.comments[0]?.post_id;
       newPosts = posts?.map((el) => {
         if (el.id == fId) {
-          if (isDefault == 'delete') {
-            return {
-              ...el,
-              counter: el?.counter - 1,
-            };
-          } else {
-            return {
-              ...el,
-              counter: isDefault == 'default' ? 1 : el?.counter + 1,
-            };
-          }
+          return {
+            ...el,
+            counter: isDefault == 'default' ? 1 : el?.counter + 1,
+          };
         }
         return {...el};
       });
@@ -271,6 +266,10 @@ const Posts = ({
     setLoveLoading(false);
     setDelete(null);
   };
+
+  useEffect(() => {
+    if (post?.comments?.length == post?.counter) setLmore(true);
+  }, [post]);
 
   return (
     <Fragment key={post?.id}>
@@ -370,7 +369,6 @@ const Posts = ({
               {!commentLoading && post?.comments?.length == 0 && (
                 <div style={{padding: 24}}>There are no comments!</div>
               )}
-              {console.log('console===>', post?.comments, post)}
               {post?.comments?.length !== 0 &&
                 post?.comments?.slice(0, post?.counter)?.map((el, subIndex) => {
                   return (
@@ -401,6 +399,7 @@ const Posts = ({
                   );
                 })}
               {!commentLoading &&
+                !lMore &&
                 post?.comments?.length > 0 &&
                 !(post?.comments?.length == post?.counter) && (
                   <Typography
