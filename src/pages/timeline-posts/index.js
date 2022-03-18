@@ -10,6 +10,7 @@ import {Loader} from '../../@crema';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    position: 'relative',
     height: 'inherit',
     padding: '16px 48px',
     '@media (max-width: 520px)': {
@@ -102,7 +103,6 @@ const TimeLinePosts = () => {
   const [count, setCount] = useState(3);
   const [posts, setPosts] = useState([]);
   const [showUp, setShowUp] = useState([]);
-  const [page, setPage] = useState(1);
 
   useEffect(() => {
     let modifiedArr = [];
@@ -113,15 +113,14 @@ const TimeLinePosts = () => {
           counter: 1,
         };
       });
-      // debugger
       setPosts([...modifiedArr]);
       loadFirst = false;
     }
   }, [getposts, isEditFetch]);
 
   useEffect(() => {
-    dispatch(getUserPost(count, null, page));
-  }, [page]);
+    dispatch(getUserPost(count, null));
+  }, [count]);
 
   const returnPosts = () => {
     if (loadFirst) {
@@ -139,7 +138,6 @@ const TimeLinePosts = () => {
             getPostCount={count}
             showUp={showUp}
             setShowUp={setShowUp}
-            page={page}
           />
         </Fragment>
       );
@@ -147,25 +145,19 @@ const TimeLinePosts = () => {
   };
 
   return (
-    <CommonComponent left='noMenu' right='noMenu'>
+    <CommonComponent
+      scroll={true}
+      left='noMenu'
+      right='noMenu'
+      scrollAction={() => {
+        setCount(count + 3);
+      }}>
       <Box className={classes.root}>
         <Typography class={classes.heading} variant='h2'>
           Timeline Posts
         </Typography>
         {returnPosts()}
-        {(posts?.length != postCount || !loadFirst) && (
-          <Typography
-            style={{
-              padding: 24,
-              color: '#0A8FDC',
-              cursor: 'pointer',
-              width: 145,
-              float: 'right',
-            }}
-            onClick={() => setPage((page) => page + 1)}>
-            {loading ? 'Loading...' : 'Load More...'}
-          </Typography>
-        )}
+        <Box style={{height: 16}}></Box>
       </Box>
     </CommonComponent>
   );

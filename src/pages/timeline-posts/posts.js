@@ -85,6 +85,8 @@ const Posts = ({
   const [deleted, setDelete] = useState(null);
   const [textFieldDisable, setTextFieldDisable] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
+  const [messageCount, setMessageCount] = useState(0);
+  const [lMore, setLmore] = useState(false);
 
   const loading = useSelector((state) => state.userPost.loading);
 
@@ -119,6 +121,7 @@ const Posts = ({
   };
 
   useEffect(() => {
+    setMessageCount(post?.comment_count);
     getSignedUrl({fileName: post.photo_url})
       .then((res) => {
         console.log('getSignedUrl===>', res, res.newUrl);
@@ -149,6 +152,7 @@ const Posts = ({
   };
 
   const btnShow = (remove) => {
+    setLmore(false);
     let arr = [...showUp];
     if (remove) arr = arr.filter((a) => a != post.id);
     else arr.push(post.id);
@@ -161,17 +165,10 @@ const Posts = ({
       const fId = post?.comments[0]?.post_id;
       newPosts = posts?.map((el) => {
         if (el.id == fId) {
-          if (isDefault == 'delete') {
-            return {
-              ...el,
-              counter: el?.counter - 1,
-            };
-          } else {
-            return {
-              ...el,
-              counter: isDefault == 'default' ? 1 : el?.counter + 1,
-            };
-          }
+          return {
+            ...el,
+            counter: isDefault == 'default' ? 1 : el?.counter + 1,
+          };
         }
         return {...el};
       });
@@ -196,23 +193,18 @@ const Posts = ({
   }
 
   const delete_Comment = async (comment) => {
-    const po = post?.comments?.filter((c) => c?.id != comment.id);
-    post.comments = [...po];
-    const idx = posts?.findIndex((p) => p.id == post.id);
-    posts[idx] = {...post};
-    setMyCounter('delete');
-    // try {
-    //   const resp = await Comment.deleteComment(comment?.id);
-    //   if (resp?.status == 200) {
-    //     const po = post?.comments?.filter((c) => c?.id != comment.id);
-    //     post.comments = [...po];
-    //     const idx = posts?.findIndex((p) => p.id == post.id);
-    //     posts[idx] = {...post};
-    //     setMyCounter('delete');
-    //   }
-    // } catch (err) {
-    //   console.log('err===>', err);
-    // }
+    try {
+      const resp = await Comment.deleteComment(comment?.id);
+      if (resp?.status == 200) {
+        const po = post?.comments?.filter((c) => c?.id != comment.id);
+        post.comments = [...po];
+        const idx = posts?.findIndex((p) => p.id == post.id);
+        posts[idx] = {...post};
+        setMessageCount((prevState) => prevState - 1);
+      }
+    } catch (err) {
+      console.log('err===>', err);
+    }
   };
 
   const editPostAction = async (e) => {
@@ -275,6 +267,10 @@ const Posts = ({
     setDelete(null);
   };
 
+  useEffect(() => {
+    if (post?.comments?.length == post?.counter) setLmore(true);
+  }, [post]);
+
   return (
     <Fragment key={post?.id}>
       <Card className={classes.card}>
@@ -325,7 +321,7 @@ const Posts = ({
                   className={classes.fontPointer}
                   style={{color: '#2D83D5'}}
                 />
-                <Box className={classes.iconTxt}>{post?.comment_count}</Box>
+                <Box className={classes.iconTxt}>{messageCount}</Box>
               </IconButton>
               <IconButton
                 className={classes.btnContainer}
@@ -373,7 +369,6 @@ const Posts = ({
               {!commentLoading && post?.comments?.length == 0 && (
                 <div style={{padding: 24}}>There are no comments!</div>
               )}
-              {console.log('console===>', post?.comments, post)}
               {post?.comments?.length !== 0 &&
                 post?.comments?.slice(0, post?.counter)?.map((el, subIndex) => {
                   return (
@@ -404,6 +399,7 @@ const Posts = ({
                   );
                 })}
               {!commentLoading &&
+                !lMore &&
                 post?.comments?.length > 0 &&
                 !(post?.comments?.length == post?.counter) && (
                   <Typography
