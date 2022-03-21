@@ -127,10 +127,12 @@ export default function RecipeReviewCard({post, getUserPost}) {
   };
 
   async function getPostComments() {
+    console.log('getting post comments.....');
     const data = await Comments.getPostComments(post.id);
+    console.log('on getting post comments', data);
     if (data) {
-      if (data.data) {
-        setComments(data.data || []);
+      if (data.data && data.data.comments) {
+        setComments(data.data.comments || []);
       }
     }
   }
@@ -191,6 +193,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
   };
   const addComment = async (e) => {
     if (e.key === 'Enter' && comment.length > 0) {
+      console.log('asdadsadadasd');
       await Comments.addComment({
         post_id: post.id,
         content: comment,

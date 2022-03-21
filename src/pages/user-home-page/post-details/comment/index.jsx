@@ -56,11 +56,8 @@ export default function Comment({
         setUser(data.data);
         if (data.data) {
           getSignedUrl({fileName: data.data.photo_url}).then((res) => {
-            console.log('..............................');
-            console.log('after response', res);
             setUserAvatarImage(res.newUrl);
           });
-          console.log('the data.data', data.data);
         }
       }
     }
