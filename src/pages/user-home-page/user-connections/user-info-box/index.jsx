@@ -20,7 +20,7 @@ import {fromPairs} from 'lodash';
 import Friend from 'redux/services/friends';
 import {baseUrl} from 'utils/axios';
 import {getSignedUrl} from '../../../../redux/actions/media';
-import NoUserProfile from 'assets/accountProfile.png';
+import NoUserProfile from 'assets/newNoProfile.png';
 
 const useStyles = makeStyles({
   root: {

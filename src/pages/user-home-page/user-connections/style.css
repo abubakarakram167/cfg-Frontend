@@ -57,6 +57,11 @@
   overflow-y: auto;
 }
 
+.left-side-container-no-height {
+  height: 0px;
+  overflow-y: auto;
+}
+
 .left-side-container::-webkit-scrollbar {
   display: none;
 }
