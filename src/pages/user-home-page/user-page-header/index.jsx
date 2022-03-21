@@ -134,8 +134,6 @@ export default function AdminHeader() {
     setResultVisibility(true);
   };
 
-  console.log('the userrr', user);
-
   // const userData = JSON.parse(localStorage.getItem('current-user'));
   // useEffect(() => {
   //   dispatch(setCurrentUser(userData));
@@ -143,7 +141,6 @@ export default function AdminHeader() {
 
   const returnUrl = () => {
     const user = JSON.parse(localStorage.getItem('current-user'));
-    console.log('the usertriple', user);
     if (user?.default_home_page_view == 'icon') {
       return '/icon-dashboard';
     } else {

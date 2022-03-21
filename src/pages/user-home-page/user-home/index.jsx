@@ -448,7 +448,11 @@ export default function UserHomePage() {
           </Link>
         </div>
       )}
-      <CreatePost />
+      <CreatePost
+        getUserPost={() => {
+          dispatch(getUserPost(3, true));
+        }}
+      />
       {transform.map((element, index) => {
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>

@@ -4,30 +4,63 @@ import jsCookie from 'js-cookie';
 import {getSignedUrl} from './media';
 import $ from 'jquery';
 
+// export const createUserPost = (params) => {
+//   return async function (dispatch) {
+//     try {
+//       if (params.media && params.media !== '')
+//         params.media = getRestoredImages(params.media);
+//       const response = await Post.addUserPost(params);
+//       if (response.status === 200) {
+//         const data_resp = await response.data;
+//         jsCookie.set('login', 'yes');
+
+//         dispatch({
+//           type: actions.CREATE_USER_POST,
+//           payload: {...data_resp, error: null},
+//         });
+//       }
+//     } catch (error) {
+//       console.log('the error', error.response);
+//       if (error.response && error.response.status === 401) {
+//         dispatch({
+//           type: actions.CREATE_USER_POST,
+//           payload: {error: 'A problem occured while creating the post'},
+//         });
+//       }
+//     }
+//   };
+// };
+
 export const createUserPost = (params) => {
-  return async function (dispatch) {
-    try {
+  return (dispatch) => {
+    return new Promise((res, rej) => {
       if (params.media && params.media !== '')
         params.media = getRestoredImages(params.media);
-      const response = await Post.addUserPost(params);
-      if (response.status === 200) {
-        const data_resp = await response.data;
-        jsCookie.set('login', 'yes');
+      Post.addUserPost(params)
+        .then((response) => {
+          console.log('after adding post', response);
+          if (response.status === 200) {
+            const data_resp = response.data;
+            jsCookie.set('login', 'yes');
 
-        dispatch({
-          type: actions.CREATE_USER_POST,
-          payload: {...data_resp, error: null},
+            dispatch({
+              type: actions.CREATE_USER_POST,
+              payload: {...data_resp, error: null},
+            });
+            res(response);
+          }
+        })
+        .catch((error) => {
+          console.log('the error in creating Post', error.response);
+          if (error.response && error.response.status === 401) {
+            dispatch({
+              type: actions.CREATE_USER_POST,
+              payload: {error: 'A problem occured while creating the post'},
+            });
+          }
+          rej(error);
         });
-      }
-    } catch (error) {
-      console.log('the error', error.response);
-      if (error.response && error.response.status === 401) {
-        dispatch({
-          type: actions.CREATE_USER_POST,
-          payload: {error: 'A problem occured while creating the post'},
-        });
-      }
-    }
+    });
   };
 };
 

@@ -170,18 +170,16 @@ export default function UserInfo({
 
   return (
     <div className='new-container'>
-      <div className='user-card-container'>
+      <div
+        onClick={() => {
+          setSelected({userData, avatarImage});
+        }}
+        className='user-card-container'>
         <div className='user-image'>
-          {user && user.photo_url ? (
-            <img
-              style={{borderRadius: 20, width: '100%', height: '100%'}}
-              src={user && user.photo_url && avatarImage}
-            />
-          ) : (
-            <div style={{width: '50%', margin: 'auto'}}>
-              <AccountCircleRounded className='circle-outlined' />
-            </div>
-          )}
+          <img
+            style={{borderRadius: 20, width: '100%', height: '100%'}}
+            src={user && user.photo_url ? avatarImage : NoUserProfile}
+          />
         </div>
         <h3 className='avatar-name'>
           {user ? user.first_name + user.last_name : 'not Available'}
