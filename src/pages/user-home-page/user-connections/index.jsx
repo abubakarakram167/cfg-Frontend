@@ -103,7 +103,7 @@ export default function UserConnections() {
   }
 
   const left = (
-    <div className='left-side-container'>
+    <div>
       <div className='requests-section'>
         <div style={{display: 'flex', alignItems: 'center'}}>
           <GroupAdd style={{color: 'green', marginRight: '5px'}} />
@@ -162,11 +162,11 @@ export default function UserConnections() {
   const right = (
     <div>
       <div className='people-button-container'>
-        <Link style={{fontSize: 18}} to='/home/friends'>
+        <Link style={{fontSize: 17, color: 'black'}} to='/home/friends'>
           <GroupIcon
             style={{color: 'green', fontSize: 20, marginRight: '5px'}}
           />
-          Peoples
+          <strong style={{fontSize: 15}}>Peoples</strong>
         </Link>
       </div>
       <div className='requests-section'>

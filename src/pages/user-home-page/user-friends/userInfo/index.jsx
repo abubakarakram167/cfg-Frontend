@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './style.css';
 import {getSignedUrl} from 'redux/actions/media';
-import NoUserProfile from 'assets/accountProfile.png';
+import NoUserProfile from 'assets/newNoProfile.png';
 import Friend from 'redux/services/friends';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
