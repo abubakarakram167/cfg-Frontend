@@ -382,7 +382,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
           title={`${user.first_name} ${user.last_name} ${
             post.assigned_group ? '> ' + post.assigned_group : ''
           }`}
-          subheader={formatDatePost(Date.parse(post.createdAt))}
+          subheader={formatDatePost(Date.parse(post.created_at))}
         />
         {post.media && mediaJSX()}
         <CardContent>
@@ -431,7 +431,6 @@ export default function RecipeReviewCard({post, getUserPost}) {
         </CardActions>
         <Collapse in={expanded} timeout='auto' unmountOnExit>
           <CardContent>
-            {console.log('comments==>', comments)}
             {comments?.length &&
               comments.map((comment, index) => {
                 const addReplyDataAction = async (replyText) => {

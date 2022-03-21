@@ -45,6 +45,7 @@
   border: 1px solid #d6d6d6;
   box-shadow: 0px 4px #e5e5e5;
   margin-top: 15px;
+  cursor: pointer;
 }
 
 .new-container .button-container {
@@ -56,7 +57,7 @@
   padding: 12px;
   padding-left: 15px;
   padding-right: 15px;
-  background-color: #c70442;
+  background-color: #ff0000;
   color: white;
   font-size: 10px;
   width: 100%;
@@ -132,6 +133,22 @@
 
   .new-container .avatar-name {
     font-size: 1.5vw;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .new-container .user-card-container {
+    width: 80%;
+    margin: auto;
+    margin-top: 15px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .new-container .user-card-container {
+    width: 90%;
+    margin: auto;
+    margin-top: 15px;
   }
 }
 
