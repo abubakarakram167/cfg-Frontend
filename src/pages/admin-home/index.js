@@ -18,6 +18,8 @@ import {
   PermMedia,
   Message,
 } from '@material-ui/icons';
+import UserModerationIcon from 'assets/updatedCrown.png';
+
 import {Link} from 'react-router-dom';
 
 export default function Index() {
@@ -109,9 +111,10 @@ export default function Index() {
               <div className='card-text'>Mini CFG</div>
             </AppCard>
           </Link>
-          <Link to='/admin/rewards' className='card-container'>
+          <Link to='admin/timeline-posts' className='card-container'>
             <AppCard backgroundColor={'#01097A'}>
-              <Redeem style={{fill: '#ffffff', fontSize: 70}} />
+              {/* <Redeem style={{fill: '#ffffff', fontSize: 70}} /> */}
+              <img style={{height: 70}} src={UserModerationIcon} />
               <div className='card-text'>Rewards</div>
             </AppCard>
           </Link>
