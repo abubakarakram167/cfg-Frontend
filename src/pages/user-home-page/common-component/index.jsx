@@ -24,7 +24,8 @@ export default function CommonComponent(props) {
   };
   return (
     <div>
-      <UserHomeHeader />
+      {!props.showHeader && <UserHomeHeader />}
+
       <div className='user-home-page-content'>
         {props.left != 'noMenu' && (
           <div className='user-home-left'>{props.left}</div>
