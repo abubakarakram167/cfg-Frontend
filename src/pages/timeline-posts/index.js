@@ -7,6 +7,7 @@ import {red} from '@material-ui/core/colors';
 import Posts from './posts';
 import {getUserPost} from 'redux/actions/UserPost';
 import {Loader} from '../../@crema';
+import AdminHeader from 'pages/admin-header';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -190,21 +191,27 @@ const TimeLinePosts = () => {
   };
 
   return (
-    <CommonComponent
-      scroll={true}
-      left='noMenu'
-      right='noMenu'
-      scrollAction={() => {
-        setCount(count + 3);
-      }}>
-      <Box className={classes.root}>
-        <Typography class={classes.heading} variant='h2'>
-          User Moderation
-        </Typography>
-        {returnPosts()}
-        <Box style={{height: 16}}></Box>
-      </Box>
-    </CommonComponent>
+    <div>
+      <div className='toolbar-container'>
+        <AdminHeader />
+      </div>
+      <CommonComponent
+        showHeader={true}
+        scroll={true}
+        left='noMenu'
+        right='noMenu'
+        scrollAction={() => {
+          setCount(count + 3);
+        }}>
+        <Box className={classes.root}>
+          <Typography class={classes.heading} variant='h2'>
+            User Moderation
+          </Typography>
+          {returnPosts()}
+          <Box style={{height: 16}}></Box>
+        </Box>
+      </CommonComponent>
+    </div>
   );
 };
 
