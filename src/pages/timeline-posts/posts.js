@@ -27,6 +27,7 @@ import {transformImagesInContent} from 'components/ReUsable';
 import Comments from './comments';
 import {DELETE_USER_POST} from '../../redux/actions/action.types';
 // import Confirmation from './deleteConfirmation'
+import SunEditor from '../../components/sunEditor';
 
 import {Loader} from '../../@crema';
 import Comment from 'redux/services/comment';
@@ -35,6 +36,7 @@ import Post from 'redux/services/post';
 import {getSignedUrl} from 'redux/actions/media';
 import moment from 'moment';
 import {TextFieldMui} from './comments';
+import './post.css';
 
 const Confirmation = ({open, setDelete, submit, loading}) => {
   const handleClose = () => setDelete(null);
@@ -75,6 +77,7 @@ const Posts = ({
   setPosts,
   showUp,
   setShowUp,
+  getUserPosts,
 }) => {
   const dispatch = useDispatch();
   const [commentValue, setCommentValue] = useState('');
@@ -87,11 +90,13 @@ const Posts = ({
   const [avatarImage, setAvatarImage] = useState(null);
   const [messageCount, setMessageCount] = useState(0);
   const [lMore, setLmore] = useState(false);
+  const [showJournalModal, setShowJournalModal] = useState(false);
+  const [journalId, setJournalId] = useState(null);
+  const [subject, setSubject] = useState(null);
+  const [updatedContent, setUpdatedContent] = useState(null);
 
   const loading = useSelector((state) => state.userPost.loading);
-
   const onBlur = () => setEditDialogOpen(false);
-
   const onChange = ({target: {value = ''} = {}}) => setCommentValue(value);
 
   const renderTxtOrInput = (post) => {
@@ -207,20 +212,21 @@ const Posts = ({
     }
   };
 
-  const editPostAction = async (e) => {
-    if (e.key === 'Enter' && commentValue.length > 0) {
-      setTextFieldDisable(true);
-      try {
-        const data = await Post.updatePost(post.id, {content: commentValue});
-        if (data.status !== 200) {
-          setCommentValue(post.content);
-        }
-        btnShow(true);
-        dispatch(getUserPost(getPostCount, 'isNewUser', 1));
-        dispatch(setLoader());
-      } catch (err) {
-        console.log(err);
+  const editPostAction = async () => {
+    try {
+      const data = await Post.updatePost(post.id, {content: updatedContent});
+      console.log('after edit post', data);
+      // debugger
+      setEditDialogOpen(false);
+      if (data.status !== 200) {
+        setCommentValue(post.content);
       }
+      btnShow(true);
+      // dispatch(getUserPost(getPostCount, 'isNewUser', 1));
+      getUserPosts(updatedContent, post);
+      dispatch(setLoader());
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -267,9 +273,33 @@ const Posts = ({
     setDelete(null);
   };
 
+  const getChangeVideoThumbnail = (editText) => {
+    var el = document.createElement('html');
+    el.innerHTML = editText;
+    var iframe = el.getElementsByTagName('iframe');
+    var figure = el.getElementsByTagName('figure');
+
+    if (figure.length) {
+      figure[0].setAttribute(
+        'style',
+        'height: 56.25%; width: 100%; padding-bottom: 0px; margin: 0px;',
+      );
+    }
+
+    if (iframe.length) {
+      iframe[0].setAttribute('style', 'height: 400px; width: 100%;');
+    }
+
+    // console.log("the selected db..", selectedB)
+
+    return el.innerHTML;
+  };
+
   useEffect(() => {
     if (post?.comments?.length == post?.counter) setLmore(true);
   }, [post]);
+
+  console.log('the posttt', post);
 
   return (
     <Fragment key={post?.id}>
@@ -298,10 +328,37 @@ const Posts = ({
           }
         />
         <CardContent>
-          {renderTxtOrInput(post)}
+          {/* {renderTxtOrInput(post)} */}
+          {editDialogOpen ? (
+            <SunEditor
+              onClickSmartClick={(id) => {
+                setJournalId(id);
+                setShowJournalModal(true);
+              }}
+              onContentSave={(content) => {
+                console.log('on content');
+                setUpdatedContent(content);
+                // setEditText(content);
+                // editPostAction()
+              }}
+              content={post.content}
+              onContentChanged={() => {}}
+              onGetSubject={(subject) => setSubject(subject)}
+              journalId={journalId}
+              showToolbar={true}
+              modalType='external'
+            />
+          ) : (
+            <div
+              dangerouslySetInnerHTML={{
+                __html: getChangeVideoThumbnail(post.content),
+              }}
+            />
+          )}
+
           <Box className={classes.iconContainer}>
             <Box>
-              <IconButton
+              {/* <IconButton
                 disabled={loveLoading}
                 className={classes.btnContainer}
                 aria-label='add to favorites'
@@ -312,7 +369,7 @@ const Posts = ({
                   style={{color: 'red'}}
                 />
                 <Box className={classes.iconTxt}>{loveCount}</Box>
-              </IconButton>
+              </IconButton> */}
               <IconButton
                 className={classes.btnContainer}
                 aria-label='add to favorites'
@@ -343,6 +400,13 @@ const Posts = ({
                   style={{color: '#B42826'}}
                 />
               </IconButton>
+              {editDialogOpen && (
+                <button
+                  className='update-post'
+                  onClick={() => editPostAction()}>
+                  Update
+                </button>
+              )}
             </Box>
             <Box>
               {!showUp?.includes(post.id) && (
