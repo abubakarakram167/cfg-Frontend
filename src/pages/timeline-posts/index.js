@@ -103,6 +103,7 @@ const TimeLinePosts = () => {
   const [count, setCount] = useState(3);
   const [posts, setPosts] = useState([]);
   const [showUp, setShowUp] = useState([]);
+  const [allTransformPosts, setAllTransformPosts] = useState(null);
 
   useEffect(() => {
     let modifiedArr = [];
@@ -113,7 +114,8 @@ const TimeLinePosts = () => {
           counter: 1,
         };
       });
-      setPosts([...modifiedArr]);
+      transformPosts([...modifiedArr]);
+      // setPosts([...modifiedArr]);
       loadFirst = false;
     }
   }, [getposts, isEditFetch]);
@@ -121,6 +123,29 @@ const TimeLinePosts = () => {
   useEffect(() => {
     dispatch(getUserPost(count, null));
   }, [count]);
+
+  // useEffect(() => {
+  //   transformPosts(posts);
+  // }, [posts]);
+
+  const transformPosts = async (posts) => {
+    let allContent = [];
+    for (let post of posts) {
+      allContent.push(transformImagesInContent(post.content, false, post.id));
+    }
+
+    const allTransformPosts = await Promise.all(allContent);
+    const newContentPosts = posts.map((post) => {
+      return {
+        ...post,
+        content: allTransformPosts.filter(
+          (newPost) => newPost.id === post.id,
+        )[0].html,
+      };
+    });
+
+    setPosts(newContentPosts);
+  };
 
   const returnPosts = () => {
     if (loadFirst) {
