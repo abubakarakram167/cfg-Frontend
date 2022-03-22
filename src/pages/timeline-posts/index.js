@@ -104,6 +104,7 @@ const TimeLinePosts = () => {
   const [posts, setPosts] = useState([]);
   const [showUp, setShowUp] = useState([]);
   const [allTransformPosts, setAllTransformPosts] = useState(null);
+  const [getPosts, setGetPosts] = useState(false);
 
   useEffect(() => {
     let modifiedArr = [];
@@ -120,8 +121,12 @@ const TimeLinePosts = () => {
     }
   }, [getposts, isEditFetch]);
 
-  useEffect(() => {
+  const getUserPostsAll = (count) => {
     dispatch(getUserPost(count, null));
+  };
+
+  useEffect(() => {
+    getUserPostsAll(count);
   }, [count]);
 
   // useEffect(() => {
@@ -163,6 +168,21 @@ const TimeLinePosts = () => {
             getPostCount={count}
             showUp={showUp}
             setShowUp={setShowUp}
+            getUserPosts={(content, getPost) => {
+              console.log('on getting post', post);
+              console.log('all posts', posts);
+              const filterPosts = posts.map((post) => {
+                if (post.id === getPost.id) {
+                  return {
+                    ...post,
+                    content: content,
+                  };
+                } else return post;
+              });
+
+              console.log('filter Posts', filterPosts);
+              setPosts(filterPosts);
+            }}
           />
         </Fragment>
       );
@@ -179,7 +199,7 @@ const TimeLinePosts = () => {
       }}>
       <Box className={classes.root}>
         <Typography class={classes.heading} variant='h2'>
-          Timeline Posts
+          User Moderation
         </Typography>
         {returnPosts()}
         <Box style={{height: 16}}></Box>

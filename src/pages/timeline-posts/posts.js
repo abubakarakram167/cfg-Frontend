@@ -36,6 +36,7 @@ import Post from 'redux/services/post';
 import {getSignedUrl} from 'redux/actions/media';
 import moment from 'moment';
 import {TextFieldMui} from './comments';
+import './post.css';
 
 const Confirmation = ({open, setDelete, submit, loading}) => {
   const handleClose = () => setDelete(null);
@@ -76,6 +77,7 @@ const Posts = ({
   setPosts,
   showUp,
   setShowUp,
+  getUserPosts,
 }) => {
   const dispatch = useDispatch();
   const [commentValue, setCommentValue] = useState('');
@@ -220,7 +222,8 @@ const Posts = ({
         setCommentValue(post.content);
       }
       btnShow(true);
-      dispatch(getUserPost(getPostCount, 'isNewUser', 1));
+      // dispatch(getUserPost(getPostCount, 'isNewUser', 1));
+      getUserPosts(updatedContent, post);
       dispatch(setLoader());
     } catch (err) {
       console.log(err);
@@ -397,7 +400,13 @@ const Posts = ({
                   style={{color: '#B42826'}}
                 />
               </IconButton>
-              <button onClick={() => editPostAction()}>Update Post</button>
+              {editDialogOpen && (
+                <button
+                  className='update-post'
+                  onClick={() => editPostAction()}>
+                  Update
+                </button>
+              )}
             </Box>
             <Box>
               {!showUp?.includes(post.id) && (
