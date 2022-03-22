@@ -115,7 +115,7 @@ export default function Index() {
             <AppCard backgroundColor={'#01097A'}>
               {/* <Redeem style={{fill: '#ffffff', fontSize: 70}} /> */}
               <img style={{height: 70}} src={UserModerationIcon} />
-              <div className='card-text'>Rewards</div>
+              <div className='card-text'>User Moderation</div>
             </AppCard>
           </Link>
         </div>

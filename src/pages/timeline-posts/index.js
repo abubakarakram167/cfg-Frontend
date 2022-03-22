@@ -154,7 +154,7 @@ const TimeLinePosts = () => {
       }}>
       <Box className={classes.root}>
         <Typography class={classes.heading} variant='h2'>
-          Timeline Posts
+          User Moderation
         </Typography>
         {returnPosts()}
         <Box style={{height: 16}}></Box>
