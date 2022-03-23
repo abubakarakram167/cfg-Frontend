@@ -430,10 +430,10 @@ const Posts = ({
           <Collapse in={showUp?.includes(post.id)}>
             <Box>
               {commentLoading && <div style={{padding: 24}}>...Loading</div>}
-              {!commentLoading && post?.comments?.length == 0 && (
+              {/* {!commentLoading && post?.comments?.length == 0 && (
                 <div style={{padding: 24}}>There are no comments!</div>
-              )}
-              {post?.comments?.length !== 0 &&
+              )} */}
+              {post?.comments?.length &&
                 post?.comments?.slice(0, post?.counter)?.map((el, subIndex) => {
                   return (
                     <Fragment key={subIndex}>
@@ -444,7 +444,7 @@ const Posts = ({
                         subIndex={subIndex}
                         comments={el}
                       />
-                      {el?.replies?.length > 0 &&
+                      {el?.replies?.length &&
                         el?.replies?.map((item, idx) => {
                           return (
                             <Comments
@@ -464,7 +464,7 @@ const Posts = ({
                 })}
               {!commentLoading &&
                 !lMore &&
-                post?.comments?.length > 0 &&
+                post?.comments?.length &&
                 !(post?.comments?.length == post?.counter) && (
                   <Typography
                     style={{
