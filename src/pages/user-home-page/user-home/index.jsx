@@ -21,7 +21,9 @@ import {
   ExpandLess,
   ChatBubble,
   Event,
+  People,
 } from '@material-ui/icons';
+
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
@@ -34,6 +36,7 @@ import {getSignedUrl} from '../../../redux/actions/media';
 import {getUserJourney} from '../../../redux/actions/journal';
 import {getResourceData} from 'redux/actions/cfg';
 import moment from 'moment';
+import CFGFamily from './cfg-family.jsx';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -405,6 +408,10 @@ export default function UserHomePage() {
             );
           })}
       </List>
+
+      {/* CFG Family Area */}
+      <hr />
+      <CFGFamily />
     </div>
   );
   return (
@@ -449,7 +456,7 @@ export default function UserHomePage() {
         </div>
       )}
       <CreatePost />
-      {transform.map((element, index) => {
+      {/* {transform.map((element, index) => {
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>
             <PostDetails
@@ -460,7 +467,7 @@ export default function UserHomePage() {
             />
           </div>
         );
-      })}
+      })} */}
     </CommonComponent>
   );
 }

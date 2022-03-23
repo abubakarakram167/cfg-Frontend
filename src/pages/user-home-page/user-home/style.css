@@ -117,3 +117,125 @@
   font-weight: 600;
   margin-bottom: 8px;
 }
+
+.contacts-rectangle {
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #ffffff;
+  border-radius: 20px 0px 0px 20px;
+  opacity: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  height: 300px;
+  padding: 10px;
+  box-shadow: 0px 6px 6px #00000029;
+}
+
+.circle {
+  width: 50px;
+  height: 50px;
+  background: rgb(246, 156, 85);
+  border-radius: 50%;
+  float: left;
+}
+
+.online {
+  border: 2px solid #10e010;
+}
+
+.offline {
+  border: 2px solid red;
+}
+
+.user_name {
+  text-align: left;
+  font: normal normal bold 19px/26px Segoe UI;
+  letter-spacing: 0.25px;
+  color: #919191;
+  opacity: 1;
+  float: left;
+  padding: left 5px;
+  margin-left: 5px;
+  margin-top: 10px;
+}
+
+.chat_user {
+  margin-left: 5px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.chat-rectangle {
+  height: 260px;
+  border: 1px solid black;
+  z-index: 9;
+  /* UI Properties */
+  opacity: 1;
+  margin-left: 10px;
+  margin-top: 10px;
+  border-radius: 50px 15px 5px 30px;
+}
+
+.user_name_chat_box {
+  text-align: left;
+  font: normal normal bold 16px Segoe UI;
+
+  color: #919191;
+  opacity: 1;
+  float: left;
+
+  margin-left: 5px;
+  margin-top: 5px;
+}
+
+.chat_input_div {
+  background-color: #6a6a6a;
+  border-radius: 0px 0px 0px 30px;
+}
+
+.chat_input {
+  border-radius: 10px;
+  height: 30px;
+  margin: 5px;
+  margin-left: 15px;
+  width: 80%;
+  padding: 3px;
+}
+
+.chat_user_chat_box {
+  margin-left: 5px;
+  margin-top: 5px;
+}
+
+.left-message {
+  text-align: left;
+  background-color: #f3f3f3;
+  width: 60%;
+  margin-left: 10px;
+  border-radius: 25px;
+  padding: 4px;
+  margin-bottom: 7px;
+  border: 1px solid black;
+}
+
+.right-message {
+  text-align: left;
+  background-color: #f3f3f3;
+  width: 60%;
+  margin-right: 5%;
+  margin-left: 37%;
+  border-radius: 25px;
+  padding: 4px;
+  margin-bottom: 7px;
+  border: 1px solid black;
+}
+
+.msg-time {
+  text-align: right;
+  float: right;
+}
+
+/* .msg-text-right{
+  text-align:left;
+  float:left;
+  background-color:#F3F3F3;
+} */
