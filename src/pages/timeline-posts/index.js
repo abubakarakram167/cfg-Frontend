@@ -7,9 +7,11 @@ import {red} from '@material-ui/core/colors';
 import Posts from './posts';
 import {getUserPost} from 'redux/actions/UserPost';
 import {Loader} from '../../@crema';
+import AdminHeader from 'pages/admin-header';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    position: 'relative',
     height: 'inherit',
     padding: '16px 48px',
     '@media (max-width: 520px)': {
@@ -86,36 +88,102 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+let loadFirst = true;
+
 const TimeLinePosts = () => {
   const classes = useStyles();
-  const getposts = useSelector((state) => state.userPost.posts);
-  const loading = useSelector((state) => state.userPost.getPostLoader);
+  const {
+    posts: getposts,
+    getPostLoader: loading,
+    isEditFetch,
+    postCount = 0,
+  } = useSelector((state) => state.userPost);
 
   const dispatch = useDispatch();
 
-  const [count] = useState(3);
+  const [count, setCount] = useState(3);
   const [posts, setPosts] = useState([]);
+  const [showUp, setShowUp] = useState([]);
+  const [allTransformPosts, setAllTransformPosts] = useState(null);
+  const [getPosts, setGetPosts] = useState(false);
 
   useEffect(() => {
-    setPosts([...getposts]);
-  }, [getposts]);
+    let modifiedArr = [];
+    if (getposts?.length) {
+      modifiedArr = getposts?.map((el) => {
+        return {
+          ...el,
+          counter: 1,
+        };
+      });
+      transformPosts([...modifiedArr]);
+      // setPosts([...modifiedArr]);
+      loadFirst = false;
+    }
+  }, [getposts, isEditFetch]);
+
+  const getUserPostsAll = (count) => {
+    dispatch(getUserPost(count, null));
+  };
 
   useEffect(() => {
-    dispatch(getUserPost(count));
-  }, []);
+    getUserPostsAll(count);
+  }, [count]);
+
+  // useEffect(() => {
+  //   transformPosts(posts);
+  // }, [posts]);
+
+  const transformPosts = async (posts) => {
+    let allContent = [];
+    for (let post of posts) {
+      allContent.push(transformImagesInContent(post.content, false, post.id));
+    }
+
+    const allTransformPosts = await Promise.all(allContent);
+    const newContentPosts = posts.map((post) => {
+      return {
+        ...post,
+        content: allTransformPosts.filter(
+          (newPost) => newPost.id === post.id,
+        )[0].html,
+      };
+    });
+
+    setPosts(newContentPosts);
+  };
 
   const returnPosts = () => {
-    if (loading) {
+    if (loadFirst) {
       return <Loader />;
     }
     return posts.map((post, index) => {
       return (
         <Fragment key={index}>
           <Posts
+            setPosts={setPosts}
+            posts={posts}
             post={post}
             index={index}
             classes={classes}
             getPostCount={count}
+            showUp={showUp}
+            setShowUp={setShowUp}
+            getUserPosts={(content, getPost) => {
+              console.log('on getting post', post);
+              console.log('all posts', posts);
+              const filterPosts = posts.map((post) => {
+                if (post.id === getPost.id) {
+                  return {
+                    ...post,
+                    content: content,
+                  };
+                } else return post;
+              });
+
+              console.log('filter Posts', filterPosts);
+              setPosts(filterPosts);
+            }}
           />
         </Fragment>
       );
@@ -123,14 +191,27 @@ const TimeLinePosts = () => {
   };
 
   return (
-    <CommonComponent left='noMenu' right='noMenu'>
-      <Box className={classes.root}>
-        <Typography class={classes.heading} variant='h2'>
-          Timeline Posts
-        </Typography>
-        {returnPosts()}
-      </Box>
-    </CommonComponent>
+    <div>
+      <div className='toolbar-container'>
+        <AdminHeader />
+      </div>
+      <CommonComponent
+        showHeader={true}
+        scroll={true}
+        left='noMenu'
+        right='noMenu'
+        scrollAction={() => {
+          setCount(count + 3);
+        }}>
+        <Box className={classes.root}>
+          <Typography class={classes.heading} variant='h2'>
+            User Moderation
+          </Typography>
+          {returnPosts()}
+          <Box style={{height: 16}}></Box>
+        </Box>
+      </CommonComponent>
+    </div>
   );
 };
 

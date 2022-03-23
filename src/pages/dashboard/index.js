@@ -14,6 +14,7 @@ export default function Dashboard() {
       </div>
 
       <Container>
+        {/* <iframe width="600" height="450" src="https://datastudio.google.com/embed/reporting/fb080705-25ff-4f39-a3a5-9ae015a29976/page/chMoC" frameborder="0" style="border:0" allowfullscreen></iframe> */}
         <div className='container-graphs'>
           <div className='graph-container'>
             <AppCard>

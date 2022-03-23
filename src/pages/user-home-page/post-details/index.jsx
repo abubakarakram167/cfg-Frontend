@@ -127,10 +127,12 @@ export default function RecipeReviewCard({post, getUserPost}) {
   };
 
   async function getPostComments() {
+    console.log('getting post comments.....');
     const data = await Comments.getPostComments(post.id);
+    console.log('on getting post comments', data);
     if (data) {
-      if (data.data) {
-        setComments(data.data);
+      if (data.data && data.data.comments) {
+        setComments(data.data.comments || []);
       }
     }
   }
@@ -191,6 +193,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
   };
   const addComment = async (e) => {
     if (e.key === 'Enter' && comment.length > 0) {
+      console.log('asdadsadadasd');
       await Comments.addComment({
         post_id: post.id,
         content: comment,
@@ -382,7 +385,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
           title={`${user.first_name} ${user.last_name} ${
             post.assigned_group ? '> ' + post.assigned_group : ''
           }`}
-          subheader={formatDatePost(Date.parse(post.createdAt))}
+          subheader={formatDatePost(Date.parse(post.created_at))}
         />
         {post.media && mediaJSX()}
         <CardContent>
@@ -392,7 +395,7 @@ export default function RecipeReviewCard({post, getUserPost}) {
             }}
           />
           {/* <Typography variant='body2' color='textSecondary' component='p'> */}
-          <span className='caption-text'>
+          <span className='caption-text12'>
             {/* <ShowMoreText
                 lines={2}
                 more='Show more'
@@ -431,31 +434,32 @@ export default function RecipeReviewCard({post, getUserPost}) {
         </CardActions>
         <Collapse in={expanded} timeout='auto' unmountOnExit>
           <CardContent>
-            {comments.map((comment, index) => {
-              const addReplyDataAction = async (replyText) => {
-                await Comments.addComment({
-                  post_id: post.id,
-                  content: replyText,
-                  parent_id: comment.id,
-                });
-                getPostComments();
-              };
-              if (comment.parent_id === null) {
-                return (
-                  <Comment
-                    key={index}
-                    comment={comment}
-                    addReplyAction={addReplyDataAction}
-                    replies={comment.replies}
-                    postId={post.id}
-                    afterDeleteCommentGetPost={() => {
-                      setShowMessage(true);
-                      getPostComments();
-                    }}
-                  />
-                );
-              }
-            })}
+            {comments?.length &&
+              comments.map((comment, index) => {
+                const addReplyDataAction = async (replyText) => {
+                  await Comments.addComment({
+                    post_id: post.id,
+                    content: replyText,
+                    parent_id: comment.id,
+                  });
+                  getPostComments();
+                };
+                if (comment.parent_id === null) {
+                  return (
+                    <Comment
+                      key={index}
+                      comment={comment}
+                      addReplyAction={addReplyDataAction}
+                      replies={comment.replies}
+                      postId={post.id}
+                      afterDeleteCommentGetPost={() => {
+                        setShowMessage(true);
+                        getPostComments();
+                      }}
+                    />
+                  );
+                }
+              })}
             <Picker
               show={showPicker}
               onGetEmoji={(emoji) => {

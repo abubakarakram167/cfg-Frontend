@@ -40,7 +40,7 @@ const changeHeight = {
   paddingTop: 0,
 };
 
-export default function CreatePostBox() {
+export default function CreatePostBox(props) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const [content, setContent] = useState('');
@@ -89,8 +89,10 @@ export default function CreatePostBox() {
     if (currentUser.role === 'content-manager')
       userPost.assigned_group = 'content-manager';
     console.log('the userPost', userPost);
-    dispatch(createUserPost(userPost));
-    // dispatch(getUserPost());
+    dispatch(createUserPost(userPost)).then((res) => {
+      props.getUserPost();
+    });
+
     setContent('');
     setMedia(null);
   };
@@ -117,8 +119,6 @@ export default function CreatePostBox() {
   const getPostPercentage = (content) => {
     return parseInt(content.length / 3);
   };
-
-  console.log('the show dialogue', showDialogue);
 
   return (
     <div>
