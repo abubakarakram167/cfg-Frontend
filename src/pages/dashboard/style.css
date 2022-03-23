@@ -37,3 +37,35 @@
   align-items: center;
   flex: 1;
 }
+
+.report-chart {
+  width: 60%;
+  margin: auto;
+}
+
+.object-tag {
+  width: 100%;
+  height: 600px;
+}
+
+@media screen and (max-width: 1600px) {
+  .report-chart {
+    width: 80%;
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .report-chart {
+    width: 90%;
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .report-chart {
+    width: 100%;
+    margin: auto;
+    margin-top: 200px;
+  }
+}
