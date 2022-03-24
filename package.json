@@ -17,6 +17,8 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/pickers": "^3.2.10",
+    "@mui/icons-material": "^5.5.0",
+    "@mui/material": "^5.5.0",
     "@popperjs/core": "^2.5.3",
     "@storybook/theming": "^5.3.19",
     "@testing-library/jest-dom": "^5.11.5",

@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import CreatePost from '../create-post-box';
 import './style.css';
+import './chat-modal.css';
 import PostDetails from '../post-details';
 import CommonComponent from '../common-component';
 import Session from 'redux/services/session';
@@ -21,7 +22,9 @@ import {
   ExpandLess,
   ChatBubble,
   Event,
+  People,
 } from '@material-ui/icons';
+
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
@@ -34,6 +37,7 @@ import {getSignedUrl} from '../../../redux/actions/media';
 import {getUserJourney} from '../../../redux/actions/journal';
 import {getResourceData} from 'redux/actions/cfg';
 import moment from 'moment';
+import CFGFamily from './cfg-family.jsx';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -405,6 +409,10 @@ export default function UserHomePage() {
             );
           })}
       </List>
+
+      {/* CFG Family Area */}
+      <hr />
+      <CFGFamily />
     </div>
   );
   return (
@@ -448,12 +456,14 @@ export default function UserHomePage() {
           </Link>
         </div>
       )}
+
       <CreatePost
         getUserPost={() => {
           dispatch(getUserPost(3, true));
         }}
       />
       {transform.map((element, index) => {
+
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>
             <PostDetails
@@ -464,7 +474,7 @@ export default function UserHomePage() {
             />
           </div>
         );
-      })}
+      })} 
     </CommonComponent>
   );
 }
