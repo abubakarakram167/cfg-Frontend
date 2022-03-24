@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import CreatePost from '../create-post-box';
 import './style.css';
+import './chat-modal.css';
 import PostDetails from '../post-details';
 import CommonComponent from '../common-component';
 import Session from 'redux/services/session';

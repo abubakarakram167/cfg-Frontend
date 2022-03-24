@@ -165,19 +165,19 @@
 }
 
 .chat-rectangle {
-  height: 260px;
+  height: 460px;
   border: 1px solid black;
   z-index: 9;
   /* UI Properties */
   opacity: 1;
   margin-left: 10px;
   margin-top: 10px;
-  border-radius: 50px 15px 5px 30px;
+  border-radius: 15px 15px 5px 15px;
 }
 
 .user_name_chat_box {
   text-align: left;
-  font: normal normal bold 16px Segoe UI;
+  font: normal normal bold 22px Segoe UI;
 
   color: #919191;
   opacity: 1;
@@ -186,16 +186,23 @@
   margin-left: 5px;
   margin-top: 5px;
 }
+.msg-box {
+  height: 330px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 .chat_input_div {
   background-color: #6a6a6a;
-  border-radius: 0px 0px 0px 30px;
+  border-radius: 0px 0px 0px 15px;
+  height: 55px;
 }
 
 .chat_input {
   border-radius: 10px;
-  height: 30px;
+  height: 35px;
   margin: 5px;
+  margin-top: 10px;
   margin-left: 15px;
   width: 80%;
   padding: 3px;
@@ -206,36 +213,43 @@
   margin-top: 5px;
 }
 
-.left-message {
-  text-align: left;
-  background-color: #f3f3f3;
-  width: 60%;
-  margin-left: 10px;
-  border-radius: 25px;
-  padding: 4px;
-  margin-bottom: 7px;
-  border: 1px solid black;
-}
-
-.right-message {
-  text-align: left;
-  background-color: #f3f3f3;
-  width: 60%;
-  margin-right: 5%;
-  margin-left: 37%;
-  border-radius: 25px;
-  padding: 4px;
-  margin-bottom: 7px;
-  border: 1px solid black;
-}
-
-.msg-time {
-  text-align: right;
-  float: right;
-}
-
 /* .msg-text-right{
   text-align:left;
   float:left;
   background-color:#F3F3F3;
 } */
+.chat-parent-right {
+  background-color: #f3f3f3;
+  width: 230px;
+  margin-right: 10px;
+  margin-left: 120px;
+  padding-left: 10px;
+  padding-right: 20px;
+  padding-top: 5px;
+  margin-bottom: 7px;
+  border: 1px solid black;
+  border-radius: 25px;
+}
+
+.chat-parent-left {
+  background-color: #f3f3f3;
+  width: 230px;
+  margin-right: 120px;
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-right: 20px;
+  padding-top: 5px;
+  margin-bottom: 7px;
+  border: 1px solid black;
+  border-radius: 25px;
+}
+
+.testdiv1 {
+  width: 200px;
+  word-wrap: break-word;
+  text-align: left;
+}
+
+.testdiv2 {
+  text-align: right;
+}
