@@ -158,6 +158,7 @@ export default function Homedashicon() {
             className='list-container event-containers'>
             {events
               .filter((contentElement) => contentElement.status === 'published')
+              .filter((elements) => moment(elements.start_date) >= moment())
               .map((element, index) => {
                 return (
                   <div className='event-card' key={index}>

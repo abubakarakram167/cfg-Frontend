@@ -14,7 +14,10 @@ export default function Dashboard() {
       </div>
 
       <Container>
-        <div className='container-graphs'>
+        {/* <iframe width="600" height="450" src="https://datastudio.google.com/embed/reporting/fb080705-25ff-4f39-a3a5-9ae015a29976/page/chMoC" frameborder="0" style="border:0" allowfullscreen></iframe> */}
+        {/* <iframe width="600" height="450" src="https://datastudio.google.com/embed/reporting/fb080705-25ff-4f39-a3a5-9ae015a29976/page/chMoC" frameborder="0" style="border:0" allowfullscreen></iframe> */}
+
+        {/* <div className='container-graphs'>
           <div className='graph-container'>
             <AppCard>
               <EarningGraph
@@ -41,8 +44,15 @@ export default function Dashboard() {
               />
             </AppCard>
           </div>
-        </div>
+        </div> */}
       </Container>
+      <div className='report-chart'>
+        <object
+          data='https://datastudio.google.com/embed/reporting/fb080705-25ff-4f39-a3a5-9ae015a29976/page/chMoC'
+          className='object-tag'>
+          Alternative Content
+        </object>
+      </div>
     </div>
   );
 }
