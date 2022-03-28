@@ -110,7 +110,8 @@ const ToolReducer = (state = INIT_STATE, action) => {
       };
     case actions.SET_SELECTED_TOOLS:
       let allTitles = [];
-      // debugger
+      var allSubtitles = [];
+
       if (
         state.contentData &&
         state.contentData.data &&
@@ -118,11 +119,21 @@ const ToolReducer = (state = INIT_STATE, action) => {
         state.contentData.data.titles.rows.length
       ) {
         allTitles = state.contentData.data.titles.rows;
+        console.log('in redux allTitles', allTitles);
+        if (allTitles.length) {
+          allTitles.map((title) => {
+            if (title.subtitles.count > 0)
+              for (let i = 0; i < title.subtitles.count; i++) {
+                allSubtitles.push(title.subtitles.rows[i]);
+              }
+          });
+        }
+        console.log('in redux allSubles', allSubtitles);
       }
       // debugger
       return {
         ...state,
-        selectedTool: allTitles,
+        selectedTool: allSubtitles,
       };
     default:
       return state;
