@@ -156,7 +156,7 @@ export default function UserHomePage() {
   //   alert(JSON.stringify(chatUser));
   // }, [chatUser]);
   return (
-    <div className='chat-container'>
+    <div>
       <List>
         <div class='contacts-rectangle'>
           <div style={{display: 'flex', flexDirection: 'row', width: '196px'}}>
