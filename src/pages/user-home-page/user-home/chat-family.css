@@ -186,7 +186,7 @@
 }
 
 .contacts-rectangle {
-  background: #ffffff 0% 0% no-repeat padding-box;
+  /* background: #ffffff 0% 0% no-repeat padding-box; */
   /* border: 1px solid #ffffff; */
   border-radius: 20px 0px 0px 20px;
   opacity: 1;
@@ -213,7 +213,8 @@
 
 .chat-rectangle {
   height: 460px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  border: none;
   z-index: 9;
   /* UI Properties */
   opacity: 1;

@@ -409,7 +409,7 @@ export default function UserHomePage() {
             );
           })}
       </List>
-
+      <CFGFamily />
       {/* CFG Family Area */}
       <hr />
     </div>
@@ -461,7 +461,7 @@ export default function UserHomePage() {
           dispatch(getUserPost(3, true));
         }}
       />
-      <CFGFamily />
+
       {transform.map((element, index) => {
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>
