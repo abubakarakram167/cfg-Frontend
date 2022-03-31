@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   List,
   ListItemIcon,
@@ -18,6 +19,7 @@ import {
 import {socket} from '../../../socket';
 import './chat-family.css';
 import moment from 'moment';
+import {showMessengerApp} from 'redux/actions/app';
 
 export default function UserHomePage() {
   const socketIn = socket.getSocket();
@@ -27,6 +29,12 @@ export default function UserHomePage() {
   const [chatUser, setChatUser] = useState({});
   const [currMessages, setCurrentMessages] = useState([]);
   const msgInputRef = useRef(0);
+
+  const dispatch = useDispatch();
+
+  const app = useSelector((state) => {
+    return state.app;
+  });
 
   //function to get user Family to load chat icons
   async function getUserFamily() {
@@ -160,7 +168,7 @@ export default function UserHomePage() {
       <List>
         <div class='contacts-rectangle'>
           <div style={{display: 'flex', flexDirection: 'row', width: '196px'}}>
-            <span style={{flex: 1}}>
+            <span style={{flex: 3}}>
               <ListItemIcon>
                 <People
                   fontSize='medium'
@@ -173,7 +181,19 @@ export default function UserHomePage() {
                 />
               </ListItemIcon>
             </span>
-            <span className='my-cfg-family-text'>My CFG Family</span>
+            <span style={{flex: 5}} className='my-cfg-family-text'>
+              My CFG Family
+            </span>
+            {app.showMessenger && (
+              <CancelIcon
+                style={{flex: 1}}
+                fontSize='medium'
+                className='cancel-icon'
+                onClick={() => {
+                  dispatch(showMessengerApp(app.showMessenger));
+                }}
+              />
+            )}
           </div>
           {/* user friends list*/}
           <div id='friends'>
@@ -191,14 +211,14 @@ export default function UserHomePage() {
                     background: `transparent url(${friend.photoUrl})   10% 10% no-repeat padding-box`,
                     backgroundSize: '45px 35px',
                   }}></div>
-                <span class='user_name'>
-                  {friend.first_name} {friend.last_name}
-                </span>
                 {friend.isOnline ? (
                   <span className='online-icon'></span>
                 ) : (
                   <span className='offline-icon'></span>
                 )}
+                <span class='user_name'>
+                  {friend.first_name} {friend.last_name}
+                </span>
               </div>
             ))}
           </div>
@@ -244,7 +264,9 @@ export default function UserHomePage() {
                     return (
                       <div>
                         <div class='testdiv2'>
-                          {moment(msg.created_at).format('YYYY MMMM, Do')}
+                          {moment(msg.created_at).format(
+                            'YYYY MMMM, Do  HH:mm',
+                          )}
                         </div>
                         <div class='chat-parent-right '>
                           <div class='testdiv1'>{msg.text}</div>
@@ -255,7 +277,7 @@ export default function UserHomePage() {
                     return (
                       <div>
                         <div class='testdiv2'>
-                          {moment(msg.created_at).format('YYYY MMMM, Do')}
+                          {moment(msg.created_at).format('YYYY MMMM, Do HH:mm')}
                         </div>
                         <div class='chat-parent-left '>
                           <div class='testdiv1'>{msg.text}</div>

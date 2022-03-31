@@ -7,6 +7,7 @@ import CommonComponent from '../common-component';
 import Session from 'redux/services/session';
 import {makeStyles} from '@material-ui/core/styles';
 import {useHistory} from 'react-router-dom';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {
   List,
   ListItemIcon,
@@ -38,6 +39,8 @@ import {getUserJourney} from '../../../redux/actions/journal';
 import {getResourceData} from 'redux/actions/cfg';
 import moment from 'moment';
 import CFGFamily from './cfg-family.jsx';
+import './style.css';
+import {showMessengerApp} from 'redux/actions/app';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -70,6 +73,12 @@ export default function UserHomePage() {
   };
   const [dayTools, setDayTools] = useState([]);
   const [events, setEvents] = useState([]);
+
+  const app = useSelector((state) => {
+    return state.app;
+  });
+
+  console.log('is state app', app);
 
   const getRestoredImage = (featureImageUrl) => {
     return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
@@ -409,6 +418,7 @@ export default function UserHomePage() {
             );
           })}
       </List>
+      <hr />
       <CFGFamily />
       {/* CFG Family Area */}
       <hr />
@@ -461,6 +471,11 @@ export default function UserHomePage() {
           dispatch(getUserPost(3, true));
         }}
       />
+      {app.showMessenger && (
+        <div className='chat-container'>
+          <CFGFamily />
+        </div>
+      )}
 
       {transform.map((element, index) => {
         return (

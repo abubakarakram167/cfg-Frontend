@@ -31,7 +31,7 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import Logout from '@material-ui/icons/ExitToApp';
 import {Link} from 'react-router-dom';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {baseUrl} from 'utils/axios';
 import {Card} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -43,6 +43,7 @@ import MediaGroup from 'redux/services/mediagroup';
 import Session from 'redux/services/session';
 import './sidestyle.css';
 import {getSignedUrl} from '../../redux/actions/media';
+import {showMessengerApp} from 'redux/actions/app';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -59,10 +60,17 @@ const AppSidebar = (props) => {
   const [allSessions, setAllSessions] = useState([]);
   const classesOther = useStyling();
   const [avatarImage, setAvatarImage] = useState(null);
+  const dispatch = useDispatch();
 
   const user = useSelector((state) => {
     return state.auth.user;
   });
+
+  const app = useSelector((state) => {
+    return state.app;
+  });
+
+  console.log('the app in state', app);
 
   const searchUser = async (e) => {
     e.persist();
@@ -399,6 +407,18 @@ const AppSidebar = (props) => {
               <ListItemText primary='Host A Conversation' />
             </ListItem>
           </Link>
+          <ListItem>
+            <div
+              onClick={() => {
+                dispatch(showMessengerApp(app.showMessenger));
+              }}>
+              <ChatBubble style={{color: 'red', float: 'left'}} />
+              <ListItemText
+                style={{float: 'left', marginLeft: 7}}
+                primary='Messenger'
+              />
+            </div>
+          </ListItem>
           <ListItem onClick={handleLogout}>
             <ListItemIcon>
               <Logout style={{color: 'red'}} />
