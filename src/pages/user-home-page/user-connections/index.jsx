@@ -12,9 +12,11 @@ import {
 import {Button} from '@material-ui/core';
 import CommonComponent from '../common-component';
 import Friend from 'redux/services/friends';
-
+import GroupIcon from '@material-ui/icons/Group';
+import {Link} from 'react-router-dom';
 import './style.css';
 import {render} from 'react-dom';
+
 export default function UserConnections() {
   const [requestsExpanded, setRequestsExpanded] = useState(true);
   const [requestSent, setRequestsSent] = useState(true);
@@ -25,12 +27,14 @@ export default function UserConnections() {
   const [friends, setFriends] = useState([]);
   const [reloadData, setReloadData] = useState(true);
   const [errorCount, setErrorCount] = useState(0);
+  const [selectAvatarImage, setSelectAvatarImage] = useState(null);
 
   const toggleReloadData = () => {
     setReloadData(!reloadData);
   };
   const setSelected = (element) => {
-    setCurrentlySelected(element);
+    setCurrentlySelected(element.userData);
+    setSelectAvatarImage(element.avatarImage);
   };
   const toggleConnectionView = () => {
     setConnectionView(!connectionsView);
@@ -43,8 +47,10 @@ export default function UserConnections() {
   const toggleRequestsExpanded = () => {
     setRequestsExpanded(!requestsExpanded);
   };
+
   async function getRequests() {
     const data = await Friend.getFriendRequests();
+    console.log('the dataaa::', data);
     if (data) {
       if (data.data) {
         setFriendRequests(data.data);
@@ -54,6 +60,7 @@ export default function UserConnections() {
 
   async function getSentRequests() {
     const data = await Friend.getSentFriendRequests();
+    console.log('the data of sending request', data);
     if (data) {
       if (data.data) {
         setSentFriendRequests(data.data);
@@ -63,8 +70,18 @@ export default function UserConnections() {
 
   async function getFriends() {
     const data = await Friend.getFriends();
+    console.log('all get frienbds', data);
     if (data) {
       if (data.data) {
+        // let fakeFriends = []
+        // fakeFriends.push(data.data[0])
+        // fakeFriends.push(data.data[0])
+        // fakeFriends.push(data.data[0])
+        // fakeFriends.push(data.data[0])
+        // fakeFriends.push(data.data[0])
+        // fakeFriends.push(data.data[0])
+        // fakeFriends.push(data.data[0])
+        // fakeFriends.push(data.data[0])
         setFriends(data.data);
       }
     }
@@ -144,6 +161,14 @@ export default function UserConnections() {
 
   const right = (
     <div>
+      <div className='people-button-container'>
+        <Link style={{fontSize: 17, color: 'black'}} to='/home/friends'>
+          <GroupIcon
+            style={{color: 'green', fontSize: 20, marginRight: '5px'}}
+          />
+          <strong style={{fontSize: 15}}>Peoples</strong>
+        </Link>
+      </div>
       <div className='requests-section'>
         <div
           style={{
@@ -163,9 +188,10 @@ export default function UserConnections() {
       <div className='requests-section-list'>
         {connectionsView &&
           friends.map((element, index) => {
+            console.log('the fri4end', element);
             return (
               <UserInfoBox
-                userId={element}
+                userId={element.friend}
                 type={'connection'}
                 key={index}
                 setSelected={setSelected}
@@ -178,13 +204,18 @@ export default function UserConnections() {
       {/* <Button color='secondary' variant='contained' fullWidth>
         Add Friend
       </Button> */}
-      <h1 onClick={HandleErrorClick}>{errorCount}</h1>;
+      {/* <h1 onClick={HandleErrorClick}>{errorCount}</h1>; */}
     </div>
   );
 
   return (
     <CommonComponent left={left} right={right}>
-      {currentlySelected && <UserDetails element={currentlySelected} />}
+      {currentlySelected && (
+        <UserDetails
+          avatarImage={selectAvatarImage}
+          element={currentlySelected}
+        />
+      )}
 
       {errorCount === 5 ? <Bomb /> : null}
       <div className='mobile-connections-view'>

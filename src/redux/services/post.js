@@ -6,8 +6,10 @@ class UserPost {
       ...params,
     });
   }
-  static getUserPosts(count) {
-    return axiosInstance.get('/api/userPosts?_count=' + count);
+  static getUserPosts(count, page) {
+    let url = `/api/userPosts?_count=${count}`;
+    if (page) url = url + `&_pageNo=${page}`;
+    return axiosInstance.get(`${url}`);
   }
   static deleteUserPost(id) {
     return axiosInstance.delete('/api/userPosts/' + id);

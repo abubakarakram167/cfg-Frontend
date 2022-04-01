@@ -23,6 +23,7 @@ const useStyles = makeStyles({
 });
 
 export default function UserDetails(props) {
+  console.log('the props', props);
   const classes = useStyles();
   return (
     <Card className={classes.root}>
@@ -30,8 +31,8 @@ export default function UserDetails(props) {
       <CardMedia
         className={classes.media}
         image={
-          props.element.photo_url
-            ? baseUrl + 'static/' + props.element.photo_url
+          props.avatarImage && props.element.photo_url
+            ? props.avatarImage
             : UserAvatar
         }
         title={props.element.first_name + ' ' + props.element.last_name}
@@ -53,7 +54,7 @@ export default function UserDetails(props) {
         <hr style={{color: 'gainsboro'}} />
 
         <br />
-        <div className='user-details-bottom-section'>
+        {/* <div className='user-details-bottom-section'>
           <div className='user-details-bottom-section-left'>
             <strong>CFG Achievement</strong>
             <br />
@@ -62,7 +63,7 @@ export default function UserDetails(props) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: 'space-evenly',
               }}>
               <Bookmark style={{color: '#CB9986', fontSize: 40}} />
               <div
@@ -89,9 +90,10 @@ export default function UserDetails(props) {
             <strong>CFG Session</strong>
             <br />
             <br />
+            <br />
             <strong style={{color: 'green'}}>Complete 2020</strong>
           </div>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

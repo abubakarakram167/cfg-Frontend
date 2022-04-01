@@ -23,10 +23,7 @@ const Reply = ({reply}) => {
     if (data) {
       if (data.data) {
         setUser(data.data);
-        console.log('sssin reply.');
         getSignedUrl({fileName: data.data.photo_url}).then((res) => {
-          console.log('.in reply.');
-          console.log('after response', res);
           setUserAvatarImage(res.newUrl);
         });
       }

@@ -456,8 +456,13 @@ export default function UserHomePage() {
           </Link>
         </div>
       )}
-      <CreatePost />
-      {/* {transform.map((element, index) => {
+
+      <CreatePost
+        getUserPost={() => {
+          dispatch(getUserPost(3, true));
+        }}
+      />
+      {transform.map((element, index) => {
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>
             <PostDetails
@@ -468,7 +473,7 @@ export default function UserHomePage() {
             />
           </div>
         );
-      })} */}
+      })}
     </CommonComponent>
   );
 }
