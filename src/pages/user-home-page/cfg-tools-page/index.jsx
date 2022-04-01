@@ -23,10 +23,9 @@ export default function CfgToolsPage() {
   }, []);
 
   useEffect(() => {
-    dispatch(getToolListData(parseInt(params.id)));
-    setTimeout(() => {
+    dispatch(getToolListData(parseInt(params.id))).then((response) => {
       dispatch(setSelectedToolData(parseInt(params.id)));
-    }, 1500);
+    });
   }, []);
 
   useEffect(() => {

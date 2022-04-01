@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   List,
   ListItemIcon,
@@ -10,13 +11,17 @@ import {People} from '@material-ui/icons';
 import './style.css';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SendIcon from '@mui/icons-material/Send';
-
 import {
   createMessage,
   getFriendMessages,
   getUserChatFamily,
 } from '../../../redux/actions/messages';
 import {socket} from '../../../socket';
+import './chat-family.css';
+import moment from 'moment';
+import {showMessengerApp} from 'redux/actions/app';
+import NoUserProfile from 'assets/newNoProfile.png';
+import TelegramLogo from 'assets/telegramLogo.png';
 
 export default function UserHomePage() {
   const socketIn = socket.getSocket();
@@ -27,12 +32,18 @@ export default function UserHomePage() {
   const [currMessages, setCurrentMessages] = useState([]);
   const msgInputRef = useRef(0);
 
+  const dispatch = useDispatch();
+
+  const app = useSelector((state) => {
+    return state.app;
+  });
+
   //function to get user Family to load chat icons
   async function getUserFamily() {
     let resp = await getUserChatFamily();
     if (resp.status === 200 && resp.data.length > 0) {
+      console.log('the response', resp.data);
       setUserFamily(resp.data);
-      console.log('userFamily is', resp.data);
     }
   }
 
@@ -155,143 +166,151 @@ export default function UserHomePage() {
   //   alert(JSON.stringify(chatUser));
   // }, [chatUser]);
   return (
-    <List>
-      <ListItem>
-        <div style={{display: 'flex', flexDirection: 'row', width: '196px'}}>
-          <span style={{flex: 1}}>
-            <ListItemIcon>
-              <People
-                fontSize='large'
-                style={{
-                  color: '#9C3F0F',
-                  opacity: 1,
-                  minWidth: 30,
-                  marginRight: '5px',
+    <div>
+      <List>
+        <div class='contacts-rectangle'>
+          <div style={{display: 'flex', flexDirection: 'row', width: '196px'}}>
+            <span style={{flex: 3}}>
+              <ListItemIcon>
+                <People
+                  fontSize='medium'
+                  style={{
+                    color: '#9C3F0F',
+                    opacity: 1,
+                    minWidth: 30,
+                    marginLeft: 7,
+                  }}
+                />
+              </ListItemIcon>
+            </span>
+            <span style={{flex: 5}} className='my-cfg-family-text'>
+              My CFG Family
+            </span>
+            {app.showMessenger && (
+              <CancelIcon
+                style={{flex: 1}}
+                fontSize='medium'
+                className='cancel-icon'
+                onClick={() => {
+                  dispatch(showMessengerApp(app.showMessenger));
                 }}
               />
-            </ListItemIcon>
-          </span>
-          <span
-            style={{
-              flex: 3,
-              // textAlign: 'left',
-              font: 'normal normal 600 25px/33px Segoe UI',
-              letterSpacing: '0.32px',
-              color: '#919191',
-              minWidth: 200,
-            }}>
-            My CFG Family
-          </span>
-        </div>
-      </ListItem>
-      <div class='contacts-rectangle'>
-        {/* user friends list*/}
-        <div id='friends'>
-          {userFamily.map((friend) => (
-            <div
-              id='user'
-              class='row chat_user'
-              onClick={() => {
-                setChatUser(friend);
-                setChatBoxOpen(true);
-              }}>
-              <div
-                class={`circle ${friend.isOnline ? 'online' : 'offline'}`}
-                style={{
-                  background: `transparent url(${friend.photoUrl})   10% 10% no-repeat padding-box`,
-                  backgroundSize: '55px 45px',
-                }}></div>
-              <span class='user_name'>
-                {friend.first_name} {friend.last_name}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div
-        class='chat-popup chat-rectangle'
-        id='myForm'
-        style={{display: isChatBoxOpen ? 'block' : 'none'}}>
-        {/* user chat area */}
-        {chatUser.first_name && (
-          <div id='chat' class=''>
-            <div
-              id='header-chat-box'
-              style={{height: '40px', paddingRight: '10px'}}>
+            )}
+          </div>
+          {/* user friends list*/}
+          <div id='friends'>
+            {userFamily.map((friend) => (
               <div
                 id='user'
-                class='row chat_user_chat_box'
-                style={{marginLeft: '10px'}}>
+                class='row chat_user'
+                onClick={() => {
+                  setChatUser(friend);
+                  setChatBoxOpen(true);
+                }}>
                 <div
-                  class={`circle ${
-                    chatUser.isOnline ? 'online' : 'offline'
-                  } col-3`}
+                  class={'circle'}
                   style={{
-                    background: `transparent url(${chatUser.photoUrl})   10% 10% no-repeat padding-box`,
-                    backgroundSize: '90px 50px',
+                    background: `transparent url(${
+                      friend.photoUrl ? friend.photoUrl : NoUserProfile
+                    })   10% 10% no-repeat padding-box`,
+                    backgroundSize: '45px 35px',
                   }}></div>
-                <span class='user_name_chat_box  col-xl-7 col-lg-7 col-md-7'>
-                  {chatUser.first_name} {chatUser.last_name}
+                {friend.isOnline ? (
+                  <span className='online-icon'></span>
+                ) : (
+                  <span className='offline-icon'></span>
+                )}
+                <span class='user_name'>
+                  {friend.first_name} {friend.last_name}
                 </span>
-                <CancelIcon
-                  fontSize='large'
-                  style={{
-                    color: 'red',
-                    float: 'right',
-                    align: 'right',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    setChatBoxOpen(false);
-                  }}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div
+          class='chat-popup chat-rectangle'
+          id='myForm'
+          style={{display: isChatBoxOpen ? 'block' : 'none'}}>
+          {/* user chat area */}
+          {chatUser.first_name && (
+            <div id='chat' class=''>
+              <div
+                id='header-chat-box'
+                style={{height: '40px', paddingRight: '10px'}}>
+                <div
+                  id='user'
+                  class='row chat_user_chat_box'
+                  style={{marginLeft: '10px'}}>
+                  <div
+                    class={'circle-modal col-2'}
+                    style={{
+                      background: `transparent url(${
+                        chatUser.photoUrl ? chatUser.photoUrl : NoUserProfile
+                      })   20% 10% no-repeat padding-box`,
+                      backgroundSize: '45px 45px',
+                    }}></div>
+                  <span class='user_name_chat_box  col-5'>
+                    {chatUser.first_name} {chatUser.last_name}
+                  </span>
+                  <CancelIcon
+                    fontSize='medium'
+                    className='cancel-icon'
+                    onClick={() => {
+                      setChatBoxOpen(false);
+                    }}
+                  />
+                </div>
+              </div>
+
+              <hr />
+
+              <div id='messages' class='msg-box'>
+                {currMessages.map((msg) => {
+                  if (msg.sent_by === user.id) {
+                    return (
+                      <div>
+                        <div class='testdiv2'>
+                          {moment(msg.created_at).format(
+                            'YYYY MMMM, Do  HH:mm',
+                          )}
+                        </div>
+                        <div class='chat-parent-right '>
+                          <div class='testdiv1'>{msg.text}</div>
+                        </div>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div>
+                        <div class='testdiv2'>
+                          {moment(msg.created_at).format('YYYY MMMM, Do HH:mm')}
+                        </div>
+                        <div class='chat-parent-left '>
+                          <div class='testdiv1'>{msg.text}</div>
+                        </div>
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+              <div id='chat-input' class='chat_input_div'>
+                <input
+                  type='text'
+                  ref={msgInputRef}
+                  class='chat_input'
+                  placeholder='Type a message...'
+                  onKeyPress={handleKeyPress}
+                />
+                <img
+                  onClick={() => sendMessage()}
+                  src={TelegramLogo}
+                  style={{cursor: 'pointer', width: 30, height: 30}}
                 />
               </div>
             </div>
-
-            <hr />
-
-            <div id='messages' class='msg-box'>
-              {currMessages.map((msg) => {
-                if (msg.sent_by === user.id) {
-                  return (
-                    <div class='chat-parent-right '>
-                      <div class='testdiv1'>{msg.text}</div>
-                      <div class='testdiv2'>
-                        {getTimeStampToHM(msg.created_at)}
-                      </div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div class='chat-parent-left '>
-                      <div class='testdiv1'>{msg.text}</div>
-                      <div class='testdiv2'>
-                        {getTimeStampToHM(msg.created_at)}
-                      </div>
-                    </div>
-                  );
-                }
-              })}
-            </div>
-            <div id='chat-input' class='chat_input_div'>
-              <input
-                type='text'
-                ref={msgInputRef}
-                class='chat_input'
-                placeholder='Message'
-                onKeyPress={handleKeyPress}
-              />
-              <SendIcon
-                fontSize='medium'
-                style={{color: 'white', cursor: 'pointer', marginLeft: '7px'}}
-                onClick={() => {
-                  sendMessage();
-                }}
-              />
-            </div>
-          </div>
-        )}
-      </div>
-    </List>
+          )}
+        </div>
+      </List>
+    </div>
   );
 }

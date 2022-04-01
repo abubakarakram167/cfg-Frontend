@@ -70,3 +70,9 @@
 .open-button:hover {
   opacity: 1;
 }
+
+@media screen and (max-width: 500px) {
+  .chat-popup {
+    width: 80%;
+  }
+}
