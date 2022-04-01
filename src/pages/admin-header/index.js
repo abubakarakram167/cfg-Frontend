@@ -17,14 +17,14 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
 import {useDispatch, useSelector} from 'react-redux';
 import {setCurrentUser} from 'redux/actions/authActions';
-import {baseUrl} from 'utils/axios';
+
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
 import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {socket} from 'socket';
 import {getSignedUrl} from '../../redux/actions/media';
-
+const baseUrl = process.env.SERVER_URL;
 export default function AdminHeader() {
   const [username, setUsername] = useState('');
   const [image, setImage] = useState('');

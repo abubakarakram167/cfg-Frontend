@@ -28,7 +28,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MediaUpload from 'components/MediaUpload';
 import {makeStyles} from '@material-ui/core/styles';
 import Media from 'redux/services/media';
-import {baseUrl} from 'utils/axios';
+
 import Api from '../../utils/axios';
 import {getSignedUrl} from '../../redux/actions/media';
 import {transformImagesInContent} from '../../components/ReUsable';
@@ -38,7 +38,7 @@ import {onGetUserList} from '../../redux/actions';
 import {getInviteOfMiniCfg, deleteInvite} from 'redux/actions/sessionActions';
 import {DateTimePicker} from '@material-ui/pickers';
 import validator from 'validator';
-
+const baseUrl = process.env.SERVER_URL;
 const useStyles = makeStyles({
   datePicker: {
     '& .MuiFormLabel-root': {

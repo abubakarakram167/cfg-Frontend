@@ -471,11 +471,13 @@ export default function UserHomePage() {
           dispatch(getUserPost(3, true));
         }}
       />
+
       {app.showMessenger && (
         <div className='chat-container'>
           <CFGFamily />
         </div>
       )}
+
 
       {transform.map((element, index) => {
         return (

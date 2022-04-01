@@ -4,7 +4,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import React, {useState, useEffect} from 'react';
 import SunEditor from './sunEditor';
 import Media from 'redux/services/media';
-import {baseUrl} from 'utils/axios';
+
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import {Select, MenuItem, Chip, withStyles} from '@material-ui/core';
@@ -68,7 +68,7 @@ const StyledChip = withStyles((theme) => ({
     fontSize: 15,
   },
 }))(Chip);
-
+const baseUrl = process.env.SERVER_URL;
 export default function (props) {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);

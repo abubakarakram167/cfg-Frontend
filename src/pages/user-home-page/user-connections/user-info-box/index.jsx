@@ -18,7 +18,7 @@ import './style.css';
 import GroupIcon from '@material-ui/icons/Group';
 import {fromPairs} from 'lodash';
 import Friend from 'redux/services/friends';
-import {baseUrl} from 'utils/axios';
+
 import {getSignedUrl} from '../../../../redux/actions/media';
 import NoUserProfile from 'assets/newNoProfile.png';
 
@@ -31,6 +31,7 @@ const useStyles = makeStyles({
     height: '60px',
   },
 });
+const baseUrl = process.env.SERVER_URL;
 
 export default function UserInfo({
   userId,
