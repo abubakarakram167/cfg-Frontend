@@ -20,6 +20,8 @@ import {socket} from '../../../socket';
 import './chat-family.css';
 import moment from 'moment';
 import {showMessengerApp} from 'redux/actions/app';
+import NoUserProfile from 'assets/newNoProfile.png';
+import TelegramLogo from 'assets/telegramLogo.png';
 
 export default function UserHomePage() {
   const socketIn = socket.getSocket();
@@ -40,8 +42,8 @@ export default function UserHomePage() {
   async function getUserFamily() {
     let resp = await getUserChatFamily();
     if (resp.status === 200 && resp.data.length > 0) {
+      console.log('the response', resp.data);
       setUserFamily(resp.data);
-      console.log('userFamily is', resp.data);
     }
   }
 
@@ -208,7 +210,9 @@ export default function UserHomePage() {
                 <div
                   class={'circle'}
                   style={{
-                    background: `transparent url(${friend.photoUrl})   10% 10% no-repeat padding-box`,
+                    background: `transparent url(${
+                      friend.photoUrl ? friend.photoUrl : NoUserProfile
+                    })   10% 10% no-repeat padding-box`,
                     backgroundSize: '45px 35px',
                   }}></div>
                 {friend.isOnline ? (
@@ -240,7 +244,9 @@ export default function UserHomePage() {
                   <div
                     class={'circle-modal col-2'}
                     style={{
-                      background: `transparent url(${chatUser.photoUrl})   20% 10% no-repeat padding-box`,
+                      background: `transparent url(${
+                        chatUser.photoUrl ? chatUser.photoUrl : NoUserProfile
+                      })   20% 10% no-repeat padding-box`,
                       backgroundSize: '45px 45px',
                     }}></div>
                   <span class='user_name_chat_box  col-5'>
@@ -295,16 +301,10 @@ export default function UserHomePage() {
                   placeholder='Type a message...'
                   onKeyPress={handleKeyPress}
                 />
-                <SendIcon
-                  fontSize='medium'
-                  style={{
-                    color: '#5291f0',
-                    cursor: 'pointer',
-                    marginLeft: '7px',
-                  }}
-                  onClick={() => {
-                    sendMessage();
-                  }}
+                <img
+                  onClick={() => sendMessage()}
+                  src={TelegramLogo}
+                  style={{cursor: 'pointer', width: 30, height: 30}}
                 />
               </div>
             </div>
