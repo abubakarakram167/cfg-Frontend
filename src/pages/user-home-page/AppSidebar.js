@@ -399,7 +399,7 @@ const AppSidebar = (props) => {
               <ListItemText primary='CFG Tools' />
             </ListItem>
           </Link>
-          <Link to='/home/host-a-conversation'>
+          <Link style={{marginBottom: 5}} to='/home/host-a-conversation'>
             <ListItem>
               <ListItemIcon>
                 <ChatBubble style={{color: 'red'}} />
@@ -407,17 +407,16 @@ const AppSidebar = (props) => {
               <ListItemText primary='Host A Conversation' />
             </ListItem>
           </Link>
-          <ListItem>
-            <div
-              onClick={() => {
-                dispatch(showMessengerApp(app.showMessenger));
-              }}>
-              <ChatBubble style={{color: 'red', float: 'left'}} />
-              <ListItemText
-                style={{float: 'left', marginLeft: 7}}
-                primary='Messenger'
-              />
-            </div>
+          <ListItem
+            onClick={() => {
+              dispatch(showMessengerApp(app.showMessenger));
+            }}
+            style={{marginBottom: 5}}>
+            <ChatBubble style={{color: 'red', float: 'left'}} />
+            <ListItemText
+              style={{float: 'left', marginLeft: 7}}
+              primary='CFG Messenger'
+            />
           </ListItem>
           <ListItem onClick={handleLogout}>
             <ListItemIcon>
