@@ -136,30 +136,61 @@ export const getToolData = () => {
 };
 
 export const getToolListData = (id) => {
-  return async function (dispatch) {
-    try {
-      const response = await Tool.getListData(id);
-      console.log('...................');
-      console.log('the responseessss....', response);
-      if (response.status === 200) {
-        const data_resp = await response.data;
-        jsCookie.set('login', 'yes');
-        dispatch({
-          type: GET_LIST_DATA,
-          payload: {...data_resp, error: null},
+  return (dispatch) => {
+    return new Promise((res, rej) => {
+      Tool.getListData(id)
+        .then((response) => {
+          console.log('...................');
+          console.log('the responseessss....', response);
+          if (response.status === 200) {
+            const data_resp = response.data;
+            jsCookie.set('login', 'yes');
+            dispatch({
+              type: GET_LIST_DATA,
+              payload: {...data_resp, error: null},
+            });
+          }
+          res(response.data);
+        })
+        .catch((error) => {
+          console.log('thew error::', error);
+          if (error.response && error.response.status === 401) {
+            dispatch({
+              type: GET_LIST_DATA,
+              payload: {error: 'There was an error creating the Tool'},
+            });
+          }
+          rej('There was an error creating the Tool');
         });
-      }
-    } catch (error) {
-      console.log('thew error::', error);
-      if (error.response && error.response.status === 401) {
-        dispatch({
-          type: GET_LIST_DATA,
-          payload: {error: 'There was an error creating the Tool'},
-        });
-      }
-    }
+    });
   };
 };
+
+// export const getToolListData = (id) => {
+//   return async function (dispatch) {
+//     try {
+//       const response = await Tool.getListData(id);
+//       console.log('...................');
+//       console.log('the responseessss....', response);
+//       if (response.status === 200) {
+//         const data_resp = await response.data;
+//         jsCookie.set('login', 'yes');
+//         dispatch({
+//           type: GET_LIST_DATA,
+//           payload: {...data_resp, error: null},
+//         });
+//       }
+//     } catch (error) {
+//       console.log('thew error::', error);
+//       if (error.response && error.response.status === 401) {
+//         dispatch({
+//           type: GET_LIST_DATA,
+//           payload: {error: 'There was an error creating the Tool'},
+//         });
+//       }
+//     }
+//   };
+// };
 
 export const getContentData = (id) => {
   return async function (dispatch) {

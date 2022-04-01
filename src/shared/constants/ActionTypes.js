@@ -12,6 +12,7 @@ export const UPDATE_NEW_USER = 'UPDATE_NEW_USER';
 //APP SETTING
 export const TOGGLE_NAV_COLLAPSED = 'toggle_nav_collapsed';
 export const SET_INITIAL_PATH = 'set_initial_path';
+export const SHOW_MESSENGER_APP = 'show_messenger_app';
 
 //Media
 export const Get_Media = 'Get_Media';
