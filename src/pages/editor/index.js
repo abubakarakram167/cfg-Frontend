@@ -31,7 +31,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MediaUpload from 'components/MediaUpload';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Media from 'redux/services/media';
-import {baseUrl} from 'utils/axios';
+
 import {parseXML} from 'jquery';
 import Api from '../../utils/axios';
 import JournalModal from '../../components/JournalModal';
@@ -64,6 +64,7 @@ const isUrlValid = (url) => {
   }
   return true;
 };
+const baseUrl = process.env.SERVER_URL;
 
 export default function Editor() {
   const params = useParams();

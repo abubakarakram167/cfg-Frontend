@@ -9,8 +9,9 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import './style.css';
 import {Bookmark, Score} from '@material-ui/icons';
-import {baseUrl} from 'utils/axios';
+
 import UserAvatar from 'assets/user-avatar.png';
+const baseUrl = process.env.SERVER_URL;
 const useStyles = makeStyles({
   root: {
     width: '100%',

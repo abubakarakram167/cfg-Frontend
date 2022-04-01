@@ -13,7 +13,7 @@ import './style.css';
 import GroupIcon from '@material-ui/icons/Group';
 import {fromPairs} from 'lodash';
 import Friend from 'redux/services/friends';
-import {baseUrl} from 'utils/axios';
+
 const useStyles = makeStyles({
   root: {
     maxWidth: '100%',
@@ -23,6 +23,7 @@ const useStyles = makeStyles({
     height: '60px',
   },
 });
+const baseUrl = process.env.SERVER_URL;
 
 export default function UserInfo({
   userId,
