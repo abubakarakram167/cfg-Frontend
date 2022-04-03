@@ -83,7 +83,7 @@ export default function UserHomePage() {
 
   function messageListener(newMessage) {
     const {message, userSend} = newMessage;
-
+    alert('message recieved');
     let chatUserid = 0;
     setChatUser((prev) => {
       console.log('prevValue is', prev);
