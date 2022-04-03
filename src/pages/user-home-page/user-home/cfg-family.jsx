@@ -49,6 +49,7 @@ export default function UserHomePage() {
 
   async function getUserFriendMessages(friendId) {
     let resp = await getFriendMessages(friendId);
+    console.log('resp is ', resp);
     if (resp.status === 200 && resp.data.length > 0) {
       setCurrentMessages(resp.data);
       console.log('friend chat is', resp.data);
@@ -74,13 +75,15 @@ export default function UserHomePage() {
       sendMessage();
     }
   }
+
   function getChatUser() {
     console.log('into get user');
     return chatUser;
   }
 
-  function messageListener(newMessage, chatUser, currMessages) {
+  function messageListener(newMessage) {
     const {message, userSend} = newMessage;
+
     let chatUserid = 0;
     setChatUser((prev) => {
       console.log('prevValue is', prev);
@@ -105,6 +108,7 @@ export default function UserHomePage() {
 
   async function sendMessage() {
     let msg = msgInputRef.current.value;
+
     if (msg !== '') {
       let message = {recieved_by: chatUser.friend, text: msg, type: 'text'};
       let resp = await createMessage(message);
@@ -134,11 +138,11 @@ export default function UserHomePage() {
 
   //hook to open user chat box
   useEffect(() => {
-    if (chatUser.first_name) {
+    if (chatUser.first_name && isChatBoxOpen) {
       setCurrentMessages([]);
       getUserFriendMessages(chatUser.friend);
     }
-  }, [chatUser]);
+  }, [isChatBoxOpen]);
 
   //chat box scroll to botton hook
   useEffect(() => {
@@ -162,9 +166,9 @@ export default function UserHomePage() {
     };
   }, [socketIn]);
 
-  // useEffect(() => {
-  //   alert(JSON.stringify(chatUser));
-  // }, [chatUser]);
+  useEffect(() => {
+    console.log('messages are ', currMessages);
+  }, [currMessages]);
   return (
     <div>
       <List>
@@ -203,6 +207,7 @@ export default function UserHomePage() {
               <div
                 id='user'
                 class='row chat_user'
+                key={friend.id}
                 onClick={() => {
                   setChatUser(friend);
                   setChatBoxOpen(true);
