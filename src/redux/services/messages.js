@@ -8,7 +8,9 @@ class Message {
     });
   }
   static getFriendMessages(friendId) {
-    return axiosInstance.get(`/api/messages/${friendId}`);
+    return axiosInstance.get(`/api/messages/${friendId}`, {
+      contentType: 'text/plain',
+    });
   }
   static getUserChatFamily() {
     return axiosInstance.get('/api/messages/cfgfamily');

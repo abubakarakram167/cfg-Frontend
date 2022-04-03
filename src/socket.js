@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import {baseUrl} from './utils/axios';
 
-const url = process.env.SERVER_URL;
+const url = baseUrl;
 
 class Socket {
   constructor(url) {
