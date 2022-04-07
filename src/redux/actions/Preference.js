@@ -34,7 +34,7 @@ export const getSpecificPreference = (name) => {
   return (dispatch) => {
     return new Promise((res, rej) => {
       dispatch({type: FETCH_START});
-      Api.get('/api/preferences/list')
+      Api.get(`/api/preferences/byname/${name}`)
         .then((data) => {
           if (data.status === 200) {
             dispatch({
