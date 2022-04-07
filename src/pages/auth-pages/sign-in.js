@@ -44,6 +44,8 @@ export default function SignIn({setView}) {
   const [currentHeight, setCurrentheight] = useState(0);
   const history = useHistory();
   const [errorMessage, setErrorMessage] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+
   const classes = useStyles();
   const handleClose1 = () => {
     setOpen1(false);
@@ -153,9 +155,6 @@ export default function SignIn({setView}) {
             height: currentHeight >= 600 ? '5vh' : '2vh',
             fontSize: currentHeight <= 600 && 12,
           }}>
-          {/* <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Checkbox /> <span>Remember Me</span>
-          </div> */}
           <div
             style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}
             onClick={() => setView(3)}>
@@ -163,6 +162,14 @@ export default function SignIn({setView}) {
           </div>
         </div>
         <button className='action-button'>Sign In</button>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <Checkbox
+            onClick={(e) => {
+              setRememberMe(!rememberMe);
+            }}
+          />{' '}
+          <span>Remember Me</span>
+        </div>
         {/* <div className='orHeader'>
           <div style={{ position: 'relative', top: '-12px' }}>
             <span

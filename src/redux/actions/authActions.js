@@ -7,12 +7,14 @@ import {
   UPDATE_AUTH_USER,
   UPDATE_NEW_USER,
 } from '../../shared/constants/ActionTypes';
+import {getSpecificPreference} from 'redux/actions/Preference';
+
 export const loginAction = (params) => {
   return async function (dispatch) {
     try {
       const response = await Auth.login(params);
       if (response.status === 200) {
-        const data_resp = await response.data;
+        const data_resp = response.data;
         jsCookie.set('login', 'yes');
         jsCookie.set('user', data_resp.user);
 
@@ -25,6 +27,24 @@ export const loginAction = (params) => {
           payload: data_resp.user,
         });
       }
+      // dispatch(
+      //   getSpecificPreference("asasdads")
+      // ).then(response => {
+      //   if (response.status === 200) {
+      //     const data_resp = response.data;
+      //     jsCookie.set('login', 'yes');
+      //     jsCookie.set('user', data_resp.user);
+
+      //     dispatch({
+      //       type: LOGIN,
+      //       payload: {...data_resp, error: null},
+      //     });
+      //     dispatch({
+      //       type: setPermissions,
+      //       payload: data_resp.user,
+      //     });
+      //   }
+      // })
     } catch (error) {
       if (error.response && error.response.status === 401) {
         dispatch({

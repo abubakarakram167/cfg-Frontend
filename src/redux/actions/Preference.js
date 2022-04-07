@@ -30,6 +30,32 @@ export const getUserPreferencesList = () => {
   };
 };
 
+export const getSpecificPreference = (name) => {
+  return (dispatch) => {
+    return new Promise((res, rej) => {
+      dispatch({type: FETCH_START});
+      Api.get('/api/preferences/list')
+        .then((data) => {
+          if (data.status === 200) {
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'Added SuccessFully', success: true},
+            });
+            res(data);
+          } else {
+            dispatch({
+              type: Show_Message,
+              payload: {message: 'SuccessFully Not Added', success: false},
+            });
+          }
+        })
+        .catch((error) => {
+          dispatch({type: FETCH_ERROR, payload: error.message});
+        });
+    });
+  };
+};
+
 export const editPreferenceInList = (body, preferences) => {
   return (dispatch) => {
     dispatch({type: FETCH_START});
