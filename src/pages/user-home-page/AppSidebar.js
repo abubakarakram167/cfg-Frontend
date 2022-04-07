@@ -118,6 +118,7 @@ const AppSidebar = (props) => {
     socket.logoutAction(user.id);
     localStorage.removeItem('current-user');
     localStorage.removeItem('auth-token');
+    localStorage.removeItem('isLogin');
     jsCookie.remove('login');
     jsCookie.remove('access');
     window.location.href = '/';

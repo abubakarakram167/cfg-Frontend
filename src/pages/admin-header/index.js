@@ -64,7 +64,8 @@ export default function AdminHeader() {
     socket.logoutAction(user.id);
     localStorage.removeItem('auth-token');
     localStorage.removeItem('current-user');
-    jsCookie.removeItem('login');
+    localStorage.removeItem('isLogin');
+    jsCookie.remove('login');
     jsCookie.remove('access');
     window.location.href = '/';
   };
@@ -76,6 +77,7 @@ export default function AdminHeader() {
     socket.logoutAction(user.id);
     localStorage.removeItem('auth-token');
     localStorage.removeItem('current-user');
+    localStorage.removeItem('isLogin');
     jsCookie.remove('login');
     jsCookie.remove('access');
     window.location.href = '/';
