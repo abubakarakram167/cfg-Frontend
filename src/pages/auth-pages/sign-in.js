@@ -117,12 +117,12 @@ export default function SignIn({setView}) {
           </div>
         </div>
 
-        <div className='icons'>
+        {/* <div className='icons'>
           <img src={Google} width='40px' alt='' />
           <img src={Mail} width='60px' alt='' />
           <img src={Twitter} width='40px' alt='' />
           <img src={Facebook} width='40px' alt='' />
-        </div>
+        </div> */}
         <div style={{width: '100%', marginTop: '10px'}}>
           Don't have an account?{' '}
           <span
