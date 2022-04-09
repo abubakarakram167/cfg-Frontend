@@ -6,6 +6,7 @@ import Toastify from 'toastify-js';
 // Set config defaults when creating the instance
 console.log('baseURL:', baseURL);
 export const baseUrl = baseURL;
+// const baseUrl = process.env.SERVER_URL;
 let user = JSON.parse(localStorage.getItem('user'));
 let options = {
   baseURL,

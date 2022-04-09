@@ -1,11 +1,13 @@
 import React, {useState, useEffect, useRef} from 'react';
 import CreatePost from '../create-post-box';
 import './style.css';
+import './chat-modal.css';
 import PostDetails from '../post-details';
 import CommonComponent from '../common-component';
 import Session from 'redux/services/session';
 import {makeStyles} from '@material-ui/core/styles';
 import {useHistory} from 'react-router-dom';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {
   List,
   ListItemIcon,
@@ -21,7 +23,9 @@ import {
   ExpandLess,
   ChatBubble,
   Event,
+  People,
 } from '@material-ui/icons';
+
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
@@ -34,6 +38,10 @@ import {getSignedUrl} from '../../../redux/actions/media';
 import {getUserJourney} from '../../../redux/actions/journal';
 import {getResourceData} from 'redux/actions/cfg';
 import moment from 'moment';
+import CFGFamily from './cfg-family.jsx';
+import './style.css';
+import {showMessengerApp} from 'redux/actions/app';
+import {getSpecificPreference} from 'redux/actions/Preference';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -61,11 +69,18 @@ export default function UserHomePage() {
   const permissions = useSelector((state) => state.roles.permissions);
   const history = useHistory();
   const [allTransformPosts, setAllTransformPosts] = useState(null);
+  const [enableLiveChat, setEnableLiveChat] = useState(false);
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
   const [dayTools, setDayTools] = useState([]);
   const [events, setEvents] = useState([]);
+
+  const app = useSelector((state) => {
+    return state.app;
+  });
+
+  console.log('is state app', app);
 
   const getRestoredImage = (featureImageUrl) => {
     return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
@@ -76,8 +91,18 @@ export default function UserHomePage() {
     dispatch(getUserJourney(user.id));
   };
 
+  const getLiveChatPreference = () => {
+    dispatch(getSpecificPreference('enable_live_chat')).then((preference) => {
+      let data =
+        preference && preference.data ? preference.data.option_value : 'no';
+      data = data === 'no' ? false : true;
+      setEnableLiveChat(data);
+    });
+  };
+
   useEffect(() => {
     getUserJourneys();
+    getLiveChatPreference();
   }, []);
 
   const getDayTools = async () => {
@@ -405,6 +430,12 @@ export default function UserHomePage() {
             );
           })}
       </List>
+      {enableLiveChat && (
+        <div>
+          <CFGFamily />
+          <hr />
+        </div>
+      )}
     </div>
   );
   return (
@@ -448,11 +479,19 @@ export default function UserHomePage() {
           </Link>
         </div>
       )}
+
       <CreatePost
         getUserPost={() => {
           dispatch(getUserPost(3, true));
         }}
       />
+
+      {app.showMessenger && enableLiveChat && (
+        <div className='chat-container'>
+          <CFGFamily />
+        </div>
+      )}
+
       {transform.map((element, index) => {
         return (
           <div key={element.id} style={{margin: '20px 0px'}}>

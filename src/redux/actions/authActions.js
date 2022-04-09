@@ -7,24 +7,47 @@ import {
   UPDATE_AUTH_USER,
   UPDATE_NEW_USER,
 } from '../../shared/constants/ActionTypes';
+import {getSpecificPreference} from 'redux/actions/Preference';
+import {
+  getTimeInMilliseconds,
+  setWithExpiry,
+  getWithExpiry,
+} from '../../shared/expireTime';
+
 export const loginAction = (params) => {
   return async function (dispatch) {
     try {
       const response = await Auth.login(params);
-      if (response.status === 200) {
-        const data_resp = await response.data;
-        jsCookie.set('login', 'yes');
-        jsCookie.set('user', data_resp.user);
+      dispatch(
+        getSpecificPreference('remember_password_in_the_browser_for'),
+      ).then((preference) => {
+        if (response.status === 200) {
+          const data_resp = response.data;
+          data_resp.expiryTime = preference.data.option_value;
+          data_resp.rememberMe = params.rememberMe;
+          jsCookie.set('user', data_resp.user);
+          jsCookie.set('login', 'yes');
 
-        dispatch({
-          type: LOGIN,
-          payload: {...data_resp, error: null},
-        });
-        dispatch({
-          type: setPermissions,
-          payload: data_resp.user,
-        });
-      }
+          const timeInMilliseconds = getTimeInMilliseconds(
+            data_resp.expiryTime,
+          );
+          setWithExpiry(
+            'isLogin',
+            'yes',
+            timeInMilliseconds,
+            data_resp.rememberMe,
+          );
+
+          dispatch({
+            type: LOGIN,
+            payload: {...data_resp, error: null},
+          });
+          dispatch({
+            type: setPermissions,
+            payload: data_resp.user,
+          });
+        }
+      });
     } catch (error) {
       if (error.response && error.response.status === 401) {
         dispatch({
