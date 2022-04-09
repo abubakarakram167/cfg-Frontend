@@ -6,7 +6,7 @@ import Google from 'assets/google.jpg';
 import Mail from 'assets/Mail.png';
 import Twitter from 'assets/Twitter.png';
 import {useDispatch, useSelector} from 'react-redux';
-import {loginAction, setErrorToNull} from '../../redux/actions/authActions';
+import {setErrorToNull} from '../../redux/actions/authActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useHistory} from 'react-router';
@@ -15,6 +15,8 @@ import PersonIcon from '@material-ui/icons/Person';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LockIcon from '@material-ui/icons/Lock';
 import {socket} from 'socket';
+import {loginAction} from '../../redux/actions/authActions';
+
 const StyledFormField = withStyles((theme) => ({}))(TextField);
 
 const useStyles = makeStyles({
@@ -45,6 +47,8 @@ export default function SignIn({setView}) {
   const history = useHistory();
   const [errorMessage, setErrorMessage] = useState('');
   const classes = useStyles();
+  const [rememberMe, setRememberMe] = useState(false);
+
   const handleClose1 = () => {
     setOpen1(false);
   };
@@ -65,7 +69,7 @@ export default function SignIn({setView}) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(loginAction({email, password}));
+    dispatch(loginAction({email, password, rememberMe}));
   };
   window.addEventListener('resize', () => {
     setCurrentheight(window.innerHeight);
@@ -153,9 +157,13 @@ export default function SignIn({setView}) {
             height: currentHeight >= 600 ? '5vh' : '2vh',
             fontSize: currentHeight <= 600 && 12,
           }}>
-          {/* <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div
+            style={{display: 'flex', alignItems: 'center'}}
+            onClick={(e) => {
+              setRememberMe(!rememberMe);
+            }}>
             <Checkbox /> <span>Remember Me</span>
-          </div> */}
+          </div>
           <div
             style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}
             onClick={() => setView(3)}>

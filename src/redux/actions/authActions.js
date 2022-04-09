@@ -7,6 +7,7 @@ import {
   UPDATE_AUTH_USER,
   UPDATE_NEW_USER,
 } from '../../shared/constants/ActionTypes';
+
 export const loginAction = (params) => {
   return async function (dispatch) {
     try {
