@@ -41,6 +41,7 @@ import moment from 'moment';
 import CFGFamily from './cfg-family.jsx';
 import './style.css';
 import {showMessengerApp} from 'redux/actions/app';
+import {getSpecificPreference} from 'redux/actions/Preference';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -68,6 +69,7 @@ export default function UserHomePage() {
   const permissions = useSelector((state) => state.roles.permissions);
   const history = useHistory();
   const [allTransformPosts, setAllTransformPosts] = useState(null);
+  const [enableLiveChat, setEnableLiveChat] = useState(false);
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
@@ -89,8 +91,18 @@ export default function UserHomePage() {
     dispatch(getUserJourney(user.id));
   };
 
+  const getLiveChatPreference = () => {
+    dispatch(getSpecificPreference('enable_live_chat')).then((preference) => {
+      let data =
+        preference && preference.data ? preference.data.option_value : 'no';
+      data = data === 'no' ? false : true;
+      setEnableLiveChat(data);
+    });
+  };
+
   useEffect(() => {
     getUserJourneys();
+    getLiveChatPreference();
   }, []);
 
   const getDayTools = async () => {
@@ -418,10 +430,12 @@ export default function UserHomePage() {
             );
           })}
       </List>
-      <hr />
-      <CFGFamily />
-      {/* CFG Family Area */}
-      <hr />
+      {enableLiveChat && (
+        <div>
+          <CFGFamily />
+          <hr />
+        </div>
+      )}
     </div>
   );
   return (
@@ -472,12 +486,11 @@ export default function UserHomePage() {
         }}
       />
 
-      {app.showMessenger && (
+      {app.showMessenger && enableLiveChat && (
         <div className='chat-container'>
           <CFGFamily />
         </div>
       )}
-
 
       {transform.map((element, index) => {
         return (

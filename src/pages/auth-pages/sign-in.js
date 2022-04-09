@@ -150,10 +150,10 @@ export default function SignIn({setView}) {
         <div
           style={{
             width: '100%',
-            textAlign: 'center',
+            textAlign: 'left',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             height: currentHeight >= 600 ? '5vh' : '2vh',
             fontSize: currentHeight <= 600 && 12,
           }}>
