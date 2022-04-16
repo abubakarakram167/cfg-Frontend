@@ -6,7 +6,7 @@ import Summary from './summary';
 import {ChatBubbleOutline, Whatshot} from '@material-ui/icons';
 import CommonComponent from '../common-component';
 import './style.css';
-export default function UserAcievement() {
+export default React.memo(function UserAcievement() {
   const achievementCardFakeData = [
     {
       cfgSession: 'CFG Session 1',
@@ -175,4 +175,4 @@ export default function UserAcievement() {
       <Summary pointsAchieved={1000} pointsRedeemed={1000} balance={2000} />
     </CommonComponent>
   );
-}
+});

@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UserDetails(props) {
+export default React.memo(function UserDetails(props) {
   console.log('the props', props);
   const classes = useStyles();
   return (
@@ -97,4 +97,4 @@ export default function UserDetails(props) {
       </CardContent>
     </Card>
   );
-}
+});

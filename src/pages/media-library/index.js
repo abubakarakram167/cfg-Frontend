@@ -27,7 +27,7 @@ import baseUrl from '../../utils/url';
 import moment from 'moment';
 import {useHistory} from 'react-router-dom';
 
-export default function MediaLibrary() {
+export default React.memo(function MediaLibrary() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [files, setFiles] = useState([]);
   const [filesPreview, setFilesPreview] = useState([]);
@@ -346,4 +346,4 @@ export default function MediaLibrary() {
       </Container>
     </div>
   );
-}
+});

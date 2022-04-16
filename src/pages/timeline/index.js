@@ -81,7 +81,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CfgTool(props) {
+export default React.memo(function CfgTool(props) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.tool);
   const permissions = useSelector((state) => state.roles.permissions);
@@ -359,7 +359,6 @@ export default function CfgTool(props) {
                 onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
                 fullWidth
-                value={status}
                 label='status'
                 required>
                 <MenuItem value={''}>
@@ -635,4 +634,4 @@ export default function CfgTool(props) {
       </Container>
     </div>
   );
-}
+});

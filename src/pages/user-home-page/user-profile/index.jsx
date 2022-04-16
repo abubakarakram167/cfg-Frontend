@@ -6,7 +6,7 @@ import DemographyCard from './demography';
 import GoalCard from './goals';
 import DefaultView from './default-homepage-view';
 
-export default function UserProfile() {
+export default React.memo(function UserProfile() {
   return (
     <CommonComponent left='' right=''>
       <BioCard />
@@ -20,4 +20,4 @@ export default function UserProfile() {
       <DefaultView />
     </CommonComponent>
   );
-}
+});

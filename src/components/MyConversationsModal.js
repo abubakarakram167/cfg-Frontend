@@ -74,10 +74,12 @@ export default (props) => {
                                 </Link>
                               </li>
                               <ul className='subtitle'>
-                                {element.subtitles.rows.map((sub) => {
+                                {element.subtitles.rows.map((sub, index) => {
                                   if (sub.status === 'published') {
                                     return (
-                                      <li className='subtitle-element'>
+                                      <li
+                                        className='subtitle-element'
+                                        key={index}>
                                         <Link
                                           to={`/home/conversation/${sub.id}`}>
                                           <strong>{sub.title}</strong>

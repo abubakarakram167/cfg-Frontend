@@ -10,7 +10,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import JournalModal from '../../components/JournalModal';
 import UserHomeHeader from '../user-home-page/user-page-header';
 
-export default function MediaLibrary() {
+export default React.memo(function MediaLibrary() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const [type, setType] = useState(null);
@@ -205,4 +205,4 @@ export default function MediaLibrary() {
       </div>
     </div>
   );
-}
+});

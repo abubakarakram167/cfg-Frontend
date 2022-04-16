@@ -5,7 +5,7 @@ import AppContext from '../../../@crema/utility/AppContext';
 import {ThemeMode} from '../../constants/AppEnums';
 import Hidden from '@material-ui/core/Hidden';
 
-const AppLogo = () => {
+const AppLogo = React.memo(() => {
   const {themeMode} = useContext(AppContext);
   const useStyles = makeStyles(() => ({
     logoRoot: {
@@ -46,6 +46,6 @@ const AppLogo = () => {
       </Hidden>
     </Box>
   );
-};
+});
 
 export default AppLogo;

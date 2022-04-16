@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const HeaderUser = (props) => {
+const HeaderUser = React.memo((props) => {
   const {themeMode} = useContext(AppContext);
   const dispatch = useDispatch();
   const user = useAuthUser();
@@ -159,7 +159,7 @@ const HeaderUser = (props) => {
       </Box>
     </Box>
   );
-};
+});
 export default HeaderUser;
 HeaderUser.defaultProps = {
   header: true,

@@ -5,7 +5,7 @@ import './style.css';
 import {getToolsData} from '../../../redux/actions/toolActions';
 import {useDispatch, useSelector} from 'react-redux';
 
-export default function HomeCFGTools() {
+export default React.memo(function HomeCFGTools() {
   const dispatch = useDispatch();
   const tools = useSelector((state) => state.tool.tools);
   console.log('the tools', tools);
@@ -32,4 +32,4 @@ export default function HomeCFGTools() {
       </div>
     </CommonComponent>
   );
-}
+});

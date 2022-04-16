@@ -6,7 +6,7 @@ import AppCard from '@crema/core/AppCard';
 import OrdersGraph from './OrdersGraph';
 import './style.css';
 
-export default function Dashboard() {
+export default React.memo(function Dashboard() {
   return (
     <div>
       <div className='toolbar-container'>
@@ -55,4 +55,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-}
+});

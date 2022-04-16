@@ -60,7 +60,7 @@ const isUrlValid = (url) => {
   return true;
 };
 
-export default function Editor() {
+export default React.memo(function Editor() {
   const myRef = useRef(null);
   const params = useParams();
   const dispatch = useDispatch();
@@ -974,4 +974,4 @@ export default function Editor() {
       </Container>
     </div>
   );
-}
+});

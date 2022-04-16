@@ -85,15 +85,17 @@ export default function UserEvents() {
         <div>
           <h1>Friend Requests</h1>
           <div className='row'>
-            {friendRequests.map((request) => {
+            {friendRequests.map((request, index) => {
               return (
-                <UserInfo
-                  user={
-                    allUsers.filter((user) => user.id === request.userId)[0]
-                  }
-                  addFriend={false}
-                  toggleReloadData={toggleReloadData}
-                />
+                <React.Fragment key={index}>
+                  <UserInfo
+                    user={
+                      allUsers.filter((user) => user.id === request.userId)[0]
+                    }
+                    addFriend={false}
+                    toggleReloadData={toggleReloadData}
+                  />
+                </React.Fragment>
               );
             })}
             <UserInfo />
@@ -102,15 +104,17 @@ export default function UserEvents() {
         <div>
           <h1>Pending Requests</h1>
           <div className='row'>
-            {sentFriendRequests.map((request) => {
+            {sentFriendRequests.map((request, index) => {
               return (
-                <UserInfo
-                  user={
-                    allUsers.filter((user) => user.id === request.userId)[0]
-                  }
-                  addFriend={false}
-                  toggleReloadData={toggleReloadData}
-                />
+                <React.Fragment key={index}>
+                  <UserInfo
+                    user={
+                      allUsers.filter((user) => user.id === request.userId)[0]
+                    }
+                    addFriend={false}
+                    toggleReloadData={toggleReloadData}
+                  />
+                </React.Fragment>
               );
             })}
             <UserInfo />
@@ -119,13 +123,15 @@ export default function UserEvents() {
         <div>
           <h1>People you may know</h1>
           <div className='row'>
-            {filteredUsers.map((user) => {
+            {filteredUsers.map((user, index) => {
               return (
-                <UserInfo
-                  user={user}
-                  addFriend={true}
-                  toggleReloadData={toggleReloadData}
-                />
+                <React.Fragment key={index}>
+                  <UserInfo
+                    user={user}
+                    addFriend={true}
+                    toggleReloadData={toggleReloadData}
+                  />
+                </React.Fragment>
               );
             })}
           </div>

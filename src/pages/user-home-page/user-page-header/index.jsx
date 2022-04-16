@@ -30,7 +30,7 @@ import {getPostById} from 'redux/actions/UserPost';
 import {getSignedUrl} from '../../../redux/actions/media';
 import whiteCfgLogo from 'assets/white_header_logo.png';
 
-export default function AdminHeader() {
+export default React.memo(function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState('');
   const [image, setImage] = useState('');
@@ -373,4 +373,4 @@ export default function AdminHeader() {
       </AppHeader>
     </div>
   );
-}
+});

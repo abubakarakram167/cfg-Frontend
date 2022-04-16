@@ -4,7 +4,7 @@ import {socket} from '../../../socket';
 import './style.css';
 import {socketEnums} from 'utils/socketEnums';
 
-export default function CommonComponent(props) {
+export default React.memo(function CommonComponent(props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [conversationExtended, setConversationExtended] = useState(false);
   const toggleExpansion = () => {
@@ -54,4 +54,4 @@ export default function CommonComponent(props) {
       </div>
     </div>
   );
-}
+});

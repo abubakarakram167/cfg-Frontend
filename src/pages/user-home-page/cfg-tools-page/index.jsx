@@ -11,7 +11,7 @@ import {
   getToolsData,
 } from '../../../redux/actions/toolActions';
 
-export default function CfgToolsPage() {
+export default React.memo(function CfgToolsPage() {
   const params = useParams();
   const selectedTool = useSelector((state) => state.tool.selectedTool);
   const dispatch = useDispatch();
@@ -52,4 +52,4 @@ export default function CfgToolsPage() {
       </div>
     </CommonComponent>
   );
-}
+});

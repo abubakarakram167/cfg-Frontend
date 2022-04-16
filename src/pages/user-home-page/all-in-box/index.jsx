@@ -27,7 +27,7 @@ export default function AllInboxPage() {
       <br />
       {fakeSideImageData.map((element, index) => {
         return (
-          <div style={{marginBottom: '10px'}}>
+          <div style={{marginBottom: '10px'}} key={index}>
             <SideImageCard element={element} />
           </div>
         );

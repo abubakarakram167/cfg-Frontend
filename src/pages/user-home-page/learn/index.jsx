@@ -14,7 +14,7 @@ import {
 import {getSignedUrl} from '../../../redux/actions/media';
 import {Link} from 'react-router-dom';
 
-export default function Learn() {
+export default React.memo(function Learn() {
   const params = useParams();
   const [content, setContent] = useState(null);
   const history = useHistory();
@@ -124,4 +124,4 @@ export default function Learn() {
       )}
     </CommonComponent>
   );
-}
+});
