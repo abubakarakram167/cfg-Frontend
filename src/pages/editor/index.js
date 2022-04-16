@@ -66,7 +66,7 @@ const isUrlValid = (url) => {
 };
 const baseUrl = process.env.SERVER_URL;
 
-export default function Editor() {
+export default React.memo(function Editor() {
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
@@ -1147,4 +1147,4 @@ export default function Editor() {
       </Container>
     </div>
   );
-}
+});

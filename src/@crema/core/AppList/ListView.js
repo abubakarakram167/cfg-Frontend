@@ -24,50 +24,52 @@ const getFooterContainer = (ListFooterComponent) => {
     );
   return null;
 };
-const ListView = ({
-  renderRow,
-  onEndReached,
-  data,
-  animation,
-  delay = 0,
-  duration = 200,
-  containerStyle,
-  border,
-  ListFooterComponent,
-  ListEmptyComponent,
-  ItemSeparatorComponent,
-  ...rest
-}) => {
-  const theme = useTheme();
-  const borderStyle = {
-    border: `1px solid ${grey[300]}`,
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: 4,
-    overflow: 'hidden',
-  };
+const ListView = React.memo(
+  ({
+    renderRow,
+    onEndReached,
+    data,
+    animation,
+    delay = 0,
+    duration = 200,
+    containerStyle,
+    border,
+    ListFooterComponent,
+    ListEmptyComponent,
+    ItemSeparatorComponent,
+    ...rest
+  }) => {
+    const theme = useTheme();
+    const borderStyle = {
+      border: `1px solid ${grey[300]}`,
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: 4,
+      overflow: 'hidden',
+    };
 
-  if (!onEndReached) {
-    onEndReached = () => {};
-  }
+    if (!onEndReached) {
+      onEndReached = () => {};
+    }
 
-  let style = containerStyle;
-  if (border) {
-    style = {...style, ...borderStyle};
-  }
-  useBottomScrollListener(onEndReached, 200);
-  return (
-    <AppAnimateGroup
-      style={{...style}}
-      {...rest}
-      flex={1}
-      enter={{delay, duration, animation}}>
-      {data.length > 0
-        ? data.map((item, index) => renderRow(item, index))
-        : getEmptyContainer(ListEmptyComponent)}
-      {getFooterContainer(ListFooterComponent)}
-    </AppAnimateGroup>
-  );
-};
+    let style = containerStyle;
+    if (border) {
+      style = {...style, ...borderStyle};
+    }
+    useBottomScrollListener(onEndReached, 200);
+    return (
+      <AppAnimateGroup
+        style={{...style}}
+        {...rest}
+        flex={1}
+        enter={{delay, duration, animation}}>
+        {data.length > 0
+          ? data.map((item, index) => renderRow(item, index))
+          : getEmptyContainer(ListEmptyComponent)}
+        {getFooterContainer(ListFooterComponent)}
+      </AppAnimateGroup>
+    );
+  },
+);
 
 export default ListView;
 ListView.propTypes = {

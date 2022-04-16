@@ -10,7 +10,7 @@ import {transformImagesInContent} from '../../components/ReUsable';
 import JournalModal from '../../components/JournalModal';
 import CommonComponent from 'pages/user-home-page/common-component';
 
-export default function ContentDisplay() {
+export default React.memo(function ContentDisplay() {
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
@@ -121,4 +121,4 @@ export default function ContentDisplay() {
       </div>
     </div>
   );
-}
+});

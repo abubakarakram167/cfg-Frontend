@@ -13,7 +13,7 @@ import useStyles from './index.style';
 import {AppContext} from '../../index';
 import AppSidebar from './AppSidebar';
 
-const AppsContainer = (props) => {
+const AppsContainer = React.memo((props) => {
   const dispatch = useDispatch();
   const {isAppDrawerOpen} = useSelector(({common}) => common);
   const {footer, navStyle} = useContext(AppContext);
@@ -74,7 +74,7 @@ const AppsContainer = (props) => {
       </Box>
     </Box>
   );
-};
+});
 
 export default AppsContainer;
 

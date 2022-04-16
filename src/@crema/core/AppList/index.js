@@ -3,7 +3,7 @@ import ListView from './ListView';
 import PropTypes from 'prop-types';
 import ListFooter from './ListFooter';
 
-const AppList = ({footerProps, ...props}) => {
+const AppList = React.memo(({footerProps, ...props}) => {
   return (
     <ListView
       {...props}
@@ -17,7 +17,7 @@ const AppList = ({footerProps, ...props}) => {
       }
     />
   );
-};
+});
 
 export default AppList;
 AppList.propTypes = {

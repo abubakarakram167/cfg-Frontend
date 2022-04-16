@@ -76,7 +76,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CfgTool(props) {
+export default React.memo(function CfgTool(props) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.cfg);
   const permissions = useSelector((state) => state.roles.permissions);
@@ -633,4 +633,4 @@ export default function CfgTool(props) {
       </Container>
     </div>
   );
-}
+});

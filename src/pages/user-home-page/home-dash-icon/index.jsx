@@ -58,7 +58,7 @@ const cardsData = [
   },
 ];
 
-export default function Homedashicon() {
+export default React.memo(function Homedashicon() {
   const state = useSelector((state) => state.cfg);
   const dispatch = useDispatch();
   const [dayTools, setDayTools] = useState([]);
@@ -139,9 +139,9 @@ export default function Homedashicon() {
         <div className='cardMain'>
           <div className='list-container'>
             {dayTools.length > 0 &&
-              dayTools.map((tool) => {
+              dayTools.map((tool, index) => {
                 return (
-                  <Link to={`/home/cfg-tools/${tool.id}`}>
+                  <Link to={`/home/cfg-tools/${tool.id}`} key={index}>
                     <div className='todoList'>
                       <img alt='img' src={tool.newUrl} />
                       <h5>{tool.title}</h5>
@@ -233,4 +233,4 @@ export default function Homedashicon() {
       />
     </CommonComponent>
   );
-}
+});

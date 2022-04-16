@@ -72,7 +72,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Preferences() {
+export default React.memo(function Preferences() {
   const [option, setOption] = useState('');
   const [value, setValue] = useState('');
   const [description, setDescription] = useState('');
@@ -357,4 +357,4 @@ export default function Preferences() {
       </Container>
     </div>
   );
-}
+});

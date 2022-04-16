@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard({post, getUserPost}) {
+export default React.memo(function RecipeReviewCard({post, getUserPost}) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [comment, setComment] = React.useState('');
@@ -518,4 +518,4 @@ export default function RecipeReviewCard({post, getUserPost}) {
       </Card>
     </>
   );
-}
+});

@@ -85,7 +85,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UserManagement() {
+export default React.memo(function UserManagement() {
   const dispatch = useDispatch();
   const [userData, setUserData] = useState([]);
   const [currentCheckState, setCurrentCheckState] = useState(false);
@@ -683,4 +683,4 @@ export default function UserManagement() {
       </Container>
     </div>
   );
-}
+});

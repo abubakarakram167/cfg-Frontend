@@ -40,7 +40,7 @@ const changeHeight = {
   paddingTop: 0,
 };
 
-export default function CreatePostBox(props) {
+export default React.memo(function CreatePostBox(props) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const [content, setContent] = useState('');
@@ -297,4 +297,4 @@ export default function CreatePostBox(props) {
       </AppCard>
     </div>
   );
-}
+});

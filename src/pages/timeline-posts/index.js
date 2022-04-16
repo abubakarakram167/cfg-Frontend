@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
 
 let loadFirst = true;
 
-const TimeLinePosts = () => {
+const TimeLinePosts = React.memo(() => {
   const classes = useStyles();
   const {
     posts: getposts,
@@ -213,6 +213,6 @@ const TimeLinePosts = () => {
       </CommonComponent>
     </div>
   );
-};
+});
 
 export default TimeLinePosts;

@@ -13,7 +13,7 @@ import {
 } from '../../../components/ReUsable';
 import {getSignedUrl} from '../../../redux/actions/media';
 
-export default function ConversationContentDisplay() {
+export default React.memo(function ConversationContentDisplay() {
   const params = useParams();
   const [content, setContent] = useState(null);
   const history = useHistory();
@@ -131,4 +131,4 @@ export default function ConversationContentDisplay() {
       )}
     </CommonComponent>
   );
-}
+});

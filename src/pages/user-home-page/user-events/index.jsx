@@ -9,7 +9,7 @@ import jsCookie from 'js-cookie';
 import moment from 'moment';
 import EventModal from 'components/EventModal';
 
-export default function UserEvents() {
+export default React.memo(function UserEvents() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.cfg);
   const [content, setContent] = useState([]);
@@ -111,4 +111,4 @@ export default function UserEvents() {
         })} */}
     </CommonComponent>
   );
-}
+});

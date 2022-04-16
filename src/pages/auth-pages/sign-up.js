@@ -6,7 +6,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useSelector} from 'react-redux';
 
-export default function SignUp({setView}) {
+export default React.memo(function SignUp({setView}) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -114,4 +114,4 @@ export default function SignUp({setView}) {
       </form>
     </div>
   );
-}
+});

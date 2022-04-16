@@ -5,7 +5,7 @@ import GroupContainer from './group-container';
 import PostDetails from '../post-details';
 import {AddCircle} from '@material-ui/icons';
 import './style.css';
-export default function UserGroup() {
+export default React.memo(function UserGroup() {
   const [currentGroup, setCurrentGroup] = useState('');
 
   const createComment = (id, commentText) => {
@@ -157,4 +157,4 @@ export default function UserGroup() {
         })}
     </CommonComponent>
   );
-}
+});

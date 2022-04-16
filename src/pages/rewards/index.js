@@ -51,7 +51,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Rewards() {
+export default React.memo(function Rewards() {
   const [rewardData, setRewardData] = useState([
     {
       checked: false,
@@ -307,4 +307,4 @@ export default function Rewards() {
       </Container>
     </div>
   );
-}
+});

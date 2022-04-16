@@ -326,11 +326,12 @@ const AppSidebar = (props) => {
             </ListItemText>
           </ListItem>
           {allSessions.length > 0 &&
-            allSessions.map((session) => {
+            allSessions.map((session, index) => {
               return (
                 <Collapse
                   in={conversationExtended}
                   timeout='auto'
+                  key={index}
                   unmountOnExit>
                   <List>
                     <div className='conversation-container'>
@@ -358,7 +359,9 @@ const AppSidebar = (props) => {
                                     {element.subtitles.rows.map((sub) => {
                                       if (sub.status === 'published') {
                                         return (
-                                          <li className='subtitle-element'>
+                                          <li
+                                            className='subtitle-element'
+                                            key={sub.id}>
                                             <Link
                                               to={`/home/conversation/${sub.id}`}>
                                               <strong>{sub.title}</strong>

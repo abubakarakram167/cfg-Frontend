@@ -58,7 +58,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function HostAConversation() {
+export default React.memo(function HostAConversation() {
   const classes = useStyles();
   const [name, setName] = useState('');
   const [date, setDate] = useState(new Date());
@@ -375,4 +375,4 @@ export default function HostAConversation() {
       </div>
     </CommonComponent>
   );
-}
+});

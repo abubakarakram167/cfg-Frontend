@@ -44,7 +44,7 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-export default function CfgElement() {
+export default React.memo(function CfgElement() {
   const dispatch = useDispatch();
   const params = useParams();
   const state = useSelector((state) => state.session.contentData);
@@ -322,4 +322,4 @@ export default function CfgElement() {
       </Container>
     </div>
   );
-}
+});

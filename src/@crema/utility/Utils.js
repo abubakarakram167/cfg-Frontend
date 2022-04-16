@@ -1,10 +1,10 @@
-import {createMuiTheme} from '@material-ui/core/styles';
+import {createTheme} from '@material-ui/core/styles';
 import moment from 'moment';
 import {useIntl} from 'react-intl';
 import {useMediaQuery, useTheme} from '@material-ui/core';
 
 export const isBreakPointDown = (key) => {
-  const defaultTheme = createMuiTheme();
+  const defaultTheme = createTheme();
   return defaultTheme.breakpoints.width(key) > window.innerWidth;
 };
 export const useDownBreakPointChecker = (key) => {

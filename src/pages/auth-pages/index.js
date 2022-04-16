@@ -20,7 +20,7 @@ import jsCookie from 'js-cookie';
 //   registerAction,
 // } from 'backend-integration/actions/auth-actions';
 
-export default function Index() {
+export default React.memo(function Index() {
   const [view, setView] = useState(1);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -72,4 +72,4 @@ export default function Index() {
       </CookieConsent>
     </div>
   );
-}
+});
