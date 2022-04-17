@@ -21,7 +21,7 @@ import './App.css';
 import 'semantic-ui-css/semantic.min.css';
 const store = configureStore();
 
-export default React.memo(function App() {
+export default function App() {
   return (
     <ContextProvider>
       <Provider store={store}>
@@ -42,4 +42,4 @@ export default React.memo(function App() {
       </Provider>
     </ContextProvider>
   );
-});
+}

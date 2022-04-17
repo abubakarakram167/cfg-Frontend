@@ -1,7 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
-import AppCard from '@crema/core/AppCard';
-import Logo from 'assets/Logo.png';
 import {TextField} from '@material-ui/core';
 import queryString from 'query-string';
 import {
@@ -15,9 +13,12 @@ import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import ReactPasswordStrength from 'react-password-strength';
 import PasswordStrengthBar from 'react-password-strength-bar';
-import LogoImage from 'assets/Logo.png';
 import {baseUrl} from 'utils/axios';
 import {terms_conditions} from './terms_conditions';
+const LogoImage =
+  'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/Logo.png';
+
+const AppCard = lazy(() => import('@crema/core/AppCard'));
 
 const CreatePassword = () => {
   const state = useSelector((state) => state);

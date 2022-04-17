@@ -1,15 +1,16 @@
-import React, {useState, useEffect} from 'react';
-import CommonComponent from '../common-component';
-import Event from './event';
-import UpcomingEvent from './upcoming-event';
+import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {getResourceData} from 'redux/actions/cfg';
 import jsCookie from 'js-cookie';
 import moment from 'moment';
-import EventModal from 'components/EventModal';
 
-export default React.memo(function UserEvents() {
+const CommonComponent = lazy(() => import('../common-component'));
+const UpcomingEvent = lazy(() => import('./upcoming-event'));
+const Event = lazy(() => import('./event'));
+const EventModal = lazy(() => import('components/EventModal'));
+
+export default function UserEvents() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.cfg);
   const [content, setContent] = useState([]);
@@ -111,4 +112,4 @@ export default React.memo(function UserEvents() {
         })} */}
     </CommonComponent>
   );
-});
+}

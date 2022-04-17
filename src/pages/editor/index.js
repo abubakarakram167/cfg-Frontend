@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import AdminHeader from 'pages/admin-header';
+import React, {useState, useEffect, lazy} from 'react';
 import {Container, Select, MenuItem, TextField} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import './style.css';
@@ -28,13 +27,11 @@ import jsCookie from 'js-cookie';
 import PromptModal from 'components/PromptModal';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import MediaUpload from 'components/MediaUpload';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Media from 'redux/services/media';
 
 import {parseXML} from 'jquery';
 import Api from '../../utils/axios';
-import JournalModal from '../../components/JournalModal';
 import SearchDropdown from 'react-select';
 import {onGetUserList} from '../../redux/actions';
 import {DateTimePicker} from '@material-ui/pickers';
@@ -43,6 +40,10 @@ import {
   deleteInvite,
   sendInvite,
 } from 'redux/actions/sessionActions';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const MediaUpload = lazy(() => import('components/MediaUpload'));
+const JournalModal = lazy(() => import('../../components/JournalModal'));
 
 const useStyles = makeStyles({
   datePicker: {
@@ -66,7 +67,7 @@ const isUrlValid = (url) => {
 };
 const baseUrl = process.env.SERVER_URL;
 
-export default React.memo(function Editor() {
+export default function Editor() {
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
@@ -1147,4 +1148,4 @@ export default React.memo(function Editor() {
       </Container>
     </div>
   );
-});
+}

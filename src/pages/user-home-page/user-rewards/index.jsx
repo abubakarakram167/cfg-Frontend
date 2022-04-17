@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
-import RewardCard from './reward-card';
+import React, {useState, lazy} from 'react';
 import './style.css';
-import UserPageHeader from '../user-page-header';
-import CommonComponent from '../common-component';
 import {Dialog, Button} from '@material-ui/core';
 import {Cancel, Redeem, ShoppingBasket} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
+
+const CommonComponent = lazy(() => import('../common-component'));
+const UserPageHeader = lazy(() => import('../user-page-header'));
+const RewardCard = lazy(() => import('./reward-card'));
+
 export default function Rewards() {
   const [open, setOpen] = useState(false);
   const toggleOpen = () => {

@@ -1,11 +1,13 @@
 import {element} from 'prop-types';
-import React, {useState} from 'react';
-import CommonComponent from '../common-component';
-import GroupContainer from './group-container';
-import PostDetails from '../post-details';
+import React, {useState, lazy} from 'react';
 import {AddCircle} from '@material-ui/icons';
 import './style.css';
-export default React.memo(function UserGroup() {
+
+const CommonComponent = lazy(() => import('../common-component'));
+const GroupContainer = lazy(() => import('./group-container'));
+const PostDetails = lazy(() => import('../post-details'));
+
+export default function UserGroup() {
   const [currentGroup, setCurrentGroup] = useState('');
 
   const createComment = (id, commentText) => {
@@ -157,4 +159,4 @@ export default React.memo(function UserGroup() {
         })}
     </CommonComponent>
   );
-});
+}

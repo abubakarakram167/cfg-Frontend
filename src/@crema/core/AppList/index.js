@@ -1,9 +1,10 @@
-import React from 'react';
-import ListView from './ListView';
+import React, {lazy} from 'react';
 import PropTypes from 'prop-types';
-import ListFooter from './ListFooter';
 
-const AppList = React.memo(({footerProps, ...props}) => {
+const ListView = lazy(() => import('./ListView'));
+const ListFooter = lazy(() => import('./ListFooter'));
+
+const AppList = ({footerProps, ...props}) => {
   return (
     <ListView
       {...props}
@@ -17,7 +18,7 @@ const AppList = React.memo(({footerProps, ...props}) => {
       }
     />
   );
-});
+};
 
 export default AppList;
 AppList.propTypes = {

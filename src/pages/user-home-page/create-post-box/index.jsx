@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import AppCard from '@crema/core/AppCard';
+import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
 import {
   Avatar,
@@ -23,12 +22,14 @@ import {createUserPost, getUserPost} from 'redux/actions/UserPost';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 import {getSignedUrl} from '../../../redux/actions/media';
-import MediaUpload from 'components/MediaUpload';
 import InputEmoji from 'react-input-emoji';
 import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import Picker from 'components/emojiComponent';
 import TextareaAutosize from 'react-textarea-autosize';
+
+const AppCard = lazy(() => import('@crema/core/AppCard'));
+const MediaUpload = lazy(() => import('components/MediaUpload'));
+const Picker = lazy(() => import('components/emojiComponent'));
 
 const defaultHeight = {
   height: 180,
@@ -40,7 +41,7 @@ const changeHeight = {
   paddingTop: 0,
 };
 
-export default React.memo(function CreatePostBox(props) {
+export default function CreatePostBox(props) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const [content, setContent] = useState('');
@@ -297,4 +298,4 @@ export default React.memo(function CreatePostBox(props) {
       </AppCard>
     </div>
   );
-});
+}

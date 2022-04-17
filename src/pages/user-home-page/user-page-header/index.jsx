@@ -1,6 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import AppHeader from '@crema/core/AppsContainer/AppsHeader';
-import SearchBar from '@crema/core/SearchBar';
+import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
 import NotificationIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -10,14 +8,12 @@ import {Avatar, Typography} from '@material-ui/core';
 import UserAvatar from 'assets/user-avatar.png';
 import {Menu, MenuItem, Button} from '@material-ui/core';
 import {Link, useHistory} from 'react-router-dom';
-import Logo from 'assets/Logo.png';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import jsCookie from 'js-cookie';
 import {socket} from 'socket';
 import {useSelector, useDispatch} from 'react-redux';
-import AppSideBar from '../AppSidebar';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import {setCurrentUser} from 'redux/actions/authActions';
 import {baseUrl} from 'utils/axios';
@@ -25,12 +21,19 @@ import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
-import LogoImage from 'assets/cfgWhiteLogo.png';
 import {getPostById} from 'redux/actions/UserPost';
 import {getSignedUrl} from '../../../redux/actions/media';
 import whiteCfgLogo from 'assets/white_header_logo.png';
 
-export default React.memo(function AdminHeader() {
+const LogoImage =
+  'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/cfgWhiteLogo.png';
+const Logo =
+  'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/Logo.png';
+const AppHeader = lazy(() => import('@crema/core/AppsContainer/AppsHeader'));
+const SearchBar = lazy(() => import('@crema/core/SearchBar'));
+const AppSideBar = lazy(() => import('../AppSidebar'));
+
+export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState('');
   const [image, setImage] = useState('');
@@ -373,4 +376,4 @@ export default React.memo(function AdminHeader() {
       </AppHeader>
     </div>
   );
-});
+}

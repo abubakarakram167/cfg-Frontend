@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import AdminHeader from 'pages/admin-header';
+import React, {useState, useEffect, lazy} from 'react';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -46,6 +45,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Categories from 'modules/dashboard/CRM/MonthlyEarning/Categories';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
 
 const CustomSelect = withStyles((theme) => ({
   select: {
@@ -94,7 +95,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default React.memo(function CfgTool(props) {
+export default function CfgTool(props) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
   const permissions = useSelector((state) => state.roles.permissions);
@@ -765,4 +766,4 @@ export default React.memo(function CfgTool(props) {
       </Container>
     </div>
   );
-});
+}

@@ -1,20 +1,26 @@
-import React from 'react';
-import ResetPassword from 'pages/auth-pages/reset-password/index';
-import Auth from 'pages/auth-pages';
+import React, {Suspense, lazy} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import Loader from '@crema/core/Loader';
+
+const ResetPassword = lazy(() =>
+  import('pages/auth-pages/reset-password/index'),
+);
+const Auth = lazy(() => import('pages/auth-pages'));
 
 const auth = () => {
   return (
     <div>
       <Router>
-        <Switch>
-          <Route path='/'>
-            <Auth />
-          </Route>
-          <Route path='/reset'>
-            <ResetPassword />
-          </Route>
-        </Switch>
+        <Suspense fallback={<Loader />}>
+          <Switch>
+            <Route path='/'>
+              <Auth />
+            </Route>
+            <Route path='/reset'>
+              <ResetPassword />
+            </Route>
+          </Switch>
+        </Suspense>
       </Router>
     </div>
   );

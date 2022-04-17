@@ -1,19 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, lazy} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
 import './style.css';
-import CommonComponent from 'pages/user-home-page/common-component';
-import Session from 'redux/services/session';
 import SunEditor from '../../../components/sunEditor';
 import Banner from './banner';
 import {Button} from '@material-ui/core';
-import JournalModal from '../../../components/JournalModal';
 import {
   transformImagesInContent,
   getRestoredImage,
 } from '../../../components/ReUsable';
 import {getSignedUrl} from '../../../redux/actions/media';
 
-export default React.memo(function ConversationContentDisplay() {
+const CommonComponent = lazy(() =>
+  import('pages/user-home-page/common-component'),
+);
+const JournalModal = lazy(() => import('../../../components/JournalModal'));
+const Session = lazy(() => import('redux/services/session'));
+
+export default function ConversationContentDisplay() {
   const params = useParams();
   const [content, setContent] = useState(null);
   const history = useHistory();
@@ -131,4 +134,4 @@ export default React.memo(function ConversationContentDisplay() {
       )}
     </CommonComponent>
   );
-});
+}

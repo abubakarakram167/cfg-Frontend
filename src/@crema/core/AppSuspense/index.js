@@ -4,9 +4,7 @@ import {Loader} from '../../index';
 
 const AppSuspense = (props) => {
   return (
-    <React.Suspense fallback={<Loader {...props.loadingProps} />}>
-      {props.children}
-    </React.Suspense>
+    <React.Suspense fallback={<Loader />}>{props.children}</React.Suspense>
   );
 };
 

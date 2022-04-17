@@ -1,12 +1,14 @@
-import React, {useEffect} from 'react';
-import UserPageHeader from '../user-page-header';
-import AchievementCard from './achievement-card';
-import AchievementList from './achievement-list';
-import Summary from './summary';
+import React, {useEffect, lazy} from 'react';
 import {ChatBubbleOutline, Whatshot} from '@material-ui/icons';
-import CommonComponent from '../common-component';
 import './style.css';
-export default React.memo(function UserAcievement() {
+
+const CommonComponent = lazy(() => import('../common-component'));
+const AchievementCard = lazy(() => import('./achievement-card'));
+const AchievementList = lazy(() => import('./achievement-list'));
+const Summary = lazy(() => import('./summary'));
+const UserPageHeader = lazy(() => import('../user-page-header'));
+
+export default function UserAcievement() {
   const achievementCardFakeData = [
     {
       cfgSession: 'CFG Session 1',
@@ -175,4 +177,4 @@ export default React.memo(function UserAcievement() {
       <Summary pointsAchieved={1000} pointsRedeemed={1000} balance={2000} />
     </CommonComponent>
   );
-});
+}

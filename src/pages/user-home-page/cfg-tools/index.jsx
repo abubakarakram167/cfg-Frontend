@@ -1,11 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import CommonComponent from '../common-component';
-import CfgCard from './cfg-card';
+import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
 import {getToolsData} from '../../../redux/actions/toolActions';
 import {useDispatch, useSelector} from 'react-redux';
 
-export default React.memo(function HomeCFGTools() {
+const CommonComponent = lazy(() => import('../common-component'));
+const CfgCard = lazy(() => import('./cfg-card'));
+
+export default function HomeCFGTools() {
   const dispatch = useDispatch();
   const tools = useSelector((state) => state.tool.tools);
   console.log('the tools', tools);
@@ -32,4 +33,4 @@ export default React.memo(function HomeCFGTools() {
       </div>
     </CommonComponent>
   );
-});
+}

@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, lazy} from 'react';
 import './style.css';
-import CommonComponent from '../common-component';
 import Timeline from '../../../assets/history_toggle_off_black_24dp.svg';
 import ToolIcon from '../../../assets/tools-solid.svg';
 import Family from '../../../assets/users-solid.svg';
@@ -17,7 +16,9 @@ import {getResourceData} from 'redux/actions/cfg';
 import {Link} from 'react-router-dom';
 import MediaGroup from 'redux/services/mediagroup';
 import Session from 'redux/services/session';
-import ConversationModal from 'components/MyConversationsModal';
+
+const CommonComponent = lazy(() => import('../common-component'));
+const ConversationModal = lazy(() => import('components/MyConversationsModal'));
 
 const cardsData = [
   {
@@ -58,7 +59,7 @@ const cardsData = [
   },
 ];
 
-export default React.memo(function Homedashicon() {
+export default function Homedashicon() {
   const state = useSelector((state) => state.cfg);
   const dispatch = useDispatch();
   const [dayTools, setDayTools] = useState([]);
@@ -233,4 +234,4 @@ export default React.memo(function Homedashicon() {
       />
     </CommonComponent>
   );
-});
+}

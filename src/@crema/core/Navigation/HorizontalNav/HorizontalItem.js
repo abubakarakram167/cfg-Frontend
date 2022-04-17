@@ -72,4 +72,4 @@ HorizontalItem.propTypes = {
 
 HorizontalItem.defaultProps = {};
 
-export default withRouter(React.memo(HorizontalItem));
+export default withRouter(HorizontalItem);

@@ -40,7 +40,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default React.memo(function SignIn({setView}) {
+export default function SignIn({setView}) {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [currentHeight, setCurrentheight] = useState(0);
@@ -202,4 +202,4 @@ export default React.memo(function SignIn({setView}) {
       </form>
     </div>
   );
-});
+}

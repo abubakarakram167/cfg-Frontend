@@ -3,7 +3,7 @@ import SunEditor from 'suneditor-react';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
 
-const EditorComponent = React.memo(({content, setContent}) => {
+const EditorComponent = ({content, setContent}) => {
   const handleEditorChange = (e) => {
     setContent(e);
   };
@@ -56,6 +56,6 @@ const EditorComponent = React.memo(({content, setContent}) => {
       />
     </div>
   );
-});
+};
 
 export default EditorComponent;
