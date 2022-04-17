@@ -12,7 +12,7 @@ import Box from '@material-ui/core/Box';
 import {RouteTransition} from '../../../shared/constants/AppEnums';
 import AppErrorBoundary from '../AppErrorBoundary';
 
-const TransitionWrapper = React.memo(({children}) => {
+const TransitionWrapper = ({children}) => {
   const {rtAnim} = useContext(AppContext);
   const location = useLocation();
   if (rtAnim === RouteTransition.NONE) {
@@ -29,7 +29,7 @@ const TransitionWrapper = React.memo(({children}) => {
       </CSSTransition>
     </TransitionGroup>
   );
-});
+};
 
 TransitionWrapper.propTypes = {
   children: PropTypes.node.isRequired,

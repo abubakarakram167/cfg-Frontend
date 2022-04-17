@@ -6,6 +6,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import MemoryIcon from '@material-ui/icons/Memory';
 import HomeIcon from '@material-ui/icons/Home';
 import {Link} from 'react-router-dom';
+
 const useStyles = makeStyles((theme) => ({
   cont: {
     display: 'flex',

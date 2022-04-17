@@ -1,11 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import CommonComponent from '../common-component';
-import UserInfo from './userInfo';
+import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {getResourceData} from 'redux/actions/cfg';
 import {onGetUserList} from 'redux/actions';
 import Friend from 'redux/services/friends';
+
+const CommonComponent = lazy(() => import('../common-component'));
+const UserInfo = lazy(() => import('./userInfo'));
 
 export default function UserEvents() {
   const dispatch = useDispatch();

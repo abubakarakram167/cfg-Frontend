@@ -94,7 +94,7 @@ const CremaThemeProvider = (props) => {
   );
 };
 
-export default React.memo(CremaThemeProvider);
+export default CremaThemeProvider;
 
 CremaThemeProvider.propTypes = {
   children: PropTypes.node.isRequired,

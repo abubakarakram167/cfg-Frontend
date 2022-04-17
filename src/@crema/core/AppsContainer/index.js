@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, lazy} from 'react';
 import {onToggleAppDrawer} from '../../../redux/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import InfoView from '@crema/core/InfoView';
@@ -11,9 +11,10 @@ import {Fonts} from '../../../shared/constants/AppEnums';
 import Card from '@material-ui/core/Card';
 import useStyles from './index.style';
 import {AppContext} from '../../index';
-import AppSidebar from './AppSidebar';
 
-const AppsContainer = React.memo((props) => {
+const AppSidebar = lazy(() => import('./AppSidebar'));
+
+const AppsContainer = (props) => {
   const dispatch = useDispatch();
   const {isAppDrawerOpen} = useSelector(({common}) => common);
   const {footer, navStyle} = useContext(AppContext);
@@ -74,7 +75,7 @@ const AppsContainer = React.memo((props) => {
       </Box>
     </Box>
   );
-});
+};
 
 export default AppsContainer;
 

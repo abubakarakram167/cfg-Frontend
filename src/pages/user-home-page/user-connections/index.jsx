@@ -1,7 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import UserPageHeader from '../user-page-header';
-import UserInfoBox from './user-info-box';
-import UserDetails from './user-details';
+import React, {useState, useEffect, lazy} from 'react';
 import {
   ExpandMore,
   ExpandLess,
@@ -10,12 +7,16 @@ import {
   AddCircle,
 } from '@material-ui/icons';
 import {Button} from '@material-ui/core';
-import CommonComponent from '../common-component';
 import Friend from 'redux/services/friends';
 import GroupIcon from '@material-ui/icons/Group';
 import {Link} from 'react-router-dom';
 import './style.css';
 import {render} from 'react-dom';
+
+const CommonComponent = lazy(() => import('../common-component'));
+const UserDetails = lazy(() => import('./user-details'));
+const UserInfoBox = lazy(() => import('./user-info-box'));
+const UserPageHeader = lazy(() => import('../user-page-header'));
 
 export default function UserConnections() {
   const [requestsExpanded, setRequestsExpanded] = useState(true);

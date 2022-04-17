@@ -1,9 +1,7 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, lazy} from 'react';
 import CreatePost from '../create-post-box';
 import './style.css';
 import './chat-modal.css';
-import PostDetails from '../post-details';
-import CommonComponent from '../common-component';
 import Session from 'redux/services/session';
 import {makeStyles} from '@material-ui/core/styles';
 import {useHistory} from 'react-router-dom';
@@ -43,6 +41,9 @@ import './style.css';
 import {showMessengerApp} from 'redux/actions/app';
 import {getSpecificPreference} from 'redux/actions/Preference';
 
+const CommonComponent = lazy(() => import('../common-component'));
+const PostDetails = lazy(() => import('../post-details'));
+
 const useStyling = makeStyles({
   childListPadding: {
     '& .MuiCollapse-entered': {
@@ -54,7 +55,7 @@ const useStyling = makeStyles({
   },
 });
 
-export default React.memo(function UserHomePage() {
+export default function UserHomePage() {
   const state = useSelector((state) => state.cfg);
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.userPost.posts);
@@ -512,4 +513,4 @@ export default React.memo(function UserHomePage() {
       })}
     </CommonComponent>
   );
-});
+}

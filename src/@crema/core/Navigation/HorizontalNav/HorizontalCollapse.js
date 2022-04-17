@@ -209,4 +209,4 @@ HorizontalCollapse.propTypes = {
 
 HorizontalCollapse.defaultProps = {};
 
-export default withRouter(React.memo(HorizontalCollapse));
+export default withRouter(HorizontalCollapse);

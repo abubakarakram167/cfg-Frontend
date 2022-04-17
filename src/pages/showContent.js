@@ -1,20 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, lazy} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams, useHistory} from 'react-router';
 import {getContentData} from 'redux/actions/sessionActions';
-import AdminHeader from 'pages/admin-header';
 import './showContent.css';
-import SunEditor from '../components/sunEditor';
 import {transformImagesInContent} from '../components/ReUsable';
-import JournalModal from '../components/JournalModal';
-import InviteModal from '../components/inviteModal';
 import {getInvite, updateInvite} from 'redux/actions/sessionActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 
 var CryptoJS = require('crypto-js');
 
-export default React.memo(function ContentDisplay() {
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const SunEditor = lazy(() => import('../components/sunEditor'));
+const JournalModal = lazy(() => import('../components/JournalModal'));
+const InviteModal = lazy(() => import('../components/inviteModal'));
+
+export default function ContentDisplay() {
   const params = useParams();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.session);
@@ -180,4 +181,4 @@ export default React.memo(function ContentDisplay() {
       </div>
     </div>
   );
-});
+}

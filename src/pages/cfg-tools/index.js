@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import AdminHeader from 'pages/admin-header';
+import React, {useState, useEffect, lazy} from 'react';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,7 +15,7 @@ import ControlPoint from '@material-ui/icons/ControlPoint';
 import EditIcon from '@material-ui/icons/Edit';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 import {Link} from 'react-router-dom';
-import CustomTablePagination from '../user-management/pagination';
+
 import moment from 'moment';
 import jsCookie from 'js-cookie';
 import FilterList from '@material-ui/icons/FilterList';
@@ -40,8 +39,13 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
 import Categories from 'modules/dashboard/CRM/MonthlyEarning/Categories';
-import MediaUpload from 'components/MediaUpload';
 import {getSignedUrl} from '../../redux/actions/media';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const MediaUpload = lazy(() => import('components/MediaUpload'));
+const CustomTablePagination = lazy(() =>
+  import('../user-management/pagination'),
+);
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -95,7 +99,7 @@ const buttonStyle = {
   borderRadius: 5,
 };
 
-export default React.memo(function CfgTool(props) {
+export default function CfgTool(props) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.tool);
   const permissions = useSelector((state) => state.roles.permissions);
@@ -666,4 +670,4 @@ export default React.memo(function CfgTool(props) {
       </Container>
     </div>
   );
-});
+}

@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import AdminHeader from 'pages/admin-header';
+import React, {useState, useEffect, lazy} from 'react';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -47,6 +46,8 @@ import {
 } from '../../redux/actions/UserList';
 import './style.css';
 
+const AdminHeader = lazy(() => import('pages/admin-header'));
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: 'none',
@@ -85,7 +86,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default React.memo(function UserManagement() {
+export default function UserManagement() {
   const dispatch = useDispatch();
   const [userData, setUserData] = useState([]);
   const [currentCheckState, setCurrentCheckState] = useState(false);
@@ -683,4 +684,4 @@ export default React.memo(function UserManagement() {
       </Container>
     </div>
   );
-});
+}

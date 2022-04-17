@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const UserInfo = React.memo((props) => {
+const UserInfo = (props) => {
   const {themeMode} = useContext(AppContext);
   const dispatch = useDispatch();
   const user = useAuthUser();
@@ -139,6 +139,6 @@ const UserInfo = React.memo((props) => {
       </Box>
     </Box>
   );
-});
+};
 
 export default UserInfo;

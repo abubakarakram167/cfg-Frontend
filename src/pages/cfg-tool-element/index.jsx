@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, lazy} from 'react';
 import {useParams} from 'react-router';
 import {Link} from 'react-router-dom';
 import './style.css';
-import AdminHeader from 'pages/admin-header';
 import {useDispatch, useSelector} from 'react-redux';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import TableRow from '@material-ui/core/TableRow';
@@ -24,6 +23,8 @@ import {
 import {ControlPoint, ExpandMore} from '@material-ui/icons';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import moment from 'moment';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -56,7 +57,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default React.memo(function CfgElement() {
+export default function CfgElement() {
   const dispatch = useDispatch();
   const params = useParams();
   const state = useSelector((state) => state.session.contentData);
@@ -370,4 +371,4 @@ export default React.memo(function CfgElement() {
       </Container>
     </div>
   );
-});
+}

@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, lazy} from 'react';
 import {useParams} from 'react-router';
-import CommonComponent from '../common-component';
 import Banner from './banner';
-import LearnCard from './learn-card';
 import './style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -11,7 +9,10 @@ import {
   getToolsData,
 } from '../../../redux/actions/toolActions';
 
-export default React.memo(function CfgToolsPage() {
+const CommonComponent = lazy(() => import('../common-component'));
+const LearnCard = lazy(() => import('./learn-card'));
+
+export default function CfgToolsPage() {
   const params = useParams();
   const selectedTool = useSelector((state) => state.tool.selectedTool);
   const dispatch = useDispatch();
@@ -52,4 +53,4 @@ export default React.memo(function CfgToolsPage() {
       </div>
     </CommonComponent>
   );
-});
+}

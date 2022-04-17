@@ -24,50 +24,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ListEmptyResult = React.memo(
-  ({loader, placeholder, loading, title, actionTitle, content, onClick}) => {
-    const classes = useStyles();
-    if (loading || loader) {
-      return (
-        <React.Fragment>
-          {placeholder ? (
-            placeholder
-          ) : (
-            <Box className={clsx(classes.emptyListContainer, classes.flexRow)}>
-              <CircularProgress size={16} />
-              <Box component='span' ml={2}>
-                Loading...
-              </Box>
+const ListEmptyResult = ({
+  loader,
+  placeholder,
+  loading,
+  title,
+  actionTitle,
+  content,
+  onClick,
+}) => {
+  const classes = useStyles();
+  if (loading || loader) {
+    return (
+      <React.Fragment>
+        {placeholder ? (
+          placeholder
+        ) : (
+          <Box className={clsx(classes.emptyListContainer, classes.flexRow)}>
+            <CircularProgress size={16} />
+            <Box component='span' ml={2}>
+              Loading...
             </Box>
-          )}
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <Box className={classes.emptyListContainer}>
-          {title ? (
-            <Box component='h4' fontSize={18} color='text.secondary' mb={3}>
-              {title}
-            </Box>
-          ) : null}
-          <Box fontSize={16} component='p' color='text.hint'>
-            {content}
           </Box>
-
-          {actionTitle ? (
-            <Button
-              color='primary'
-              variant='contained'
-              style={{marginTop: 30, height: 45, minWidth: 150}}
-              onClick={onClick}>
-              {actionTitle}
-            </Button>
-          ) : null}
+        )}
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <Box className={classes.emptyListContainer}>
+        {title ? (
+          <Box component='h4' fontSize={18} color='text.secondary' mb={3}>
+            {title}
+          </Box>
+        ) : null}
+        <Box fontSize={16} component='p' color='text.hint'>
+          {content}
         </Box>
-      );
-    }
-  },
-);
+
+        {actionTitle ? (
+          <Button
+            color='primary'
+            variant='contained'
+            style={{marginTop: 30, height: 45, minWidth: 150}}
+            onClick={onClick}>
+            {actionTitle}
+          </Button>
+        ) : null}
+      </Box>
+    );
+  }
+};
 
 export default ListEmptyResult;
 

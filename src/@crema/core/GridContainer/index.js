@@ -3,13 +3,13 @@ import Grid from '@material-ui/core/Grid';
 import {isBreakPointDown} from '../../utility/Utils';
 import PropTypes from 'prop-types';
 
-const GridContainer = React.memo(({children, ...others}) => {
+const GridContainer = ({children, ...others}) => {
   return (
     <Grid container spacing={isBreakPointDown('md') ? 4 : 8} {...others}>
       {children}
     </Grid>
   );
-});
+};
 
 export default GridContainer;
 

@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
-import AppCard from '@crema/core/AppCard';
-import Header from '../auth-header';
 import {Link} from 'react-router-dom';
-import LogoImage from 'assets/Logo.png';
+const LogoImage =
+  'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/Logo.png';
+
+const AppCard = lazy(() => import('@crema/core/AppCard'));
+const Header = lazy(() => import('../auth-header'));
 
 const SessionExpired = () => {
   const [view, setView] = useState(1);

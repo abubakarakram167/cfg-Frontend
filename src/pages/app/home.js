@@ -1,27 +1,36 @@
-import React from 'react';
+import React, {lazy} from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   withRouter,
 } from 'react-router-dom';
-import ProtectedRoute from './protectedRouter';
-import UserHome from 'pages/user-home-page/user-home';
-import UserRewards from 'pages/user-home-page/user-rewards';
-import UserConnections from 'pages/user-home-page/user-connections';
-import UserAchievements from 'pages/user-home-page/user-achievement';
-import UserGroup from 'pages/user-home-page/groups';
-import UserProfile from 'pages/user-home-page/user-profile';
-import UserEvents from 'pages/user-home-page/user-events';
-import UserFriends from 'pages/user-home-page/user-friends';
-import HostAConversation from 'pages/user-home-page/host-a-conversation';
-import HomeCFGTools from 'pages/user-home-page/cfg-tools';
-import CfgToolsPage from 'pages/user-home-page/cfg-tools-page';
-import Learn from 'pages/user-home-page/learn';
-import AllInboxPage from 'pages/user-home-page/all-in-box';
-import ConversationContentDisplay from 'pages/user-home-page/conversation-content-display';
-import userJournals from 'pages/journal';
-import Homedashicon from 'pages/user-home-page/home-dash-icon';
+
+const ProtectedRoute = lazy(() => import('./protectedRouter'));
+const UserHome = lazy(() => import('pages/user-home-page/user-home'));
+const UserRewards = lazy(() => import('pages/user-home-page/user-rewards'));
+const UserConnections = lazy(() =>
+  import('pages/user-home-page/user-connections'),
+);
+const UserAchievements = lazy(() =>
+  import('pages/user-home-page/user-achievement'),
+);
+const UserGroup = lazy(() => import('pages/user-home-page/groups'));
+const UserProfile = lazy(() => import('pages/user-home-page/user-profile'));
+const UserEvents = lazy(() => import('pages/user-home-page/user-events'));
+const UserFriends = lazy(() => import('pages/user-home-page/user-friends'));
+const HostAConversation = lazy(() =>
+  import('pages/user-home-page/host-a-conversation'),
+);
+const HomeCFGTools = lazy(() => import('pages/user-home-page/cfg-tools'));
+const CfgToolsPage = lazy(() => import('pages/user-home-page/cfg-tools-page'));
+const Learn = lazy(() => import('pages/user-home-page/learn'));
+const AllInboxPage = lazy(() => import('pages/user-home-page/all-in-box'));
+const ConversationContentDisplay = lazy(() =>
+  import('pages/user-home-page/conversation-content-display'),
+);
+const userJournals = lazy(() => import('pages/journal'));
+const Homedashicon = lazy(() => import('pages/user-home-page/home-dash-icon'));
 
 export default [
   <ProtectedRoute exact path='/home' component={withRouter(UserHome)} />,

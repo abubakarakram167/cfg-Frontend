@@ -1,12 +1,13 @@
-import React from 'react';
-import CommonComponent from '../common-component';
-import BioCard from './bio';
-import CfgCard from './cfg';
-import DemographyCard from './demography';
-import GoalCard from './goals';
-import DefaultView from './default-homepage-view';
+import React, {lazy} from 'react';
 
-export default React.memo(function UserProfile() {
+const CommonComponent = lazy(() => import('../common-component'));
+const BioCard = lazy(() => import('./bio'));
+const CfgCard = lazy(() => import('./cfg'));
+const DemographyCard = lazy(() => import('./demography'));
+const GoalCard = lazy(() => import('./goals'));
+const DefaultView = lazy(() => import('./default-homepage-view'));
+
+export default function UserProfile() {
   return (
     <CommonComponent left='' right=''>
       <BioCard />
@@ -20,4 +21,4 @@ export default React.memo(function UserProfile() {
       <DefaultView />
     </CommonComponent>
   );
-});
+}

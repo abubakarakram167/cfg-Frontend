@@ -3,7 +3,7 @@ import {Box} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
 
-const AppLogoWhite = React.memo(() => {
+const AppLogoWhite = () => {
   const useStyles = makeStyles(() => ({
     logoRoot: {
       display: 'flex',
@@ -35,6 +35,6 @@ const AppLogoWhite = React.memo(() => {
       </Hidden>
     </Box>
   );
-});
+};
 
 export default AppLogoWhite;
