@@ -1,5 +1,5 @@
 import React from 'react';
-import {MemoryRouter as Router} from 'react-router';
+import {MemoryRouter as Router} from 'react-router-dom';
 import {Link as RouterLink} from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 

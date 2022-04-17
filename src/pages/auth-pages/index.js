@@ -3,7 +3,7 @@ import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
 import {useDispatch} from 'react-redux';
 import CookieConsent from 'react-cookie-consent';
-import {useHistory} from 'react-router';
+import {useHistory} from 'react-router-dom';
 import jsCookie from 'js-cookie';
 
 const Logo =

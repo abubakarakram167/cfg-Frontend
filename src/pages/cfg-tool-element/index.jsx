@@ -1,5 +1,5 @@
 import React, {useEffect, useState, lazy} from 'react';
-import {useParams} from 'react-router';
+import {useParams} from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import './style.css';
 import {useDispatch, useSelector} from 'react-redux';
