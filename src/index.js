@@ -14,6 +14,7 @@ import './fonts/Gotham-Font/GothamMedium.ttf';
 import './fonts/rissa/Rissa.ttf';
 import './fonts/angelina/angelina.ttf';
 import {SnackbarProvider} from 'notistack';
+require('apminsight')();
 
 if (module.hot) {
   module.hot.accept();
