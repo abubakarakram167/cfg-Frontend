@@ -1,6 +1,6 @@
 import React, {useEffect, useState, lazy} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams, useHistory} from 'react-router';
+import {useParams, useHistory} from 'react-router-dom';
 import {getContentData} from 'redux/actions/sessionActions';
 import './style.css';
 import {Link} from 'react-router-dom';
