@@ -91,7 +91,7 @@ export default function SignIn({setView}) {
         history.push('/admin');
       }
     }
-  }, []);
+  }, [state]);
 
   return (
     <div className='sign-in-box'>
