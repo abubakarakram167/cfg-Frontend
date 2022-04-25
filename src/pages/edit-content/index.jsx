@@ -1,5 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
-import AdminHeader from 'pages/admin-header';
+import React, {useState, useEffect, useRef, lazy} from 'react';
 import {Container, Select, MenuItem, TextField} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import './style.css';
@@ -25,19 +24,22 @@ import InfoIcon from '@material-ui/icons/Info';
 import {useHistory} from 'react-router-dom';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import MediaUpload from 'components/MediaUpload';
 import {makeStyles} from '@material-ui/core/styles';
 import Media from 'redux/services/media';
 
 import Api from '../../utils/axios';
 import {getSignedUrl} from '../../redux/actions/media';
 import {transformImagesInContent} from '../../components/ReUsable';
-import JournalModal from '../../components/JournalModal';
 import SearchDropdown from 'react-select';
 import {onGetUserList} from '../../redux/actions';
 import {getInviteOfMiniCfg, deleteInvite} from 'redux/actions/sessionActions';
 import {DateTimePicker} from '@material-ui/pickers';
 import validator from 'validator';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const MediaUpload = lazy(() => import('components/MediaUpload'));
+const JournalModal = lazy(() => import('../../components/JournalModal'));
+
 const baseUrl = process.env.SERVER_URL;
 const useStyles = makeStyles({
   datePicker: {

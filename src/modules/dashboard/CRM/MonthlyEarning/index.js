@@ -28,9 +28,9 @@ export const MonthlyEarning = ({earningGraphData}) => {
       <Divider />
       <Box pt={3}>
         <List>
-          {earningGraphData.map((category) => {
+          {earningGraphData.map((category, index) => {
             if (category.name !== '') {
-              return <Categories category={category} key={category.name} />;
+              return <Categories category={category} key={index} />;
             }
             return null;
           })}

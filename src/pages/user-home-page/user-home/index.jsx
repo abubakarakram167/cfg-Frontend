@@ -1,9 +1,7 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, lazy} from 'react';
 import CreatePost from '../create-post-box';
 import './style.css';
 import './chat-modal.css';
-import PostDetails from '../post-details';
-import CommonComponent from '../common-component';
 import Session from 'redux/services/session';
 import {makeStyles} from '@material-ui/core/styles';
 import {useHistory} from 'react-router-dom';
@@ -42,6 +40,9 @@ import CFGFamily from './cfg-family.jsx';
 import './style.css';
 import {showMessengerApp} from 'redux/actions/app';
 import {getSpecificPreference} from 'redux/actions/Preference';
+
+const CommonComponent = lazy(() => import('../common-component'));
+const PostDetails = lazy(() => import('../post-details'));
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -264,10 +265,14 @@ export default function UserHomePage() {
         </ListItemText>
       </ListItem>
       {allSessions.length !== 0 &&
-        allSessions.map((session) => {
+        allSessions.map((session, index) => {
           return (
-            <Collapse in={conversationExtended} timeout='auto' unmountOnExit>
-              <List>
+            <Collapse
+              key={index}
+              in={conversationExtended}
+              timeout='auto'
+              unmountOnExit>
+              <List key={index}>
                 <div className='conversation-container'>
                   <div className='conversation-lists'>
                     <div className='conversationHeader'>
@@ -286,10 +291,12 @@ export default function UserHomePage() {
                                 </Link>
                               </li>
                               <ul className='subtitle'>
-                                {element.subtitles.rows.map((sub) => {
+                                {element.subtitles.rows.map((sub, index) => {
                                   if (sub.status === 'published') {
                                     return (
-                                      <li className='subtitle-element'>
+                                      <li
+                                        className='subtitle-element'
+                                        key={index}>
                                         <Link
                                           to={`/home/conversation/${sub.id}`}>
                                           <strong>{sub.title}</strong>
@@ -464,9 +471,9 @@ export default function UserHomePage() {
                 {allJournals.length &&
                   allJournals
                     .slice(Math.max(allJournals.length - 5, 0))
-                    .map((journal) => {
+                    .map((journal, index) => {
                       return (
-                        <div className='journal-list-element'>
+                        <div className='journal-list-element' key={index}>
                           <p className='journal-subject'>{journal.subject}</p>
                           <p style={getColorStatus(journal.status)}>
                             {journal.status}

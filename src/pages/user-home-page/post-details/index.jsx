@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, lazy} from 'react';
 import {
   Card,
   CardHeader,
@@ -34,11 +34,9 @@ import Comments from 'redux/services/comment';
 import {useDispatch, useSelector} from 'react-redux';
 import Posts from 'redux/services/post';
 import {formatDatePost} from 'utils/stampToFormat';
-import SunEditor from '../../../components/sunEditor';
 import * as actions from '../../../redux/actions/action.types';
 import {getSignedUrl} from '../../../redux/actions/media';
 import {onGetUserList} from '../../../redux/actions';
-import JournalModal from '../../../components/JournalModal';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import ShowMoreText from 'react-show-more-text';
@@ -46,6 +44,9 @@ import parse from 'html-react-parser';
 import InputEmoji from 'react-input-emoji';
 import Picker from 'components/emojiComponent';
 import TextareaAutosize from 'react-textarea-autosize';
+
+const JournalModal = lazy(() => import('../../../components/JournalModal'));
+const SunEditor = lazy(() => import('../../../components/sunEditor'));
 
 let reRender = true;
 let userList = [];

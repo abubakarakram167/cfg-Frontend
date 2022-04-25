@@ -28,7 +28,7 @@ const renderRow = (data, index) => {
     );
   } else {
     return (
-      <Box className='embed-responsive'>
+      <Box className='embed-responsive' key={index}>
         <iframe
           key={index}
           src={data.src}

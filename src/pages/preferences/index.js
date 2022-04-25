@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, lazy} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import AdminHeader from 'pages/admin-header';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,7 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import FilterList from '@material-ui/icons/FilterList';
 import {getUserPreferencesList} from '../../redux/actions/Preference';
-import CustomTablePagination from '../user-management/pagination';
 import EditIcon from '@material-ui/icons/Edit';
 import {editPreferenceInList} from '../../redux/actions/Preference';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -31,6 +29,11 @@ import {
   TextField,
   Button,
 } from '@material-ui/core';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const CustomTablePagination = lazy(() =>
+  import('../user-management/pagination'),
+);
 
 const StyledTableCell = withStyles((theme) => ({
   head: {

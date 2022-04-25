@@ -1,5 +1,5 @@
 import React from 'react';
-import {MemoryRouter as Router} from 'react-router';
+import {MemoryRouter as Router} from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 

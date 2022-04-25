@@ -1,14 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, lazy} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import AdminHeader from 'pages/admin-header';
 import './journal.css';
 import moment from 'moment';
 import {getUserJourney, deleteJournal} from '../../redux/actions/journal';
 import {Select, MenuItem} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircleOutlineOutlined';
-import JournalModal from '../../components/JournalModal';
-import UserHomeHeader from '../user-home-page/user-page-header';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const JournalModal = lazy(() => import('../../components/JournalModal'));
+const UserHomeHeader = lazy(() => import('../user-home-page/user-page-header'));
 
 export default function MediaLibrary() {
   const [dialogOpen, setDialogOpen] = useState(false);

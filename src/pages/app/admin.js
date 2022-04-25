@@ -1,28 +1,11 @@
-import React from 'react';
+import React, {lazy} from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   withRouter,
 } from 'react-router-dom';
-import AdminHome from 'pages/admin-home';
-import Dashboard from 'pages/dashboard';
-import Events from 'pages/events';
-import UserManagement from 'pages/user-management';
-import CfgSession from 'pages/cfg-session';
-import CfgTool from 'pages/cfg-tools';
-import Timeline from 'pages/timeline';
-import TimeLinePosts from 'pages/timeline-posts';
-import Preferences from 'pages/preferences';
-import MediaLibrary from 'pages/media-library';
-import MiniCfg from 'pages/mini-cfg';
-import Rewards from 'pages/rewards';
-import Editor from 'pages/editor/index';
-import CfgElement from 'pages/cfg-element';
-import CfgToolElement from 'pages/cfg-tool-element';
-import ContentDisplay from 'pages/content-display';
-import EditContent from 'pages/edit-content';
-import ProtectedRoute from './protectedRouter';
+
 import {
   QuizContentScreen,
   PreviewQuizScreen,
@@ -30,6 +13,25 @@ import {
   QuizListingScreen,
 } from 'pages/Quiz/Loadable';
 import ShowMiniContent from 'pages/showContent';
+
+const AdminHome = lazy(() => import('pages/admin-home'));
+const Dashboard = lazy(() => import('pages/dashboard'));
+const Events = lazy(() => import('pages/events'));
+const UserManagement = lazy(() => import('pages/user-management'));
+const CfgSession = lazy(() => import('pages/cfg-session'));
+const CfgTool = lazy(() => import('pages/cfg-tools'));
+const Timeline = lazy(() => import('pages/timeline'));
+const TimeLinePosts = lazy(() => import('pages/timeline-posts'));
+const Preferences = lazy(() => import('pages/preferences'));
+const MediaLibrary = lazy(() => import('pages/media-library'));
+const MiniCfg = lazy(() => import('pages/mini-cfg'));
+const Rewards = lazy(() => import('pages/rewards'));
+const Editor = lazy(() => import('pages/editor/index'));
+const CfgElement = lazy(() => import('pages/cfg-element'));
+const CfgToolElement = lazy(() => import('pages/cfg-tool-element'));
+const ContentDisplay = lazy(() => import('pages/content-display'));
+const EditContent = lazy(() => import('pages/edit-content'));
+const ProtectedRoute = lazy(() => import('./protectedRouter'));
 
 export default [
   <ProtectedRoute exact path='/admin' component={AdminHome} />,

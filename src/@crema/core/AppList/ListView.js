@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {lazy} from 'react';
 import {useBottomScrollListener} from 'react-bottom-scroll-listener';
 import PropTypes from 'prop-types';
 import {useTheme} from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
-import AppAnimateGroup from '../AppAnimateGroup';
+
+const AppAnimateGroup = lazy(() => import('../AppAnimateGroup'));
 
 const getEmptyContainer = (ListEmptyComponent) => {
   if (ListEmptyComponent)

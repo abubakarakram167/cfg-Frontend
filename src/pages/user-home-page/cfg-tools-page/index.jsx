@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router';
-import CommonComponent from '../common-component';
+import React, {useEffect, useState, lazy} from 'react';
+import {useParams} from 'react-router-dom';
 import Banner from './banner';
-import LearnCard from './learn-card';
 import './style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -10,6 +8,9 @@ import {
   setSelectedToolData,
   getToolsData,
 } from '../../../redux/actions/toolActions';
+
+const CommonComponent = lazy(() => import('../common-component'));
+const LearnCard = lazy(() => import('./learn-card'));
 
 export default function CfgToolsPage() {
   const params = useParams();

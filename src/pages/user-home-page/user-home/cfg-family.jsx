@@ -270,10 +270,10 @@ export default function UserHomePage() {
               <hr />
 
               <div id='messages' class='msg-box'>
-                {currMessages.map((msg) => {
+                {currMessages.map((msg, index) => {
                   if (msg.sent_by === user.id) {
                     return (
-                      <div>
+                      <div key={index}>
                         <div class='testdiv2'>
                           {moment(msg.created_at).format(
                             'YYYY MMMM, Do  HH:mm',

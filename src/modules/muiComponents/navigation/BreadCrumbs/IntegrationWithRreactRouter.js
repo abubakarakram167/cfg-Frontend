@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import {MemoryRouter, Route} from 'react-router';
+import {MemoryRouter, Route} from 'react-router-dom';
 import {Link as RouterLink} from 'react-router-dom';
 
 const breadcrumbNameMap = {

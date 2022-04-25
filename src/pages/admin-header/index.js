@@ -1,6 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import AppHeader from '@crema/core/AppsContainer/AppsHeader';
-import SearchBar from '@crema/core/SearchBar';
+import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
 import NotificationIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -10,7 +8,6 @@ import {Avatar, Typography} from '@material-ui/core';
 import UserAvatar from 'assets/user-avatar.png';
 import {Menu, MenuItem, Button} from '@material-ui/core';
 import {Link} from 'react-router-dom';
-import Logo from 'assets/Logo.png';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Logout from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -24,6 +21,12 @@ import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import {socket} from 'socket';
 import {getSignedUrl} from '../../redux/actions/media';
+
+const Logo =
+  'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/Logo.png';
+const AppHeader = lazy(() => import('@crema/core/AppsContainer/AppsHeader'));
+const SearchBar = lazy(() => import('@crema/core/SearchBar'));
+
 const baseUrl = process.env.SERVER_URL;
 export default function AdminHeader() {
   const [username, setUsername] = useState('');
