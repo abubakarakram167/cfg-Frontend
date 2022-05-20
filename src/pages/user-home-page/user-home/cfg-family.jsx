@@ -16,12 +16,14 @@ import {
   getFriendMessages,
   getUserChatFamily,
 } from '../../../redux/actions/messages';
+import {ToastContainer, toast} from 'react-toastify';
 import {socket} from '../../../socket';
 import './chat-family.css';
 import moment from 'moment';
 import {showMessengerApp} from 'redux/actions/app';
 import NoUserProfile from 'assets/newNoProfile.png';
 import TelegramLogo from 'assets/telegramLogo.png';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function UserHomePage() {
   const socketIn = socket.getSocket();
@@ -49,10 +51,10 @@ export default function UserHomePage() {
 
   async function getUserFriendMessages(friendId) {
     let resp = await getFriendMessages(friendId);
-    console.log('resp is ', resp);
+
     if (resp.status === 200 && resp.data.length > 0) {
       setCurrentMessages(resp.data);
-      console.log('friend chat is', resp.data);
+      // console.log('friend chat is', resp.data);
     } else {
       setCurrentMessages([]);
     }
@@ -76,21 +78,18 @@ export default function UserHomePage() {
     }
   }
 
-  function getChatUser() {
-    console.log('into get user');
-    return chatUser;
-  }
-
   function messageListener(newMessage) {
     const {message, userSend} = newMessage;
-    alert('message recieved');
+
     let chatUserid = 0;
     setChatUser((prev) => {
-      console.log('prevValue is', prev);
+      // console.log('prevValue is', prev);
       chatUserid = prev.friend;
       return prev;
     });
-
+    toast.info(`You've got a new message from ${userSend.first_name}`);
+    let audio = new Audio('/assets/message.mp3');
+    audio.play();
     // console.log('chat user id is', chatUserid);
     if (chatUserid === userSend.id) {
       let insMessage = {
@@ -167,7 +166,7 @@ export default function UserHomePage() {
   }, [socketIn]);
 
   useEffect(() => {
-    console.log('messages are ', currMessages);
+    // console.log('messages are ', currMessages);
   }, [currMessages]);
   return (
     <div>
