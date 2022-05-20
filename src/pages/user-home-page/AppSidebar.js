@@ -44,6 +44,7 @@ import Session from 'redux/services/session';
 import './sidestyle.css';
 import {getSignedUrl} from '../../redux/actions/media';
 import {showMessengerApp} from 'redux/actions/app';
+import {getSpecificPreference} from 'redux/actions/Preference';
 
 const useStyling = makeStyles({
   childListPadding: {
@@ -60,6 +61,7 @@ const AppSidebar = (props) => {
   const [allSessions, setAllSessions] = useState([]);
   const classesOther = useStyling();
   const [avatarImage, setAvatarImage] = useState(null);
+  const [enableLiveChat, setEnableLiveChat] = useState(false);
   const dispatch = useDispatch();
 
   const user = useSelector((state) => {
@@ -101,8 +103,19 @@ const AppSidebar = (props) => {
     const data = await MediaGroup.getUserGroup();
     if (data && data.data) getSessionByGroupId(data.data.group_id);
   };
+
+  const getLiveChatPreference = () => {
+    dispatch(getSpecificPreference('enable_live_chat')).then((preference) => {
+      let data =
+        preference && preference.data ? preference.data.option_value : 'no';
+      data = data === 'no' ? false : true;
+      setEnableLiveChat(data);
+    });
+  };
+
   useEffect(() => {
     getUserGroup();
+    getLiveChatPreference();
   }, []);
 
   useEffect(() => {
@@ -118,6 +131,7 @@ const AppSidebar = (props) => {
     socket.logoutAction(user.id);
     localStorage.removeItem('current-user');
     localStorage.removeItem('auth-token');
+    localStorage.removeItem('isLogin');
     jsCookie.remove('login');
     jsCookie.remove('access');
     window.location.href = '/';
@@ -312,11 +326,12 @@ const AppSidebar = (props) => {
             </ListItemText>
           </ListItem>
           {allSessions.length > 0 &&
-            allSessions.map((session) => {
+            allSessions.map((session, index) => {
               return (
                 <Collapse
                   in={conversationExtended}
                   timeout='auto'
+                  key={index}
                   unmountOnExit>
                   <List>
                     <div className='conversation-container'>
@@ -344,7 +359,9 @@ const AppSidebar = (props) => {
                                     {element.subtitles.rows.map((sub) => {
                                       if (sub.status === 'published') {
                                         return (
-                                          <li className='subtitle-element'>
+                                          <li
+                                            className='subtitle-element'
+                                            key={sub.id}>
                                             <Link
                                               to={`/home/conversation/${sub.id}`}>
                                               <strong>{sub.title}</strong>
@@ -407,17 +424,19 @@ const AppSidebar = (props) => {
               <ListItemText primary='Host A Conversation' />
             </ListItem>
           </Link>
-          <ListItem
-            onClick={() => {
-              dispatch(showMessengerApp(app.showMessenger));
-            }}
-            style={{marginBottom: 5}}>
-            <ChatBubble style={{color: 'red', float: 'left'}} />
-            <ListItemText
-              style={{float: 'left', marginLeft: 7}}
-              primary='CFG Messenger'
-            />
-          </ListItem>
+          {enableLiveChat && (
+            <ListItem
+              onClick={() => {
+                dispatch(showMessengerApp(app.showMessenger));
+              }}
+              style={{marginBottom: 5}}>
+              <ChatBubble style={{color: 'red', float: 'left'}} />
+              <ListItemText
+                style={{float: 'left', marginLeft: 7}}
+                primary='CFG Messenger'
+              />
+            </ListItem>
+          )}
           <ListItem onClick={handleLogout}>
             <ListItemIcon>
               <Logout style={{color: 'red'}} />

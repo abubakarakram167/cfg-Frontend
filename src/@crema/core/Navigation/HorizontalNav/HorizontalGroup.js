@@ -158,4 +158,4 @@ HorizontalGroup.propTypes = {
 
 HorizontalGroup.defaultProps = {};
 
-export default withRouter(React.memo(HorizontalGroup));
+export default withRouter(HorizontalGroup);

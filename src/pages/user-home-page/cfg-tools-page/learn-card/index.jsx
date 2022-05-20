@@ -6,7 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {ErrorOutline} from '@material-ui/icons';
-import {useParams} from 'react-router';
+import {useParams} from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import {getContentData} from '../../../../redux/actions/toolActions';
 import {useDispatch, useSelector} from 'react-redux';

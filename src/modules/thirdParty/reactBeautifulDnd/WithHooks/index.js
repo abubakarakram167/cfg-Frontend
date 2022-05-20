@@ -97,11 +97,11 @@ function Quote({quote, index}) {
   );
 }
 
-const QuoteList = React.memo(function QuoteList({quotes}) {
+const QuoteList = function QuoteList({quotes}) {
   return quotes.map((quote, index) => (
     <Quote quote={quote} index={index} key={quote.id} />
   ));
-});
+};
 
 const WithHooks = () => {
   const [state, setState] = useState({quotes: simpleListData});

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, lazy} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -13,8 +13,9 @@ import {Dialog, DialogTitle, DialogActions, TextField} from '@material-ui/core';
 import {updateUser} from 'redux/actions/authActions';
 import Media from 'redux/services/media';
 import {baseUrl} from 'utils/axios';
-import MediaUpload from 'components/MediaUpload';
 import {getSignedUrl} from '../../../../redux/actions/media';
+
+const MediaUpload = lazy(() => import('components/MediaUpload'));
 
 const useStyles = makeStyles({
   root: {

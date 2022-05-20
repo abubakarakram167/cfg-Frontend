@@ -1,8 +1,6 @@
-import React, {useEffect} from 'react';
-import AdminHeader from 'pages/admin-header';
+import React, {useEffect, lazy} from 'react';
 import './style.css';
 import {Container} from '@material-ui/core';
-import AppCard from '@crema/core/AppCard';
 import {useHistory} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {
@@ -21,6 +19,9 @@ import {
 import UserModerationIcon from 'assets/updatedCrown.png';
 
 import {Link} from 'react-router-dom';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const AppCard = lazy(() => import('@crema/core/AppCard'));
 
 export default function Index() {
   const permissions = useSelector((state) => state.roles.permissions);

@@ -6,6 +6,7 @@ import {socket} from 'socket';
 import RouteComponent from './route-component';
 import jsCookie from 'js-cookie';
 import {getPostById} from 'redux/actions/UserPost';
+
 export default function MainApp() {
   const dispatch = useDispatch();
   console.log(configureStore());

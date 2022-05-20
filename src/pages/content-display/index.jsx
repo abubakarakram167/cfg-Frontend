@@ -1,14 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, lazy} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams, useHistory} from 'react-router';
+import {useParams, useHistory} from 'react-router-dom';
 import {getContentData} from 'redux/actions/sessionActions';
-import AdminHeader from 'pages/admin-header';
 import './style.css';
 import {Link} from 'react-router-dom';
-import SunEditor from '../../components/sunEditor';
 import {transformImagesInContent} from '../../components/ReUsable';
-import JournalModal from '../../components/JournalModal';
-import CommonComponent from 'pages/user-home-page/common-component';
+
+const CommonComponent = lazy(() =>
+  import('pages/user-home-page/common-component'),
+);
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const SunEditor = lazy(() => import('../../components/sunEditor'));
+const JournalModal = lazy(() => import('../../components/JournalModal'));
 
 export default function ContentDisplay() {
   const params = useParams();

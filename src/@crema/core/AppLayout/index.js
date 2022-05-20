@@ -53,4 +53,4 @@ const CremaLayout = () => {
   );
 };
 
-export default React.memo(CremaLayout);
+export default CremaLayout;

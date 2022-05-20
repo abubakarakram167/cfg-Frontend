@@ -40,4 +40,4 @@ Badge.defaultProps = {
   color: 'secondary.main',
 };
 
-export default React.memo(Badge);
+export default Badge;

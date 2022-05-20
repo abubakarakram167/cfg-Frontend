@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {lazy} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,15 +6,16 @@ import MenuIcon from '@material-ui/icons/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import LanguageSwitcher from '../../LanguageSwitcher';
 import {toggleNavCollapsed} from '../../../../redux/actions';
 import {useDispatch} from 'react-redux';
 import Box from '@material-ui/core/Box';
-import SearchBar from '../../SearchBar';
 import useStyles from './AppHeader.style';
-import HeaderMessages from '../../HeaderMessages';
-import Notifications from '../../Notifications';
 import AppLogo from '../../../../shared/components/AppLogo';
+
+const LanguageSwitcher = lazy(() => import('../../LanguageSwitcher'));
+const SearchBar = lazy(() => import('../../SearchBar'));
+const HeaderMessages = lazy(() => import('../../HeaderMessages'));
+const Notifications = lazy(() => import('../../Notifications'));
 
 const AppHeader = () => {
   const classes = useStyles();

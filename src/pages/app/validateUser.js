@@ -1,4 +1,5 @@
-import jsCookie from 'js-cookie';
+import {getWithExpiry} from '../../shared/expireTime';
+
 export const isAuthenticUser = () => {
-  return jsCookie.get('login') === 'yes';
+  return getWithExpiry('isLogin');
 };

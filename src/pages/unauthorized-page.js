@@ -1,8 +1,9 @@
-import React from 'react';
-import AdminHeader from 'pages/admin-header';
-import Logo from 'assets/Logo.png';
+import React, {lazy} from 'react';
 import './unAuthorizedPage.css';
 import {Link} from 'react-router-dom';
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const Logo =
+  'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/Logo.png';
 
 export default () => {
   return (

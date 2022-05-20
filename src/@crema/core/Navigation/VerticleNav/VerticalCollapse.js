@@ -62,10 +62,10 @@ const VerticalCollapse = ({item, level}) => {
   };
 
   const {user} = useSelector(({auth}) => auth);
-  const hasPermission = useMemo(() => checkPermission(item.auth, user.role), [
-    item.auth,
-    user.role,
-  ]);
+  const hasPermission = useMemo(
+    () => checkPermission(item.auth, user.role),
+    [item.auth, user.role],
+  );
 
   if (!hasPermission) {
     return null;
@@ -133,4 +133,4 @@ VerticalCollapse.propTypes = {
 };
 VerticalCollapse.defaultProps = {};
 
-export default React.memo(VerticalCollapse);
+export default VerticalCollapse;

@@ -80,4 +80,4 @@ function ForgotPassword({setView}) {
   );
 }
 
-export default React.memo(ForgotPassword);
+export default ForgotPassword;

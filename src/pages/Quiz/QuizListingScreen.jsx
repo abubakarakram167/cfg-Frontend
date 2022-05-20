@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import AdminHeader from 'pages/admin-header';
+import React, {useState, useEffect, lazy} from 'react';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -44,6 +43,8 @@ import {
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {Show_Message} from '../../shared/constants/ActionTypes';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -359,7 +360,6 @@ export default function CfgTool(props) {
                 onChange={(e) => setStatus(e.target.value)}
                 variant='filled'
                 fullWidth
-                value={status}
                 label='status'
                 required>
                 <MenuItem value={''}>

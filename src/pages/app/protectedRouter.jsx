@@ -1,7 +1,7 @@
+import React from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {isAuthenticUser} from './validateUser';
-import React from 'react';
 
 const ProtectedRoute = ({component: Component, ...rest}) => {
   const authenticatedUser = isAuthenticUser();

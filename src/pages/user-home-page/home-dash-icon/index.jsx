@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, lazy} from 'react';
 import './style.css';
-import CommonComponent from '../common-component';
 import Timeline from '../../../assets/history_toggle_off_black_24dp.svg';
 import ToolIcon from '../../../assets/tools-solid.svg';
 import Family from '../../../assets/users-solid.svg';
@@ -17,7 +16,9 @@ import {getResourceData} from 'redux/actions/cfg';
 import {Link} from 'react-router-dom';
 import MediaGroup from 'redux/services/mediagroup';
 import Session from 'redux/services/session';
-import ConversationModal from 'components/MyConversationsModal';
+
+const CommonComponent = lazy(() => import('../common-component'));
+const ConversationModal = lazy(() => import('components/MyConversationsModal'));
 
 const cardsData = [
   {
@@ -139,9 +140,9 @@ export default function Homedashicon() {
         <div className='cardMain'>
           <div className='list-container'>
             {dayTools.length > 0 &&
-              dayTools.map((tool) => {
+              dayTools.map((tool, index) => {
                 return (
-                  <Link to={`/home/cfg-tools/${tool.id}`}>
+                  <Link to={`/home/cfg-tools/${tool.id}`} key={index}>
                     <div className='todoList'>
                       <img alt='img' src={tool.newUrl} />
                       <h5>{tool.title}</h5>
