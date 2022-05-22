@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import UserHomeHeader from '../user-page-header';
+import React, {useState, useEffect, lazy} from 'react';
 import {socket} from '../../../socket';
 import './style.css';
 import {socketEnums} from 'utils/socketEnums';
+const UserHomeHeader = lazy(() => import('../user-page-header'));
 
 export default function CommonComponent(props) {
   const [drawerOpen, setDrawerOpen] = useState(false);

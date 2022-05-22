@@ -1,10 +1,11 @@
-import React from 'react';
-import AdminHeader from 'pages/admin-header';
+import React, {lazy} from 'react';
 import Container from '@material-ui/core/Container';
-import EarningGraph from './EarningGraph';
-import AppCard from '@crema/core/AppCard';
-import OrdersGraph from './OrdersGraph';
 import './style.css';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const EarningGraph = lazy(() => import('./EarningGraph'));
+const AppCard = lazy(() => import('@crema/core/AppCard'));
+const OrdersGraph = lazy(() => import('./OrdersGraph'));
 
 export default function Dashboard() {
   return (

@@ -1,7 +1,8 @@
-import React from 'react';
-import ListView from './ListView';
+import React, {lazy} from 'react';
 import PropTypes from 'prop-types';
-import ListFooter from './ListFooter';
+
+const ListView = lazy(() => import('./ListView'));
+const ListFooter = lazy(() => import('./ListFooter'));
 
 const AppList = ({footerProps, ...props}) => {
   return (

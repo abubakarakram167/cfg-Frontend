@@ -1,11 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import CommonComponent from '../common-component';
-import UserInfo from './userInfo';
+import React, {useState, useEffect, lazy} from 'react';
 import './style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {getResourceData} from 'redux/actions/cfg';
 import {onGetUserList} from 'redux/actions';
 import Friend from 'redux/services/friends';
+
+const CommonComponent = lazy(() => import('../common-component'));
+const UserInfo = lazy(() => import('./userInfo'));
 
 export default function UserEvents() {
   const dispatch = useDispatch();
@@ -85,15 +86,17 @@ export default function UserEvents() {
         <div>
           <h1>Friend Requests</h1>
           <div className='row'>
-            {friendRequests.map((request) => {
+            {friendRequests.map((request, index) => {
               return (
-                <UserInfo
-                  user={
-                    allUsers.filter((user) => user.id === request.userId)[0]
-                  }
-                  addFriend={false}
-                  toggleReloadData={toggleReloadData}
-                />
+                <React.Fragment key={index}>
+                  <UserInfo
+                    user={
+                      allUsers.filter((user) => user.id === request.userId)[0]
+                    }
+                    addFriend={false}
+                    toggleReloadData={toggleReloadData}
+                  />
+                </React.Fragment>
               );
             })}
             <UserInfo />
@@ -102,15 +105,17 @@ export default function UserEvents() {
         <div>
           <h1>Pending Requests</h1>
           <div className='row'>
-            {sentFriendRequests.map((request) => {
+            {sentFriendRequests.map((request, index) => {
               return (
-                <UserInfo
-                  user={
-                    allUsers.filter((user) => user.id === request.userId)[0]
-                  }
-                  addFriend={false}
-                  toggleReloadData={toggleReloadData}
-                />
+                <React.Fragment key={index}>
+                  <UserInfo
+                    user={
+                      allUsers.filter((user) => user.id === request.userId)[0]
+                    }
+                    addFriend={false}
+                    toggleReloadData={toggleReloadData}
+                  />
+                </React.Fragment>
               );
             })}
             <UserInfo />
@@ -119,13 +124,15 @@ export default function UserEvents() {
         <div>
           <h1>People you may know</h1>
           <div className='row'>
-            {filteredUsers.map((user) => {
+            {filteredUsers.map((user, index) => {
               return (
-                <UserInfo
-                  user={user}
-                  addFriend={true}
-                  toggleReloadData={toggleReloadData}
-                />
+                <React.Fragment key={index}>
+                  <UserInfo
+                    user={user}
+                    addFriend={true}
+                    toggleReloadData={toggleReloadData}
+                  />
+                </React.Fragment>
               );
             })}
           </div>

@@ -1,17 +1,21 @@
-import React, {useState, useEffect} from 'react';
-import Header from './auth-header';
-import SignIn from './sign-in';
-import SignUp from './sign-up';
-import ForgotPassword from './forgot-password';
-import {Container} from '@material-ui/core';
-import SignUpMessage from 'pages/auth-pages/sign-up-message';
+import React, {useState, useEffect, lazy} from 'react';
+
 import './style.css';
-import Logo from 'assets/Logo.png';
 import {useDispatch} from 'react-redux';
-import LogoImage from 'assets/jmmb-foundation.png';
 import CookieConsent from 'react-cookie-consent';
-import {useHistory} from 'react-router';
+import {useHistory} from 'react-router-dom';
 import jsCookie from 'js-cookie';
+
+const Logo =
+  'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/Logo.png';
+const LogoImage =
+  'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/jmmb-foundation.png';
+
+const Header = lazy(() => import('./auth-header'));
+const SignIn = lazy(() => import('./sign-in'));
+const SignUp = lazy(() => import('./sign-up'));
+const ForgotPassword = lazy(() => import('./forgot-password'));
+const SignUpMessage = lazy(() => import('pages/auth-pages/sign-up-message'));
 
 // import {
 //   forgotPasswordAction,
@@ -43,7 +47,7 @@ export default function Index() {
         <div className='container-auth'>
           <div
             className='auth-card left-box'
-            style={{backgroundImage: LogoImage}}>
+            style={{backgroundImage: `url('${LogoImage}')`}}>
             {/* <img src={LogoImage} className="heart-image" alt="test" /> */}
           </div>
           <div className='right-box'>

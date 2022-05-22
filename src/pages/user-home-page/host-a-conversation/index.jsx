@@ -1,19 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import CommonComponent from '../common-component';
+import React, {useState, useEffect, lazy} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {Forum, Save, Cancel, CameraAlt} from '@material-ui/icons';
-import Logo from 'assets/Logo.png';
 import {TextField, Chip, withStyles, MenuItem} from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import {getSignedUrl} from '../../../redux/actions/media';
-import MediaUpload from 'components/MediaUpload';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 import {KeyboardDatePicker} from '@material-ui/pickers';
 import moment from 'moment';
 import './style.css';
 import {onGetUserList} from '../../../redux/actions';
-import userList from '@crema/services/db/userList';
 import {useDispatch, useSelector} from 'react-redux';
 import {Dropdown} from 'react-bootstrap';
 import {createSessionTitle, sendInvite} from 'redux/actions/sessionActions';
@@ -23,6 +19,12 @@ import Alert from '@material-ui/lab/Alert';
 import {DateTimePicker} from '@material-ui/pickers';
 import {useHistory} from 'react-router-dom';
 import Select from 'react-select';
+
+const Logo =
+  'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/Logo.png';
+const CommonComponent = lazy(() => import('../common-component'));
+const MediaUpload = lazy(() => import('components/MediaUpload'));
+const userList = lazy(() => import('@crema/services/db/userList'));
 
 const options = [
   {value: 'chocolate', label: 'Chocolate'},

@@ -1,7 +1,9 @@
-import React from 'react';
-import CommonComponent from '../common-component';
-import SideImageCard from './side-image-card';
-import SummaryBox from './summary-box';
+import React, {lazy} from 'react';
+
+const CommonComponent = lazy(() => import('../common-component'));
+const SideImageCard = lazy(() => import('./side-image-card'));
+const SummaryBox = lazy(() => import('./summary-box'));
+
 export default function AllInboxPage() {
   const fakeSideImageData = [
     {
@@ -27,7 +29,7 @@ export default function AllInboxPage() {
       <br />
       {fakeSideImageData.map((element, index) => {
         return (
-          <div style={{marginBottom: '10px'}}>
+          <div style={{marginBottom: '10px'}} key={index}>
             <SideImageCard element={element} />
           </div>
         );

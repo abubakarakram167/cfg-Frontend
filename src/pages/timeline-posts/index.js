@@ -1,13 +1,16 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, Fragment, lazy} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import CommonComponent from 'pages/user-home-page/common-component';
 import {Typography, Box, makeStyles} from '@material-ui/core';
 import {transformImagesInContent} from 'components/ReUsable';
 import {red} from '@material-ui/core/colors';
-import Posts from './posts';
 import {getUserPost} from 'redux/actions/UserPost';
 import {Loader} from '../../@crema';
-import AdminHeader from 'pages/admin-header';
+
+const AdminHeader = lazy(() => import('pages/admin-header'));
+const CommonComponent = lazy(() =>
+  import('pages/user-home-page/common-component'),
+);
+const Posts = lazy(() => import('./posts'));
 
 const useStyles = makeStyles((theme) => ({
   root: {

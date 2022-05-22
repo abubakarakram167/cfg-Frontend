@@ -24,8 +24,8 @@ const PopularCoinsTable = (props) => {
           <TableHeading />
         </TableHead>
         <TableBody>
-          {popularCoins.map((row) => (
-            <TableItem key={row.name} row={row} />
+          {popularCoins.map((row, index) => (
+            <TableItem key={index} row={row} />
           ))}
         </TableBody>
       </Table>
