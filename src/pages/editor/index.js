@@ -371,7 +371,9 @@ export default function Editor() {
                   title,
                   author: author,
                   start_date:
-                    params.cfgType !== 'event'
+                    params.cfgType === 'timeline'
+                      ? publishDates
+                      : params.cfgType !== 'event'
                       ? formatDate(start_date)
                       : publishDates,
                   end_date: formatDate(end_date),

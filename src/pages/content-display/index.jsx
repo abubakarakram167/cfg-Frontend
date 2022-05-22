@@ -117,6 +117,13 @@ export default function ContentDisplay() {
               )}
             </div>
           </div>
+          <div className='content-display-buttons-container'>
+            <Link to='/admin' className='btn btn-danger'>
+              <button className='next-prev-button btn-warning'>
+                Back to Home
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
