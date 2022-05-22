@@ -386,7 +386,11 @@ export default function RecipeReviewCard({post, getUserPost}) {
           title={`${user.first_name} ${user.last_name} ${
             post.assigned_group ? '> ' + post.assigned_group : ''
           }`}
-          subheader={formatDatePost(Date.parse(post.created_at))}
+          subheader={formatDatePost(
+            Date.parse(
+              post.publish_date === null ? post.created_at : post.publish_date,
+            ),
+          )}
         />
         {post.media && mediaJSX()}
         <CardContent>

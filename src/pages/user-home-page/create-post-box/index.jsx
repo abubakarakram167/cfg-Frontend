@@ -215,7 +215,7 @@ export default function CreatePostBox(props) {
           <label className='bottom-section' htmlFor='media-upload'>
             <div className='create-post-dialog-action-content'>
               <button className='create-post-button' onClick={handleSave}>
-                <Save /> <span className='app-card-bottom-text'>Save</span>
+                <Save /> <span className='app-card-bottom-text'>Post</span>
               </button>
               <div
                 className='create-post-action-icons'
