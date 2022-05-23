@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import MomentUtils from '@date-io/moment';
 // import moment from 'moment';
-import {createTheme, ThemeProvider} from '@material-ui/core/styles';
+import {createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 
 import AppContext from '../AppContext';
@@ -86,7 +86,8 @@ const CremaThemeProvider = (props) => {
   }, [params.theme_style, theme, updateTheme, updateThemeStyle]);
 
   return (
-    <ThemeProvider theme={responsiveFontSizes(createTheme(theme, muiLocale))}>
+    <ThemeProvider
+      theme={responsiveFontSizes(createMuiTheme(theme, muiLocale))}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         {props.children}
       </MuiPickersUtilsProvider>
