@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  createTheme,
+  createMuiTheme,
   fade,
   makeStyles,
   ThemeProvider,
@@ -123,7 +123,7 @@ const ValidationTextField = withStyles({
   },
 })(TextField);
 
-const theme = createTheme({
+const theme = createMuiTheme({
   palette: {
     primary: green,
   },

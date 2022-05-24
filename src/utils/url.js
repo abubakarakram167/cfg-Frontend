@@ -1,7 +1,7 @@
 const environment = process.env.NODE_ENV || 'development';
 var url = '';
 if (environment === 'development') {
-  url = 'http://devapp.mycfg.org/';
-} else url = 'https://app.mycfg.org/';
+  url = 'https://devapp.mycfg.org/';
+} else url = 'https://devapp.mycfg.org/';
 
 export default url;
