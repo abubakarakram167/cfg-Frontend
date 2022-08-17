@@ -88,8 +88,9 @@
 }
 .conversation-lists {
   position: relative;
+
   top: -10px;
-  left: 72px;
+  left: 32px;
   color: grey !important;
 }
 
