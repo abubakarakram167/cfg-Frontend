@@ -3,6 +3,7 @@ import {useHistory, useParams} from 'react-router-dom';
 import './style.css';
 import SunEditor from '../../../components/sunEditor';
 import Banner from './banner';
+import Session from '../../../redux/services/session';
 import {Button} from '@material-ui/core';
 import {
   transformImagesInContent,
@@ -14,7 +15,6 @@ const CommonComponent = lazy(() =>
   import('pages/user-home-page/common-component'),
 );
 const JournalModal = lazy(() => import('../../../components/JournalModal'));
-const Session = lazy(() => import('redux/services/session'));
 
 export default function ConversationContentDisplay() {
   const params = useParams();
