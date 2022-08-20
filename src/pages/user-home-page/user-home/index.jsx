@@ -24,6 +24,9 @@ import {
   People,
 } from '@material-ui/icons';
 
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
@@ -59,21 +62,30 @@ export default function UserHomePage() {
   const state = useSelector((state) => state.cfg);
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.userPost.posts);
+  const postDivInnerRef = useRef();
+
   const allJournals = useSelector((state) => {
     return state.journal.userJournals;
   });
+
+  //page posts count and page handlers
+  const [page, setPage] = useState(0);
+  const [count, setCount] = useState(5);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [conversationExtended, setConversationExtended] = useState(false);
-  const [count, setCount] = useState(3);
+
   const [allSessions, setAllSessions] = useState([]);
   const classesOther = useStyling();
   const permissions = useSelector((state) => state.roles.permissions);
   const history = useHistory();
   const [allTransformPosts, setAllTransformPosts] = useState(null);
   const [enableLiveChat, setEnableLiveChat] = useState(false);
+
   const toggleExpansion = () => {
     setConversationExtended(!conversationExtended);
   };
+
   const [dayTools, setDayTools] = useState([]);
   const [events, setEvents] = useState([]);
 
@@ -81,7 +93,7 @@ export default function UserHomePage() {
     return state.app;
   });
 
-  console.log('is state app', app);
+  // console.log('is state app', app);
 
   const getRestoredImage = (featureImageUrl) => {
     return featureImageUrl.substring(featureImageUrl.lastIndexOf('/') + 1);
@@ -92,6 +104,7 @@ export default function UserHomePage() {
     dispatch(getUserJourney(user.id));
   };
 
+  //handling live chat preference coming from backend
   const getLiveChatPreference = () => {
     dispatch(getSpecificPreference('enable_live_chat')).then((preference) => {
       let data =
@@ -101,11 +114,7 @@ export default function UserHomePage() {
     });
   };
 
-  useEffect(() => {
-    getUserJourneys();
-    getLiveChatPreference();
-  }, []);
-
+  //function to fetch day tools from backend
   const getDayTools = async () => {
     try {
       let images = [];
@@ -169,13 +178,47 @@ export default function UserHomePage() {
     setAllTransformPosts(newContentPosts);
   };
 
-  const getAllUserPost = () => {
-    dispatch(getUserPost(count));
+  //post scrolling handler
+  const onScroll = (e) => {
+    // console.log(e.target.scrollHeight);
+    if (e.target) {
+      const {scrollTop, scrollHeight, clientHeight} = e.target;
+      //check when user has reached bottom
+      if (scrollTop + clientHeight === scrollHeight) {
+        console.log('reached bottom');
+        setPage((prevValue) => {
+          return prevValue + 1;
+        });
+      }
+    }
   };
 
+  const getAllUserPost = (count, isNew, page) => {
+    dispatch(getUserPost(count, isNew, page));
+  };
+
+  //initial useEffect hook to check fro live chat and user journeys
   useEffect(() => {
-    getAllUserPost();
+    getUserJourneys();
+    getLiveChatPreference();
+
+    dispatch(getToolsData());
+    getDayTools();
+
+    // const user = JSON.parse(localStorage.getItem('current-user'));
+    // // getSessionById(user.cfg_session_id)
+    getUserGroup();
+  }, []);
+
+  useEffect(() => {
+    getAllUserPost(count, true, page);
   }, [count]);
+
+  useEffect(() => {
+    if (page != 0) {
+      getAllUserPost(count, false, page);
+    }
+  }, [page]);
 
   useEffect(() => {
     dispatch(getResourceData('event'));
@@ -188,15 +231,6 @@ export default function UserHomePage() {
   useEffect(() => {
     transformPosts(posts);
   }, [posts]);
-
-  useEffect(() => {
-    dispatch(getToolsData());
-    getDayTools();
-
-    const user = JSON.parse(localStorage.getItem('current-user'));
-    // getSessionById(user.cfg_session_id)
-    getUserGroup();
-  }, []);
 
   useEffect(() => {
     if (!permissions.home.view) {
@@ -450,9 +484,8 @@ export default function UserHomePage() {
       left={left}
       right={right}
       scroll={true}
-      scrollAction={() => {
-        setCount(count + 3);
-      }}>
+      ref={postDivInnerRef}
+      scrollAction={onScroll}>
       {allJournals.length > 0 && (
         <div style={{position: 'relative'}}>
           <Link to={`/home/journals/list`}>
@@ -511,6 +544,7 @@ export default function UserHomePage() {
           </div>
         );
       })}
+      <Skeleton count={5} />
     </CommonComponent>
   );
 }

@@ -72,7 +72,7 @@ const AppSidebar = (props) => {
     return state.app;
   });
 
-  console.log('the app in state', app);
+  // console.log('the app in state', app);
 
   const searchUser = async (e) => {
     e.persist();
