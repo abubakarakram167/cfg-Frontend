@@ -125,7 +125,6 @@ export default function SignIn({setView}) {
               </InputAdornment>
             ),
           }}
-          required
           // className={currentHeight >= 600 ? classes.root : classes.secondRoot}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -144,7 +143,6 @@ export default function SignIn({setView}) {
               </InputAdornment>
             ),
           }}
-          required
           onChange={(e) => setPassword(e.target.value)}
         />
         <div

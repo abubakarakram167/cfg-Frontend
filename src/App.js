@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Provider} from 'react-redux';
 import LocaleProvider from '@crema/utility/LocaleProvider';
 import CremaThemeProvider from '@crema/utility/CremaThemeProvider';
@@ -19,9 +19,11 @@ import UserRewards from 'pages/user-home-page/user-rewards';
 import UserAchievements from 'pages/user-home-page/user-achievement';
 import './App.css';
 import 'semantic-ui-css/semantic.min.css';
+
 const store = configureStore();
 
 export default function App() {
+
   return (
     <ContextProvider>
       <Provider store={store}>

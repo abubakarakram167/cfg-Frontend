@@ -85,7 +85,7 @@ export default function CreatePostBox(props) {
     const userPost = {
       content,
       status: 'published',
-      media,
+      media: media === null ? '#' : media,
     };
     if (currentUser.role === 'content-manager')
       userPost.assigned_group = 'content-manager';
@@ -93,7 +93,6 @@ export default function CreatePostBox(props) {
     dispatch(createUserPost(userPost)).then((res) => {
       props.getUserPost();
     });
-
     setContent('');
     setMedia(null);
   };

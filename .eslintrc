@@ -27,10 +27,10 @@
     "react-hooks"
   ],
   "rules": {
-    "prettier/prettier": "error",
+    //"prettier/prettier": "error",
     "no-case-declarations": "off",
     "no-eval": "error",
-    "import/first": "error",
+    //"import/first": "error",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
   }

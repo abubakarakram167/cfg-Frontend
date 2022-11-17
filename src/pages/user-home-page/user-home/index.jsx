@@ -26,7 +26,7 @@ import {
 
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-
+import { ToastContainer, toast } from 'react-toastify';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
@@ -43,6 +43,8 @@ import CFGFamily from './cfg-family.jsx';
 import './style.css';
 import {showMessengerApp} from 'redux/actions/app';
 import {getSpecificPreference} from 'redux/actions/Preference';
+import { onMessageListener } from '../../../firebaseInit';
+
 
 const CommonComponent = lazy(() => import('../common-component'));
 const PostDetails = lazy(() => import('../post-details'));
@@ -59,6 +61,22 @@ const useStyling = makeStyles({
 });
 
 export default function UserHomePage() {
+
+
+  onMessageListener()
+    .then((payload) => {
+      const { title, body } = payload.data;
+      toast.info(`${title}; ${body}`, {
+          position: toast.POSITION.TOP_RIGHT
+      });
+    })
+    .catch((err) => {
+      toast.error(JSON.stringify(err), {
+          position: toast.POSITION.TOP_RIGHT
+      });
+    });
+
+
   const state = useSelector((state) => state.cfg);
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.userPost.posts);
@@ -480,6 +498,8 @@ export default function UserHomePage() {
     </div>
   );
   return (
+    <div>
+
     <CommonComponent
       left={left}
       right={right}
@@ -546,5 +566,8 @@ export default function UserHomePage() {
       })}
       <Skeleton count={5} />
     </CommonComponent>
+    <ToastContainer />
+    </div>
+    
   );
 }
