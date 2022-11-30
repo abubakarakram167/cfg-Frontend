@@ -1,0 +1,16 @@
+.form-img {
+  height: 150px !important;
+  width: 150px !important;
+}
+.submit-button {
+  background-color: #eb1b29;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 1px 2px gainsboro;
+  cursor: pointer;
+  width: 35%;
+  margin-top: 10px;
+  font-weight: 600;
+}

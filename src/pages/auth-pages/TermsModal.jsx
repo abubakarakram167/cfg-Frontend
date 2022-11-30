@@ -7,6 +7,7 @@ import {terms_conditions} from './create-password/terms_conditions';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloseIcon from '@mui/icons-material/Close';
 import {toast} from 'react-toastify';
+import {useHistory} from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -24,6 +25,7 @@ const style = {
 export default function TermsModal(props) {
   const [open, setOpen] = useState(false);
   const [boxHeight, setHeight] = useState(null);
+  const history = useHistory();
 
   const div = useCallback((node) => {
     if (node !== null) {
@@ -35,7 +37,8 @@ export default function TermsModal(props) {
     props.setOpenState(false);
   };
   const acceptTerms = () => {
-    props.setView(2);
+    // props.setView(2);
+    history.push('/signUp');
   };
   const rejectTerms = () => {
     toast.error('You must agree to terms and conditions to signup.!');
@@ -104,7 +107,7 @@ export default function TermsModal(props) {
                 className='btn bt-lg'
                 style={{
                   float: 'left',
-                  backgroundColor: '#eb1b29',
+                  backgroundColor: '#6A6A6A',
                   color: 'white',
                   fontWeight: '600',
                   width: '30%',
