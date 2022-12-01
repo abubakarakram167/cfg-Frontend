@@ -138,11 +138,15 @@ const SignUp = () => {
 
   async function signUpUser(data) {
     let resp = await registerAction({...data}, dispatch);
+    // alert(JSON.stringify(resp))
     if (resp.status === 200) {
       history.push('/');
       toast.success('Registration successful. Please login to continue');
     } else {
-      toast.success('Registration failed. Please try again later');
+      let msg =
+        resp.message.message || 'Registration failed. Please try again later';
+      toast.error(msg);
+      //   history.push('/');
     }
   }
 
