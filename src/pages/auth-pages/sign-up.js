@@ -2,17 +2,27 @@ import React, {useState, useEffect} from 'react';
 import TextField from '@material-ui/core/TextField';
 import {registerAction, setErrorToNull} from '../../redux/actions/authActions';
 import {useDispatch} from 'react-redux';
-import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useSelector} from 'react-redux';
+import TermsModal from './TermsModal';
 
 export default function SignUp({setView}) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const dispatch = useDispatch();
 
+  const [open2, setOpen2] = useState(false);
+  const dispatch = useDispatch();
   const state = useSelector((state) => state);
+
+  useEffect(() => {
+    if (state.auth.error) {
+      setOpen2(true);
+    }
+    if (state.auth.message) {
+      setView(4);
+    }
+  }, [state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,27 +34,6 @@ export default function SignUp({setView}) {
       }),
     );
   };
-  const handleClose1 = () => {
-    setOpen1(false);
-  };
-  const handleClose2 = () => {
-    setOpen2(false);
-    dispatch(setErrorToNull());
-  };
-
-  const [open1, setOpen1] = useState(false);
-  const [open2, setOpen2] = useState(false);
-
-  useEffect(() => {
-    if (state.auth.error) {
-      setOpen2(true);
-    }
-    if (state.auth.message) {
-      setView(4);
-    }
-  }, [state]);
-
-  console.log('the state', state.auth);
 
   return (
     <div>
@@ -73,7 +62,6 @@ export default function SignUp({setView}) {
           fullWidth
           variant='filled'
           style={{marginBottom: '10px'}}
-          required
           onChange={(e) => setFirstName(e.target.value)}
         />
         <TextField
@@ -83,7 +71,6 @@ export default function SignUp({setView}) {
           fullWidth
           variant='filled'
           style={{marginTop: '10px', marginBottom: '10px'}}
-          required
           onChange={(e) => setLastName(e.target.value)}
         />
 
@@ -93,7 +80,6 @@ export default function SignUp({setView}) {
           label='Email'
           fullWidth
           variant='filled'
-          required
           style={{marginTop: '10px', marginBottom: '10px'}}
           onChange={(e) => setEmail(e.target.value)}
         />

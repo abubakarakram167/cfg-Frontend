@@ -1,21 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
-import Facebook from 'assets/facebook.png';
-import Google from 'assets/google.jpg';
-import Mail from 'assets/Mail.png';
-import Twitter from 'assets/Twitter.png';
 import {useDispatch, useSelector} from 'react-redux';
 import {setErrorToNull} from '../../redux/actions/authActions';
-import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import {useHistory} from 'react-router-dom';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import PersonIcon from '@material-ui/icons/Person';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LockIcon from '@material-ui/icons/Lock';
-import {socket} from 'socket';
 import {loginAction} from '../../redux/actions/authActions';
+import TermsModal from './TermsModal';
 
 const StyledFormField = withStyles((theme) => ({}))(TextField);
 
@@ -44,20 +39,12 @@ export default function SignIn({setView}) {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [currentHeight, setCurrentheight] = useState(0);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsModalState, setTermsModalState] = useState(false);
   const history = useHistory();
   const [errorMessage, setErrorMessage] = useState('');
   const classes = useStyles();
   const [rememberMe, setRememberMe] = useState(false);
-
-  const handleClose1 = () => {
-    setOpen1(false);
-  };
-  const handleClose2 = () => {
-    setOpen2(false);
-    dispatch(setErrorToNull());
-    setErrorMessage('');
-  };
-
   const dispatch = useDispatch();
   const state = useSelector((state) => {
     return state;
@@ -66,14 +53,14 @@ export default function SignIn({setView}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    dispatch(loginAction({email, password, rememberMe}));
-  };
-  window.addEventListener('resize', () => {
-    setCurrentheight(window.innerHeight);
-  });
+  // const handleClose1 = () => {
+  //   setOpen1(false);
+  // };
+  // const handleClose2 = () => {
+  //   setOpen2(false);
+  //   dispatch(setErrorToNull());
+  //   setErrorMessage('');
+  // };
 
   useEffect(() => {
     if (state.auth.error) {
@@ -93,8 +80,27 @@ export default function SignIn({setView}) {
     }
   }, [state]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(loginAction({email, password, rememberMe}));
+  };
+
+  window.addEventListener('resize', () => {
+    setCurrentheight(window.innerHeight);
+  });
+
+  function handleSignUp() {
+    setTermsModalState(true);
+  }
+
   return (
     <div className='sign-in-box'>
+      <TermsModal
+        open={termsModalState}
+        setOpenState={setTermsModalState}
+        setView={setView}
+      />
       {errorMessage && (
         <div
           style={{
@@ -193,7 +199,7 @@ export default function SignIn({setView}) {
           <br />
           <span
             style={{color: '#EB1B29', fontWeight: '600', cursor: 'pointer'}}
-            onClick={() => setView(2)}>
+            onClick={() => handleSignUp()}>
             Sign Up
           </span>
         </div>
