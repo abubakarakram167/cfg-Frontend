@@ -19,6 +19,7 @@ import UnAuthorizedPage from 'pages/unauthorized-page';
 import {ToastContainer, toast} from 'react-toastify';
 import {Offline, Online} from 'react-detect-offline';
 import LoadingBar from 'react-top-loading-bar';
+import SignUp from '../auth-pages/SignUp/index';
 
 const user = JSON.parse(localStorage.getItem('current-user'));
 const RouteComponent = (props) => {
@@ -78,6 +79,9 @@ const RouteComponent = (props) => {
             </Route>
             <Route exact path='/reset'>
               <ResetPassword />
+            </Route>
+            <Route exact path='/signUp'>
+              <SignUp />
             </Route>
             <Route exact path='/sessionexpired'>
               <SessionExpired />
