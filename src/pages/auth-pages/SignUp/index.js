@@ -142,7 +142,8 @@ const SignUp = () => {
       history.push('/');
       toast.success('Registration successful. Please login to continue');
     } else {
-      toast.success('Registration failed. Please try again later');
+      toast.error('Registration failed. Please try again later');
+      history.push('/');
     }
   }
 

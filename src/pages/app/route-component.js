@@ -74,9 +74,9 @@ const RouteComponent = (props) => {
       <Router>
         <Suspense fallback={<Loader />}>
           <Switch>
-            <Route exact path='/createPassword'>
+            {/* <Route exact path='/createPassword'>
               <CreatePassword />
-            </Route>
+            </Route> */}
             <Route exact path='/reset'>
               <ResetPassword />
             </Route>
