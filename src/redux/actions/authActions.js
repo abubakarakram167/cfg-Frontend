@@ -157,51 +157,6 @@ export const registerAction = (data, dispatch) => {
       });
       return {status: e.response.status, message: e.response.data};
     });
-
-  // return async function () {
-  //   try {
-  //     const response = await Auth.register(data);
-  //     if (response.status === 200) {
-  //       dispatch({
-  //         type: 'REGISTER',
-  //         payload: { ...data_resp, message: 'success', error: null },
-  //         error: null,
-  //       });
-  //       const data_resp = response.data;
-  //       return { data: data_resp, message: "success" }
-
-  //     }
-  //   } catch (error) {
-
-  //     dispatch({
-  //       type: 'REGISTER',
-  //       payload: { error: 'Email already exists.' },
-  //       error: 'An unexpected error occured. Please try again.',
-  //     });
-  //     return { status: data_resp, message: "success" }
-  //   }
-  // };
-  // return async function (dispatch) {
-  //   try {
-  //     const response = await Auth.register(data);
-  //     if (response.status === 200) {
-  //       const data_resp = response.data;
-  //       console.log(data_resp);
-  //       return dispatch({
-  //         type: 'REGISTER',
-  //         payload: {...data_resp, message: 'success', error: null},
-  //         error: null,
-  //       });
-  //     }
-  //   } catch (error) {
-
-  //     dispatch({
-  //       type: 'REGISTER',
-  //       payload: {error: 'Email already exists.'},
-  //       error: 'An unexpected error occured. Please try again.',
-  //     });
-  //   }
-  // };
 };
 
 export const passwordResetAction = (data) => {
@@ -238,6 +193,16 @@ export const setLoader = () => {
       type: 'SET_LOADING',
     });
   };
+};
+
+export const verifyEmail = (token) => {
+  return Auth.verifyEmail(token)
+    .then((response) => {
+      return {status: response.status, data: response.data, message: 'success'};
+    })
+    .catch((e) => {
+      return {status: e.response.status, message: e.response.data.message};
+    });
 };
 
 export const updateUser = (data) => {
