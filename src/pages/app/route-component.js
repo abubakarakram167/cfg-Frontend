@@ -11,7 +11,7 @@ import Admin from './admin';
 import Home from './home';
 import Auth from 'pages/auth-pages';
 import ResetPassword from 'pages/auth-pages/reset-password/index';
-import CreatePassword from 'pages/auth-pages/create-password/index';
+import VerifyEmail from 'pages/auth-pages/verify-email/index';
 import SessionExpired from 'pages/auth-pages/session-expired/index';
 import ErrorPage from 'pages/auth-pages/error-page/index';
 import ShowMiniContent from 'pages/showContent';
@@ -74,9 +74,9 @@ const RouteComponent = (props) => {
       <Router>
         <Suspense fallback={<Loader />}>
           <Switch>
-            {/* <Route exact path='/createPassword'>
-              <CreatePassword />
-            </Route> */}
+            <Route exact path='/verifyEmail'>
+              <VerifyEmail />
+            </Route>
             <Route exact path='/reset'>
               <ResetPassword />
             </Route>
