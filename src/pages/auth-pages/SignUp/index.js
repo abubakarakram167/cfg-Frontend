@@ -7,6 +7,11 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import InputAdornment from '@mui/material/InputAdornment';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
 import {useDispatch} from 'react-redux';
@@ -14,6 +19,13 @@ import {registerAction} from '../../../redux/actions/authActions';
 import {toast} from 'react-toastify';
 import {useHistory} from 'react-router-dom';
 import './style.css';
+
+const customStyles = {
+  control: (base) => ({
+    ...base,
+    minHeight: 0,
+  }),
+};
 
 const verifyPassword = (password) => {
   const lowerExp = new RegExp('(?=.*[a-z])');
@@ -52,19 +64,20 @@ const signUpSchema = yup.object().shape({
     .string()
     .email('Enter a valid email')
     .required('Email is required'),
-  phone: yup.number('Enter a valid phone').required('Phone is required'),
+  phone: yup
+    .string('Enter a valid phone')
+    .required('Phone is required')
+    .matches(/^[0-9]*$/, 'Please Enter Numbers Only')
+    .max(7, 'Phone should be of maximum 7 characters length')
+    .min(7, 'Phone should be of minimum 7 characters length'),
   institution: yup
     .string()
     .required('Institution is required')
     .max(50, 'Institution should be of maximum 50 characters length'),
-  parish: yup
-    .string()
-    .required('Parish is required')
-    .max(50, 'Parish should be of maximum 50 characters length'),
-  age_range: yup
-    .string()
-    .required('Age Range is required')
-    .max(50, 'Age Range should be of maximum 50 characters length'),
+  parish: yup.string().required('Parish is required'),
+  // .max(50, 'Parish should be of maximum 50 characters length'),
+  age_range: yup.string().required('Age Range is required'),
+  // .max(50, 'Age Range should be of maximum 50 characters length'),
   password: yup
     .string()
     .test(
@@ -221,15 +234,25 @@ const SignUp = () => {
               <Grid item lg={6} md={6} sm={6} xs={12}>
                 <TextField
                   name='phone'
-                  label='Phone'
+                  // label='Phone'
+                  id='filled-start-adornment'
+                  sx={{m: 1, width: '25ch'}}
                   placeholder='Phone'
                   fullWidth
                   type='number'
                   variant='filled'
                   value={formik.values.phone}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    formik.handleChange(e);
+                    // alert(e.target.value.length)
+                  }}
                   error={formik.touched.phone && Boolean(formik.errors.phone)}
                   helperText={formik.touched.phone && formik.errors.phone}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>{`+1 (876)`}</InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
               <Grid item lg={4} md={4} sm={6} xs={12}>
@@ -251,34 +274,67 @@ const SignUp = () => {
                 />
               </Grid>
               <Grid item lg={4} md={4} sm={6} xs={12}>
-                <TextField
-                  name='parish'
-                  label='Parish'
-                  placeholder='Parish'
-                  fullWidth
-                  variant='filled'
-                  value={formik.values.parish}
-                  onChange={formik.handleChange}
-                  error={formik.touched.parish && Boolean(formik.errors.parish)}
-                  helperText={formik.touched.parish && formik.errors.parish}
-                />
+                <FormControl fullWidth>
+                  <InputLabel id='demo-simple-select-label'>Parish</InputLabel>
+                  <Select
+                    labelId='demo-simple-select-label'
+                    variant='filled'
+                    sx={{minHeight: 0}}
+                    id='demo-simple-select'
+                    name='parish'
+                    value={formik.values.parish}
+                    label='Parish'
+                    onChange={formik.handleChange}
+                    styles={customStyles}
+                    error={
+                      formik.touched.parish && Boolean(formik.errors.parish)
+                    }
+                    helperText={formik.touched.parish && formik.errors.parish}>
+                    <MenuItem value='Kingston & St. Andrew'>
+                      Kingston & St. Andrew
+                    </MenuItem>
+                    <MenuItem value='Portland'>Portland</MenuItem>
+                    <MenuItem value='St. Thomas'>St. Thomas</MenuItem>
+                    <MenuItem value='St. Catherine'>St. Catherine</MenuItem>
+                    <MenuItem value='St. Mary'>St. Mary</MenuItem>
+                    <MenuItem value='St. Ann'>St. Ann</MenuItem>
+                    <MenuItem value='Manchester'>Manchester</MenuItem>
+                    <MenuItem value='Clarendon'>Clarendon</MenuItem>
+                    <MenuItem value='Hanover'>Hanover</MenuItem>
+                    <MenuItem value='Westmoreland'>Westmoreland</MenuItem>
+                    <MenuItem value='St. James'>St. James</MenuItem>
+                    <MenuItem value='Trelawny'>Trelawny</MenuItem>
+                    <MenuItem value='St. Elizabeth'>St. Elizabeth</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item lg={4} md={4} sm={6} xs={12}>
-                <TextField
-                  name='age_range'
-                  label='Age Range'
-                  placeholder='Age Range'
-                  fullWidth
-                  variant='filled'
-                  value={formik.values.age_range}
-                  onChange={formik.handleChange}
-                  error={
-                    formik.touched.age_range && Boolean(formik.errors.age_range)
-                  }
-                  helperText={
-                    formik.touched.age_range && formik.errors.age_range
-                  }
-                />
+                <FormControl fullWidth>
+                  <InputLabel id='demo-simple-select-label'>
+                    Age Range
+                  </InputLabel>
+                  <Select
+                    labelId='demo-simple-select-label'
+                    variant='filled'
+                    style={{minHeight: 0}}
+                    id='demo-simple-select'
+                    name='age_range'
+                    label='Age Range'
+                    value={formik.values.age_range}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.age_range &&
+                      Boolean(formik.errors.age_range)
+                    }
+                    helperText={
+                      formik.touched.age_range && formik.errors.age_range
+                    }>
+                    <MenuItem value='18-25'>18-25</MenuItem>
+                    <MenuItem value='26-45'>26-45</MenuItem>
+                    <MenuItem value='46-60'>46-60</MenuItem>
+                    <MenuItem value='61 And Over'>61 And Over</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
               {/* Password Validation CheckList Texts Started */}
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -406,6 +462,24 @@ const SignUp = () => {
                   <button className='submit-button' type='submit'>
                     Sign Up
                   </button>
+                </div>
+              </Grid>
+              <Grid item lg={12} md={12} sm={6} xs={12}>
+                <div style={{display: 'flex', justifyContent: 'center'}}>
+                  <span
+                    style={{
+                      color: '#eb1b29',
+                    }}>{`Already have an account? `}</span>
+                  <br />
+                  <span
+                    style={{
+                      color: '#EB1B29',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => history.push('/')}>
+                    {'  '}Sign In
+                  </span>
                 </div>
               </Grid>
             </Grid>
