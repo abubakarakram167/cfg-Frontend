@@ -13,6 +13,7 @@ import {
   setWithExpiry,
   getWithExpiry,
 } from '../../shared/expireTime';
+// import {toast}
 
 export const loginAction = (params) => {
   return async function (dispatch) {
@@ -138,28 +139,24 @@ export const sendMultipleForgotPasswordAction = (usersEmail) => {
   };
 };
 
-export const registerAction = (data) => {
-  return async function (dispatch) {
-    try {
-      const response = await Auth.register(data);
-      if (response.status === 200) {
-        const data_resp = response.data;
-        console.log(data_resp);
-        return dispatch({
-          type: 'REGISTER',
-          payload: {...data_resp, message: 'success', error: null},
-          error: null,
-        });
-      }
-    } catch (error) {
-      console.log('the error', error.message);
+export const registerAction = (data, dispatch) => {
+  return Auth.register(data)
+    .then((response) => {
       dispatch({
         type: 'REGISTER',
-        payload: {error: 'Email already exists.'},
+        payload: {...response.data, message: 'success', error: null},
+        error: null,
+      });
+      return {status: response.status, data: response.data, message: 'success'};
+    })
+    .catch((e) => {
+      dispatch({
+        type: 'REGISTER',
+        payload: {error: 'Something Went Wrong.'},
         error: 'An unexpected error occured. Please try again.',
       });
-    }
-  };
+      return {status: e.response.status, message: e.response.data};
+    });
 };
 
 export const passwordResetAction = (data) => {
@@ -196,6 +193,16 @@ export const setLoader = () => {
       type: 'SET_LOADING',
     });
   };
+};
+
+export const verifyEmail = (token) => {
+  return Auth.verifyEmail(token)
+    .then((response) => {
+      return {status: response.status, data: response.data, message: 'success'};
+    })
+    .catch((e) => {
+      return {status: e.response.status, message: e.response.data.message};
+    });
 };
 
 export const updateUser = (data) => {

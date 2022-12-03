@@ -38,5 +38,11 @@ class Auth {
   static updateUser(params) {
     return axiosInstance.put('/api/users', {...params});
   }
+
+  static verifyEmail(token) {
+    return axiosInstance.post('/api/auth/verify', {
+      token,
+    });
+  }
 }
 export default Auth;
