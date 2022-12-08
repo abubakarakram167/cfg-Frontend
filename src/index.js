@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-notifications-component/dist/theme.css';
+import 'react-toastify/dist/ReactToastify.css';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -14,6 +15,7 @@ import './fonts/Gotham-Font/GothamMedium.ttf';
 import './fonts/rissa/Rissa.ttf';
 import './fonts/angelina/angelina.ttf';
 import {SnackbarProvider} from 'notistack';
+import subscribeNotification from './subscribe-to-web-push';
 
 if (module.hot) {
   module.hot.accept();
@@ -29,4 +31,5 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // //Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+//serviceWorker.register();
+subscribeNotification();
