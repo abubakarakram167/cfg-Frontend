@@ -11,6 +11,7 @@ import {Videocam, Forum, QueryBuilder} from '@material-ui/icons';
 import {PlayArrowOutlined, Event} from '@material-ui/icons';
 import '../event/style.css';
 import NoImage from '../../../../assets/noImage.jpeg';
+import PeopleIcon from '@material-ui/icons/People';
 import moment from 'moment';
 import './style.css';
 import EventCalendarModal from 'components/EventCalendarModal';
@@ -25,14 +26,22 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UpcomingEvent({element}) {
+export default function UpcomingEvent({
+  element,
+  setSelectedEvent,
+  setShowPrompt,
+}) {
   const classes = useStyles();
   const [showModal, setShowModal] = useState(false);
 
   return (
     <div>
       <Card className={classes.root}>
-        <CardActionArea>
+        <CardActionArea
+          onClick={() => {
+            setSelectedEvent(element);
+            setShowPrompt(true);
+          }}>
           <CardMedia
             className={classes.media}
             image={element.newUrl ? element.newUrl : NoImage}
@@ -85,10 +94,19 @@ export default function UpcomingEvent({element}) {
                     </span>
                   </div>
                 )}
+                {element.event_type === 'face-to-face' && (
+                  <div>
+                    <PeopleIcon style={{fill: '#bd3535', fontSize: 28}} />
+                    <span
+                      style={{fontSize: 12, fontWeight: 500, marginLeft: 5}}>
+                      Face to Face
+                    </span>
+                  </div>
+                )}
               </div>
             </Typography>
             <div className='event-start-date'>
-              {moment(element.start_date).format('MMMM Do, YYYY hA')}
+              {moment(element.meeting_start_time).format('MMMM Do, YYYY hA')}
             </div>
             <div className='event-points'>
               {element.total_points ? element.total_points : 0} P

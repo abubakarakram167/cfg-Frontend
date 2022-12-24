@@ -72,7 +72,6 @@ const authReducer = (state = INIT_STATE, action) => {
 
     case 'REGISTER':
       payload = action.payload;
-      console.log(payload);
       return {...state, ...payload};
     case actions.SET_CURRENT_USER:
       payload = action.payload;
