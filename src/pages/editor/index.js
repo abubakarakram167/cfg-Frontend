@@ -378,6 +378,8 @@ export default function Editor() {
                       ? formatDate(start_date)
                       : publishDates,
                   end_date: formatDate(end_date),
+                  meeting_start_time:
+                    params.cfgType === 'event' ? publishDate : null,
                   total_points,
                   status: status,
                   tags: totalTags,
@@ -752,6 +754,7 @@ export default function Editor() {
                   <MenuItem value={'live-video'}>Live Video</MenuItem>
                   <MenuItem value={'group-chat'}>Group Chat</MenuItem>
                   <MenuItem value={'zoom-video'}>Zoom Video</MenuItem>
+                  <MenuItem value={'face-to-face'}>Face to Face</MenuItem>
                 </Select>
               </div>
             )}

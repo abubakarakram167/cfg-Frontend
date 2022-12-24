@@ -309,6 +309,7 @@ export default function Editor() {
           categories: JSON.stringify(categories),
           status,
           total_points,
+          meeting_start_time: params.cfgType === 'event' ? publishDate : null,
           next_page,
           updated_at: moment(moment()).format('YYYY-MM-DD'),
           previous_page,
@@ -575,6 +576,7 @@ export default function Editor() {
                   <MenuItem value={'live-video'}>Live Video</MenuItem>
                   <MenuItem value={'group-chat'}>Group Chat</MenuItem>
                   <MenuItem value={'zoom-video'}>Zoom Video</MenuItem>
+                  <MenuItem value={'face-to-face'}>Face to Face</MenuItem>
                 </Select>
               </div>
             )}

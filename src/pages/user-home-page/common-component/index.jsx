@@ -33,7 +33,9 @@ export default function CommonComponent(props) {
         <div
           className={returnCenterClass()}
           onScroll={(ev) => {
-            setTimeout(props.scrollAction(ev), 2000);
+            if (props.scrollAction !== undefined) {
+              setTimeout(props.scrollAction(ev), 2000);
+            }
           }}>
           {props.children}
         </div>
