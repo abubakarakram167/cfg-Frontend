@@ -22,7 +22,7 @@ let icon = {textOnly: 'none'};
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    width: 430,
+    width: 400,
     height: 250,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
@@ -33,14 +33,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getWidthAccordingToDevice = (width) => {
-  let percentageWidth = '50%';
-  if (width < 500) percentageWidth = '90%';
-  else if (width >= 501 && width <= 600) percentageWidth = '80%';
-  else if (width >= 601 && width <= 800) percentageWidth = '70%';
-  else percentageWidth = '30%';
+const getWidthAccordingToDevice = () => {
+  // console.log(window.innerWidth , "width is");
+  if (window.innerWidth < 400) {
+    return `${window.innerWidth - 30}px`;
+  } else {
+    return 'auto';
+  }
 
-  return percentageWidth;
+  // return percentageWidth;
 };
 
 export default (props) => {
@@ -110,8 +111,8 @@ export default (props) => {
                 fill: 'white',
                 borderRadius: 50,
                 backgroundColor: 'red',
-                position: 'relative',
-                left: getWidthAccordingToDevice(),
+                position: 'absolute',
+                left: '90%',
                 cursor: 'pointer',
               }}
             />{' '}
