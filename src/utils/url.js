@@ -4,7 +4,8 @@ var url = 'https://app.mycfg.org/';
 if (environment === 'local') {
   url = 'http://localhost:3690/';
 
-} else url = 'https://app.mycfg.org/';
+} else {
+  url = 'https://app.mycfg.org/';
 
 }
 
