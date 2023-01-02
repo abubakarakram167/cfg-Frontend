@@ -31,3 +31,7 @@
   margin-top: 9px;
   padding-top: 15px;
 }
+
+.react-add-to-calendar__dropdown ul li a {
+  color: white !important;
+}

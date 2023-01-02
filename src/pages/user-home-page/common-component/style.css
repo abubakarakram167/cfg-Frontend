@@ -4,7 +4,7 @@
   justify-content: space-between;
   min-height: 100vh;
   background-color: #f9f9f9;
-  /* overflow: scroll; */
+  overflow-y: hidden;
 }
 .user-home-left {
   width: 21%;
@@ -14,7 +14,7 @@
 .user-home-center {
   width: 56%;
   overflow-y: scroll;
-  height: 100vh;
+  /* height: 130vh; */
   padding-top: 20px;
 }
 .fullscreen-user-home-center {

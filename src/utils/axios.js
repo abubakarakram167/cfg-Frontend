@@ -32,6 +32,7 @@ axiosInstance.interceptors.response.use(
         error.response.data.message !==
         'Your login details could not be verified. Please try again.'
       ) {
+        console.log(error.response.data)
         history.push('/sessionexpired');
       }
     } else {

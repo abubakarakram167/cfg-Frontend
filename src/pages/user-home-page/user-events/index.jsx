@@ -49,8 +49,6 @@ export default function UserEvents() {
     },
   ];
 
-  console.log('the content', content);
-
   return (
     <CommonComponent>
       <h1 style={{marginBottom: '4px'}}>Happening Now</h1>
@@ -68,14 +66,12 @@ export default function UserEvents() {
           .filter((elements) => moment(elements.start_date) >= moment())
           .map((element, index) => {
             return (
-              <div
-                onClick={() => {
-                  setSelectedEvent(element);
-                  setShowPrompt(true);
-                }}
-                className='upcoming-event'
-                key={index}>
-                <UpcomingEvent element={element} />
+              <div className='upcoming-event' key={index}>
+                <UpcomingEvent
+                  element={element}
+                  setSelectedEvent={setSelectedEvent}
+                  setShowPrompt={setShowPrompt}
+                />
               </div>
             );
           })}

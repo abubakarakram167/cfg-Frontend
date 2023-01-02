@@ -1,4 +1,4 @@
-import React, {useState, useEffect, lazy} from 'react';
+import React, {useState, useEffect, lazy, Suspense} from 'react';
 import './style.css';
 import NotificationIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -21,9 +21,11 @@ import {Card, List, ListItem} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from 'redux/services/search';
 import Friend from 'redux/services/friends';
-import {getPostById} from 'redux/actions/UserPost';
+import {getPostById, postNotificationSubscription} from 'redux/actions/UserPost';
 import {getSignedUrl} from '../../../redux/actions/media';
 import whiteCfgLogo from 'assets/white_header_logo.png';
+import { getNodeToken } from '../../../firebaseInit';
+import Loader from '@crema/core/Loader';
 
 const LogoImage =
   'https://cfg-media.s3.us-east-2.amazonaws.com/static_images/cfgWhiteLogo.png';
@@ -37,6 +39,7 @@ export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState('');
   const [image, setImage] = useState('');
+  const [tokenFound, setTokenFound] = useState('');
   const dispatch = useDispatch('');
   const [searchResults, setSearchResults] = useState([]);
   const [resultVisibility, setResultVisibility] = useState(false);
@@ -50,6 +53,21 @@ export default function AdminHeader() {
   });
 
   useEffect(() => {
+    if(tokenFound !== '')
+    {
+      if(state && state.subscriptionTokens)
+      {
+         const subscriptionTokens = state.subscriptionTokens;
+         if(!subscriptionTokens.includes(tokenFound))
+         {
+            dispatch(postNotificationSubscription({token: tokenFound}))
+         }
+      }
+      
+    }
+  }, [tokenFound]);
+
+  useEffect(() => {
     const socketObj = socket.getSocket();
     socketObj.on('notification', (data) => {
       console.log(data, 'Hello world');
@@ -59,12 +77,15 @@ export default function AdminHeader() {
     });
   }, []);
 
+  const getToken = async () => {
+    console.log("gettoken()");
+      const token = await getNodeToken(setTokenFound);
+      console.log({token})
+  }
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('current-user'));
-    if (user) {
-      // console.log('hello hakuna', user.id);
-      // socket.windowAction(user.id);
-    }
+    getToken();
     console.log('asdajsbndjkadbna............');
     console.log('the user', user);
     dispatch(setCurrentUser(user));
@@ -159,6 +180,8 @@ export default function AdminHeader() {
 
   return (
     <div>
+      <Suspense fallback={<Loader />}>
+
       <AppSideBar drawerOpen={drawerOpen} toggleDrawerOpen={toggleDrawerOpen}>
         Hello{' '}
       </AppSideBar>
@@ -374,6 +397,7 @@ export default function AdminHeader() {
           </div>
         </div>
       </AppHeader>
+      </Suspense>
     </div>
   );
 }

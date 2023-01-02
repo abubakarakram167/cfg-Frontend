@@ -26,7 +26,7 @@ import {
 
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-
+import {ToastContainer, toast} from 'react-toastify';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserPost} from 'redux/actions/UserPost';
@@ -43,6 +43,7 @@ import CFGFamily from './cfg-family.jsx';
 import './style.css';
 import {showMessengerApp} from 'redux/actions/app';
 import {getSpecificPreference} from 'redux/actions/Preference';
+import {onMessageListener} from '../../../firebaseInit';
 
 const CommonComponent = lazy(() => import('../common-component'));
 const PostDetails = lazy(() => import('../post-details'));
@@ -59,6 +60,21 @@ const useStyling = makeStyles({
 });
 
 export default function UserHomePage() {
+  // onMessageListener()
+  //   .then((payload) => {
+  //     const { title, body, userId } = payload.data;
+  //     const user = JSON.parse(localStorage.getItem('current-user'));
+  //     if(String(user.id) !== String(userId))
+  //     {
+  //       toast.info(`${title}:  ${body}`, {
+  //           position: toast.POSITION.TOP_RIGHT
+  //       });
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log(err.message)
+  //   });
+
   const state = useSelector((state) => state.cfg);
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.userPost.posts);
@@ -480,71 +496,74 @@ export default function UserHomePage() {
     </div>
   );
   return (
-    <CommonComponent
-      left={left}
-      right={right}
-      scroll={true}
-      ref={postDivInnerRef}
-      scrollAction={onScroll}>
-      {allJournals.length > 0 && (
-        <div style={{position: 'relative'}}>
-          <Link to={`/home/journals/list`}>
-            <img
-              style={{
-                height: 300,
-                width: '100%',
-                borderRadius: 10,
-                marginBottom: 20,
-              }}
-              src={require('../../../assets/new_journey_image.png')}
-            />
-            <div className='journal-text'>
-              <p className='journey-heading'>My Journey</p>
-              <div className='journal-list-container'>
-                {allJournals.length &&
-                  allJournals
-                    .slice(Math.max(allJournals.length - 5, 0))
-                    .map((journal, index) => {
-                      return (
-                        <div className='journal-list-element' key={index}>
-                          <p className='journal-subject'>{journal.subject}</p>
-                          <p style={getColorStatus(journal.status)}>
-                            {journal.status}
-                          </p>
-                        </div>
-                      );
-                    })}
+    <div>
+      <CommonComponent
+        left={left}
+        right={right}
+        scroll={true}
+        ref={postDivInnerRef}
+        scrollAction={onScroll}>
+        {allJournals.length > 0 && (
+          <div style={{position: 'relative'}}>
+            <Link to={`/home/journals/list`}>
+              <img
+                style={{
+                  height: 300,
+                  width: '100%',
+                  borderRadius: 10,
+                  marginBottom: 20,
+                }}
+                src={require('../../../assets/new_journey_image.png')}
+              />
+              <div className='journal-text'>
+                <p className='journey-heading'>My Journey</p>
+                <div className='journal-list-container'>
+                  {allJournals.length &&
+                    allJournals
+                      .slice(Math.max(allJournals.length - 5, 0))
+                      .map((journal, index) => {
+                        return (
+                          <div className='journal-list-element' key={index}>
+                            <p className='journal-subject'>{journal.subject}</p>
+                            <p style={getColorStatus(journal.status)}>
+                              {journal.status}
+                            </p>
+                          </div>
+                        );
+                      })}
+                </div>
               </div>
-            </div>
-          </Link>
-        </div>
-      )}
-
-      <CreatePost
-        getUserPost={() => {
-          dispatch(getUserPost(3, true));
-        }}
-      />
-
-      {app.showMessenger && enableLiveChat && (
-        <div className='chat-container'>
-          <CFGFamily />
-        </div>
-      )}
-
-      {transform.map((element, index) => {
-        return (
-          <div key={element.id} style={{margin: '20px 0px'}}>
-            <PostDetails
-              getUserPost={() => {
-                getAllUserPost();
-              }}
-              post={element}
-            />
+            </Link>
           </div>
-        );
-      })}
-      <Skeleton count={5} />
-    </CommonComponent>
+        )}
+
+        <CreatePost
+          getUserPost={() => {
+            dispatch(getUserPost(3, true));
+          }}
+        />
+
+        {app.showMessenger && enableLiveChat && (
+          <div className='chat-container'>
+            <CFGFamily />
+          </div>
+        )}
+
+        {transform.map((element, index) => {
+          return (
+            <div key={element.id} style={{margin: '20px 0px'}}>
+              <PostDetails
+                getUserPost={() => {
+                  getAllUserPost();
+                }}
+                post={element}
+              />
+            </div>
+          );
+        })}
+        <Skeleton count={5} />
+      </CommonComponent>
+      <ToastContainer />
+    </div>
   );
 }

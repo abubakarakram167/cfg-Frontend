@@ -14,6 +14,7 @@ const INIT_STATE = {
   error: null,
   newUser: {},
   loading: false,
+  subscriptionTokens:[],
 };
 let payload = null;
 const authReducer = (state = INIT_STATE, action) => {
@@ -50,6 +51,8 @@ const authReducer = (state = INIT_STATE, action) => {
         ...state,
         error: null,
       };
+    case 'CREATE_NOTIFICATION_SUBSCRIPTION':
+      return {...state, subscriptionTokens: [...state.subscriptionTokens, action.payload]};
     case 'LOGIN':
       payload = action.payload;
       let error = null;
@@ -58,10 +61,13 @@ const authReducer = (state = INIT_STATE, action) => {
       }
       if (payload.user) {
         socket.loginAction(payload.user.id);
+        console.log(payload.subscriptionTokens);
         localStorage.setItem('current-user', JSON.stringify(payload.user));
+        localStorage.setItem('subscriptionTokens', payload.subscriptionTokens)
       }
       if (payload.error) error = payload.error.data.message;
-      return {...state, user: payload.user, token: payload.token, error: error};
+      return {...state, user: payload.user, token: payload.token, 
+                 subscriptionTokens: payload.subscriptionTokens, error: error};
     case 'RESET_PASSWORD':
       payload = action.payload;
       if (payload.error) {
@@ -72,7 +78,6 @@ const authReducer = (state = INIT_STATE, action) => {
 
     case 'REGISTER':
       payload = action.payload;
-      console.log(payload);
       return {...state, ...payload};
     case actions.SET_CURRENT_USER:
       payload = action.payload;
@@ -102,3 +107,5 @@ const authReducer = (state = INIT_STATE, action) => {
   }
 };
 export default authReducer;
+
+

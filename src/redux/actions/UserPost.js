@@ -1,5 +1,6 @@
 import * as actions from './action.types';
 import Post from '../services/post';
+import NotificationSubscription from '../services/notification_subscription';
 import jsCookie from 'js-cookie';
 import {getSignedUrl} from './media';
 import $ from 'jquery';
@@ -31,10 +32,34 @@ import $ from 'jquery';
 //   };
 // };
 
+export const postNotificationSubscription = (params) => {
+  return (dispatch) => {
+    return new Promise((res, rej) => {
+      NotificationSubscription.addNotificationSubscription(params)
+        .then((response) => {
+          console.log('after adding post', response);
+          if (response.status === 200) {
+            const data_resp = response.data;
+            dispatch({
+              type: 'CREATE_NOTIFICATION_SUBSCRIPTION',
+              payload: {...data_resp},
+            });
+            res(response);
+          }
+        })
+        .catch((error) => {
+          console.log('the error in creating Post', error.response);
+          rej(error);
+        });
+    });
+  };
+}
+
 export const createUserPost = (params) => {
   return (dispatch) => {
     return new Promise((res, rej) => {
       if (params.media && params.media !== '')
+        params.imageUrl = params.media;
         params.media = getRestoredImages(params.media);
       Post.addUserPost(params)
         .then((response) => {
@@ -65,7 +90,18 @@ export const createUserPost = (params) => {
 };
 
 const getRestoredImages = (featureImageUrl) => {
-  const pathname = new URL(featureImageUrl).pathname;
+  console.log({featureImageUrl})
+  let pathname = '';
+  try {
+    const url = new URL(featureImageUrl);
+    if(url){
+      pathname = url.pathname;
+    }
+
+  }
+  catch(e) {
+    console.log(e.message);
+  }
   const index = pathname.lastIndexOf('/');
   return -1 !== index ? pathname.substring(index + 1) : pathname;
 };

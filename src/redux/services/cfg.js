@@ -30,6 +30,12 @@ class Cfg {
       ...params,
     });
   }
+
+  static subscribeEvent(data) {
+    return axiosInstance.post('/api/contentSubscribers', {
+      ...data,
+    });
+  }
 }
 
 export default Cfg;

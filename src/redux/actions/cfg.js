@@ -209,3 +209,13 @@ export const getContentData = (id) => {
     }
   };
 };
+
+export const subscribeEvent = (data) => {
+  return Resource.subscribeEvent(data)
+    .then((response) => {
+      return {status: response.status, data: response.data, message: 'success'};
+    })
+    .catch((e) => {
+      return {status: e.response.status, message: e.response.data};
+    });
+};

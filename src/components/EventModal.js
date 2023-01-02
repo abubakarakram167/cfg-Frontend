@@ -2,13 +2,13 @@ import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import {makeStyles} from '@material-ui/core/styles';
 import React, {useState, useEffect, useRef} from 'react';
-import './MyConversationModal.css';
+import './EventModal.css';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    width: 400,
-    height: 300,
+    width: '80%',
+    height: '80%',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -44,7 +44,9 @@ export default (props) => {
         <h2 style={{textAlign: 'center', color: '#5f5b5b'}}>
           {event && event.title}
         </h2>
-        <div className='parent-conversation-container'>
+        <div
+          className='parent-conversation-container'
+          style={{height: '75% !important'}}>
           <div dangerouslySetInnerHTML={{__html: event && event.detail}}></div>
         </div>
         <div style={{display: 'flex', justifyContent: 'space-around'}}>
